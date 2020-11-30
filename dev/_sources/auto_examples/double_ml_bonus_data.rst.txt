@@ -1,0 +1,748 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_examples_double_ml_bonus_data.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_double_ml_bonus_data.py:
+
+
+===============
+DML: Bonus Data
+===============
+This example shows
+TODO: Add a general description!
+
+
+.. code-block:: default
+
+    print(__doc__)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+
+    import numpy as np
+    import doubleml as dml
+    from doubleml.datasets import fetch_bonus
+
+    from sklearn.linear_model import Lasso, LogisticRegression
+    from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+
+    plt.rcParams['figure.figsize'] = 14, 6
+    sns.set()
+
+
+
+
+
+
+
+
+Load bonus data using the dml datasets module
+---------------------------------------------
+
+
+.. code-block:: default
+
+
+    dml_data = dml.datasets.fetch_bonus()
+    dml_data.data.head()
+
+
+
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>index</th>
+          <th>abdt</th>
+          <th>tg</th>
+          <th>inuidur1</th>
+          <th>inuidur2</th>
+          <th>female</th>
+          <th>black</th>
+          <th>hispanic</th>
+          <th>othrace</th>
+          <th>dep</th>
+          <th>q1</th>
+          <th>q2</th>
+          <th>q3</th>
+          <th>q4</th>
+          <th>q5</th>
+          <th>q6</th>
+          <th>recall</th>
+          <th>agelt35</th>
+          <th>agegt54</th>
+          <th>durable</th>
+          <th>nondurable</th>
+          <th>lusd</th>
+          <th>husd</th>
+          <th>muld</th>
+          <th>dep1</th>
+          <th>dep2</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>0</td>
+          <td>10824</td>
+          <td>0</td>
+          <td>2.890372</td>
+          <td>18</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>2</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.0</td>
+          <td>1.0</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>3</td>
+          <td>10824</td>
+          <td>0</td>
+          <td>0.000000</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0.0</td>
+          <td>0.0</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>4</td>
+          <td>10747</td>
+          <td>0</td>
+          <td>3.295837</td>
+          <td>27</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0.0</td>
+          <td>0.0</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>11</td>
+          <td>10607</td>
+          <td>1</td>
+          <td>2.197225</td>
+          <td>9</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0.0</td>
+          <td>0.0</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>12</td>
+          <td>10831</td>
+          <td>0</td>
+          <td>3.295837</td>
+          <td>27</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>1</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>1.0</td>
+          <td>0.0</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <br />
+    <br />
+
+Specify learner and estimate causal parameter: PLR model with random forest as learner
+--------------------------------------------------------------------------------------
+
+
+.. code-block:: default
+
+
+    # Set machine learning methods for m & g
+    ml_g = RandomForestRegressor()
+    ml_m = RandomForestRegressor()
+    n_folds = 2
+    n_rep = 10
+
+    np.random.seed(3141)
+    dml_plr_rf = dml.DoubleMLPLR(dml_data,
+                                 ml_g,
+                                 ml_m,
+                                 n_folds,
+                                 n_rep,
+                                 'partialling out',
+                                 'dml2')
+
+    # set some hyperparameters for the learners
+    pars = {'n_estimators': 500,
+            'max_features': 'sqrt',
+            'max_depth': 5}
+
+    dml_plr_rf.set_ml_nuisance_params('ml_g', 'tg', pars)
+    dml_plr_rf.set_ml_nuisance_params('ml_m', 'tg', pars)
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    <doubleml.double_ml_plr.DoubleMLPLR object at 0x7fa81f194b80>
+
+
+
+
+.. code-block:: default
+
+
+    dml_plr_rf.fit()
+    dml_plr_rf.summary
+
+
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>coef</th>
+          <th>std err</th>
+          <th>t</th>
+          <th>P&gt;|t|</th>
+          <th>2.5 %</th>
+          <th>97.5 %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>tg</th>
+          <td>-0.079085</td>
+          <td>0.035391</td>
+          <td>-2.234604</td>
+          <td>0.025443</td>
+          <td>-0.14845</td>
+          <td>-0.00972</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+
+    # Load data with polynomial features
+    dml_data_lasso = dml.datasets.fetch_bonus(polynomial_features=True)
+    print(dml_data_lasso)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    === DoubleMLData Object ===
+    y_col: inuidur1
+    d_cols: ['tg']
+    x_cols: ['female', 'black', 'othrace', 'dep1', 'dep2', 'q2', 'q3', 'q4', 'q5', 'q6', 'agelt35', 'agegt54', 'durable', 'lusd', 'husd', 'female^2', 'female black', 'female othrace', 'female dep1', 'female dep2', 'female q2', 'female q3', 'female q4', 'female q5', 'female q6', 'female agelt35', 'female agegt54', 'female durable', 'female lusd', 'female husd', 'black^2', 'black othrace', 'black dep1', 'black dep2', 'black q2', 'black q3', 'black q4', 'black q5', 'black q6', 'black agelt35', 'black agegt54', 'black durable', 'black lusd', 'black husd', 'othrace^2', 'othrace dep1', 'othrace dep2', 'othrace q2', 'othrace q3', 'othrace q4', 'othrace q5', 'othrace q6', 'othrace agelt35', 'othrace agegt54', 'othrace durable', 'othrace lusd', 'othrace husd', 'dep1^2', 'dep1 dep2', 'dep1 q2', 'dep1 q3', 'dep1 q4', 'dep1 q5', 'dep1 q6', 'dep1 agelt35', 'dep1 agegt54', 'dep1 durable', 'dep1 lusd', 'dep1 husd', 'dep2^2', 'dep2 q2', 'dep2 q3', 'dep2 q4', 'dep2 q5', 'dep2 q6', 'dep2 agelt35', 'dep2 agegt54', 'dep2 durable', 'dep2 lusd', 'dep2 husd', 'q2^2', 'q2 q3', 'q2 q4', 'q2 q5', 'q2 q6', 'q2 agelt35', 'q2 agegt54', 'q2 durable', 'q2 lusd', 'q2 husd', 'q3^2', 'q3 q4', 'q3 q5', 'q3 q6', 'q3 agelt35', 'q3 agegt54', 'q3 durable', 'q3 lusd', 'q3 husd', 'q4^2', 'q4 q5', 'q4 q6', 'q4 agelt35', 'q4 agegt54', 'q4 durable', 'q4 lusd', 'q4 husd', 'q5^2', 'q5 q6', 'q5 agelt35', 'q5 agegt54', 'q5 durable', 'q5 lusd', 'q5 husd', 'q6^2', 'q6 agelt35', 'q6 agegt54', 'q6 durable', 'q6 lusd', 'q6 husd', 'agelt35^2', 'agelt35 agegt54', 'agelt35 durable', 'agelt35 lusd', 'agelt35 husd', 'agegt54^2', 'agegt54 durable', 'agegt54 lusd', 'agegt54 husd', 'durable^2', 'durable lusd', 'durable husd', 'lusd^2', 'lusd husd', 'husd^2']
+    z_cols: None
+    data:
+     <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 5099 entries, 0 to 5098
+    Columns: 137 entries, inuidur1 to husd^2
+    dtypes: float64(136), int64(1)
+    memory usage: 5.3 MB
+
+
+
+
+
+Specify learner and estimate causal parameter: PLR model with Lasso as learner
+------------------------------------------------------------------------------
+
+
+.. code-block:: default
+
+
+    # Set machine learning methods for m & g
+    ml_g = Lasso()
+    ml_m = Lasso()
+    n_folds = 2
+    n_rep = 10
+
+    np.random.seed(3141)
+    dml_plr_lasso = dml.DoubleMLPLR(dml_data_lasso,
+                                    ml_g,
+                                    ml_m,
+                                    n_folds,
+                                    n_rep,
+                                    'partialling out',
+                                    'dml2')
+
+    # set some hyperparameters for the learners
+    dml_plr_lasso.set_ml_nuisance_params('ml_g', 'tg', {'alpha': 0.0005})
+    dml_plr_lasso.set_ml_nuisance_params('ml_m', 'tg', {'alpha': 0.0026})
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    <doubleml.double_ml_plr.DoubleMLPLR object at 0x7fa7e3ab5ac0>
+
+
+
+
+.. code-block:: default
+
+
+    dml_plr_lasso.fit()
+    dml_plr_lasso.summary
+
+
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>coef</th>
+          <th>std err</th>
+          <th>t</th>
+          <th>P&gt;|t|</th>
+          <th>2.5 %</th>
+          <th>97.5 %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>tg</th>
+          <td>-0.078207</td>
+          <td>0.035572</td>
+          <td>-2.198549</td>
+          <td>0.02791</td>
+          <td>-0.147927</td>
+          <td>-0.008487</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <br />
+    <br />
+
+Specify learner and estimate causal parameter: IRM model with random forest as learner
+--------------------------------------------------------------------------------------
+
+
+.. code-block:: default
+
+
+    # Set machine learning methods for m & g
+    ml_g = RandomForestRegressor()
+    ml_m = RandomForestClassifier()
+    n_folds = 2
+    n_rep = 10
+
+    np.random.seed(3141)
+    dml_irm_rf = dml.DoubleMLIRM(dml_data,
+                                 ml_g,
+                                 ml_m,
+                                 n_folds,
+                                 n_rep,
+                                 'ATE',
+                                 'dml2')
+
+    # set some hyperparameters for the learners
+    pars = {'n_estimators': 500,
+            'max_features': 'sqrt',
+            'max_depth': 5}
+
+    dml_irm_rf.set_ml_nuisance_params('ml_g0', 'tg', pars)
+    dml_irm_rf.set_ml_nuisance_params('ml_g1', 'tg', pars)
+    dml_irm_rf.set_ml_nuisance_params('ml_m', 'tg', pars)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    <doubleml.double_ml_irm.DoubleMLIRM object at 0x7fa7e38e17c0>
+
+
+
+
+.. code-block:: default
+
+
+    dml_irm_rf.fit()
+    dml_irm_rf.summary
+
+
+
+
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>coef</th>
+          <th>std err</th>
+          <th>t</th>
+          <th>P&gt;|t|</th>
+          <th>2.5 %</th>
+          <th>97.5 %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>tg</th>
+          <td>-0.076971</td>
+          <td>0.03574</td>
+          <td>-2.153633</td>
+          <td>0.031269</td>
+          <td>-0.14702</td>
+          <td>-0.006922</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <br />
+    <br />
+
+Specify learner and estimate causal parameter: IRM model with Lasso as learner
+------------------------------------------------------------------------------
+
+
+.. code-block:: default
+
+
+    # Set machine learning methods for m & g
+    ml_g = Lasso()
+    ml_m = LogisticRegression()
+    np.random.seed(1234)
+    n_folds = 2
+    n_rep = 10
+
+    np.random.seed(3141)
+    dml_irm_lasso = dml.DoubleMLIRM(dml_data_lasso,
+                                    ml_g,
+                                    ml_m,
+                                    n_folds,
+                                    n_rep,
+                                    'ATE',
+                                    'dml2')
+
+    # set some hyperparameters for the learners
+    dml_irm_lasso.set_ml_nuisance_params('ml_g0', 'tg', {'alpha': 0.0019})
+    dml_irm_lasso.set_ml_nuisance_params('ml_g1', 'tg', {'alpha': 0.0073})
+    dml_irm_lasso.set_ml_nuisance_params('ml_m', 'tg', {'C': 0.0001})
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    <doubleml.double_ml_irm.DoubleMLIRM object at 0x7fa7e39e0640>
+
+
+
+
+.. code-block:: default
+
+
+    dml_irm_lasso.fit()
+    dml_irm_lasso.summary
+
+
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>coef</th>
+          <th>std err</th>
+          <th>t</th>
+          <th>P&gt;|t|</th>
+          <th>2.5 %</th>
+          <th>97.5 %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>tg</th>
+          <td>-0.080947</td>
+          <td>0.035545</td>
+          <td>-2.277299</td>
+          <td>0.022768</td>
+          <td>-0.150614</td>
+          <td>-0.01128</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <br />
+    <br />
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 1 minutes  31.240 seconds)
+
+
+.. _sphx_glr_download_auto_examples_double_ml_bonus_data.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: double_ml_bonus_data.py <double_ml_bonus_data.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: double_ml_bonus_data.ipynb <double_ml_bonus_data.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
