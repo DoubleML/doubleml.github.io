@@ -302,9 +302,9 @@ A nested <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>. The
 <p>The hyperparameter-tuning is performed using the tuning methods provided in the <a href='https://mlr3tuning.mlr-org.com/'>mlr3tuning</a> package. For more information on tuning in <a href='https://mlr3.mlr-org.com/'>mlr3</a>, we refer to the section on parameter tuning in the <a href='https://mlr3book.mlr-org.com/tuning.html'>mlr3 book</a>.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>DoubleML</span><span class='op'>$</span><span class='fu'>tune</span><span class='op'>(</span>
   <span class='va'>param_set</span>,
-  tune_settings <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>n_folds_tune <span class='op'>=</span> <span class='fl'>5</span>, rsmp_tune <span class='op'>=</span> <span class='st'>"cv"</span>, measure <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>ml_g <span class='op'>=</span> <span class='cn'>NULL</span>,
-    ml_m <span class='op'>=</span> <span class='cn'>NULL</span>, ml_r <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>, terminator <span class='op'>=</span> <span class='fu'>mlr3tuning</span><span class='fu'>::</span><span class='fu'><a href='https://bbotk.mlr-org.com/reference/trm.html'>trm</a></span><span class='op'>(</span><span class='st'>"evals"</span>, n_evals <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span>,
-    algorithm <span class='op'>=</span> <span class='st'>"grid_search"</span>, resolution <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>,
+  tune_settings <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>n_folds_tune <span class='op'>=</span> <span class='fl'>5</span>, rsmp_tune <span class='op'>=</span> <span class='fu'>mlr3</span><span class='fu'>::</span><span class='fu'><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>rsmp</a></span><span class='op'>(</span><span class='st'>"cv"</span>, folds <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>,
+    measure <span class='op'>=</span> <span class='cn'>NULL</span>, terminator <span class='op'>=</span> <span class='fu'>mlr3tuning</span><span class='fu'>::</span><span class='fu'><a href='https://bbotk.mlr-org.com/reference/trm.html'>trm</a></span><span class='op'>(</span><span class='st'>"evals"</span>, n_evals <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span>, algorithm <span class='op'>=</span>
+    <span class='fu'>mlr3tuning</span><span class='fu'>::</span><span class='fu'><a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr</a></span><span class='op'>(</span><span class='st'>"grid_search"</span><span class='op'>)</span>, resolution <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>,
   tune_on_folds <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre><p></div></p>
 
@@ -314,14 +314,19 @@ A nested <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>. The
 A named <code>list</code> with a parameter grid for each nuisance model/learner (see method <code>learner_names()</code>). The parameter grid must be an object of class <a href='https://paradox.mlr-org.com/reference/ParamSet.html'>ParamSet</a>.</p></dd>
 
 <dt><code>tune_settings</code></dt><dd><p>(named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>) <br />
-A named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code> with argument passed to the hyperparameter-tuning with <a href='https://mlr3tuning.mlr-org.com/'>mlr3tuning</a> to set up <a href='https://mlr3tuning.mlr-org.com/reference/TuningInstanceSingleCrit.html'>TuningInstance</a> objects. <code>tune_settings</code> has entries
+A named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code> with arguments passed to the hyperparameter-tuning with <a href='https://mlr3tuning.mlr-org.com/'>mlr3tuning</a> to set up <a href='https://mlr3tuning.mlr-org.com/reference/TuningInstanceSingleCrit.html'>TuningInstance</a> objects. <code>tune_settings</code> has entries
 <ul>
-<li><p><code>rsmp_tune</code> <br /> <a href='https://mlr3.mlr-org.com/reference/Resampling.html'>Resampling</a> or option passed to <a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>rsmpl()</a> to initialize a <a href='https://mlr3.mlr-org.com/reference/Resampling.html'>Resampling</a> for parameter tuning in <code>mlr3</code>. Default is <code>"cv"</code> (cross-validation).</p></li>
-<li><p><code>n_folds_tune</code> (<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>) <br /> If <code>rsmp_tune = "cv"</code>, number of folds used for cross-validation. Default is <code>5</code>.</p></li>
-<li><p><code>measure</code> (<code>NULL</code>, named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>) <br /> <code>NULL</code> or named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code> with options passed to <a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>msr()</a>. Names of entries are set to names of learners (see method <code>learner_names()</code>). If <code>NULL</code>, default measures as provided by <a href='https://mlr3.mlr-org.com/reference/default_measures.html'>default_measures()</a> are used. Default is <code>NULL</code>.</p></li>
-<li><p><code>terminator</code> <br /> A <a href='https://bbotk.mlr-org.com/reference/Terminator.html'>Terminator</a> object. Default is <code><a href='https://bbotk.mlr-org.com/reference/trm.html'>mlr3tuning::trm("evals", n_evals = 20)</a></code>.</p></li>
-<li><p><code>algorithm</code> (<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br /> The key passed to the respective dictionary to specify the tuning algorithm used in <a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr()</a>. <code>algorithm</code> is passed as an argument to <a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr()</a>. Default is <code>grid_search</code>.</p></li>
-<li><p><code>resolution</code> (<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br /> The key passed to the respective dictionary to specify  the tuning algorithm used in <a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr()</a>. <code>resolution</code> is passed as an argument to <a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr()</a>. Default is <code>5</code>.</p></li>
+<li><p><code>terminator</code> (<a href='https://bbotk.mlr-org.com/reference/Terminator.html'>Terminator</a>) <br />
+A <a href='https://bbotk.mlr-org.com/reference/Terminator.html'>Terminator</a> object. Specification of <code>terminator</code> is required to perform tuning.</p></li>
+<li><p><code>algorithm</code> (<a href='https://mlr3tuning.mlr-org.com/reference/Tuner.html'>Tuner</a> or <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br />
+A <a href='https://mlr3tuning.mlr-org.com/reference/Tuner.html'>Tuner</a> object (recommended) or key passed to the respective dictionary to specify the tuning algorithm used in <a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr()</a>. <code>algorithm</code> is passed as an argument to <a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr()</a>. If <code>algorithm</code> is not specified by the users, default is set to <code>"grid_search"</code>. If set to <code>"grid_search"</code>, then additional argument <code>"resolution"</code> is required.</p></li>
+<li><p><code>rsmp_tune</code> (<a href='https://mlr3.mlr-org.com/reference/Resampling.html'>Resampling</a> or <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>)<br />
+A <a href='https://mlr3.mlr-org.com/reference/Resampling.html'>Resampling</a> object (recommended) or option passed to <a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>rsmp()</a> to initialize a <a href='https://mlr3.mlr-org.com/reference/Resampling.html'>Resampling</a> for parameter tuning in <code>mlr3</code>. If not specified by the user, default is set to <code>"cv"</code> (cross-validation).</p></li>
+<li><p><code>n_folds_tune</code> (<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>, optional) <br />
+If <code>rsmp_tune = "cv"</code>, number of folds used for cross-validation. If not specified by the user, default is set to <code>5</code>.</p></li>
+<li><p><code>measure</code> (<code>NULL</code>, named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code>, optional) <br />
+Named list containing the measures used for parameter tuning. Entries in list must either be <a href='https://mlr3.mlr-org.com/reference/Measure.html'>Measure</a> objects or keys to be passed to passed to <a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>msr()</a>. The names of the entries must match the learner names (see method <code>learner_names()</code>). If set to <code>NULL</code>, default measures are used, i.e., <code>"regr.mse"</code> for continuous outcome variables and <code>"classif.ce"</code> for binary outcomes.</p></li>
+<li><p><code>resolution</code> (<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br /> The key passed to the respective dictionary to specify  the tuning algorithm used in <a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr()</a>. <code>resolution</code> is passed as an argument to <a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr()</a>.</p></li>
 </ul></p></dd>
 
 <dt><code>tune_on_folds</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>) <br />
@@ -348,7 +353,7 @@ The number of significant digits to use when printing.</p></dd>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>parm</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>) <br />
+<dt><code>parm</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code> or <code><a href='https://rdrr.io/r/base/character.html'>character()</a></code>) <br />
 A specification of which parameters are to be given confidence intervals among the variables for which inference was done, either a vector of numbers or a vector of names. If missing, all parameters are considered (default).</p></dd>
 
 <dt><code>joint</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>) <br />
@@ -388,7 +393,7 @@ The confidence level. Default is <code>0.95</code>.</p></dd>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
 <dt><code>learner</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br />
-The nuisance model/learner (see method <code>params_names</code>)</p></dd>
+The nuisance model/learner (see method <code>params_names</code>).</p></dd>
 
 <dt><code>treat_var</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br />
 The treatment varaible (hyperparameters can be set treatment-variable specific).</p></dd>

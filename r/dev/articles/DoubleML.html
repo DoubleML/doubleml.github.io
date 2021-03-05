@@ -116,20 +116,20 @@
 <span class="co"># Load bonus data</span>
 <span class="va">df_bonus</span> <span class="op">=</span> <span class="fu"><a href="../reference/fetch_bonus.html">fetch_bonus</a></span><span class="op">(</span>return_type<span class="op">=</span><span class="st">"data.table"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df_bonus</span><span class="op">)</span></code></pre></div>
-<pre><code>##     abdt tg inuidur1 inuidur2 female black hispanic othrace q1 q2 q3 q4 q5 q6
-## 1: 10824  0 2.890372       18      0     0        0       0  0  0  0  0  1  0
-## 2: 10824  0 0.000000        1      0     0        0       0  0  0  0  0  1  0
-## 3: 10747  0 3.295837       27      0     0        0       0  0  0  0  1  0  0
-## 4: 10607  1 2.197225        9      0     0        0       0  0  0  1  0  0  0
-## 5: 10831  0 3.295837       27      0     0        0       0  0  0  0  0  1  0
-## 6: 10845  0 3.295837       27      1     0        0       0  0  0  0  0  1  0
-##    recall agelt35 agegt54 durable nondurable lusd husd muld dep1 dep2
-## 1:      0       0       0       0          0    0    1    0    0    1
-## 2:      0       0       0       0          0    1    0    0    0    0
-## 3:      0       0       0       0          0    1    0    0    0    0
-## 4:      0       1       0       0          0    0    0    1    0    0
-## 5:      0       0       1       1          0    1    0    0    1    0
-## 6:      0       0       1       0          0    1    0    0    0    0</code></pre>
+<pre><code>##    inuidur1 female black othrace dep1 dep2 q2 q3 q4 q5 q6 agelt35 agegt54
+## 1: 2.890372      0     0       0    0    1  0  0  0  1  0       0       0
+## 2: 0.000000      0     0       0    0    0  0  0  0  1  0       0       0
+## 3: 3.295837      0     0       0    0    0  0  0  1  0  0       0       0
+## 4: 2.197225      0     0       0    0    0  0  1  0  0  0       1       0
+## 5: 3.295837      0     0       0    1    0  0  0  0  1  0       0       1
+## 6: 3.295837      1     0       0    0    0  0  0  0  1  0       0       1
+##    durable lusd husd tg
+## 1:       0    0    1  0
+## 2:       0    1    0  0
+## 3:       0    1    0  0
+## 4:       0    0    0  1
+## 5:       1    1    0  0
+## 6:       0    1    0  0</code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Simulate data</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">3141</span><span class="op">)</span>
@@ -166,7 +166,7 @@ D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">dml_data_bonus</span><span class="op">)</span></code></pre></div>
 <pre><code>## &lt;DoubleMLData&gt;
 ##   Public:
-##     all_variables: abdt tg inuidur1 inuidur2 female black hispanic othrace  ...
+##     all_variables: inuidur1 female black othrace dep1 dep2 q2 q3 q4 q5 q6 a ...
 ##     clone: function (deep = FALSE) 
 ##     d_cols: tg
 ##     data: data.table, data.frame
@@ -243,8 +243,11 @@ D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">3141</span><span class="op">)</span>
 <span class="va">obj_dml_plr_bonus</span> <span class="op">=</span> <span class="va"><a href="../reference/DoubleMLPLR.html">DoubleMLPLR</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dml_data_bonus</span>, ml_g<span class="op">=</span><span class="va">ml_g_bonus</span>, ml_m<span class="op">=</span><span class="va">ml_m_bonus</span><span class="op">)</span>
-<span class="va">obj_dml_plr_bonus</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">obj_dml_plr_bonus</span><span class="op">)</span></code></pre></div>
+<span class="va">obj_dml_plr_bonus</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## No parameters provided for learners. Default values are used.
+## No parameters provided for learners. Default values are used.</code></pre>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">obj_dml_plr_bonus</span><span class="op">)</span></code></pre></div>
 <pre><code>## ================= DoubleMLPLR Object ==================
 ## 
 ## 
@@ -274,10 +277,13 @@ D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,
 ## tg  -0.07385    0.03528  -2.093   0.0364 *
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">obj_dml_plr_sim</span> <span class="op">=</span> <span class="va"><a href="../reference/DoubleMLPLR.html">DoubleMLPLR</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dml_data_sim</span>, ml_g<span class="op">=</span><span class="va">ml_g_sim</span>, ml_m<span class="op">=</span><span class="va">ml_m_sim</span><span class="op">)</span>
-<span class="va">obj_dml_plr_sim</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">obj_dml_plr_sim</span><span class="op">)</span></code></pre></div>
+<span class="va">obj_dml_plr_sim</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## No parameters provided for learners. Default values are used.
+## No parameters provided for learners. Default values are used.</code></pre>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">obj_dml_plr_sim</span><span class="op">)</span></code></pre></div>
 <pre><code>## ================= DoubleMLPLR Object ==================
 ## 
 ## 
