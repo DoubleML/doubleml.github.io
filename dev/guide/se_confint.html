@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>7. Variance estimation, confidence intervals and multiplier bootstrap &#8212; DoubleML 0.2.dev0 documentation</title>
+    <title>7. Variance estimation and confidence intervals for a causal parameter of interest &#8212; DoubleML 0.2.dev0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet" />
   <link href="../_static/css/index.101715efdecc9b59cb6e1ddfa685c31f.css" rel="stylesheet" />
@@ -51,7 +51,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="8. Sample-splitting, cross-fitting and repeated cross-fitting" href="resampling.html" />
+    <link rel="next" title="8. Confidence bands and multiplier bootstrap for valid simultaneous inference" href="sim_inf.html" />
     <link rel="prev" title="6. Learners, hyperparameters and hyperparameter tuning" href="learners.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -179,17 +179,22 @@
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="learners.html">
-   6.  Machine learners, hyperparameters and hyperparameter tuning
+   6.  Learners, hyperparameters and hyperparameter tuning
   </a>
  </li>
  <li class="toctree-l2 current active">
   <a class="current reference internal" href="#">
-   7.  Variance estimation, confidence intervals and boostrap standard errors
+   7.  Variance estimation and confidence intervals for a causal parameter of interest
+  </a>
+ </li>
+ <li class="toctree-l2">
+  <a class="reference internal" href="sim_inf.html">
+   8.  Confidence bands and multiplier bootstrap for valid simultaneous inference
   </a>
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="resampling.html">
-   8.  Sample-splitting, cross-fitting and repeated cross-fitting
+   9.  Sample-splitting, cross-fitting and repeated cross-fitting
   </a>
  </li>
 </ul>
@@ -213,11 +218,6 @@
    7.1. Variance estimation
   </a>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#multiplier-bootstrap-and-joint-confidence-intervals">
-   7.2. Multiplier bootstrap and joint confidence intervals
-  </a>
- </li>
 </ul>
 
 </nav>
@@ -235,8 +235,8 @@
               
               <div>
                 
-  <div class="section" id="variance-estimation-confidence-intervals-and-multiplier-bootstrap">
-<span id="se-confint"></span><h1><span class="section-number">7. </span>Variance estimation, confidence intervals and multiplier bootstrap<a class="headerlink" href="#variance-estimation-confidence-intervals-and-multiplier-bootstrap" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="variance-estimation-and-confidence-intervals-for-a-causal-parameter-of-interest">
+<span id="se-confint"></span><h1><span class="section-number">7. </span>Variance estimation and confidence intervals for a causal parameter of interest<a class="headerlink" href="#variance-estimation-and-confidence-intervals-for-a-causal-parameter-of-interest" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="variance-estimation">
 <h2><span class="section-number">7.1. </span>Variance estimation<a class="headerlink" href="#variance-estimation" title="Permalink to this headline">¶</a></h2>
 <p>Under regularity conditions the estimator <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span> concentrates in a <span class="math notranslate nohighlight">\(1/\sqrt(N)\)</span>-neighborhood
@@ -255,8 +255,8 @@ of <span class="math notranslate nohighlight">\(\theta_0\)</span> and the sampli
 <p>As an example we consider a partially linear regression model (PLR)
 implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="3b9423f4-dfb1-47ab-a586-5dcef1583abb" name="23ca3157-7328-4925-aa31-4ac932acaf7d" type="radio">
-</input><label class="tabbed-label" for="3b9423f4-dfb1-47ab-a586-5dcef1583abb">
+<input checked="checked" id="a883ef36-15e3-4447-a94a-11c193bbcbc4" name="d109c766-5beb-49ef-9637-1781c848ced4" type="radio">
+</input><label class="tabbed-label" for="a883ef36-15e3-4447-a94a-11c193bbcbc4">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -284,8 +284,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="b62e9fee-3640-44da-b780-aa6504c83f55" name="23ca3157-7328-4925-aa31-4ac932acaf7d" type="radio">
-</input><label class="tabbed-label" for="b62e9fee-3640-44da-b780-aa6504c83f55">
+<input id="16cd7c34-c659-49b6-9a8f-79a5fab82c92" name="d109c766-5beb-49ef-9637-1781c848ced4" type="radio">
+</input><label class="tabbed-label" for="16cd7c34-c659-49b6-9a8f-79a5fab82c92">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -327,16 +327,16 @@ dml_plr_obj$fit()
 <p>The <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method of <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>
 stores the estimate <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span> in its <code class="docutils literal notranslate"><span class="pre">coef</span></code> attribute.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="ddf9562b-eefd-450f-9466-57a5671445a7" name="185afa85-10eb-45a0-8077-d1a06c921c15" type="radio">
-</input><label class="tabbed-label" for="ddf9562b-eefd-450f-9466-57a5671445a7">
+<input checked="checked" id="b9cdb067-8bbb-4968-9c00-ce788e203679" name="b3618e45-f1b6-42b4-bfa6-e0fbfb4942b7" type="radio">
+</input><label class="tabbed-label" for="b9cdb067-8bbb-4968-9c00-ce788e203679">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">coef</span><span class="p">)</span>
-<span class="go">[0.4629685]</span>
+<span class="go">[0.46280962]</span>
 </pre></div>
 </div>
 </div>
-<input id="b090ae71-39ac-49b8-a950-bf838d24e43d" name="185afa85-10eb-45a0-8077-d1a06c921c15" type="radio">
-</input><label class="tabbed-label" for="b090ae71-39ac-49b8-a950-bf838d24e43d">
+<input id="90b533cd-fbea-42b1-a468-750f44e3f8a8" name="b3618e45-f1b6-42b4-bfa6-e0fbfb4942b7" type="radio">
+</input><label class="tabbed-label" for="90b533cd-fbea-42b1-a468-750f44e3f8a8">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -355,16 +355,16 @@ R</label><div class="tabbed-content docutils">
 </div>
 <p>The asymptotic standard error <span class="math notranslate nohighlight">\(\hat{\sigma}/\sqrt{N}\)</span> is stored in its <code class="docutils literal notranslate"><span class="pre">se</span></code> attribute.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="c805f12f-b47d-41f4-aa31-767e74f14b64" name="5d31e830-7220-4f56-b424-011ee49a58f1" type="radio">
-</input><label class="tabbed-label" for="c805f12f-b47d-41f4-aa31-767e74f14b64">
+<input checked="checked" id="a64f32e9-c504-451e-84f0-380f540f769f" name="60a87de0-2f46-45a8-9f68-9de6e41254cd" type="radio">
+</input><label class="tabbed-label" for="a64f32e9-c504-451e-84f0-380f540f769f">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">se</span><span class="p">)</span>
-<span class="go">[0.04101795]</span>
+<span class="go">[0.04105558]</span>
 </pre></div>
 </div>
 </div>
-<input id="9c4d2292-5ecb-4811-acb3-a2b70474b63c" name="5d31e830-7220-4f56-b424-011ee49a58f1" type="radio">
-</input><label class="tabbed-label" for="9c4d2292-5ecb-4811-acb3-a2b70474b63c">
+<input id="09c75010-c0b1-412a-8878-48932f2bde23" name="60a87de0-2f46-45a8-9f68-9de6e41254cd" type="radio">
+</input><label class="tabbed-label" for="09c75010-c0b1-412a-8878-48932f2bde23">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -384,19 +384,19 @@ R</label><div class="tabbed-content docutils">
 <p>Additionally, the value of the <span class="math notranslate nohighlight">\(t\)</span>-statistic and the corresponding p-value are provided in the attributes
 <code class="docutils literal notranslate"><span class="pre">t_stat</span></code> and <code class="docutils literal notranslate"><span class="pre">pval</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="0e59bb25-cb51-4666-aab1-f22281997e71" name="54415de0-f0de-4fe7-9ebe-3c726963976a" type="radio">
-</input><label class="tabbed-label" for="0e59bb25-cb51-4666-aab1-f22281997e71">
+<input checked="checked" id="e0b2cd22-9356-4133-8b98-fb300bc69154" name="4544ce2f-5441-4642-a967-8d189831ff22" type="radio">
+</input><label class="tabbed-label" for="e0b2cd22-9356-4133-8b98-fb300bc69154">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">t_stat</span><span class="p">)</span>
-<span class="go">[11.2869741]</span>
+<span class="go">[11.27275855]</span>
 
 <span class="gp">In [16]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">pval</span><span class="p">)</span>
-<span class="go">[1.52186068e-29]</span>
+<span class="go">[1.78876317e-29]</span>
 </pre></div>
 </div>
 </div>
-<input id="80fd00c1-3261-49b9-9dbc-313619453660" name="54415de0-f0de-4fe7-9ebe-3c726963976a" type="radio">
-</input><label class="tabbed-label" for="80fd00c1-3261-49b9-9dbc-313619453660">
+<input id="a7c662c7-f4e5-44ff-ab0e-10eb4977ae32" name="4544ce2f-5441-4642-a967-8d189831ff22" type="radio">
+</input><label class="tabbed-label" for="a7c662c7-f4e5-44ff-ab0e-10eb4977ae32">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -429,17 +429,17 @@ confidence intervals.</p></li>
 </ul>
 </div>
 <div class="tabbed-set docutils">
-<input checked="checked" id="d9638601-0bc6-402d-9e0a-7f64d08d3a5a" name="093b36f2-b8f3-42b4-8ee9-e879b7167cb7" type="radio">
-</input><label class="tabbed-label" for="d9638601-0bc6-402d-9e0a-7f64d08d3a5a">
+<input checked="checked" id="03ef197a-2582-41ee-9035-f74a85b50000" name="7fb09fe0-4650-41ca-ae86-d63383d64f61" type="radio">
+</input><label class="tabbed-label" for="03ef197a-2582-41ee-9035-f74a85b50000">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [17]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.462968  0.041018  11.286974  1.521861e-29  0.382575  0.543362</span>
+<span class="go">      coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.46281  0.041056  11.272759  1.788763e-29  0.382342  0.543277</span>
 </pre></div>
 </div>
 </div>
-<input id="23b4b665-b210-4d29-b945-31ea820a0c66" name="093b36f2-b8f3-42b4-8ee9-e879b7167cb7" type="radio">
-</input><label class="tabbed-label" for="23b4b665-b210-4d29-b945-31ea820a0c66">
+<input id="811c2138-4082-42f5-9432-ddd0808643ff" name="7fb09fe0-4650-41ca-ae86-d63383d64f61" type="radio">
+</input><label class="tabbed-label" for="811c2138-4082-42f5-9432-ddd0808643ff">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -475,8 +475,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>A more detailed overview of the fitted model, its specifications and the summary can be obtained via the
 string-representation of the object.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="3f1e0a00-c9f9-4984-8b4a-d14db1084ef7" name="f3f93de5-f6c2-4bc9-a61b-b938f526bb6c" type="radio">
-</input><label class="tabbed-label" for="3f1e0a00-c9f9-4984-8b4a-d14db1084ef7">
+<input checked="checked" id="a18351b4-fa45-4667-ba7e-9ca8e59d61d3" name="712cfbbf-e144-4925-89b0-d23f96ef4db5" type="radio">
+</input><label class="tabbed-label" for="a18351b4-fa45-4667-ba7e-9ca8e59d61d3">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="p">)</span>
 <span class="go">================== DoubleMLPLR Object ==================</span>
@@ -502,13 +502,13 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">Apply cross-fitting: True</span>
 
 <span class="go">------------------ Fit summary       ------------------</span>
-<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.462968  0.041018  11.286974  1.521861e-29  0.382575  0.543362</span>
+<span class="go">      coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.46281  0.041056  11.272759  1.788763e-29  0.382342  0.543277</span>
 </pre></div>
 </div>
 </div>
-<input id="2ae33edb-9fee-472f-90d8-e017cf6a1396" name="f3f93de5-f6c2-4bc9-a61b-b938f526bb6c" type="radio">
-</input><label class="tabbed-label" for="2ae33edb-9fee-472f-90d8-e017cf6a1396">
+<input id="cf93dc7c-bb2b-4f65-8777-15fcc80433b1" name="712cfbbf-e144-4925-89b0-d23f96ef4db5" type="radio">
+</input><label class="tabbed-label" for="cf93dc7c-bb2b-4f65-8777-15fcc80433b1">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -555,178 +555,6 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 </div>
-<div class="section" id="multiplier-bootstrap-and-joint-confidence-intervals">
-<h2><span class="section-number">7.2. </span>Multiplier bootstrap and joint confidence intervals<a class="headerlink" href="#multiplier-bootstrap-and-joint-confidence-intervals" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">bootstrap()</span></code> method provides an implementation of a multiplier bootstrap for double machine learning models.
-For <span class="math notranslate nohighlight">\(b=1, \ldots, B\)</span> weights <span class="math notranslate nohighlight">\(\xi_{i, b}\)</span> are generated according to a normal (Gaussian) bootstrap, wild
-bootstrap or exponential bootstrap.
-The number of bootstrap samples is provided as input <code class="docutils literal notranslate"><span class="pre">n_rep_boot</span></code> and for <code class="docutils literal notranslate"><span class="pre">method</span></code> one can choose <code class="docutils literal notranslate"><span class="pre">'Bayes'</span></code>,
-<code class="docutils literal notranslate"><span class="pre">'normal'</span></code> or <code class="docutils literal notranslate"><span class="pre">'wild'</span></code>.
-Based on the estimates of the standard errors given by</p>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\hat{\sigma}^2 &amp;= \hat{J}_0^{-2} \frac{1}{N} \sum_{k=1}^{K} \sum_{i \in I_k} \big[\psi(W_i; \tilde{\theta}_0, \hat{\eta}_{0,k})\big]^2,\\\hat{J}_0 &amp;= \frac{1}{N} \sum_{k=1}^{K} \sum_{i \in I_k} \psi_a(W_i; \hat{\eta}_{0,k}),\end{aligned}\end{align} \]</div>
-<p>we obtain bootstrap coefficients <span class="math notranslate nohighlight">\(\theta^*_b\)</span> and bootstrap t-statistics <span class="math notranslate nohighlight">\(t^*_b\)</span></p>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\theta^*_b &amp;= \frac{1}{\sqrt{N} \hat{J}_0}\sum_{k=1}^{K} \sum_{i \in I_k} \xi_{i, b} \cdot \psi(W_i; \tilde{\theta}_0, \hat{\eta}_{0,k}),\\t^*_b &amp;= \frac{1}{\sqrt{N} \hat{J}_0 \hat{\sigma}} \sum_{k=1}^{K} \sum_{i \in I_k} \xi_{i, b} \cdot \psi(W_i; \tilde{\theta}_0, \hat{\eta}_{0,k}).\end{aligned}\end{align} \]</div>
-<p>To demonstrate the bootstrap, we simulate data from a sparse partially linear regression model.
-Then we estimate the PLR model and perform the multiplier bootstrap.
-Joint confidence intervals based on the multiplier bootstrap are then obtained with the method <code class="docutils literal notranslate"><span class="pre">confint()</span></code>.
-Besides that, a multiple hypotheses testing adjustment of p-values from a high-dimensional model can be obtained with
-the method <code class="docutils literal notranslate"><span class="pre">p_adjust</span></code>.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="0cd6d9a4-22b5-4237-a739-039f83764b08" name="9871d3ec-acde-4a51-938f-6d94896c8018" type="radio">
-</input><label class="tabbed-label" for="0cd6d9a4-22b5-4237-a739-039f83764b08">
-Python</label><div class="tabbed-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [19]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
-
-<span class="gp">In [20]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="gp">In [21]: </span><span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">clone</span>
-
-<span class="gp">In [22]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span>
-
-<span class="go"># Simulate data</span>
-<span class="gp">In [23]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
-
-<span class="gp">In [24]: </span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">500</span>
-
-<span class="gp">In [25]: </span><span class="n">n_vars</span> <span class="o">=</span> <span class="mi">100</span>
-
-<span class="gp">In [26]: </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">))</span>
-
-<span class="gp">In [27]: </span><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])</span>
-
-<span class="gp">In [28]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
-
-<span class="gp">In [29]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">:],</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span>
-
-<span class="gp">In [30]: </span><span class="n">learner</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span>
-
-<span class="gp">In [31]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
-
-<span class="gp">In [32]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
-
-<span class="gp">In [33]: </span><span class="n">dml_plr</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
-
-<span class="gp">In [34]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-<span class="go">        2.5 %    97.5 %</span>
-<span class="go">d1   2.813342  3.055680</span>
-<span class="go">d2   2.815224  3.083258</span>
-<span class="go">d3   2.860663  3.109069</span>
-<span class="go">d4  -0.141546  0.091391</span>
-<span class="go">d5  -0.060845  0.176929</span>
-<span class="go">d6  -0.158697  0.078474</span>
-<span class="go">d7  -0.172022  0.062964</span>
-<span class="go">d8  -0.067721  0.174499</span>
-<span class="go">d9  -0.092365  0.139491</span>
-<span class="go">d10 -0.110717  0.138698</span>
-
-<span class="gp">In [35]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr</span><span class="o">.</span><span class="n">p_adjust</span><span class="p">())</span>
-<span class="go">         coef   pval</span>
-<span class="go">d1   2.934511  0.000</span>
-<span class="go">d2   2.949241  0.000</span>
-<span class="go">d3   2.984866  0.000</span>
-<span class="go">d4  -0.025077  0.850</span>
-<span class="go">d5   0.058042  0.492</span>
-<span class="go">d6  -0.040112  0.850</span>
-<span class="go">d7  -0.054529  0.850</span>
-<span class="go">d8   0.053389  0.514</span>
-<span class="go">d9   0.023563  0.802</span>
-<span class="go">d10  0.013990  0.850</span>
-</pre></div>
-</div>
-</div>
-<input id="8c6f346c-91a0-4397-8350-1606d4b4fb53" name="9871d3ec-acde-4a51-938f-6d94896c8018" type="radio">
-</input><label class="tabbed-label" for="8c6f346c-91a0-4397-8350-1606d4b4fb53">
-R</label><div class="tabbed-content docutils">
-<div class="jupyter_cell jupyter_container docutils container">
-<div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span>library(DoubleML)
-library(mlr3)
-library(data.table)
-
-set.seed(3141)
-n_obs = 500
-n_vars = 100
-theta = rep(3, 3)
-X = matrix(stats::rnorm(n_obs * n_vars), nrow = n_obs, ncol = n_vars)
-y = X[, 1:3, drop = FALSE] %*% theta  + stats::rnorm(n_obs)
-dml_data = double_ml_data_from_matrix(X = X[, 11:n_vars], y = y, d = X[,1:10])
-
-learner = lrn(&quot;regr.cv_glmnet&quot;, s=&quot;lambda.min&quot;)
-ml_g = learner$clone()
-ml_m = learner$clone()
-dml_plr = DoubleMLPLR$new(dml_data, ml_g, ml_m)
-
-dml_plr$fit()
-dml_plr$bootstrap()
-dml_plr$confint(joint=TRUE)
-dml_plr$p_adjust()
-</pre></div>
-</td></tr></table></div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><table class="dataframe">
-<caption>A matrix: 10 × 2 of type dbl</caption>
-<thead>
-	<tr><th></th><th scope=col>2.5 %</th><th scope=col>97.5 %</th></tr>
-</thead>
-<tbody>
-	<tr><th scope=row>d1</th><td> 2.89027368</td><td>3.14532650</td></tr>
-	<tr><th scope=row>d2</th><td> 2.90794478</td><td>3.14368145</td></tr>
-	<tr><th scope=row>d3</th><td> 2.87430335</td><td>3.12752825</td></tr>
-	<tr><th scope=row>d4</th><td>-0.14790924</td><td>0.07828372</td></tr>
-	<tr><th scope=row>d5</th><td>-0.09779675</td><td>0.16803512</td></tr>
-	<tr><th scope=row>d6</th><td>-0.12105472</td><td>0.12539340</td></tr>
-	<tr><th scope=row>d7</th><td>-0.16536299</td><td>0.09310496</td></tr>
-	<tr><th scope=row>d8</th><td>-0.10127930</td><td>0.14200098</td></tr>
-	<tr><th scope=row>d9</th><td>-0.13868238</td><td>0.09980311</td></tr>
-	<tr><th scope=row>d10</th><td>-0.04444978</td><td>0.19680840</td></tr>
-</tbody>
-</table>
-</div><div class="output text_html"><table class="dataframe">
-<caption>A matrix: 10 × 2 of type dbl</caption>
-<thead>
-	<tr><th></th><th scope=col>Estimate.</th><th scope=col>pval</th></tr>
-</thead>
-<tbody>
-	<tr><th scope=row>d1</th><td> 3.017800092</td><td>0.000</td></tr>
-	<tr><th scope=row>d2</th><td> 3.025813114</td><td>0.000</td></tr>
-	<tr><th scope=row>d3</th><td> 3.000915799</td><td>0.000</td></tr>
-	<tr><th scope=row>d4</th><td>-0.034812763</td><td>0.938</td></tr>
-	<tr><th scope=row>d5</th><td> 0.035119185</td><td>0.938</td></tr>
-	<tr><th scope=row>d6</th><td> 0.002169338</td><td>0.958</td></tr>
-	<tr><th scope=row>d7</th><td>-0.036129015</td><td>0.938</td></tr>
-	<tr><th scope=row>d8</th><td> 0.020360838</td><td>0.954</td></tr>
-	<tr><th scope=row>d9</th><td>-0.019439633</td><td>0.954</td></tr>
-	<tr><th scope=row>d10</th><td> 0.076179312</td><td>0.428</td></tr>
-</tbody>
-</table>
-</div></div>
-</div>
-</div>
-</div>
-</div>
 </div>
 
 
@@ -736,7 +564,7 @@ dml_plr$p_adjust()
               <div class='prev-next-bottom'>
                 
     <a class='left-prev' id="prev-link" href="learners.html" title="previous page"><span class="section-number">6. </span>Learners, hyperparameters and hyperparameter tuning</a>
-    <a class='right-next' id="next-link" href="resampling.html" title="next page"><span class="section-number">8. </span>Sample-splitting, cross-fitting and repeated cross-fitting</a>
+    <a class='right-next' id="next-link" href="sim_inf.html" title="next page"><span class="section-number">8. </span>Confidence bands and multiplier bootstrap for valid simultaneous inference</a>
 
               </div>
               

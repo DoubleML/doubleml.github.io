@@ -179,17 +179,22 @@
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="learners.html">
-   6.  Machine learners, hyperparameters and hyperparameter tuning
+   6.  Learners, hyperparameters and hyperparameter tuning
   </a>
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="se_confint.html">
-   7.  Variance estimation, confidence intervals and boostrap standard errors
+   7.  Variance estimation and confidence intervals for a causal parameter of interest
+  </a>
+ </li>
+ <li class="toctree-l2">
+  <a class="reference internal" href="sim_inf.html">
+   8.  Confidence bands and multiplier bootstrap for valid simultaneous inference
   </a>
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="resampling.html">
-   8.  Sample-splitting, cross-fitting and repeated cross-fitting
+   9.  Sample-splitting, cross-fitting and repeated cross-fitting
   </a>
  </li>
 </ul>
@@ -244,13 +249,13 @@ demonstrated in the following. We download the Bonus data set from the Pennsylva
 <ul class="simple">
 <li><p>In Python we use <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> and <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>.
 The data can be fetched via <a class="reference internal" href="../api/generated/doubleml.datasets.fetch_bonus.html#doubleml.datasets.fetch_bonus" title="doubleml.datasets.fetch_bonus"><code class="xref py py-func docutils literal notranslate"><span class="pre">doubleml.datasets.fetch_bonus()</span></code></a>.</p></li>
-<li><p>In R we use <cite>data.table::data.table()</cite>, <cite>data.frame()</cite>, and <cite>matrix()</cite>.
-The data can be fetched via <cite>DoubleML::fetch_bonus()</cite>.</p></li>
+<li><p>In R we use <a class="reference external" href="https://rdatatable.gitlab.io/data.table/reference/data.table.html">data.table::data.table()</a>, <a class="reference external" href="https://rdrr.io/r/base/data.frame.html">data.frame()</a>, and <a class="reference external" href="https://rdrr.io/r/base/matrix.html">matrix()</a>.
+The data can be fetched via <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/fetch_bonus.html">DoubleML::fetch_bonus()</a></p></li>
 </ul>
 </div>
 <div class="tabbed-set docutils">
-<input checked="checked" id="617e9cb1-8e3e-4ab9-ad5f-98b0dfb78116" name="686c5560-2aa1-4199-93e3-47e4e7dc8266" type="radio">
-</input><label class="tabbed-label" for="617e9cb1-8e3e-4ab9-ad5f-98b0dfb78116">
+<input checked="checked" id="fc39b8af-e904-47f5-8a48-c1f59af03cc9" name="d57f350a-d56a-4540-85a2-63e5e46d3ac4" type="radio">
+</input><label class="tabbed-label" for="fc39b8af-e904-47f5-8a48-c1f59af03cc9">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">fetch_bonus</span>
 
@@ -270,8 +275,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="dd7ae601-847d-40a9-b0a8-26fd582e9b14" name="686c5560-2aa1-4199-93e3-47e4e7dc8266" type="radio">
-</input><label class="tabbed-label" for="dd7ae601-847d-40a9-b0a8-26fd582e9b14">
+<input id="c6a3f703-8709-404c-9039-f09b850e231a" name="d57f350a-d56a-4540-85a2-63e5e46d3ac4" type="radio">
+</input><label class="tabbed-label" for="c6a3f703-8709-404c-9039-f09b850e231a">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -334,19 +339,19 @@ R</label><div class="tabbed-content docutils">
 <h2><span class="section-number">2.1. </span>DoubleMLData from dataframes<a class="headerlink" href="#doublemldata-from-dataframes" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> class serves as data-backend and can be initialized from a dataframe by
 specifying the column <code class="docutils literal notranslate"><span class="pre">y_col='inuidur1'</span></code> serving as outcome variable <span class="math notranslate nohighlight">\(Y\)</span>, the column(s) <code class="docutils literal notranslate"><span class="pre">d_cols</span> <span class="pre">=</span> <span class="pre">'tg'</span></code>
-serving as treatment variable <span class="math notranslate nohighlight">\(D\)</span> and the columns <code class="docutils literal notranslate"><span class="pre">x_cols=</span></code> specifying the confounders.</p>
+serving as treatment variable <span class="math notranslate nohighlight">\(D\)</span> and the columns <code class="docutils literal notranslate"><span class="pre">x_cols</span></code> specifying the confounders.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>In Python we use <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>
 and the API reference can be found here <a class="reference internal" href="../api/generated/doubleml.DoubleMLData.html#doubleml.DoubleMLData" title="doubleml.DoubleMLData"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLData</span></code></a>.</p></li>
-<li><p>In R we use <cite>data.table::data.table()</cite> and the API reference can be found here <cite>DoubleML::DoubleMLData</cite>.</p></li>
-<li><p>For initialization from the R base class <cite>data.frame()</cite> the API reference can be found here <cite>DoubleML::data_ml_from_data_frame()</cite>.</p></li>
+<li><p>In R we use <a class="reference external" href="https://rdatatable.gitlab.io/data.table/reference/data.table.html">data.table::data.table()</a> and the API reference can be found here <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLData.html">DoubleML::DoubleMLData</a>.</p></li>
+<li><p>For initialization from the R base class <a class="reference external" href="https://rdrr.io/r/base/data.frame.html">data.frame()</a> the API reference can be found here <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/double_ml_data_from_data_frame.html">DoubleML::double_ml_data_from_data_frame()</a>.</p></li>
 </ul>
 </div>
 <div class="tabbed-set docutils">
-<input checked="checked" id="7815a8d6-15e1-4cf7-ac1c-df637a65d5d7" name="1d17c690-410c-4cb0-bb90-5a5692637428" type="radio">
-</input><label class="tabbed-label" for="7815a8d6-15e1-4cf7-ac1c-df637a65d5d7">
+<input checked="checked" id="85a10770-6262-42f8-8c61-3599fcda5066" name="6a0fbeb3-c0d0-4579-8d6d-e6969d7bdb32" type="radio">
+</input><label class="tabbed-label" for="85a10770-6262-42f8-8c61-3599fcda5066">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLData</span>
 
@@ -375,8 +380,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="f4f224eb-da2b-4740-8f98-d84d0ede9921" name="1d17c690-410c-4cb0-bb90-5a5692637428" type="radio">
-</input><label class="tabbed-label" for="f4f224eb-da2b-4740-8f98-d84d0ede9921">
+<input id="db136370-5e07-4a7e-b30f-7b52b7a5af15" name="6a0fbeb3-c0d0-4579-8d6d-e6969d7bdb32" type="radio">
+</input><label class="tabbed-label" for="db136370-5e07-4a7e-b30f-7b52b7a5af15">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -489,13 +494,13 @@ variable <code class="docutils literal notranslate"><span class="pre">y</span></
 <ul class="simple">
 <li><p>In python we use <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>.
 and the API reference can be found here <a class="reference internal" href="../api/generated/doubleml.DoubleMLData.html#doubleml.DoubleMLData.from_arrays" title="doubleml.DoubleMLData.from_arrays"><code class="xref py py-func docutils literal notranslate"><span class="pre">doubleml.DoubleMLData.from_arrays()</span></code></a>.</p></li>
-<li><p>In R we use the R base class <cite>matrix()</cite>
-and the API reference can be found here <cite>DoubleML::double_ml_data_from_matrix()</cite>.</p></li>
+<li><p>In R we use the R base class <a class="reference external" href="https://rdrr.io/r/base/matrix.html">matrix()</a>
+and the API reference can be found here <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/double_ml_data_from_matrix.html">DoubleML::double_ml_data_from_matrix()</a>.</p></li>
 </ul>
 </div>
 <div class="tabbed-set docutils">
-<input checked="checked" id="fa892e7e-2ce5-43ea-a4ea-613e5bd4b718" name="57075898-8ec0-43c3-b893-bee837f62839" type="radio">
-</input><label class="tabbed-label" for="fa892e7e-2ce5-43ea-a4ea-613e5bd4b718">
+<input checked="checked" id="e3a6bf38-533d-4fa2-b7bd-bd5be0bf8570" name="7badea12-5105-4b47-a771-5d6cc178a34b" type="radio">
+</input><label class="tabbed-label" for="e3a6bf38-533d-4fa2-b7bd-bd5be0bf8570">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -516,8 +521,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="097ef8b1-9fca-40d5-a19b-517b561675b0" name="57075898-8ec0-43c3-b893-bee837f62839" type="radio">
-</input><label class="tabbed-label" for="097ef8b1-9fca-40d5-a19b-517b561675b0">
+<input id="7e4d4b5d-8222-4c33-b7df-78a884339bbb" name="7badea12-5105-4b47-a771-5d6cc178a34b" type="radio">
+</input><label class="tabbed-label" for="7e4d4b5d-8222-4c33-b7df-78a884339bbb">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -546,8 +551,8 @@ R</label><div class="tabbed-content docutils">
 </div>
 <p>To specify the data and the variables for the causal model from arrays we call</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="8b108e19-a64a-472d-9122-eed4251a8ca7" name="9eddf370-e967-4d38-b9dd-70b8805661ad" type="radio">
-</input><label class="tabbed-label" for="8b108e19-a64a-472d-9122-eed4251a8ca7">
+<input checked="checked" id="ae5084c1-a068-4e75-883d-c3b9f3156b4d" name="7c5776b6-71fe-42d7-a9f5-910f7fd14547" type="radio">
+</input><label class="tabbed-label" for="ae5084c1-a068-4e75-883d-c3b9f3156b4d">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLData</span>
 
@@ -568,8 +573,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="bc5f9ae9-42ef-4e67-9540-b45b9409bb9b" name="9eddf370-e967-4d38-b9dd-70b8805661ad" type="radio">
-</input><label class="tabbed-label" for="bc5f9ae9-42ef-4e67-9540-b45b9409bb9b">
+<input id="eb937895-e278-4a67-9119-cadf3ca1b886" name="7c5776b6-71fe-42d7-a9f5-910f7fd14547" type="radio">
+</input><label class="tabbed-label" for="eb937895-e278-4a67-9119-cadf3ca1b886">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
