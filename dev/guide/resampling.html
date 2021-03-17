@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>9. Sample-splitting, cross-fitting and repeated cross-fitting &#8212; DoubleML 0.2.dev0 documentation</title>
+    <title>8. Sample-splitting, cross-fitting and repeated cross-fitting &#8212; DoubleML 0.2.dev0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet" />
   <link href="../_static/css/index.101715efdecc9b59cb6e1ddfa685c31f.css" rel="stylesheet" />
@@ -52,7 +52,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Examples" href="../auto_examples/index.html" />
-    <link rel="prev" title="8. Confidence bands and multiplier bootstrap for valid simultaneous inference" href="sim_inf.html" />
+    <link rel="prev" title="7. Variance estimation, confidence intervals and multiplier bootstrap" href="se_confint.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
   </head>
@@ -179,22 +179,17 @@
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="learners.html">
-   6.  Learners, hyperparameters and hyperparameter tuning
+   6.  Machine learners, hyperparameters and hyperparameter tuning
   </a>
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="se_confint.html">
-   7.  Variance estimation and confidence intervals for a causal parameter of interest
-  </a>
- </li>
- <li class="toctree-l2">
-  <a class="reference internal" href="sim_inf.html">
-   8.  Confidence bands and multiplier bootstrap for valid simultaneous inference
+   7.  Variance estimation, confidence intervals and boostrap standard errors
   </a>
  </li>
  <li class="toctree-l2 current active">
   <a class="current reference internal" href="#">
-   9.  Sample-splitting, cross-fitting and repeated cross-fitting
+   8.  Sample-splitting, cross-fitting and repeated cross-fitting
   </a>
  </li>
 </ul>
@@ -215,7 +210,7 @@
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#cross-fitting-with-k-folds">
-   9.1. Cross-fitting with
+   8.1. Cross-fitting with
    <span class="math notranslate nohighlight">
     \(K\)
    </span>
@@ -224,7 +219,7 @@
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#repeated-cross-fitting-with-k-folds-and-m-repetition">
-   9.2. Repeated cross-fitting with
+   8.2. Repeated cross-fitting with
    <span class="math notranslate nohighlight">
     \(K\)
    </span>
@@ -237,17 +232,17 @@
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#externally-provide-a-sample-splitting-partition">
-   9.3. Externally provide a sample splitting / partition
+   8.3. Externally provide a sample splitting / partition
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#sample-splitting-without-cross-fitting">
-   9.4. Sample-splitting without cross-fitting
+   8.4. Sample-splitting without cross-fitting
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#estimate-dml-models-without-sample-splitting">
-   9.5. Estimate DML models without sample-splitting
+   8.5. Estimate DML models without sample-splitting
   </a>
  </li>
 </ul>
@@ -268,7 +263,7 @@
               <div>
                 
   <div class="section" id="sample-splitting-cross-fitting-and-repeated-cross-fitting">
-<span id="resampling"></span><h1><span class="section-number">9. </span>Sample-splitting, cross-fitting and repeated cross-fitting<a class="headerlink" href="#sample-splitting-cross-fitting-and-repeated-cross-fitting" title="Permalink to this headline">¶</a></h1>
+<span id="resampling"></span><h1><span class="section-number">8. </span>Sample-splitting, cross-fitting and repeated cross-fitting<a class="headerlink" href="#sample-splitting-cross-fitting-and-repeated-cross-fitting" title="Permalink to this headline">¶</a></h1>
 <p>Sample-splitting and the application of cross-fitting is a central part of double/debiased machine learning (DML).
 For all DML models
 <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>,
@@ -282,8 +277,8 @@ Advanced resampling techniques can be obtained via the boolean parameters
 <p>As an example we consider a partially linear regression model (PLR)
 implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="aef71ad7-ac8a-4700-8080-0d1228819af7" name="0f803438-d45b-4e05-937d-0e457d9bd0a9" type="radio">
-</input><label class="tabbed-label" for="aef71ad7-ac8a-4700-8080-0d1228819af7">
+<input checked="checked" id="d4178e80-bd18-44fb-8555-6177eab977a5" name="434d4945-ed79-4ded-8ee0-26fdb1e03698" type="radio">
+</input><label class="tabbed-label" for="d4178e80-bd18-44fb-8555-6177eab977a5">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -307,8 +302,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="11fdab44-2344-44ef-92a8-d8719331bfff" name="0f803438-d45b-4e05-937d-0e457d9bd0a9" type="radio">
-</input><label class="tabbed-label" for="11fdab44-2344-44ef-92a8-d8719331bfff">
+<input id="3389e76a-8d18-4b49-a621-8e7a9e713f5e" name="434d4945-ed79-4ded-8ee0-26fdb1e03698" type="radio">
+</input><label class="tabbed-label" for="3389e76a-8d18-4b49-a621-8e7a9e713f5e">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -346,12 +341,12 @@ obj_dml_data = DoubleMLData$new(data,
 </div>
 </div>
 <div class="section" id="cross-fitting-with-k-folds">
-<span id="k-fold-cross-fitting"></span><h2><span class="section-number">9.1. </span>Cross-fitting with <span class="math notranslate nohighlight">\(K\)</span> folds<a class="headerlink" href="#cross-fitting-with-k-folds" title="Permalink to this headline">¶</a></h2>
+<span id="k-fold-cross-fitting"></span><h2><span class="section-number">8.1. </span>Cross-fitting with <span class="math notranslate nohighlight">\(K\)</span> folds<a class="headerlink" href="#cross-fitting-with-k-folds" title="Permalink to this headline">¶</a></h2>
 <p>The default setting is <code class="docutils literal notranslate"><span class="pre">n_folds</span> <span class="pre">=</span> <span class="pre">5</span></code> and <code class="docutils literal notranslate"><span class="pre">n_rep</span> <span class="pre">=</span> <span class="pre">1</span></code>, i.e.,
 <span class="math notranslate nohighlight">\(K=5\)</span> folds and no repeated cross-fitting.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="338eab3d-096e-4c3a-ae04-2baa1b9ba692" name="096dff24-bae4-41e0-b5f9-02e79a3f5133" type="radio">
-</input><label class="tabbed-label" for="338eab3d-096e-4c3a-ae04-2baa1b9ba692">
+<input checked="checked" id="8f33fdff-9548-48bc-913a-b76659adc577" name="e1793695-6595-4197-a588-dac5928d0d4d" type="radio">
+</input><label class="tabbed-label" for="8f33fdff-9548-48bc-913a-b76659adc577">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">n_folds</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_rep</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -363,8 +358,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="b7128e8e-4ab2-47ad-ba0a-d10ec32aa492" name="096dff24-bae4-41e0-b5f9-02e79a3f5133" type="radio">
-</input><label class="tabbed-label" for="b7128e8e-4ab2-47ad-ba0a-d10ec32aa492">
+<input id="311d4bd0-9894-4f8d-9922-38e6eeeb42c8" name="e1793695-6595-4197-a588-dac5928d0d4d" type="radio">
+</input><label class="tabbed-label" for="311d4bd0-9894-4f8d-9922-38e6eeeb42c8">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -391,8 +386,8 @@ print(dml_plr_obj$n_rep)
 partition <span class="math notranslate nohighlight">\((I_k)_{k=1}^{K}\)</span> of observation indices is generated.
 The <span class="math notranslate nohighlight">\(K\)</span>-fold random partition is stored in the <code class="docutils literal notranslate"><span class="pre">smpls</span></code> attribute of the DML model object.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="82cdb385-1707-4ceb-8314-e3f7c9f4afb1" name="a18e5f18-f099-41e0-94f2-4ce58170a430" type="radio">
-</input><label class="tabbed-label" for="82cdb385-1707-4ceb-8314-e3f7c9f4afb1">
+<input checked="checked" id="0116a9bc-e479-4c04-b194-f9b19e6d494d" name="8499efe8-7251-4ec6-b3c3-53d7dad1bf7b" type="radio">
+</input><label class="tabbed-label" for="0116a9bc-e479-4c04-b194-f9b19e6d494d">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">smpls</span><span class="p">)</span>
 <span class="go">[[(array([ 0,  2,  3,  4,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 19,</span>
@@ -424,8 +419,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="482c3a98-361b-474d-a726-1888ecfb1ea6" name="a18e5f18-f099-41e0-94f2-4ce58170a430" type="radio">
-</input><label class="tabbed-label" for="482c3a98-361b-474d-a726-1888ecfb1ea6">
+<input id="812588ff-9bda-4ee8-b6d0-7cc5ae0d8bac" name="8499efe8-7251-4ec6-b3c3-53d7dad1bf7b" type="radio">
+</input><label class="tabbed-label" for="812588ff-9bda-4ee8-b6d0-7cc5ae0d8bac">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -443,35 +438,35 @@ R</label><div class="tabbed-content docutils">
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>3</li><li>4</li><li>6</li><li>10</li><li>19</li><li>26</li><li>29</li><li>32</li><li>54</li><li>56</li><li>60</li><li>61</li><li>64</li><li>65</li><li>75</li><li>79</li><li>84</li><li>87</li><li>91</li><li>98</li><li>11</li><li>12</li><li>21</li><li>25</li><li>27</li><li>28</li><li>33</li><li>35</li><li>45</li><li>48</li><li>55</li><li>58</li><li>59</li><li>73</li><li>80</li><li>81</li><li>85</li><li>86</li><li>88</li><li>90</li><li>7</li><li>8</li><li>9</li><li>16</li><li>23</li><li>24</li><li>37</li><li>38</li><li>44</li><li>47</li><li>50</li><li>57</li><li>63</li><li>66</li><li>67</li><li>74</li><li>82</li><li>83</li><li>89</li><li>93</li><li>1</li><li>5</li><li>13</li><li>14</li><li>15</li><li>20</li><li>30</li><li>39</li><li>40</li><li>42</li><li>46</li><li>51</li><li>53</li><li>68</li><li>69</li><li>70</li><li>77</li><li>95</li><li>96</li><li>99</li></ol>
+<ol class=list-inline><li>3</li><li>9</li><li>10</li><li>15</li><li>17</li><li>24</li><li>28</li><li>31</li><li>45</li><li>46</li><li>48</li><li>50</li><li>62</li><li>71</li><li>75</li><li>76</li><li>82</li><li>85</li><li>98</li><li>100</li><li>6</li><li>11</li><li>14</li><li>32</li><li>34</li><li>39</li><li>44</li><li>47</li><li>49</li><li>51</li><li>52</li><li>53</li><li>67</li><li>68</li><li>69</li><li>88</li><li>90</li><li>95</li><li>96</li><li>99</li><li>1</li><li>5</li><li>8</li><li>19</li><li>27</li><li>38</li><li>41</li><li>55</li><li>57</li><li>58</li><li>59</li><li>64</li><li>72</li><li>73</li><li>77</li><li>78</li><li>83</li><li>86</li><li>93</li><li>94</li><li>2</li><li>7</li><li>12</li><li>13</li><li>16</li><li>20</li><li>23</li><li>25</li><li>26</li><li>29</li><li>36</li><li>37</li><li>42</li><li>60</li><li>63</li><li>74</li><li>79</li><li>81</li><li>89</li><li>92</li></ol>
 </li>
 	<li><style>
 .list-inline {list-style: none; margin:0; padding: 0}
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>2</li><li>17</li><li>18</li><li>22</li><li>31</li><li>34</li><li>36</li><li>41</li><li>43</li><li>49</li><li>52</li><li>62</li><li>71</li><li>72</li><li>76</li><li>78</li><li>92</li><li>94</li><li>97</li><li>100</li><li>11</li><li>12</li><li>21</li><li>25</li><li>27</li><li>28</li><li>33</li><li>35</li><li>45</li><li>48</li><li>55</li><li>58</li><li>59</li><li>73</li><li>80</li><li>81</li><li>85</li><li>86</li><li>88</li><li>90</li><li>7</li><li>8</li><li>9</li><li>16</li><li>23</li><li>24</li><li>37</li><li>38</li><li>44</li><li>47</li><li>50</li><li>57</li><li>63</li><li>66</li><li>67</li><li>74</li><li>82</li><li>83</li><li>89</li><li>93</li><li>1</li><li>5</li><li>13</li><li>14</li><li>15</li><li>20</li><li>30</li><li>39</li><li>40</li><li>42</li><li>46</li><li>51</li><li>53</li><li>68</li><li>69</li><li>70</li><li>77</li><li>95</li><li>96</li><li>99</li></ol>
+<ol class=list-inline><li>4</li><li>18</li><li>21</li><li>22</li><li>30</li><li>33</li><li>35</li><li>40</li><li>43</li><li>54</li><li>56</li><li>61</li><li>65</li><li>66</li><li>70</li><li>80</li><li>84</li><li>87</li><li>91</li><li>97</li><li>6</li><li>11</li><li>14</li><li>32</li><li>34</li><li>39</li><li>44</li><li>47</li><li>49</li><li>51</li><li>52</li><li>53</li><li>67</li><li>68</li><li>69</li><li>88</li><li>90</li><li>95</li><li>96</li><li>99</li><li>1</li><li>5</li><li>8</li><li>19</li><li>27</li><li>38</li><li>41</li><li>55</li><li>57</li><li>58</li><li>59</li><li>64</li><li>72</li><li>73</li><li>77</li><li>78</li><li>83</li><li>86</li><li>93</li><li>94</li><li>2</li><li>7</li><li>12</li><li>13</li><li>16</li><li>20</li><li>23</li><li>25</li><li>26</li><li>29</li><li>36</li><li>37</li><li>42</li><li>60</li><li>63</li><li>74</li><li>79</li><li>81</li><li>89</li><li>92</li></ol>
 </li>
 	<li><style>
 .list-inline {list-style: none; margin:0; padding: 0}
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>2</li><li>17</li><li>18</li><li>22</li><li>31</li><li>34</li><li>36</li><li>41</li><li>43</li><li>49</li><li>52</li><li>62</li><li>71</li><li>72</li><li>76</li><li>78</li><li>92</li><li>94</li><li>97</li><li>100</li><li>3</li><li>4</li><li>6</li><li>10</li><li>19</li><li>26</li><li>29</li><li>32</li><li>54</li><li>56</li><li>60</li><li>61</li><li>64</li><li>65</li><li>75</li><li>79</li><li>84</li><li>87</li><li>91</li><li>98</li><li>7</li><li>8</li><li>9</li><li>16</li><li>23</li><li>24</li><li>37</li><li>38</li><li>44</li><li>47</li><li>50</li><li>57</li><li>63</li><li>66</li><li>67</li><li>74</li><li>82</li><li>83</li><li>89</li><li>93</li><li>1</li><li>5</li><li>13</li><li>14</li><li>15</li><li>20</li><li>30</li><li>39</li><li>40</li><li>42</li><li>46</li><li>51</li><li>53</li><li>68</li><li>69</li><li>70</li><li>77</li><li>95</li><li>96</li><li>99</li></ol>
+<ol class=list-inline><li>4</li><li>18</li><li>21</li><li>22</li><li>30</li><li>33</li><li>35</li><li>40</li><li>43</li><li>54</li><li>56</li><li>61</li><li>65</li><li>66</li><li>70</li><li>80</li><li>84</li><li>87</li><li>91</li><li>97</li><li>3</li><li>9</li><li>10</li><li>15</li><li>17</li><li>24</li><li>28</li><li>31</li><li>45</li><li>46</li><li>48</li><li>50</li><li>62</li><li>71</li><li>75</li><li>76</li><li>82</li><li>85</li><li>98</li><li>100</li><li>1</li><li>5</li><li>8</li><li>19</li><li>27</li><li>38</li><li>41</li><li>55</li><li>57</li><li>58</li><li>59</li><li>64</li><li>72</li><li>73</li><li>77</li><li>78</li><li>83</li><li>86</li><li>93</li><li>94</li><li>2</li><li>7</li><li>12</li><li>13</li><li>16</li><li>20</li><li>23</li><li>25</li><li>26</li><li>29</li><li>36</li><li>37</li><li>42</li><li>60</li><li>63</li><li>74</li><li>79</li><li>81</li><li>89</li><li>92</li></ol>
 </li>
 	<li><style>
 .list-inline {list-style: none; margin:0; padding: 0}
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>2</li><li>17</li><li>18</li><li>22</li><li>31</li><li>34</li><li>36</li><li>41</li><li>43</li><li>49</li><li>52</li><li>62</li><li>71</li><li>72</li><li>76</li><li>78</li><li>92</li><li>94</li><li>97</li><li>100</li><li>3</li><li>4</li><li>6</li><li>10</li><li>19</li><li>26</li><li>29</li><li>32</li><li>54</li><li>56</li><li>60</li><li>61</li><li>64</li><li>65</li><li>75</li><li>79</li><li>84</li><li>87</li><li>91</li><li>98</li><li>11</li><li>12</li><li>21</li><li>25</li><li>27</li><li>28</li><li>33</li><li>35</li><li>45</li><li>48</li><li>55</li><li>58</li><li>59</li><li>73</li><li>80</li><li>81</li><li>85</li><li>86</li><li>88</li><li>90</li><li>1</li><li>5</li><li>13</li><li>14</li><li>15</li><li>20</li><li>30</li><li>39</li><li>40</li><li>42</li><li>46</li><li>51</li><li>53</li><li>68</li><li>69</li><li>70</li><li>77</li><li>95</li><li>96</li><li>99</li></ol>
+<ol class=list-inline><li>4</li><li>18</li><li>21</li><li>22</li><li>30</li><li>33</li><li>35</li><li>40</li><li>43</li><li>54</li><li>56</li><li>61</li><li>65</li><li>66</li><li>70</li><li>80</li><li>84</li><li>87</li><li>91</li><li>97</li><li>3</li><li>9</li><li>10</li><li>15</li><li>17</li><li>24</li><li>28</li><li>31</li><li>45</li><li>46</li><li>48</li><li>50</li><li>62</li><li>71</li><li>75</li><li>76</li><li>82</li><li>85</li><li>98</li><li>100</li><li>6</li><li>11</li><li>14</li><li>32</li><li>34</li><li>39</li><li>44</li><li>47</li><li>49</li><li>51</li><li>52</li><li>53</li><li>67</li><li>68</li><li>69</li><li>88</li><li>90</li><li>95</li><li>96</li><li>99</li><li>2</li><li>7</li><li>12</li><li>13</li><li>16</li><li>20</li><li>23</li><li>25</li><li>26</li><li>29</li><li>36</li><li>37</li><li>42</li><li>60</li><li>63</li><li>74</li><li>79</li><li>81</li><li>89</li><li>92</li></ol>
 </li>
 	<li><style>
 .list-inline {list-style: none; margin:0; padding: 0}
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>2</li><li>17</li><li>18</li><li>22</li><li>31</li><li>34</li><li>36</li><li>41</li><li>43</li><li>49</li><li>52</li><li>62</li><li>71</li><li>72</li><li>76</li><li>78</li><li>92</li><li>94</li><li>97</li><li>100</li><li>3</li><li>4</li><li>6</li><li>10</li><li>19</li><li>26</li><li>29</li><li>32</li><li>54</li><li>56</li><li>60</li><li>61</li><li>64</li><li>65</li><li>75</li><li>79</li><li>84</li><li>87</li><li>91</li><li>98</li><li>11</li><li>12</li><li>21</li><li>25</li><li>27</li><li>28</li><li>33</li><li>35</li><li>45</li><li>48</li><li>55</li><li>58</li><li>59</li><li>73</li><li>80</li><li>81</li><li>85</li><li>86</li><li>88</li><li>90</li><li>7</li><li>8</li><li>9</li><li>16</li><li>23</li><li>24</li><li>37</li><li>38</li><li>44</li><li>47</li><li>50</li><li>57</li><li>63</li><li>66</li><li>67</li><li>74</li><li>82</li><li>83</li><li>89</li><li>93</li></ol>
+<ol class=list-inline><li>4</li><li>18</li><li>21</li><li>22</li><li>30</li><li>33</li><li>35</li><li>40</li><li>43</li><li>54</li><li>56</li><li>61</li><li>65</li><li>66</li><li>70</li><li>80</li><li>84</li><li>87</li><li>91</li><li>97</li><li>3</li><li>9</li><li>10</li><li>15</li><li>17</li><li>24</li><li>28</li><li>31</li><li>45</li><li>46</li><li>48</li><li>50</li><li>62</li><li>71</li><li>75</li><li>76</li><li>82</li><li>85</li><li>98</li><li>100</li><li>6</li><li>11</li><li>14</li><li>32</li><li>34</li><li>39</li><li>44</li><li>47</li><li>49</li><li>51</li><li>52</li><li>53</li><li>67</li><li>68</li><li>69</li><li>88</li><li>90</li><li>95</li><li>96</li><li>99</li><li>1</li><li>5</li><li>8</li><li>19</li><li>27</li><li>38</li><li>41</li><li>55</li><li>57</li><li>58</li><li>59</li><li>64</li><li>72</li><li>73</li><li>77</li><li>78</li><li>83</li><li>86</li><li>93</li><li>94</li></ol>
 </li>
 </ol>
 </dd>
@@ -482,35 +477,35 @@ R</label><div class="tabbed-content docutils">
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>2</li><li>17</li><li>18</li><li>22</li><li>31</li><li>34</li><li>36</li><li>41</li><li>43</li><li>49</li><li>52</li><li>62</li><li>71</li><li>72</li><li>76</li><li>78</li><li>92</li><li>94</li><li>97</li><li>100</li></ol>
+<ol class=list-inline><li>4</li><li>18</li><li>21</li><li>22</li><li>30</li><li>33</li><li>35</li><li>40</li><li>43</li><li>54</li><li>56</li><li>61</li><li>65</li><li>66</li><li>70</li><li>80</li><li>84</li><li>87</li><li>91</li><li>97</li></ol>
 </li>
 	<li><style>
 .list-inline {list-style: none; margin:0; padding: 0}
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>3</li><li>4</li><li>6</li><li>10</li><li>19</li><li>26</li><li>29</li><li>32</li><li>54</li><li>56</li><li>60</li><li>61</li><li>64</li><li>65</li><li>75</li><li>79</li><li>84</li><li>87</li><li>91</li><li>98</li></ol>
+<ol class=list-inline><li>3</li><li>9</li><li>10</li><li>15</li><li>17</li><li>24</li><li>28</li><li>31</li><li>45</li><li>46</li><li>48</li><li>50</li><li>62</li><li>71</li><li>75</li><li>76</li><li>82</li><li>85</li><li>98</li><li>100</li></ol>
 </li>
 	<li><style>
 .list-inline {list-style: none; margin:0; padding: 0}
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>11</li><li>12</li><li>21</li><li>25</li><li>27</li><li>28</li><li>33</li><li>35</li><li>45</li><li>48</li><li>55</li><li>58</li><li>59</li><li>73</li><li>80</li><li>81</li><li>85</li><li>86</li><li>88</li><li>90</li></ol>
+<ol class=list-inline><li>6</li><li>11</li><li>14</li><li>32</li><li>34</li><li>39</li><li>44</li><li>47</li><li>49</li><li>51</li><li>52</li><li>53</li><li>67</li><li>68</li><li>69</li><li>88</li><li>90</li><li>95</li><li>96</li><li>99</li></ol>
 </li>
 	<li><style>
 .list-inline {list-style: none; margin:0; padding: 0}
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>7</li><li>8</li><li>9</li><li>16</li><li>23</li><li>24</li><li>37</li><li>38</li><li>44</li><li>47</li><li>50</li><li>57</li><li>63</li><li>66</li><li>67</li><li>74</li><li>82</li><li>83</li><li>89</li><li>93</li></ol>
+<ol class=list-inline><li>1</li><li>5</li><li>8</li><li>19</li><li>27</li><li>38</li><li>41</li><li>55</li><li>57</li><li>58</li><li>59</li><li>64</li><li>72</li><li>73</li><li>77</li><li>78</li><li>83</li><li>86</li><li>93</li><li>94</li></ol>
 </li>
 	<li><style>
 .list-inline {list-style: none; margin:0; padding: 0}
 .list-inline>li {display: inline-block}
 .list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
 </style>
-<ol class=list-inline><li>1</li><li>5</li><li>13</li><li>14</li><li>15</li><li>20</li><li>30</li><li>39</li><li>40</li><li>42</li><li>46</li><li>51</li><li>53</li><li>68</li><li>69</li><li>70</li><li>77</li><li>95</li><li>96</li><li>99</li></ol>
+<ol class=list-inline><li>2</li><li>7</li><li>12</li><li>13</li><li>16</li><li>20</li><li>23</li><li>25</li><li>26</li><li>29</li><li>36</li><li>37</li><li>42</li><li>60</li><li>63</li><li>74</li><li>79</li><li>81</li><li>89</li><li>92</li></ol>
 </li>
 </ol>
 </dd>
@@ -532,37 +527,37 @@ The values of the two score function components
 for each observation index <span class="math notranslate nohighlight">\(i \in I_k\)</span> are computed and
 stored in the attributes <code class="docutils literal notranslate"><span class="pre">psi_a</span></code> and <code class="docutils literal notranslate"><span class="pre">psi_b</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="1a3c844f-6a19-4883-a0b6-2ff1a2433d9c" name="3945ed5b-f808-4792-8cf8-3849806c3703" type="radio">
-</input><label class="tabbed-label" for="1a3c844f-6a19-4883-a0b6-2ff1a2433d9c">
+<input checked="checked" id="62e2e62a-5b6a-436e-bfa1-951a34912987" name="84004a2c-728f-415f-ba02-f1814eef5103" type="radio">
+</input><label class="tabbed-label" for="62e2e62a-5b6a-436e-bfa1-951a34912987">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">();</span>
 
 <span class="gp">In [16]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">psi_a</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
-<span class="go">[[[-2.77031254]]</span>
+<span class="go">[[[-2.88531   ]]</span>
 
-<span class="go"> [[-2.87771887]]</span>
+<span class="go"> [[-2.90210293]]</span>
 
-<span class="go"> [[-0.08013837]]</span>
+<span class="go"> [[-0.07859105]]</span>
 
-<span class="go"> [[-0.36003344]]</span>
+<span class="go"> [[-0.32047806]]</span>
 
-<span class="go"> [[-2.62438715]]]</span>
+<span class="go"> [[-2.63196468]]]</span>
 
 <span class="gp">In [17]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">psi_b</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
-<span class="go">[[[ 0.08694518]]</span>
+<span class="go">[[[ 0.14584976]]</span>
 
-<span class="go"> [[-1.06665591]]</span>
+<span class="go"> [[-1.07752306]]</span>
 
-<span class="go"> [[-0.1202984 ]]</span>
+<span class="go"> [[-0.11679041]]</span>
 
-<span class="go"> [[ 0.4134775 ]]</span>
+<span class="go"> [[ 0.39065473]]</span>
 
-<span class="go"> [[ 1.11809605]]]</span>
+<span class="go"> [[ 1.14544635]]]</span>
 </pre></div>
 </div>
 </div>
-<input id="2e42dcd1-f714-4852-b797-b872b3eef068" name="3945ed5b-f808-4792-8cf8-3849806c3703" type="radio">
-</input><label class="tabbed-label" for="2e42dcd1-f714-4852-b797-b872b3eef068">
+<input id="8389bb98-07e9-44b2-8dab-98dff8b27183" name="84004a2c-728f-415f-ba02-f1814eef5103" type="radio">
+</input><label class="tabbed-label" for="8389bb98-07e9-44b2-8dab-98dff8b27183">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -575,10 +570,10 @@ print(dml_plr_obj$psi_b[1:5, ,1])
 </td></tr></table></div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] -2.71353653 -0.43574816 -0.41509148 -0.12927576 -0.01067308
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] -0.06451593 -0.05203059 -0.01292566 -0.75206401 -1.35532790
 </pre></div>
 </div>
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1]  1.4110488 -1.2710348 -1.0956602  0.1250234 -0.1737710
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] -0.02044657 -0.13318999  0.15239756  0.46147232  0.91766137
 </pre></div>
 </div>
 </div>
@@ -587,12 +582,12 @@ print(dml_plr_obj$psi_b[1:5, ,1])
 </div>
 </div>
 <div class="section" id="repeated-cross-fitting-with-k-folds-and-m-repetition">
-<h2><span class="section-number">9.2. </span>Repeated cross-fitting with <span class="math notranslate nohighlight">\(K\)</span> folds and <span class="math notranslate nohighlight">\(M\)</span> repetition<a class="headerlink" href="#repeated-cross-fitting-with-k-folds-and-m-repetition" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">8.2. </span>Repeated cross-fitting with <span class="math notranslate nohighlight">\(K\)</span> folds and <span class="math notranslate nohighlight">\(M\)</span> repetition<a class="headerlink" href="#repeated-cross-fitting-with-k-folds-and-m-repetition" title="Permalink to this headline">¶</a></h2>
 <p>Repeated cross-fitting is obtained by choosing a value <span class="math notranslate nohighlight">\(M&gt;1\)</span> for the number of repetition <code class="docutils literal notranslate"><span class="pre">n_rep</span></code>.
 It results in <span class="math notranslate nohighlight">\(M\)</span> random <span class="math notranslate nohighlight">\(K\)</span>-fold partitions being drawn.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="b9d00552-0dac-4518-8a0a-8dd6f8c26c46" name="3757ac6f-682d-4d5e-9f13-d60732c4201e" type="radio">
-</input><label class="tabbed-label" for="b9d00552-0dac-4518-8a0a-8dd6f8c26c46">
+<input checked="checked" id="ffb04a99-cd23-4805-b439-c9351c2b9e87" name="425ca4c0-1255-439d-a114-0f792dfc633a" type="radio">
+</input><label class="tabbed-label" for="ffb04a99-cd23-4805-b439-c9351c2b9e87">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">n_folds</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_rep</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
 
@@ -604,8 +599,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="5723012f-4baf-453d-8bd4-a8ed77d8dfc3" name="3757ac6f-682d-4d5e-9f13-d60732c4201e" type="radio">
-</input><label class="tabbed-label" for="5723012f-4baf-453d-8bd4-a8ed77d8dfc3">
+<input id="91ad0011-94d3-4f4f-82d7-a72290c282b4" name="425ca4c0-1255-439d-a114-0f792dfc633a" type="radio">
+</input><label class="tabbed-label" for="91ad0011-94d3-4f4f-82d7-a72290c282b4">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -635,39 +630,39 @@ row index corresponds the observation index <span class="math notranslate nohigh
 and the column index to the partition <span class="math notranslate nohighlight">\(m \in [M] = \lbrace 1, \ldots, M]\)</span>.
 The third dimension refers to the treatment variable and becomes non-singleton in case of multiple treatment variables.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="ac3ff78b-ba4f-4d8e-b41b-4c591495d993" name="9f5c55fc-2e72-4965-9cb9-5ca3aaa3ca55" type="radio">
-</input><label class="tabbed-label" for="ac3ff78b-ba4f-4d8e-b41b-4c591495d993">
+<input checked="checked" id="ceb4ad3d-11e8-4678-bdb9-e5de3bdee360" name="68aacb11-3006-40a0-bd71-9f4362d9341b" type="radio">
+</input><label class="tabbed-label" for="ceb4ad3d-11e8-4678-bdb9-e5de3bdee360">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [21]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">();</span>
 
 <span class="gp">In [22]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">psi_a</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="go">[[-2.98432359 -3.06480151 -3.85921198 -2.96874769 -3.05657146 -3.2140234</span>
-<span class="go">  -3.93301812 -2.72412326 -3.92721123 -4.88704139]</span>
-<span class="go"> [-2.83359228 -2.53108066 -2.03009132 -2.07915489 -3.3994495  -2.36751096</span>
-<span class="go">  -2.49584278 -2.14283539 -1.98361135 -2.07559537]</span>
-<span class="go"> [-0.23465747 -0.19072988 -0.09287264 -0.18618573 -0.04664579 -0.10008165</span>
-<span class="go">  -0.17123038 -0.4765105  -0.29798259 -0.57459766]</span>
-<span class="go"> [-0.04854801 -0.12693729 -0.11709589 -0.13362169 -0.34118416 -0.1356885</span>
-<span class="go">  -0.21936282 -0.61791403 -0.01701573 -0.00959174]</span>
-<span class="go"> [-2.94228402 -4.09970808 -1.74962533 -2.91622689 -1.46372629 -2.85263354</span>
-<span class="go">  -4.71027078 -1.79069144 -3.53482783 -2.95084544]]</span>
+<span class="go">[[-2.68599367 -3.23380465 -3.87925464 -2.89041468 -3.08674439 -3.17372511</span>
+<span class="go">  -4.06162781 -2.71757056 -3.93769627 -4.80729735]</span>
+<span class="go"> [-2.88112325 -2.42456107 -2.02910892 -2.04403523 -3.37767737 -2.35320534</span>
+<span class="go">  -2.45193279 -2.22980749 -1.9562462  -2.09392654]</span>
+<span class="go"> [-0.181359   -0.16799817 -0.07332458 -0.21872073 -0.06599282 -0.11102169</span>
+<span class="go">  -0.16396342 -0.50714384 -0.29398956 -0.56135776]</span>
+<span class="go"> [-0.04570088 -0.12277897 -0.10397745 -0.13543039 -0.36304868 -0.11301572</span>
+<span class="go">  -0.19153314 -0.62534417 -0.02197674 -0.01718614]</span>
+<span class="go"> [-2.99590389 -4.12622929 -1.77374567 -2.84585724 -1.47892889 -2.80198843</span>
+<span class="go">  -4.7074332  -1.77410084 -3.5422875  -3.20771252]]</span>
 
 <span class="gp">In [23]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">psi_b</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="go">[[ 0.05194436  0.36904565  0.7322728   0.18000647 -0.08155766  0.25451579</span>
-<span class="go">  -0.15635892 -0.00700313  0.10084129  0.35967313]</span>
-<span class="go"> [-0.37844833 -1.3861506  -0.51353049 -0.80280278 -0.35055124 -0.52875372</span>
-<span class="go">  -0.72369879 -0.94641422 -0.7244148  -0.87413061]</span>
-<span class="go"> [-0.23876905 -0.17447994 -0.11406848 -0.21012099 -0.17211746 -0.14038296</span>
-<span class="go">  -0.12573943 -0.31596746 -0.09332741 -0.22672197]</span>
-<span class="go"> [ 0.15449116  0.19571928  0.23704881  0.3477631   0.41909963  0.19310959</span>
-<span class="go">   0.22392664  0.52443597  0.07921596  0.08061351]</span>
-<span class="go"> [ 0.61359257  1.3563012   0.18112505  0.45243241  0.38899264  0.77911744</span>
-<span class="go">   1.01224811  0.87656413  0.92262984  0.50719376]]</span>
+<span class="go">[[ 0.04605718  0.40626329  0.74793091  0.18205525 -0.13083083  0.24800699</span>
+<span class="go">  -0.15153994  0.02067865  0.17040069  0.40464152]</span>
+<span class="go"> [-0.44276955 -1.3415938  -0.50685506 -0.8130893  -0.40504965 -0.5433195</span>
+<span class="go">  -0.77235098 -0.97564857 -0.68378606 -0.8890806 ]</span>
+<span class="go"> [-0.2085827  -0.15144663 -0.10209256 -0.24270094 -0.20685474 -0.15512408</span>
+<span class="go">  -0.11551561 -0.35281149 -0.07560974 -0.20729528]</span>
+<span class="go"> [ 0.15462366  0.17402885  0.22050906  0.33823906  0.43836142  0.16201454</span>
+<span class="go">   0.20697463  0.53725044  0.08476671  0.10902499]</span>
+<span class="go"> [ 0.64042081  1.36752436  0.21184894  0.45545298  0.39017148  0.71515068</span>
+<span class="go">   1.00864349  0.91863437  0.93603507  0.55055093]]</span>
 </pre></div>
 </div>
 </div>
-<input id="5a2f43c9-38aa-4ac3-b07c-e98d4077a0c0" name="9f5c55fc-2e72-4965-9cb9-5ca3aaa3ca55" type="radio">
-</input><label class="tabbed-label" for="5a2f43c9-38aa-4ac3-b07c-e98d4077a0c0">
+<input id="6004d2ca-8e47-48da-bc4b-e5d2be7e4383" name="68aacb11-3006-40a0-bd71-9f4362d9341b" type="radio">
+</input><label class="tabbed-label" for="6004d2ca-8e47-48da-bc4b-e5d2be7e4383">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -680,32 +675,32 @@ print(dml_plr_obj$psi_b[1:5, ,1])
 </td></tr></table></div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>              [,1]        [,2]        [,3]          [,4]         [,5]
-[1,] -2.6830881619 -3.11486413 -2.94584390 -2.2281197790 -2.237136882
-[2,] -0.1526701702 -1.07362058 -0.12803340 -0.6549489242 -0.637015428
-[3,] -0.5572054285 -0.48284532 -0.17725118 -0.4109345302 -0.315715546
-[4,] -0.0004661349 -0.26569888 -0.00645948 -0.0020166600 -0.088506393
-[5,] -0.0027530715 -0.01859117 -0.01450479 -0.0006760791 -0.007492112
-              [,6]          [,7]        [,8]        [,9]        [,10]
-[1,] -2.8078629829 -2.4773540808 -3.36632274 -2.77698410 -4.084993998
-[2,] -0.5803914038 -0.0086359807 -0.66726904 -0.66416935 -1.174426101
-[3,] -0.2852378263 -0.6668981386 -0.42702763 -0.74352707 -0.651068042
-[4,] -0.0434624353 -0.0375011504 -0.14557112 -0.18571936 -0.004070617
-[5,] -0.0002680219 -0.0009479117 -0.03268091 -0.03989094 -0.009016016
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>              [,1]         [,2]        [,3]         [,4]         [,5]
+[1,] -7.393776e-05 -0.009449109 -0.01004438 -0.004346851 -0.070345385
+[2,] -3.396618e-01 -0.072684064 -0.24564197 -0.065743465 -0.061592894
+[3,] -6.904057e-02 -0.020077182 -0.11566859 -0.062457169 -0.002656215
+[4,] -3.030435e-01 -0.544194374 -0.36130383 -0.285799179 -0.634995466
+[5,] -2.255684e+00 -1.049052135 -1.68166180 -1.493039253 -1.405976811
+              [,6]        [,7]        [,8]         [,9]       [,10]
+[1,] -3.424715e-05 -0.01913035 -0.06755753 -0.006910542 -0.02265797
+[2,] -1.644421e-01 -0.18328759 -0.02318548 -0.443307519 -0.15203147
+[3,] -4.328524e-05 -0.39452178 -0.09665297 -0.086778472 -0.04905385
+[4,] -4.106661e-01 -0.70456382 -0.61286555 -0.560524592 -0.28723491
+[5,] -1.439448e+00 -3.01645484 -2.51175191 -2.457912232 -1.58146049
 </pre></div>
 </div>
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>             [,1]        [,2]        [,3]        [,4]        [,5]        [,6]
-[1,]  2.026299026  2.14931871  2.45719150  1.95667850  2.08995123  1.19083444
-[2,] -0.949337447 -2.13807261 -0.69648303 -1.60447003 -1.61543222 -1.56182636
-[3,] -0.812390860 -1.67190337 -0.78840177 -0.93596159 -1.02670658 -1.27399755
-[4,]  0.005496813  0.04515038 -0.01404657  0.01129881  0.07233251 -0.06219017
-[5,]  0.088983124 -0.23684465 -0.19493470 -0.04603479 -0.16894015 -0.02732232
-            [,7]        [,8]        [,9]       [,10]
-[1,]  0.60305549  2.73276463  1.86863702  2.95481747
-[2,] -0.21382592 -1.37674512 -1.62100570 -1.75097257
-[3,] -1.23990087 -1.19282390 -1.24524463 -1.49782227
-[4,]  0.08127238 -0.02760884  0.05648927 -0.01485253
-[5,] -0.04122136 -0.34224909 -0.35183861  0.19166719
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>              [,1]        [,2]        [,3]        [,4]        [,5]         [,6]
+[1,] -0.0007664645 -0.01416422  0.01929543  0.02127199  0.01112023 -0.001837248
+[2,] -0.3350552075 -0.14814061 -0.29283690 -0.03036299 -0.12470611 -0.045994614
+[3,] -0.3689947167 -0.16903438 -0.53032934 -0.40182371 -0.08128375  0.009652360
+[4,]  0.2313185196  0.20790937  0.24939885  0.16216828  0.26970587  0.259941708
+[5,]  1.3709467782  0.38456429  0.86713404  0.19803199  1.17642052  0.846277849
+            [,7]         [,8]          [,9]      [,10]
+[1,]  0.01923184  0.003251996 -0.0002344553  0.0100044
+[2,] -0.18419266 -0.079130772 -0.2898553394 -0.2126070
+[3,]  0.85862142 -0.436606555 -0.4813042246 -0.3150483
+[4,]  0.50116804  0.607518989  0.4481748134  0.1429586
+[5,]  1.92493816  1.215081231  0.6865793556  0.8215460
 </pre></div>
 </div>
 </div>
@@ -714,7 +709,7 @@ print(dml_plr_obj$psi_b[1:5, ,1])
 </div>
 <p>We estimate the causal parameter <span class="math notranslate nohighlight">\(\tilde{\theta}_{0,m}\)</span> for each of the <span class="math notranslate nohighlight">\(M\)</span> partitions with a DML
 algorithm as described in <a class="reference internal" href="algorithms.html#algorithms"><span class="std std-ref">Double machine learning algorithms</span></a>.
-Standard errors are obtained as described in <a class="reference internal" href="se_confint.html#se-confint"><span class="std std-ref">Variance estimation and confidence intervals for a causal parameter of interest</span></a>.
+Standard errors are obtained as described in <a class="reference internal" href="se_confint.html#se-confint"><span class="std std-ref">Variance estimation, confidence intervals and multiplier bootstrap</span></a>.
 The aggregation of the estimates of the causal parameter and its standard errors is done using the median</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
@@ -723,19 +718,19 @@ The aggregation of the estimates of the causal parameter and its standard errors
 <p>The estimate of the causal parameter <span class="math notranslate nohighlight">\(\tilde{\theta}_{0}\)</span> is stored in the <code class="docutils literal notranslate"><span class="pre">coef</span></code> attribute
 and the asymptotic standard error <span class="math notranslate nohighlight">\(\hat{\sigma}/\sqrt{N}\)</span> in <code class="docutils literal notranslate"><span class="pre">se</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="0d7bc50d-749e-48f3-b8c9-1293bb7a88f3" name="3eb91bf0-5079-419a-92e0-03960104578c" type="radio">
-</input><label class="tabbed-label" for="0d7bc50d-749e-48f3-b8c9-1293bb7a88f3">
+<input checked="checked" id="7ae6d0ae-a235-4a57-9061-443f46dd40f5" name="10cc4192-bcb8-4e05-bbff-fe86ebdcc887" type="radio">
+</input><label class="tabbed-label" for="7ae6d0ae-a235-4a57-9061-443f46dd40f5">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [24]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">coef</span><span class="p">)</span>
-<span class="go">[0.50003654]</span>
+<span class="go">[0.49855526]</span>
 
 <span class="gp">In [25]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">se</span><span class="p">)</span>
-<span class="go">[0.0759755]</span>
+<span class="go">[0.07599746]</span>
 </pre></div>
 </div>
 </div>
-<input id="35148167-4721-44be-b276-12f2d8f74fb8" name="3eb91bf0-5079-419a-92e0-03960104578c" type="radio">
-</input><label class="tabbed-label" for="35148167-4721-44be-b276-12f2d8f74fb8">
+<input id="0d39e3b7-790f-4797-bca5-947bf2cb11ae" name="10cc4192-bcb8-4e05-bbff-fe86ebdcc887" type="radio">
+</input><label class="tabbed-label" for="0d39e3b7-790f-4797-bca5-947bf2cb11ae">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -747,11 +742,11 @@ print(dml_plr_obj$se)
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>        d 
-0.4556012 
+0.6027687 
 </pre></div>
 </div>
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>         d 
-0.07839124 
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>        d 
+0.1014602 
 </pre></div>
 </div>
 </div>
@@ -762,21 +757,21 @@ print(dml_plr_obj$se)
 <span class="math notranslate nohighlight">\((\hat{\sigma}_m)_{m \in [M]}\)</span> for each of the <span class="math notranslate nohighlight">\(M\)</span> partitions are stored in the attributes
 <code class="docutils literal notranslate"><span class="pre">_all_coef</span></code> and <code class="docutils literal notranslate"><span class="pre">_all_se</span></code>, respectively.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="d1ddc664-23e0-4a3d-a083-f9b4405fbd13" name="f8c60413-edd2-4817-aea7-d1a51b5c9a24" type="radio">
-</input><label class="tabbed-label" for="d1ddc664-23e0-4a3d-a083-f9b4405fbd13">
+<input checked="checked" id="f7a8d22c-8ee7-4869-9d10-0aa8412f2c2c" name="ce3a07be-8598-4714-b6b5-c6bf9782de84" type="radio">
+</input><label class="tabbed-label" for="f7a8d22c-8ee7-4869-9d10-0aa8412f2c2c">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [26]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">_all_coef</span><span class="p">)</span>
-<span class="go">[[0.49050748 0.47162414 0.47976884 0.50956561 0.51360033 0.54163618</span>
-<span class="go">  0.5278666  0.46204646 0.51533086 0.47119733]]</span>
+<span class="go">[[0.4912799  0.47383624 0.47971449 0.51116967 0.50583062 0.54217549</span>
+<span class="go">  0.52744838 0.47070297 0.52106584 0.4732103 ]]</span>
 
 <span class="gp">In [27]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">_all_se</span><span class="p">)</span>
-<span class="go">[[0.075171   0.07658685 0.07032188 0.08584866 0.07904228 0.07626231</span>
-<span class="go">  0.07552195 0.07687109 0.07377529 0.07145054]]</span>
+<span class="go">[[0.07574142 0.0764744  0.07045978 0.08555445 0.08032833 0.0760157</span>
+<span class="go">  0.07579885 0.0761749  0.07356857 0.07122361]]</span>
 </pre></div>
 </div>
 </div>
-<input id="6e703dca-7157-4a8c-95a1-cf2dd5fe7f2a" name="f8c60413-edd2-4817-aea7-d1a51b5c9a24" type="radio">
-</input><label class="tabbed-label" for="6e703dca-7157-4a8c-95a1-cf2dd5fe7f2a">
+<input id="c76ae883-febf-4a8b-aefc-143349bfa793" name="ce3a07be-8598-4714-b6b5-c6bf9782de84" type="radio">
+</input><label class="tabbed-label" for="c76ae883-febf-4a8b-aefc-143349bfa793">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -787,16 +782,16 @@ print(dml_plr_obj$all_se)
 </td></tr></table></div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>          [,1]      [,2]      [,3]      [,4]    [,5]      [,6]      [,7]
-[1,] 0.4689405 0.3893902 0.4641194 0.4508349 0.45805 0.4725301 0.4593932
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>          [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]
+[1,] 0.6162142 0.5167107 0.6055899 0.5999475 0.6605812 0.6400327 0.6231809
           [,8]      [,9]     [,10]
-[1,] 0.4457856 0.4508399 0.4531523
+[1,] 0.5565745 0.5908072 0.5633057
 </pre></div>
 </div>
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>           [,1]       [,2]      [,3]       [,4]       [,5]       [,6]
-[1,] 0.07065738 0.07640352 0.0720727 0.07630313 0.07912379 0.07701217
-           [,7]       [,8]       [,9]      [,10]
-[1,] 0.07903073 0.08064785 0.07778328 0.07731467
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>           [,1]       [,2]       [,3]       [,4]       [,5]       [,6]
+[1,] 0.09508104 0.09450459 0.09668634 0.09201452 0.08532552 0.09261218
+          [,7]       [,8]     [,9]      [,10]
+[1,] 0.1056078 0.08472354 0.108431 0.09864677
 </pre></div>
 </div>
 </div>
@@ -805,7 +800,7 @@ print(dml_plr_obj$all_se)
 </div>
 </div>
 <div class="section" id="externally-provide-a-sample-splitting-partition">
-<h2><span class="section-number">9.3. </span>Externally provide a sample splitting / partition<a class="headerlink" href="#externally-provide-a-sample-splitting-partition" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">8.3. </span>Externally provide a sample splitting / partition<a class="headerlink" href="#externally-provide-a-sample-splitting-partition" title="Permalink to this headline">¶</a></h2>
 <p>All DML models allow a partition to be provided externally via the method <code class="docutils literal notranslate"><span class="pre">set_sample_splitting()</span></code>.
 In Python we can for example use the K-Folds cross-validator of sklearn <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="(in scikit-learn v0.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a> in
 order to generate a sample splitting and provide it to the DML model object.
@@ -815,21 +810,21 @@ The following calls are equivalent.
 In the first sample code, we use the standard interface and draw the sample-splitting with <span class="math notranslate nohighlight">\(K=4\)</span> folds during
 initialization of the <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> object.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="d1406aa2-afca-4789-a8eb-6f7c11f4a27c" name="e2323f39-17ad-4ad4-8208-08c480c55c15" type="radio">
-</input><label class="tabbed-label" for="d1406aa2-afca-4789-a8eb-6f7c11f4a27c">
+<input checked="checked" id="f76ffbe1-5726-4240-bd56-c07fa7d069d3" name="bf16e20d-9160-4325-a804-a4cc863e3c35" type="radio">
+</input><label class="tabbed-label" for="f76ffbe1-5726-4240-bd56-c07fa7d069d3">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [28]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">314</span><span class="p">)</span>
 
 <span class="gp">In [29]: </span><span class="n">dml_plr_obj_internal</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">n_folds</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
 
 <span class="gp">In [30]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj_internal</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">       coef   std err         t         P&gt;|t|     2.5 %   97.5 %</span>
-<span class="go">d  0.502792  0.086164  5.835291  5.369687e-09  0.333913  0.67167</span>
+<span class="go">     coef   std err         t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.5005  0.086388  5.793628  6.888187e-09  0.331182  0.669817</span>
 </pre></div>
 </div>
 </div>
-<input id="0f1e258c-2f6b-4cdd-8af3-f07d2b3714be" name="e2323f39-17ad-4ad4-8208-08c480c55c15" type="radio">
-</input><label class="tabbed-label" for="0f1e258c-2f6b-4cdd-8af3-f07d2b3714be">
+<input id="128e61ad-3b2d-4fad-b56f-ef123bae5bc7" name="bf16e20d-9160-4325-a804-a4cc863e3c35" type="radio">
+</input><label class="tabbed-label" for="128e61ad-3b2d-4fad-b56f-ef123bae5bc7">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -846,7 +841,7 @@ dml_plr_obj_internal$summary()
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] &quot;Estimates and significance testing of the effect of target variables&quot;
   Estimate. Std. Error t value Pr(&gt;|t|)    
-d   0.50149    0.07361   6.812  9.6e-12 ***
+d   0.55889    0.09298   6.011 1.85e-09 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -860,8 +855,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>In the second sample code, we use the K-Folds cross-validator of sklearn <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="(in scikit-learn v0.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a>
 and set the partition via the <code class="docutils literal notranslate"><span class="pre">set_sample_splitting()</span></code> method.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="87c2f0e8-4e91-41b8-99d5-1a5e1b3d93f3" name="bdf18e21-82cf-43e6-844f-07ac756b178a" type="radio">
-</input><label class="tabbed-label" for="87c2f0e8-4e91-41b8-99d5-1a5e1b3d93f3">
+<input checked="checked" id="5ca7e39a-403c-4b5d-ad39-d24da846082c" name="8886d7de-9398-42cf-b0df-c1df791b879f" type="radio">
+</input><label class="tabbed-label" for="5ca7e39a-403c-4b5d-ad39-d24da846082c">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [31]: </span><span class="n">dml_plr_obj_external</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">draw_sample_splitting</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 
@@ -876,13 +871,13 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">In [36]: </span><span class="n">dml_plr_obj_external</span><span class="o">.</span><span class="n">set_sample_splitting</span><span class="p">(</span><span class="n">smpls</span><span class="p">);</span>
 
 <span class="gp">In [37]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj_external</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">       coef   std err         t         P&gt;|t|     2.5 %   97.5 %</span>
-<span class="go">d  0.502792  0.086164  5.835291  5.369687e-09  0.333913  0.67167</span>
+<span class="go">     coef   std err         t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.5005  0.086388  5.793628  6.888187e-09  0.331182  0.669817</span>
 </pre></div>
 </div>
 </div>
-<input id="f481cda2-5921-4b8b-9666-3f204ab63bd5" name="bdf18e21-82cf-43e6-844f-07ac756b178a" type="radio">
-</input><label class="tabbed-label" for="f481cda2-5921-4b8b-9666-3f204ab63bd5">
+<input id="cfd129b1-0867-4d86-85af-3e9b2eac935a" name="8886d7de-9398-42cf-b0df-c1df791b879f" type="radio">
+</input><label class="tabbed-label" for="cfd129b1-0867-4d86-85af-3e9b2eac935a">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -919,7 +914,7 @@ dml_plr_obj_external$summary()
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] &quot;Estimates and significance testing of the effect of target variables&quot;
   Estimate. Std. Error t value Pr(&gt;|t|)    
-d   0.50149    0.07361   6.812  9.6e-12 ***
+d   0.55889    0.09298   6.011 1.85e-09 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -932,7 +927,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <div class="section" id="sample-splitting-without-cross-fitting">
-<h2><span class="section-number">9.4. </span>Sample-splitting without cross-fitting<a class="headerlink" href="#sample-splitting-without-cross-fitting" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">8.4. </span>Sample-splitting without cross-fitting<a class="headerlink" href="#sample-splitting-without-cross-fitting" title="Permalink to this headline">¶</a></h2>
 <p>The boolean flag <code class="docutils literal notranslate"><span class="pre">apply_cross_fitting</span></code> allows to estimate DML models without applying cross-fitting.
 It results in randomly splitting the sample into two parts.
 The first half of the data is used for the estimation of the nuisance ML models and the second half for estimating the
@@ -940,8 +935,8 @@ causal parameter.
 Note that cross-fitting performs well empirically and is recommended to remove bias induced by overfitting, see also
 <a class="reference internal" href="basics.html#bias-overfitting"><span class="std std-ref">Sample splitting to remove bias induced by overfitting</span></a>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="77dc2a37-3666-43a5-bb40-d97df31ba122" name="7843b1b4-806f-46d3-a9f0-148fe0a9598c" type="radio">
-</input><label class="tabbed-label" for="77dc2a37-3666-43a5-bb40-d97df31ba122">
+<input checked="checked" id="b4d4215a-e6ab-438a-8fd5-9811c77e13b0" name="7285a01c-6945-4cd9-807d-f77741daee68" type="radio">
+</input><label class="tabbed-label" for="b4d4215a-e6ab-438a-8fd5-9811c77e13b0">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [38]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">314</span><span class="p">)</span>
 
@@ -950,13 +945,13 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">   ....: </span>
 
 <span class="gp">In [40]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj_external</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">       coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.553448  0.121353  4.560651  0.000005  0.315601  0.791296</span>
+<span class="go">       coef   std err         t     P&gt;|t|     2.5 %   97.5 %</span>
+<span class="go">d  0.559242  0.118328  4.726196  0.000002  0.327323  0.79116</span>
 </pre></div>
 </div>
 </div>
-<input id="1d8151e2-ff63-4bf5-bfb1-8e58c01be282" name="7843b1b4-806f-46d3-a9f0-148fe0a9598c" type="radio">
-</input><label class="tabbed-label" for="1d8151e2-ff63-4bf5-bfb1-8e58c01be282">
+<input id="090f614f-fa3a-40e6-b8c1-ecd815656142" name="7285a01c-6945-4cd9-807d-f77741daee68" type="radio">
+</input><label class="tabbed-label" for="090f614f-fa3a-40e6-b8c1-ecd815656142">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -972,8 +967,8 @@ dml_plr_obj_external$summary()
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] &quot;Estimates and significance testing of the effect of target variables&quot;
-  Estimate. Std. Error t value Pr(&gt;|t|)    
-d    0.5269     0.1094   4.814 1.48e-06 ***
+  Estimate. Std. Error t value Pr(&gt;|t|)   
+d    0.4243     0.1400    3.03  0.00244 **
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -987,8 +982,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>Note, that in order to split data unevenly into train and test sets the interface to externally set the sample splitting
 via <code class="docutils literal notranslate"><span class="pre">set_sample_splitting()</span></code> needs to be applied, like for example:</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="d5e38cee-3750-4d20-a3a9-d0a8a1dabbf4" name="88fb009e-57a6-4586-9afa-aeb27afaaf86" type="radio">
-</input><label class="tabbed-label" for="d5e38cee-3750-4d20-a3a9-d0a8a1dabbf4">
+<input checked="checked" id="1530dcf1-ba86-429f-b76d-6d9a2d1d61fb" name="646f66c2-6092-4c65-bbdb-596307b504a2" type="radio">
+</input><label class="tabbed-label" for="1530dcf1-ba86-429f-b76d-6d9a2d1d61fb">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [41]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">314</span><span class="p">)</span>
 
@@ -1003,13 +998,13 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">In [45]: </span><span class="n">dml_plr_obj_external</span><span class="o">.</span><span class="n">set_sample_splitting</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">smpls</span><span class="p">));</span>
 
 <span class="gp">In [46]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj_external</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">       coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.473033  0.134977  3.504531  0.000457  0.208482  0.737584</span>
+<span class="go">      coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.47396  0.134194  3.531894  0.000413  0.210944  0.736976</span>
 </pre></div>
 </div>
 </div>
-<input id="db6a334b-8935-4404-ad57-4f57fd2c65a8" name="88fb009e-57a6-4586-9afa-aeb27afaaf86" type="radio">
-</input><label class="tabbed-label" for="db6a334b-8935-4404-ad57-4f57fd2c65a8">
+<input id="b5fa4375-0779-4e00-86e7-d7ceade6ef05" name="646f66c2-6092-4c65-bbdb-596307b504a2" type="radio">
+</input><label class="tabbed-label" for="b5fa4375-0779-4e00-86e7-d7ceade6ef05">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1050,7 +1045,7 @@ dml_plr_obj_external$summary()
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] &quot;Estimates and significance testing of the effect of target variables&quot;
   Estimate. Std. Error t value Pr(&gt;|t|)    
-d    0.5222     0.1216   4.293 1.76e-05 ***
+d    0.6394     0.1385   4.617 3.89e-06 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -1063,14 +1058,14 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <div class="section" id="estimate-dml-models-without-sample-splitting">
-<h2><span class="section-number">9.5. </span>Estimate DML models without sample-splitting<a class="headerlink" href="#estimate-dml-models-without-sample-splitting" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">8.5. </span>Estimate DML models without sample-splitting<a class="headerlink" href="#estimate-dml-models-without-sample-splitting" title="Permalink to this headline">¶</a></h2>
 <p>The implementation of the DML models allows the estimation without sample splitting, i.e., all observations are used
 for learning the nuisance models as well as for the estimation of the causal parameter.
 Note that this approach usually results in a bias and is therefore not recommended without appropriate theoretical
 justification, see also <a class="reference internal" href="basics.html#bias-overfitting"><span class="std std-ref">Sample splitting to remove bias induced by overfitting</span></a>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="5f3c0701-db12-4af5-bc88-3eb6364798b7" name="66f19513-6098-4f10-a16e-62356092f5e7" type="radio">
-</input><label class="tabbed-label" for="5f3c0701-db12-4af5-bc88-3eb6364798b7">
+<input checked="checked" id="ee5f8221-a16d-4305-bbaa-52fe3ae55c3e" name="26489698-a18f-4fff-bbf5-88ad39b9a292" type="radio">
+</input><label class="tabbed-label" for="ee5f8221-a16d-4305-bbaa-52fe3ae55c3e">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [47]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">314</span><span class="p">)</span>
 
@@ -1079,13 +1074,13 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">   ....: </span>
 
 <span class="gp">In [49]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj_external</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">       coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.514558  0.123173  4.177519  0.000029  0.273143  0.755973</span>
+<span class="go">       coef   std err        t    P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.508076  0.125342  4.05353  0.00005  0.262411  0.753741</span>
 </pre></div>
 </div>
 </div>
-<input id="c7ea816b-3595-4b4f-a419-63801c323cfc" name="66f19513-6098-4f10-a16e-62356092f5e7" type="radio">
-</input><label class="tabbed-label" for="c7ea816b-3595-4b4f-a419-63801c323cfc">
+<input id="a4b27cc6-88f4-40d7-9bc7-1f25c3b9f506" name="26489698-a18f-4fff-bbf5-88ad39b9a292" type="radio">
+</input><label class="tabbed-label" for="a4b27cc6-88f4-40d7-9bc7-1f25c3b9f506">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1106,7 +1101,7 @@ dml_plr_no_split$summary()
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] &quot;Estimates and significance testing of the effect of target variables&quot;
   Estimate. Std. Error t value Pr(&gt;|t|)    
-d    0.4115     0.0766   5.371 7.82e-08 ***
+d    0.5452     0.1078   5.056 4.28e-07 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -1126,7 +1121,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
               
               <div class='prev-next-bottom'>
                 
-    <a class='left-prev' id="prev-link" href="sim_inf.html" title="previous page"><span class="section-number">8. </span>Confidence bands and multiplier bootstrap for valid simultaneous inference</a>
+    <a class='left-prev' id="prev-link" href="se_confint.html" title="previous page"><span class="section-number">7. </span>Variance estimation, confidence intervals and multiplier bootstrap</a>
     <a class='right-next' id="next-link" href="../auto_examples/index.html" title="next page">Examples</a>
 
               </div>
