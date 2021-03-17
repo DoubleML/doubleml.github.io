@@ -179,17 +179,22 @@
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="learners.html">
-   6.  Machine learners, hyperparameters and hyperparameter tuning
+   6.  Learners, hyperparameters and hyperparameter tuning
   </a>
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="se_confint.html">
-   7.  Variance estimation, confidence intervals and boostrap standard errors
+   7.  Variance estimation and confidence intervals for a causal parameter of interest
+  </a>
+ </li>
+ <li class="toctree-l2">
+  <a class="reference internal" href="sim_inf.html">
+   8.  Confidence bands and multiplier bootstrap for valid simultaneous inference
   </a>
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="resampling.html">
-   8.  Sample-splitting, cross-fitting and repeated cross-fitting
+   9.  Sample-splitting, cross-fitting and repeated cross-fitting
   </a>
  </li>
 </ul>
@@ -248,7 +253,7 @@
 <p>The algorithm <code class="docutils literal notranslate"><span class="pre">dml_procedure='dml1'</span></code> can be summarized as</p>
 <ol class="arabic">
 <li><p><strong>Inputs:</strong> Choose a model (PLR, PLIV, IRM, IIVM), provide data <span class="math notranslate nohighlight">\((W_i)_{i=1}^{N}\)</span>, a Neyman-orthogonal score function <span class="math notranslate nohighlight">\(\psi(W; \theta, \eta)\)</span> and specify machine learning method(s) for the nuisance function(s) <span class="math notranslate nohighlight">\(\eta\)</span>.</p></li>
-<li><p><strong>Train ML predictors on folds:</strong> Take a <span class="math notranslate nohighlight">\(K\)</span>-fold random partition <span class="math notranslate nohighlight">\((I_k)_{k=1}^{K}\)</span> of observation indices <span class="math notranslate nohighlight">\([N] = \lbrace 1, \ldots, N\rbrace\)</span> such that the size of each fold <span class="math notranslate nohighlight">\(I_k\)</span> is <span class="math notranslate nohighlight">\(n=N/K\)</span>. For each <span class="math notranslate nohighlight">\(k \in [K] = \lbrace 1, \ldots, K]\)</span>, construct a high-quality machine learning estimator</p>
+<li><p><strong>Train ML predictors on folds:</strong> Take a <span class="math notranslate nohighlight">\(K\)</span>-fold random partition <span class="math notranslate nohighlight">\((I_k)_{k=1}^{K}\)</span> of observation indices <span class="math notranslate nohighlight">\([N] = \lbrace 1, \ldots, N\rbrace\)</span> such that the size of each fold <span class="math notranslate nohighlight">\(I_k\)</span> is <span class="math notranslate nohighlight">\(n=N/K\)</span>. For each <span class="math notranslate nohighlight">\(k \in [K] = \lbrace 1, \ldots, K\rbrace\)</span>, construct a high-quality machine learning estimator</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
 \[\hat{\eta}_{0,k} = \hat{\eta}_{0,k}\big((W_i)_{i\not\in I_k}\big)\]</div>
@@ -272,7 +277,7 @@
 <p>The algorithm <code class="docutils literal notranslate"><span class="pre">dml_procedure='dml2'</span></code> can be summarized as</p>
 <ol class="arabic">
 <li><p><strong>Inputs:</strong> Choose a model (PLR, PLIV, IRM, IIVM), provide data <span class="math notranslate nohighlight">\((W_i)_{i=1}^{N}\)</span>, a Neyman-orthogonal score function <span class="math notranslate nohighlight">\(\psi(W; \theta, \eta)\)</span> and specify machine learning method(s) for the nuisance function(s) <span class="math notranslate nohighlight">\(\eta\)</span>.</p></li>
-<li><p><strong>Train ML predictors on folds:</strong> Take a <span class="math notranslate nohighlight">\(K\)</span>-fold random partition <span class="math notranslate nohighlight">\((I_k)_{k=1}^{K}\)</span> of observation indices <span class="math notranslate nohighlight">\([N] = \lbrace 1, \ldots, N\rbrace\)</span> such that the size of each fold <span class="math notranslate nohighlight">\(I_k\)</span> is <span class="math notranslate nohighlight">\(n=N/K\)</span>. For each <span class="math notranslate nohighlight">\(k \in [K] = \lbrace 1, \ldots, K]\)</span>, construct a high-quality machine learning estimator</p>
+<li><p><strong>Train ML predictors on folds:</strong> Take a <span class="math notranslate nohighlight">\(K\)</span>-fold random partition <span class="math notranslate nohighlight">\((I_k)_{k=1}^{K}\)</span> of observation indices <span class="math notranslate nohighlight">\([N] = \lbrace 1, \ldots, N\rbrace\)</span> such that the size of each fold <span class="math notranslate nohighlight">\(I_k\)</span> is <span class="math notranslate nohighlight">\(n=N/K\)</span>. For each <span class="math notranslate nohighlight">\(k \in [K] = \lbrace 1, \ldots, K\rbrace\)</span>, construct a high-quality machine learning estimator</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
 \[\hat{\eta}_{0,k} = \hat{\eta}_{0,k}\big((W_i)_{i\not\in I_k}\big)\]</div>
@@ -294,8 +299,8 @@
 implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>.
 The DML algorithm can be selected via parameter <code class="docutils literal notranslate"><span class="pre">dml_procedure='dml1'</span></code> vs. <code class="docutils literal notranslate"><span class="pre">dml_procedure='dml2'</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="6cfc446a-ae41-4dbf-814a-44e3d22ccb1a" name="b59f70fd-8e77-4736-90ec-30dada395861" type="radio">
-</input><label class="tabbed-label" for="6cfc446a-ae41-4dbf-814a-44e3d22ccb1a">
+<input checked="checked" id="bf04d048-8796-4ced-b90f-a6a4fa2c3443" name="31679aab-e1d1-403c-ab45-7c50b863fced" type="radio">
+</input><label class="tabbed-label" for="bf04d048-8796-4ced-b90f-a6a4fa2c3443">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -323,8 +328,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="c603ee24-5ffc-4f15-93c9-0a12c136b713" name="b59f70fd-8e77-4736-90ec-30dada395861" type="radio">
-</input><label class="tabbed-label" for="c603ee24-5ffc-4f15-93c9-0a12c136b713">
+<input id="6ab0b3cf-933c-456b-b270-341d26dca19c" name="31679aab-e1d1-403c-ab45-7c50b863fced" type="radio">
+</input><label class="tabbed-label" for="6ab0b3cf-933c-456b-b270-341d26dca19c">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -366,16 +371,16 @@ dml_plr_obj$fit()
 <p>The <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method of <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>
 stores the estimate <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span> in its <code class="docutils literal notranslate"><span class="pre">coef</span></code> attribute.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="3bae5b07-5998-485e-8e2a-6439a659cb9c" name="bf8e1691-bfb1-44c2-a2dd-6cb603f75843" type="radio">
-</input><label class="tabbed-label" for="3bae5b07-5998-485e-8e2a-6439a659cb9c">
+<input checked="checked" id="2c2eaa65-692f-48be-a8ba-d8c5778c0a6a" name="59be82a3-db53-4bd9-b375-b74dcd882d32" type="radio">
+</input><label class="tabbed-label" for="2c2eaa65-692f-48be-a8ba-d8c5778c0a6a">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">coef</span>
 <span class="gh">Out[13]: </span><span class="go">array([0.45746521])</span>
 </pre></div>
 </div>
 </div>
-<input id="fc4a549b-8fcf-461f-97e3-8d9e8b9f473c" name="bf8e1691-bfb1-44c2-a2dd-6cb603f75843" type="radio">
-</input><label class="tabbed-label" for="fc4a549b-8fcf-461f-97e3-8d9e8b9f473c">
+<input id="544ee058-70d6-4f35-bdf6-dcc6dd325011" name="59be82a3-db53-4bd9-b375-b74dcd882d32" type="radio">
+</input><label class="tabbed-label" for="544ee058-70d6-4f35-bdf6-dcc6dd325011">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -392,8 +397,8 @@ R</label><div class="tabbed-content docutils">
 The values of the score function <span class="math notranslate nohighlight">\((\psi(W_i; \tilde{\theta}_0, \hat{\eta}_{0,k(i)}))_{i \in [N]}\)</span>
 are stored in the attribute <code class="docutils literal notranslate"><span class="pre">psi</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="cb8786e1-8c20-4046-b044-4344c979f9e1" name="8ec9d7bd-053d-48ca-a70d-5f907b4e50fa" type="radio">
-</input><label class="tabbed-label" for="cb8786e1-8c20-4046-b044-4344c979f9e1">
+<input checked="checked" id="cc1129ff-983e-46d4-b611-d504963a57b5" name="83bea30c-4577-4776-9cc7-90d5eb4cf3b7" type="radio">
+</input><label class="tabbed-label" for="cc1129ff-983e-46d4-b611-d504963a57b5">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">psi</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
 <span class="gh">Out[14]: </span><span class="go"></span>
@@ -409,8 +414,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="ec0b3045-e117-4452-a2bc-27caacdd3679" name="8ec9d7bd-053d-48ca-a70d-5f907b4e50fa" type="radio">
-</input><label class="tabbed-label" for="ec0b3045-e117-4452-a2bc-27caacdd3679">
+<input id="454c0f4d-ef2d-446d-ba4e-8b139483c753" name="83bea30c-4577-4776-9cc7-90d5eb4cf3b7" type="radio">
+</input><label class="tabbed-label" for="454c0f4d-ef2d-446d-ba4e-8b139483c753">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -432,16 +437,16 @@ R</label><div class="tabbed-content docutils">
 <p>For the DML1 algorithm, the estimates for the different folds
 <span class="math notranslate nohighlight">\(\check{\theta}_{0,k}\)</span>, <span class="math notranslate nohighlight">\(k \in [K]\)</span> are stored in attribute <code class="docutils literal notranslate"><span class="pre">all_dml1_coef</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="ea780c7c-1510-410a-b8dd-a21ee6e16501" name="c3fdf359-58ee-4266-830a-fef5f34fa4b0" type="radio">
-</input><label class="tabbed-label" for="ea780c7c-1510-410a-b8dd-a21ee6e16501">
+<input checked="checked" id="b19be2b9-676f-4ba0-b8a5-b6fab0348434" name="fccf9ad0-cedc-4aa4-a9aa-f5a0db50fe43" type="radio">
+</input><label class="tabbed-label" for="b19be2b9-676f-4ba0-b8a5-b6fab0348434">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">all_dml1_coef</span>
 <span class="gh">Out[15]: </span><span class="go">array([[[0.47200861, 0.34307521, 0.46938008, 0.44933048, 0.55353165]]])</span>
 </pre></div>
 </div>
 </div>
-<input id="fed896c6-d3a4-40ce-a3b4-45aa716b408f" name="c3fdf359-58ee-4266-830a-fef5f34fa4b0" type="radio">
-</input><label class="tabbed-label" for="fed896c6-d3a4-40ce-a3b4-45aa716b408f">
+<input id="0d3f0f84-cdd3-4b2a-9aa9-6bd54ce93fb7" name="fccf9ad0-cedc-4aa4-a9aa-f5a0db50fe43" type="radio">
+</input><label class="tabbed-label" for="0d3f0f84-cdd3-4b2a-9aa9-6bd54ce93fb7">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">

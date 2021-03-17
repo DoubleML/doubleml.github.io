@@ -179,17 +179,22 @@
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="learners.html">
-   6.  Machine learners, hyperparameters and hyperparameter tuning
+   6.  Learners, hyperparameters and hyperparameter tuning
   </a>
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="se_confint.html">
-   7.  Variance estimation, confidence intervals and boostrap standard errors
+   7.  Variance estimation and confidence intervals for a causal parameter of interest
+  </a>
+ </li>
+ <li class="toctree-l2">
+  <a class="reference internal" href="sim_inf.html">
+   8.  Confidence bands and multiplier bootstrap for valid simultaneous inference
   </a>
  </li>
  <li class="toctree-l2">
   <a class="reference internal" href="resampling.html">
-   8.  Sample-splitting, cross-fitting and repeated cross-fitting
+   9.  Sample-splitting, cross-fitting and repeated cross-fitting
   </a>
  </li>
 </ul>
@@ -262,30 +267,30 @@
                 
   <div class="section" id="the-basics-of-double-debiased-machine-learning">
 <span id="basics"></span><h1><span class="section-number">1. </span>The basics of double/debiased machine learning<a class="headerlink" href="#the-basics-of-double-debiased-machine-learning" title="Permalink to this headline">¶</a></h1>
-<p>In the following we provide a brief summary of and motivation to double machine learning methods and show how the
+<p>In the following we provide a brief summary of and motivation to the double machine learning (DML) framework and show how the
 corresponding methods provided by the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> package can be applied.
 For details we refer to Chernozhukov et al. (2018).</p>
 <div class="section" id="data-generating-process">
 <h2><span class="section-number">1.1. </span>Data generating process<a class="headerlink" href="#data-generating-process" title="Permalink to this headline">¶</a></h2>
 <p>We consider the following partially linear model</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}d_i = m_0(x_i) + v_i, &amp; &amp;v_i \sim \mathcal{N}(0,1),\\y_i = \theta d_i + g_0(x_i) + \zeta_i, &amp; &amp;\zeta_i \sim \mathcal{N}(0,1),\end{aligned}\end{align} \]</div>
+\[ \begin{align}\begin{aligned}y_i = \theta d_i + g_0(x_i) + \zeta_i, &amp; &amp;\zeta_i \sim \mathcal{N}(0,1),\\d_i = m_0(x_i) + v_i, &amp; &amp;v_i \sim \mathcal{N}(0,1),\end{aligned}\end{align} \]</div>
 <p>with covariates <span class="math notranslate nohighlight">\(x_i \sim \mathcal{N}(0, \Sigma)\)</span>, where  <span class="math notranslate nohighlight">\(\Sigma\)</span> is a matrix with entries
-<span class="math notranslate nohighlight">\(\Sigma_{kj} = 0.7^{|j-k|}\)</span>.
-The true parameter <span class="math notranslate nohighlight">\(\theta\)</span> is set to <span class="math notranslate nohighlight">\(0.5\)</span>.</p>
+<span class="math notranslate nohighlight">\(\Sigma_{kj} = 0.7^{|j-k|}\)</span>. We are interested in performing valid inference on the causal parameter <span class="math notranslate nohighlight">\(\theta\)</span>.
+The true parameter <span class="math notranslate nohighlight">\(\theta\)</span> is set to <span class="math notranslate nohighlight">\(0.5\)</span> in our simulation experiment.</p>
 <p>The nuisance functions are given by</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}m_0(x_i) &amp;= \frac{1}{4} x_{i,1} + \frac{\exp(x_{i,3})}{1+\exp(x_{i,3})},\\g_0(X) &amp;= \frac{\exp(x_{i,1})}{1+\exp(x_{i,1})} + \frac{1}{4} x_{i,3}.\end{aligned}\end{align} \]</div>
+\[ \begin{align}\begin{aligned}m_0(x_i) &amp;= x_{i,1} + \frac{1}{4}  \frac{\exp(x_{i,3})}{1+\exp(x_{i,3})},\\g_0(X) &amp;= \frac{\exp(x_{i,1})}{1+\exp(x_{i,1})} + \frac{1}{4} x_{i,3}.\end{aligned}\end{align} \]</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>In Python the data can be generated with <a class="reference internal" href="../api/generated/doubleml.datasets.make_plr_CCDDHNR2018.html#doubleml.datasets.make_plr_CCDDHNR2018" title="doubleml.datasets.make_plr_CCDDHNR2018"><code class="xref py py-func docutils literal notranslate"><span class="pre">doubleml.datasets.make_plr_CCDDHNR2018()</span></code></a>.</p></li>
-<li><p>In R the data can be generated with <cite>DoubleML::make_plr_CCDDHNR2018()</cite>.</p></li>
+<li><p>In R the data can be generated with <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/make_plr_CCDDHNR2018.html">DoubleML::make_plr_CCDDHNR2018()</a>.</p></li>
 </ul>
 </div>
 <div class="tabbed-set docutils">
-<input checked="checked" id="b7751058-c0d0-4bcf-9cd4-c0bc848518da" name="b0beb631-b72e-4695-a172-8294fe7b7bc9" type="radio">
-</input><label class="tabbed-label" for="b7751058-c0d0-4bcf-9cd4-c0bc848518da">
+<input checked="checked" id="30a51538-1447-4c57-94ff-4266f9ad96a7" name="bb199298-ea76-4611-b79e-42f62a81680d" type="radio">
+</input><label class="tabbed-label" for="30a51538-1447-4c57-94ff-4266f9ad96a7">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -310,8 +315,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="0589fd9a-2dcb-44bd-95bd-e8cbdbe343eb" name="b0beb631-b72e-4695-a172-8294fe7b7bc9" type="radio">
-</input><label class="tabbed-label" for="0589fd9a-2dcb-44bd-95bd-e8cbdbe343eb">
+<input id="c6318098-349d-453d-bd4e-04d62107c101" name="bb199298-ea76-4611-b79e-42f62a81680d" type="radio">
+</input><label class="tabbed-label" for="c6318098-349d-453d-bd4e-04d62107c101">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -354,8 +359,8 @@ As we will see in the following, due to the considered high-dimensional setting 
 estimates is higher in comparison to the double machine learning estimates and therefore the estimates are also less
 efficient.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="b6429a65-916e-48c6-ab08-5f3bc03f6d4a" name="ac9c6b70-495c-408f-a36c-42f453ef4020" type="radio">
-</input><label class="tabbed-label" for="b6429a65-916e-48c6-ab08-5f3bc03f6d4a">
+<input checked="checked" id="f60977f3-6285-4f62-92a3-0c60628498e8" name="2ba36d84-0d11-4c4a-bed6-a159a411ed37" type="radio">
+</input><label class="tabbed-label" for="f60977f3-6285-4f62-92a3-0c60628498e8">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [10]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
 
@@ -392,8 +397,8 @@ Python</label><div class="tabbed-content docutils">
 </div>
 <a class="reference internal image-reference" href="../_images/ols.png"><img alt="../_images/ols.png" src="../_images/ols.png" style="width: 5in;" /></a>
 </div>
-<input id="ab1ae57a-5dc5-41ae-aeae-305c5be97d9c" name="ac9c6b70-495c-408f-a36c-42f453ef4020" type="radio">
-</input><label class="tabbed-label" for="ab1ae57a-5dc5-41ae-aeae-305c5be97d9c">
+<input id="c0fd926d-bb4b-40fb-938e-e67bc90d2bc6" name="2ba36d84-0d11-4c4a-bed6-a159a411ed37" type="radio">
+</input><label class="tabbed-label" for="c0fd926d-bb4b-40fb-938e-e67bc90d2bc6">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -466,15 +471,18 @@ R</label><div class="tabbed-content docutils">
 </div>
 <div class="section" id="regularization-bias-in-simple-ml-approaches">
 <h2><span class="section-number">1.3. </span>Regularization bias in simple ML-approaches<a class="headerlink" href="#regularization-bias-in-simple-ml-approaches" title="Permalink to this headline">¶</a></h2>
-<p>A simple ML approach is given by randomly splitting the sample into two parts.
-On the auxiliary sample indexed by <span class="math notranslate nohighlight">\(i \in I^C\)</span> the nuisance function <span class="math notranslate nohighlight">\(g_0(X)\)</span> is estimated with an ML method.
+<p>Naive inference that is based on a direct application of machine learning methods to estimate the causal
+parameter, <span class="math notranslate nohighlight">\(\theta\)</span>, is generally invalid. The use of machine learning methods introduces a bias that arises due to
+regularization. A simple ML approach is given by randomly splitting the sample into two parts.
+On the auxiliary sample indexed by <span class="math notranslate nohighlight">\(i \in I^C\)</span> the nuisance function <span class="math notranslate nohighlight">\(g_0(X)\)</span> is estimated with an ML method,
+for example a random forest learner.
 Given the estimate <span class="math notranslate nohighlight">\(\hat{g}_0(X)\)</span>, the final estimate of <span class="math notranslate nohighlight">\(\theta\)</span> is obtained as (<span class="math notranslate nohighlight">\(n=N/2\)</span>) using the
 other half of observations indexed with <span class="math notranslate nohighlight">\(i \in I\)</span></p>
 <div class="math notranslate nohighlight">
 \[\hat{\theta} = \left(\frac{1}{n} \sum_{i\in I} D_i^2\right)^{-1} \frac{1}{n} \sum_{i\in I} D_i (Y_i - \hat{g}_0(X_i)).\]</div>
 <div class="tabbed-set docutils">
-<input checked="checked" id="20de7fd3-1ef0-444a-a4a4-8e75a3d8be55" name="6dc1efb7-0f9b-4a0c-b299-c7c4aa5b577d" type="radio">
-</input><label class="tabbed-label" for="20de7fd3-1ef0-444a-a4a4-8e75a3d8be55">
+<input checked="checked" id="ba15594c-0728-4d69-a009-9d2b109fafcb" name="37112d07-788d-49f7-9b90-28f523b7f19f" type="radio">
+</input><label class="tabbed-label" for="ba15594c-0728-4d69-a009-9d2b109fafcb">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [19]: </span><span class="k">def</span> <span class="nf">non_orth_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">g_hat</span><span class="p">,</span> <span class="n">m_hat</span><span class="p">,</span> <span class="n">smpls</span><span class="p">):</span>
 <span class="gp">   ....: </span>    <span class="n">u_hat</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">g_hat</span>
@@ -529,8 +537,8 @@ Python</label><div class="tabbed-content docutils">
 </div>
 <a class="reference internal image-reference" href="../_images/nonorth.png"><img alt="../_images/nonorth.png" src="../_images/nonorth.png" style="width: 5in;" /></a>
 </div>
-<input id="7afaf8f0-dfd7-4d43-add8-85e5be22a9eb" name="6dc1efb7-0f9b-4a0c-b299-c7c4aa5b577d" type="radio">
-</input><label class="tabbed-label" for="7afaf8f0-dfd7-4d43-add8-85e5be22a9eb">
+<input id="8359b5bb-3e0c-45a9-9dd5-6aa96b49b526" name="37112d07-788d-49f7-9b90-28f523b7f19f" type="radio">
+</input><label class="tabbed-label" for="8359b5bb-3e0c-45a9-9dd5-6aa96b49b526">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -642,9 +650,9 @@ g_nonorth
 <p>The regularization bias in the simple ML-approach is caused by the slow convergence of <span class="math notranslate nohighlight">\(\hat{\theta}\)</span></p>
 <div class="math notranslate nohighlight">
 \[|\sqrt{n} (\hat{\theta} - \theta) | \rightarrow_{P} \infty\]</div>
-<p>i.e. slower than <span class="math notranslate nohighlight">\(1/\sqrt{n}\)</span>.
-The driving factor is the bias in learning <span class="math notranslate nohighlight">\(g\)</span>.
-A Heuristic illustration is given by</p>
+<p>i.e., slower than <span class="math notranslate nohighlight">\(1/\sqrt{n}\)</span>.
+The driving factor is the bias that arises by learning <span class="math notranslate nohighlight">\(g\)</span> with a random forest or any other ML technique.
+A heuristic illustration is given by</p>
 <div class="math notranslate nohighlight">
 \[\sqrt{n}(\hat{\theta} - \theta) = \underbrace{\left(\frac{1}{n} \sum_{i\in I} D_i^2\right)^{-1} \frac{1}{n} \sum_{i\in I} D_i U_i}_{=:a}
 +  \underbrace{\left(\frac{1}{n} \sum_{i\in I} D_i^2\right)^{-1} \frac{1}{n} \sum_{i\in I} D_i (g_0(X_i) - \hat{g}_0(X_i))}_{=:b}.\]</div>
@@ -653,13 +661,13 @@ However, <span class="math notranslate nohighlight">\(b\)</span> (the regulariza
 </div>
 <div class="section" id="overcoming-regularization-bias-by-orthogonalization">
 <span id="bias-non-orth"></span><h2><span class="section-number">1.4. </span>Overcoming regularization bias by orthogonalization<a class="headerlink" href="#overcoming-regularization-bias-by-orthogonalization" title="Permalink to this headline">¶</a></h2>
-<p>To overcome the regularization bias we are directly partialling out the effect of <span class="math notranslate nohighlight">\(X\)</span> from <span class="math notranslate nohighlight">\(D\)</span> to obtain the
+<p>To overcome the regularization bias we can partial out the effect of <span class="math notranslate nohighlight">\(X\)</span> from <span class="math notranslate nohighlight">\(D\)</span> to obtain the
 orthogonalized regressor <span class="math notranslate nohighlight">\(V = D - m(X)\)</span>. We then use the final estimate</p>
 <div class="math notranslate nohighlight">
 \[\check{\theta} = \left(\frac{1}{n} \sum_{i\in I} \hat{V}_i D_i\right)^{-1} \frac{1}{n} \sum_{i\in I} \hat{V}_i (Y_i - \hat{g}_0(X_i)).\]</div>
 <div class="tabbed-set docutils">
-<input checked="checked" id="0d992fcf-5458-4384-934d-a04e78ef03c8" name="6133e3b7-6499-40b6-861e-c49f66281162" type="radio">
-</input><label class="tabbed-label" for="0d992fcf-5458-4384-934d-a04e78ef03c8">
+<input checked="checked" id="f21e015d-1a4e-48bc-9962-eeb98389720c" name="f12cf8ed-e020-4554-b1e3-758bfda8aace" type="radio">
+</input><label class="tabbed-label" for="f21e015d-1a4e-48bc-9962-eeb98389720c">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [33]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -692,8 +700,8 @@ Python</label><div class="tabbed-content docutils">
 </div>
 <a class="reference internal image-reference" href="../_images/orth_nosplit.png"><img alt="../_images/orth_nosplit.png" src="../_images/orth_nosplit.png" style="width: 5in;" /></a>
 </div>
-<input id="86321118-8418-4d3d-a74d-d354ecf341ec" name="6133e3b7-6499-40b6-861e-c49f66281162" type="radio">
-</input><label class="tabbed-label" for="86321118-8418-4d3d-a74d-d354ecf341ec">
+<input id="e4749dfc-2c49-47ad-8cd2-f4241d12deaf" name="f12cf8ed-e020-4554-b1e3-758bfda8aace" type="radio">
+</input><label class="tabbed-label" for="e4749dfc-2c49-47ad-8cd2-f4241d12deaf">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -769,17 +777,18 @@ g_nosplit
 </div>
 </div>
 </div>
-<p>If the nuisance models <span class="math notranslate nohighlight">\(\hat{g}_0()\)</span> and <span class="math notranslate nohighlight">\(\hat{m}()\)</span> are estimate on the whole dataset which is also used for obtaining
-the final estimate <span class="math notranslate nohighlight">\(\check{\theta}\)</span> another bias can be observed.</p>
+<p>If the nuisance models <span class="math notranslate nohighlight">\(\hat{g}_0()\)</span> and <span class="math notranslate nohighlight">\(\hat{m}()\)</span> are estimated on the whole dataset, which is also used for obtaining
+the final estimate <span class="math notranslate nohighlight">\(\check{\theta}\)</span>, another bias is observed.</p>
 </div>
 <div class="section" id="sample-splitting-to-remove-bias-induced-by-overfitting">
 <span id="bias-overfitting"></span><h2><span class="section-number">1.5. </span>Sample splitting to remove bias induced by overfitting<a class="headerlink" href="#sample-splitting-to-remove-bias-induced-by-overfitting" title="Permalink to this headline">¶</a></h2>
 <p>Using sample splitting, i.e., estimate the nuisance models <span class="math notranslate nohighlight">\(\hat{g}_0()\)</span> and <span class="math notranslate nohighlight">\(\hat{m}()\)</span> on one part of the
-data (training data) and estimate <span class="math notranslate nohighlight">\(\check{\theta}\)</span> on the other part of the data (test data) overcomes the bias
-induced by overfitting. Cross-fitting performs well empirically.</p>
+data (training data) and estimate <span class="math notranslate nohighlight">\(\check{\theta}\)</span> on the other part of the data (test data), overcomes the bias
+induced by overfitting. We can exploit the benefits of cross-fitting by switching the role of the training and test sample.
+Cross-fitting performs well empirically because the entire sample can be used for estimation.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="e6294713-2cb7-4a08-833f-1c5f2083f645" name="38464e97-aa52-45bb-9b36-2a8362fd6749" type="radio">
-</input><label class="tabbed-label" for="e6294713-2cb7-4a08-833f-1c5f2083f645">
+<input checked="checked" id="3a4a7a95-21e3-4467-8a29-0947380a309d" name="365269db-e868-4bb4-ade7-77407320b72a" type="radio">
+</input><label class="tabbed-label" for="3a4a7a95-21e3-4467-8a29-0947380a309d">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [39]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -811,8 +820,8 @@ Python</label><div class="tabbed-content docutils">
 </div>
 <a class="reference internal image-reference" href="../_images/orth.png"><img alt="../_images/orth.png" src="../_images/orth.png" style="width: 5in;" /></a>
 </div>
-<input id="f3e17237-264c-4f37-9807-54a91de0f6dd" name="38464e97-aa52-45bb-9b36-2a8362fd6749" type="radio">
-</input><label class="tabbed-label" for="f3e17237-264c-4f37-9807-54a91de0f6dd">
+<input id="cf629635-e86a-426e-9d1c-02697e5da2ab" name="365269db-e868-4bb4-ade7-77407320b72a" type="radio">
+</input><label class="tabbed-label" for="cf629635-e86a-426e-9d1c-02697e5da2ab">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -887,7 +896,7 @@ g_dml
 </div>
 <div class="section" id="double-debiased-machine-learning">
 <h2><span class="section-number">1.6. </span>Double/debiased machine learning<a class="headerlink" href="#double-debiased-machine-learning" title="Permalink to this headline">¶</a></h2>
-<p>To illustrate the benefits of the auxiliary prediction step (the DML) we write the error as</p>
+<p>To illustrate the benefits of the auxiliary prediction step in the DML framework we write the error as</p>
 <div class="math notranslate nohighlight">
 \[\sqrt{n}(\check{\theta} - \theta) = a^* + b^* + c^*\]</div>
 <p>Chernozhukov et al. (2018) argues that:</p>
@@ -901,8 +910,8 @@ g_dml
 <p>vanishes asymptotically for many data generating processes.</p>
 <p>The third term <span class="math notranslate nohighlight">\(c^*\)</span> vanishes in probability if sample splitting is applied.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="58787224-c16e-4100-92ed-6e96d4aa2668" name="3d2e0c72-9164-4cb2-bb36-76512ce2c3bf" type="radio">
-</input><label class="tabbed-label" for="58787224-c16e-4100-92ed-6e96d4aa2668">
+<input checked="checked" id="8e0b5070-3a3e-4eea-901f-05b3fd951009" name="9beae1c6-ff99-4a37-a47e-3b38e4079df3" type="radio">
+</input><label class="tabbed-label" for="8e0b5070-3a3e-4eea-901f-05b3fd951009">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [45]: </span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">theta_ols</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -921,8 +930,8 @@ Python</label><div class="tabbed-content docutils">
 </div>
 <a class="reference internal image-reference" href="../_images/comparison.png"><img alt="../_images/comparison.png" src="../_images/comparison.png" style="width: 5in;" /></a>
 </div>
-<input id="1a3fa2f7-d0ee-49be-8dba-903aacce58c1" name="3d2e0c72-9164-4cb2-bb36-76512ce2c3bf" type="radio">
-</input><label class="tabbed-label" for="1a3fa2f7-d0ee-49be-8dba-903aacce58c1">
+<input id="8f941b67-81e3-45a2-9cd3-4f828950141d" name="9beae1c6-ff99-4a37-a47e-3b38e4079df3" type="radio">
+</input><label class="tabbed-label" for="8f941b67-81e3-45a2-9cd3-4f828950141d">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
