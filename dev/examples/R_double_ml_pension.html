@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Impact of 401(k) on Financial Wealth* &#8212; DoubleML 0.2.dev0 documentation</title>
+    <title>R: Impact of 401(k) on Financial Wealth &#8212; DoubleML 0.2.dev0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet" />
   <link href="../_static/css/index.ee6fb81b276d6fba8a971ad8e9b95dd9.css" rel="stylesheet" />
@@ -51,6 +51,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Multiway Cluster Robust DML" href="double_ml_multiway_cluster.html" />
+    <link rel="prev" title="Examples" href="index.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -106,7 +108,7 @@
  </a>
 </li>
 
-<li class="toctree-l1 nav-item">
+<li class="toctree-l1 current active nav-item">
  <a class="reference internal nav-link" href="index.html">
   Examples
  </a>
@@ -167,7 +169,24 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
-    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   R: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_ml_multiway_cluster.html">
+   Multiway Cluster Robust DML
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_ml_bonus_data.html">
+   DML: Bonus Data
+  </a>
+ </li>
+</ul>
+
   </div>
 </nav>
             </div>
@@ -509,19 +528,18 @@ div.rendered_html tbody tr:hover {
     <ul class="simple">
 
 Download Jupyter notebook:
-<a class="reference external" href="https://docs.doubleml.org/stable/examples/R_pension.ipynb">https://docs.doubleml.org/stable/examples/R_pension.ipynb</a>.
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/R_double_ml_pension.ipynb">https://docs.doubleml.org/stable/examples/R_double_ml_pension.ipynb</a>.
 
     </ul>
-    </div><div class="section" id="Impact-of-401(k)-on-Financial-Wealth*">
-<h1>Impact of 401(k) on Financial Wealth*<a class="headerlink" href="#Impact-of-401(k)-on-Financial-Wealth*" title="Permalink to this headline">¶</a></h1>
-<p>In this real-data example, we illustrate how the <code class="docutils literal notranslate"><span class="pre">`DoubleML</span></code> &lt;<a class="reference external" href="https://docs.doubleml.org/stable/index.html">https://docs.doubleml.org/stable/index.html</a>&gt;`__ package can be used to estimate the effect of 401(k) eligibility and participation on accumulated assets.</p>
+    </div><div class="section" id="R:-Impact-of-401(k)-on-Financial-Wealth">
+<h1>R: Impact of 401(k) on Financial Wealth<a class="headerlink" href="#R:-Impact-of-401(k)-on-Financial-Wealth" title="Permalink to this headline">¶</a></h1>
+<p>In this real-data example, we illustrate how the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package can be used to estimate the effect of 401(k) eligibility and participation on accumulated assets.</p>
 <p>401(k) plans are pension accounts sponsored by employers. The key problem in determining the effect of participation in 401(k) plans on accumulated assets is saver heterogeneity coupled with the fact that the decision to enroll in a 401(k) is non-random. It is generally recognized that some people have a higher preference for saving than others. It also seems likely that those individuals with high unobserved preference for saving would be most likely to choose to participate in tax-advantaged
 retirement savings plans and would tend to have otherwise high amounts of accumulated assets. The presence of unobserved savings preferences with these properties then implies that conventional estimates that do not account for saver heterogeneity and endogeneity of participation will be biased upward, tending to overstate the savings effects of 401(k) participation.</p>
 <p>One can argue that eligibility for enrolling in a 401(k) plan in this data can be taken as exogenous after conditioning on a few observables of which the most important for their argument is income. The basic idea is that, at least around the time 401(k)’s initially became available, people were unlikely to be basing their employment decisions on whether an employer offered a 401(k) but would instead focus on income and other aspects of the job.</p>
 <div class="section" id="Data">
 <h2>Data<a class="headerlink" href="#Data" title="Permalink to this headline">¶</a></h2>
-<p>The preprocessed data can be fetched by calling <code class="docutils literal notranslate"><span class="pre">`fetch_401k()</span></code> &lt;<a class="reference external" href="https://docs.doubleml.org/r/stable/reference/fetch_401k.html">https://docs.doubleml.org/r/stable/reference/fetch_401k.html</a>&gt;`__. The arguments <code class="docutils literal notranslate"><span class="pre">polynomial_features</span></code> and <code class="docutils literal notranslate"><span class="pre">instrument</span></code> can be used to replicate the models used in <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>. Note that an internet connection is required for loading the data. We start with a baseline specification of the regression model and reload the data later in case we want to use another
-specification.</p>
+<p>The preprocessed data can be fetched by calling <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/fetch_401k.html">fetch_401k()</a>. The arguments <code class="docutils literal notranslate"><span class="pre">polynomial_features</span></code> and <code class="docutils literal notranslate"><span class="pre">instrument</span></code> can be used to replicate the models used in <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>. Note that an internet connection is required for loading the data. We start with a baseline specification of the regression model and reload the data later in case we want to use another specification.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -547,23 +565,6 @@ specification.</p>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-Warning message:
-&#34;package &#39;DoubleML&#39; was built under R version 3.6.3&#34;
-Warning message:
-&#34;package &#39;mlr3&#39; was built under R version 3.6.3&#34;
-Warning message:
-&#34;package &#39;mlr3learners&#39; was built under R version 3.6.3&#34;
-Warning message:
-&#34;package &#39;data.table&#39; was built under R version 3.6.3&#34;
-Warning message:
-&#34;package &#39;ggplot2&#39; was built under R version 3.6.3&#34;
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
 <div class="output_area rendered_html docutils container">
 <style>
 .list-inline {list-style: none; margin:0; padding: 0}
@@ -577,7 +578,7 @@ Warning message:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Classes &#39;data.table&#39; and &#39;data.frame&#39;:  9915 obs. of  12 variables:
+Classes ‘data.table’ and &#39;data.frame&#39;:  9915 obs. of  12 variables:
  $ net_tfa: num  0 1015 -2000 15000 0 ...
  $ age    : num  47 36 37 58 32 34 28 54 43 32 ...
  $ inc    : num  6765 28452 3300 52590 21804 ...
@@ -614,7 +615,7 @@ help(fetch_401k)<p>The data consist of 9,915 observations at the household level
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_pension_8_0.png" class="no-scaled-link" src="../_images/examples_R_pension_8_0.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pension_8_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_8_0.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -635,7 +636,7 @@ help(fetch_401k)<p>The data consist of 9,915 observations at the household level
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_pension_9_0.png" class="no-scaled-link" src="../_images/examples_R_pension_9_0.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pension_9_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_9_0.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <p>Eligibility is highly associated with financial wealth:</p>
@@ -659,14 +660,14 @@ help(fetch_401k)<p>The data consist of 9,915 observations at the household level
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
 Warning message:
-&#34;Removed 340 rows containing non-finite values (stat_density).&#34;
+“Removed 340 rows containing non-finite values (stat_density).”
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_pension_11_1.png" class="no-scaled-link" src="../_images/examples_R_pension_11_1.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pension_11_1.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_11_1.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <p>As a first estimate, we calculate the unconditional average predictive effect (APE) of 401(k) eligibility on accumulated assets. This effect corresponds to the average treatment effect if 401(k) eligibility would be assigned to individuals in an entirely randomized way. The unconditional APE of e401 is about <span class="math notranslate nohighlight">\(19559\)</span>:</p>
@@ -706,7 +707,7 @@ Warning message:
 <p>As discussed, these estimates are biased since they do not account for saver heterogeneity and endogeneity of participation.</p>
 <div class="section" id="Double-ML-package">
 <h3>Double ML package<a class="headerlink" href="#Double-ML-package" title="Permalink to this headline">¶</a></h3>
-<p>Let’s use the package <code class="docutils literal notranslate"><span class="pre">`DoubleML</span></code> &lt;<a class="reference external" href="https://docs.doubleml.org/stable/index.html">https://docs.doubleml.org/stable/index.html</a>&gt;`__ to estimate the average treatment effect of 401(k) eligibility, i.e. <code class="docutils literal notranslate"><span class="pre">e401</span></code>, and participation, i.e. <code class="docutils literal notranslate"><span class="pre">p401</span></code>, on net financial assets <code class="docutils literal notranslate"><span class="pre">net_tfa</span></code>.</p>
+<p>Let’s use the package <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> to estimate the average treatment effect of 401(k) eligibility, i.e. <code class="docutils literal notranslate"><span class="pre">e401</span></code>, and participation, i.e. <code class="docutils literal notranslate"><span class="pre">p401</span></code>, on net financial assets <code class="docutils literal notranslate"><span class="pre">net_tfa</span></code>.</p>
 </div>
 <div class="section" id="Estimating-the-ATE-of-401(k)-Eligibility-on-Net-Financial-Assets">
 <h3>Estimating the ATE of 401(k) Eligibility on Net Financial Assets<a class="headerlink" href="#Estimating-the-ATE-of-401(k)-Eligibility-on-Net-Financial-Assets" title="Permalink to this headline">¶</a></h3>
@@ -726,7 +727,7 @@ formula below (<code class="docutils literal notranslate"><span class="pre">form
 </div>
 <div class="section" id="The-Data-Backend:-DoubleMLData">
 <h2>The Data Backend: <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code><a class="headerlink" href="#The-Data-Backend:-DoubleMLData" title="Permalink to this headline">¶</a></h2>
-<p>To start our analysis, we initialize the data backend, i.e., a new instance of a <code class="docutils literal notranslate"><span class="pre">`DoubleMLData</span></code> &lt;<a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLData.html">https://docs.doubleml.org/r/stable/reference/DoubleMLData.html</a>&gt;`__ object. Here, we manually implement the regression model by using R’s formula interface. A shortcut would be to directly specify the options <code class="docutils literal notranslate"><span class="pre">polynomial_features</span></code> and <code class="docutils literal notranslate"><span class="pre">instrument</span></code> when calling <code class="docutils literal notranslate"><span class="pre">`fetch_401k()</span></code> &lt;<a class="reference external" href="https://docs.doubleml.org/r/stable/reference/fetch_401k.html">https://docs.doubleml.org/r/stable/reference/fetch_401k.html</a>&gt;`__.<span class="math notranslate nohighlight">\(^{**}\)</span></p>
+<p>To start our analysis, we initialize the data backend, i.e., a new instance of a <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLData.html">DoubleMLData</a> object. Here, we manually implement the regression model by using R’s formula interface. A shortcut would be to directly specify the options <code class="docutils literal notranslate"><span class="pre">polynomial_features</span></code> and <code class="docutils literal notranslate"><span class="pre">instrument</span></code> when calling <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/fetch_401k.html">fetch_401k()</a>.<span class="math notranslate nohighlight">\(^{**}\)</span></p>
 <p>To implement both models (basic and flexible), we generate two data backend: <code class="docutils literal notranslate"><span class="pre">data_dml_base</span></code> and <code class="docutils literal notranslate"><span class="pre">data_dml_flex</span></code>.</p>
 <p><span class="math notranslate nohighlight">\(^{**}\)</span> Note that the model specification using <code class="docutils literal notranslate"><span class="pre">polynomial_features</span></code> differs from the one used in our example.</p>
 <div class="nbinput docutils container">
@@ -770,8 +771,6 @@ formula below (<code class="docutils literal notranslate"><span class="pre">form
     x_cols: age inc educ fsize marr twoearn db pira hown
     y_col: net_tfa
     z_cols: NULL
-  Private:
-    check_disjoint_sets: function ()
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -822,23 +821,19 @@ formula below (<code class="docutils literal notranslate"><span class="pre">form
     x_cols: poly.age..2..raw...TRUE.1 poly.age..2..raw...TRUE.2 poly ...
     y_col: net_tfa
     z_cols: NULL
-  Private:
-    check_disjoint_sets: function ()
 </pre></div></div>
 </div>
 <div class="section" id="Partially-Linear-Regression-Models-(PLR)">
 <h3>Partially Linear Regression Models (PLR)<a class="headerlink" href="#Partially-Linear-Regression-Models-(PLR)" title="Permalink to this headline">¶</a></h3>
 <p>We start using lasso to estimate the function <span class="math notranslate nohighlight">\(g_0\)</span> and <span class="math notranslate nohighlight">\(m_0\)</span> in the following PLR model:</p>
-<dl class="simple">
-<dt>:nbsphinx-math:<a href="#id1"><span class="problematic" id="id2">`</span></a>begin{eqnarray}</dt><dd><p>&amp;  Y = Dtheta_0 + g_0(X) + zeta,  &amp;  E[zeta mid D,X]= 0,\
-&amp; D = m_0(X) +  V,   &amp;  E[V mid X] = 0.</p>
-</dd>
-</dl>
-<p>end{eqnarray}`</p>
+<p><span class="math">\begin{eqnarray}
+& Y = D\theta_0 + g_0(X) + \zeta, &\quad E[\zeta \mid D,X]= 0,\\
+& D = m_0(X) +  V, &\quad E[V \mid X] = 0.
+\end{eqnarray}</span></p>
 <p>To estimate the causal parameter <span class="math notranslate nohighlight">\(\theta_0\)</span> here, we use double machine learning with 3-fold cross-fitting.</p>
-<p>Estimation of the nuisance components <span class="math notranslate nohighlight">\(g_0\)</span> and <span class="math notranslate nohighlight">\(m_0\)</span>, is based on the lasso with cross-validated choice of the penalty term , <span class="math notranslate nohighlight">\(\lambda\)</span>, as provided by the <code class="docutils literal notranslate"><span class="pre">`glmnet</span></code> package &lt;<a class="reference external" href="https://glmnet.stanford.edu/reference/cv.glmnet.html">https://glmnet.stanford.edu/reference/cv.glmnet.html</a>&gt;`__. We load the learner by using the <code class="docutils literal notranslate"><span class="pre">`mlr3</span></code> &lt;<a class="reference external" href="https://mlr3.mlr-org.com/">https://mlr3.mlr-org.com/</a>&gt;`__ function <code class="docutils literal notranslate"><span class="pre">`lrn()</span></code> &lt;<a class="reference external" href="https://mlr3.mlr-org.com/reference/Learner.html">https://mlr3.mlr-org.com/reference/Learner.html</a>&gt;`__. Hyperparameters and options can be set during instantiation of the learner. Here we specify that
-the lasso should use that value of <span class="math notranslate nohighlight">\(\lambda\)</span> that minimizes the cross-validated mean squared error which is based on 5-fold cross validation.</p>
-<p>In order to use a learner, the underyling R packages have to be installed. In this case, the package <code class="docutils literal notranslate"><span class="pre">`glmnet</span></code> package &lt;<a class="reference external" href="https://glmnet.stanford.edu/reference/cv.glmnet.html">https://glmnet.stanford.edu/reference/cv.glmnet.html</a>&gt;`__ needs to be installed. Moreover, installation of the package <code class="docutils literal notranslate"><span class="pre">`mlr3learners</span></code> &lt;<a class="reference external" href="https://mlr3learners.mlr-org.com/">https://mlr3learners.mlr-org.com/</a>&gt;`__ is required.</p>
+<p>Estimation of the nuisance components <span class="math notranslate nohighlight">\(g_0\)</span> and <span class="math notranslate nohighlight">\(m_0\)</span>, is based on the lasso with cross-validated choice of the penalty term , <span class="math notranslate nohighlight">\(\lambda\)</span>, as provided by the <a class="reference external" href="https://glmnet.stanford.edu/reference/cv.glmnet.html">glmnet package</a>. We load the learner by using the <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> function <a class="reference external" href="https://mlr3.mlr-org.com/reference/Learner.html">lrn()</a>. Hyperparameters and options can be set during instantiation of the learner. Here we specify that the lasso
+should use that value of <span class="math notranslate nohighlight">\(\lambda\)</span> that minimizes the cross-validated mean squared error which is based on 5-fold cross validation.</p>
+<p>In order to use a learner, the underlying R packages have to be installed. In this case, the package <a class="reference external" href="https://glmnet.stanford.edu/reference/cv.glmnet.html">glmnet package</a> needs to be installed. Moreover, installation of the package <a class="reference external" href="https://mlr3learners.mlr-org.com/">mlr3learners</a> is required.</p>
 <p>We start by estimation the ATE in the basic model and then repeat the estimation in the flexible model.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
@@ -869,7 +864,7 @@ the lasso should use that value of <span class="math notranslate nohighlight">\(
      Estimate. Std. Error t value Pr(&gt;|t|)
 e401      6133       1465   4.185 2.85e-05 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
@@ -903,12 +898,12 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 e401      9580       1325   7.229 4.87e-13 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
 </div>
-<p>Alternatively, we can repeat this procedure with other machine learning methods, for example a random forest learner as provided by the <code class="docutils literal notranslate"><span class="pre">`ranger</span></code> &lt;<a class="reference external" href="https://github.com/imbs-hl/ranger">https://github.com/imbs-hl/ranger</a>&gt;`__ package for R. The website of the <code class="docutils literal notranslate"><span class="pre">`mlr3extralearners</span></code> &lt;<a class="reference external" href="https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html">https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html</a>&gt;`__ package has a searchable list of all learners that are available in the <code class="docutils literal notranslate"><span class="pre">`mlr3verse</span></code> &lt;<a class="reference external" href="https://mlr3verse.mlr-org.com/">https://mlr3verse.mlr-org.com/</a>&gt;`__.</p>
+<p>Alternatively, we can repeat this procedure with other machine learning methods, for example a random forest learner as provided by the <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a> package for R. The website of the <a class="reference external" href="https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html">mlr3extralearners</a> package has a searchable list of all learners that are available in the <a class="reference external" href="https://mlr3verse.mlr-org.com/">mlr3verse</a>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
@@ -939,12 +934,12 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 e401      9127       1313   6.952 3.61e-12 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
 </div>
-<p>Now, let’s use a regression tree as provided by the R package <code class="docutils literal notranslate"><span class="pre">`rpart</span></code> &lt;<a class="reference external" href="https://github.com/bethatkinson/rpart">https://github.com/bethatkinson/rpart</a>&gt;`__.</p>
+<p>Now, let’s use a regression tree as provided by the R package <a class="reference external" href="https://github.com/bethatkinson/rpart">rpart</a>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
@@ -973,12 +968,12 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 e401      8210       1324   6.203 5.55e-10 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
 </div>
-<p>We can also experiment with extreme gradient boosting as provided by <code class="docutils literal notranslate"><span class="pre">`xgboost</span></code> &lt;<a class="reference external" href="https://xgboost.readthedocs.io/en/latest/">https://xgboost.readthedocs.io/en/latest/</a>&gt;`__.</p>
+<p>We can also experiment with extreme gradient boosting as provided by <a class="reference external" href="https://xgboost.readthedocs.io/en/latest/">xgboost</a>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
@@ -1011,7 +1006,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 e401      8700       1360   6.399 1.57e-10 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
@@ -1039,7 +1034,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<table>
+<table class="dataframe">
 <caption>A data.table: 4 × 5</caption>
 <thead>
     <tr><th scope=col>model</th><th scope=col>ML</th><th scope=col>Estimate</th><th scope=col>lower</th><th scope=col>upper</th></tr>
@@ -1075,21 +1070,17 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_pension_39_0.png" class="no-scaled-link" src="../_images/examples_R_pension_39_0.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pension_39_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_39_0.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 </div>
 <div class="section" id="Interactive-Regression-Model-(IRM)">
 <h3>Interactive Regression Model (IRM)<a class="headerlink" href="#Interactive-Regression-Model-(IRM)" title="Permalink to this headline">¶</a></h3>
 <p>Next, we consider estimation of average treatment effects when treatment effects are fully heterogeneous:</p>
-<dl class="simple">
-<dt>:nbsphinx-math:<a href="#id3"><span class="problematic" id="id4">`</span></a>begin{eqnarray}label{eq: HetPL1}</dt><dd><dl class="simple">
-<dt>&amp; Y  = g_0(D, X) + U,  &amp;  quad E[U mid X, D]= 0,\</dt><dd><p>&amp; D  = m_0(X) + V,  &amp; quad  E[Vmid X] = 0.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>end{eqnarray}`</p>
+<p><span class="math">\begin{eqnarray}
+& Y = g_0(Z,X) + U, &\quad E[U\mid Z,X] = 0,\\
+& D = m_0(Z,X) + V, &\quad E[V\mid Z, X] = 0.
+\end{eqnarray}</span></p>
 <p>To reduce the disproportionate impact of extreme propensity score weights in the interactive model we trim the propensity scores which are close to the bounds.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
@@ -1117,7 +1108,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 e401      8850       1341   6.601 4.08e-11 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
@@ -1161,7 +1152,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 e401      8202       1118   7.334 2.23e-13 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
@@ -1205,7 +1196,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 e401      8415       1186   7.098 1.26e-12 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
@@ -1249,13 +1240,13 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 e401      8048       1182   6.808 9.91e-12 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1287,7 +1278,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<table>
+<table class="dataframe">
 <caption>A data.table: 4 × 5</caption>
 <thead>
     <tr><th scope=col>model</th><th scope=col>ML</th><th scope=col>Estimate</th><th scope=col>lower</th><th scope=col>upper</th></tr>
@@ -1305,7 +1296,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_pension_48_1.png" class="no-scaled-link" src="../_images/examples_R_pension_48_1.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pension_48_1.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_48_1.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <p>These estimates that flexibly account for confounding are substantially attenuated relative to the baseline estimate (<em>19559</em>) that does not account for confounding. They suggest much smaller causal effects of 401(k) eligiblity on financial asset holdings. The best model with lowest RMSE in both equations is the PLR model estimated via lasso. It gives the following estimate:</p>
@@ -1323,7 +1314,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 & Z = m_0(X) + \zeta, &\quad E[\zeta \mid X] = 0.
 \end{eqnarray}</span></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1362,12 +1353,10 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
     x_cols: age inc educ fsize marr twoearn db pira hown
     y_col: net_tfa
     z_cols: e401
-  Private:
-    check_disjoint_sets: function ()
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1385,7 +1374,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1412,14 +1401,14 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 p401     12802       1941   6.597  4.2e-11 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
 </div>
 <p>Again, we repeat the procedure for the other machine learning methods:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1466,13 +1455,13 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 p401     11792       1604   7.352 1.95e-13 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1519,13 +1508,13 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 p401     12214       1714   7.128 1.02e-12 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1572,13 +1561,13 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
      Estimate. Std. Error t value Pr(&gt;|t|)
 p401     11861       1619   7.324  2.4e-13 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1610,7 +1599,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area rendered_html docutils container">
-<table>
+<table class="dataframe">
 <caption>A data.table: 4 × 5</caption>
 <thead>
     <tr><th scope=col>model</th><th scope=col>ML</th><th scope=col>Estimate</th><th scope=col>lower</th><th scope=col>upper</th></tr>
@@ -1628,12 +1617,12 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_pension_60_1.png" class="no-scaled-link" src="../_images/examples_R_pension_60_1.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pension_60_1.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_60_1.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <p>To sum up, let’s merge all our results so far and illustrate them in a plot.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1643,7 +1632,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1665,7 +1654,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_pension_63_0.png" class="no-scaled-link" src="../_images/examples_R_pension_63_0.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pension_63_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_63_0.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <p>We report results based on four ML methods for estimating the nuisance functions used in forming the orthogonal estimating equations. We find again that the estimates of the treatment effect are stable across ML methods. The estimates are highly significant, hence we would reject the hypothesis that 401(k) participation has no effect on financial wealth.</p>
@@ -1682,6 +1671,8 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
               
               <div class='prev-next-bottom'>
                 
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">Examples</a>
+    <a class='right-next' id="next-link" href="double_ml_multiway_cluster.html" title="next page">Multiway Cluster Robust DML</a>
 
               </div>
               
