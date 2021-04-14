@@ -51,7 +51,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Multiway Cluster Robust DML" href="double_ml_multiway_cluster.html" />
+    <link rel="next" title="Python: Impact of 401(k) on Financial Wealth" href="py_double_ml_pension.html" />
     <link rel="prev" title="Examples" href="index.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -173,6 +173,13 @@
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    R: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pension.html">
+   Python: Impact of 401(k) on Financial Wealth
   </a>
  </li>
 </ul>
@@ -1232,12 +1239,22 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
                                 <span class="n">n_folds</span> <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
 
 <span class="c1"># Set nuisance-part specific parameters</span>
-<span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
-    <span class="s">&quot;ml_g0&quot;</span><span class="p">,</span> <span class="s">&quot;e401&quot;</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">8</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
-<span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
-    <span class="s">&quot;ml_g1&quot;</span><span class="p">,</span> <span class="s">&quot;e401&quot;</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">29</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
-<span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
-    <span class="s">&quot;ml_m&quot;</span><span class="p">,</span> <span class="s">&quot;e401&quot;</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">23</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+<span class="nf">if </span><span class="p">(</span><span class="nf">compareVersion</span><span class="p">(</span><span class="nf">as.character</span><span class="p">(</span><span class="nf">packageVersion</span><span class="p">(</span><span class="s">&quot;DoubleML&quot;</span><span class="p">)),</span> <span class="s">&quot;0.2.1&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_g0&quot;</span><span class="p">,</span> <span class="s">&quot;e401&quot;</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">8</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+    <span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_g1&quot;</span><span class="p">,</span> <span class="s">&quot;e401&quot;</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">29</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+    <span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_m&quot;</span><span class="p">,</span> <span class="s">&quot;e401&quot;</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">23</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+<span class="p">}</span> <span class="n">else</span> <span class="p">{</span>
+    <span class="c1"># behavior of set_ml_nuisance_params() changed in https://github.com/DoubleML/doubleml-for-r/pull/89</span>
+    <span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_g0&quot;</span><span class="p">,</span> <span class="s">&quot;e401&quot;</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">8</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">objective</span> <span class="o">=</span> <span class="s">&quot;reg:squarederror&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
+    <span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_g1&quot;</span><span class="p">,</span> <span class="s">&quot;e401&quot;</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">29</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">objective</span> <span class="o">=</span> <span class="s">&quot;reg:squarederror&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
+    <span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_m&quot;</span><span class="p">,</span> <span class="s">&quot;e401&quot;</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">23</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">objective</span> <span class="o">=</span> <span class="s">&quot;binary:logistic&quot;</span><span class="p">,</span> <span class="n">eval_metric</span> <span class="o">=</span> <span class="s">&quot;logloss&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
+<span class="p">}</span>
 
 <span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="n">dml_irm_boost</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
@@ -1546,18 +1563,34 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
                                                <span class="n">never_takers</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span>
 
 <span class="c1"># Set nuisance-part specific parameters</span>
-<span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
-    <span class="s">&quot;ml_g0&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
-    <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">9</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
-<span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
-    <span class="s">&quot;ml_g1&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
-    <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">33</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
-<span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
-    <span class="s">&quot;ml_m&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
-    <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">12</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
-<span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
-    <span class="s">&quot;ml_r1&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
-    <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">25</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+<span class="nf">if </span><span class="p">(</span><span class="nf">compareVersion</span><span class="p">(</span><span class="nf">as.character</span><span class="p">(</span><span class="nf">packageVersion</span><span class="p">(</span><span class="s">&quot;DoubleML&quot;</span><span class="p">)),</span> <span class="s">&quot;0.2.1&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_g0&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
+        <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">9</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+    <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_g1&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
+        <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">33</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+    <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_m&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
+        <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">12</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+    <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_r1&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
+        <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">25</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+<span class="p">}</span> <span class="n">else</span> <span class="p">{</span>
+    <span class="c1"># behavior of set_ml_nuisance_params() changed in https://github.com/DoubleML/doubleml-for-r/pull/89</span>
+    <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_g0&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
+        <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">9</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">objective</span> <span class="o">=</span> <span class="s">&quot;reg:squarederror&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
+    <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_g1&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
+        <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">33</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">objective</span> <span class="o">=</span> <span class="s">&quot;reg:squarederror&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
+    <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_m&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
+        <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">12</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">objective</span> <span class="o">=</span> <span class="s">&quot;binary:logistic&quot;</span><span class="p">,</span> <span class="n">eval_metric</span> <span class="o">=</span> <span class="s">&quot;logloss&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
+    <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span>
+        <span class="s">&quot;ml_r1&quot;</span><span class="p">,</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
+        <span class="nf">list</span><span class="p">(</span><span class="n">nrounds</span> <span class="o">=</span> <span class="m">25</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">objective</span> <span class="o">=</span> <span class="s">&quot;binary:logistic&quot;</span><span class="p">,</span> <span class="n">eval_metric</span> <span class="o">=</span> <span class="s">&quot;logloss&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
+<span class="p">}</span>
 
 <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="n">dml_iivm_boost</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
@@ -1687,7 +1720,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
               <div class='prev-next-bottom'>
                 
     <a class='left-prev' id="prev-link" href="index.html" title="previous page">Examples</a>
-    <a class='right-next' id="next-link" href="double_ml_multiway_cluster.html" title="next page">Multiway Cluster Robust DML</a>
+    <a class='right-next' id="next-link" href="py_double_ml_pension.html" title="next page">Python: Impact of 401(k) on Financial Wealth</a>
 
               </div>
               
