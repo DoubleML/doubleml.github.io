@@ -175,6 +175,8 @@
    R: Impact of 401(k) on Financial Wealth
   </a>
  </li>
+</ul>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="double_ml_multiway_cluster.html">
    Multiway Cluster Robust DML
@@ -209,32 +211,36 @@
   <a class="reference internal nav-link" href="#Data">
    Data
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Double-ML-package">
-     Double ML package
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Estimating-the-ATE-of-401(k)-Eligibility-on-Net-Financial-Assets">
-     Estimating the ATE of 401(k) Eligibility on Net Financial Assets
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#The-Data-Backend:-DoubleMLData">
-   The Data Backend:
+  <a class="reference internal nav-link" href="#The-DoubleML-package">
+   The
    <code class="docutils literal notranslate">
     <span class="pre">
-     DoubleMLData
+     DoubleML
     </span>
    </code>
+   package
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Estimating-the-Average-Treatment-Effect-of-401(k)-Eligibility-on-Net-Financial-Assets">
+   Estimating the Average Treatment Effect of 401(k) Eligibility on Net Financial Assets
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Partially-Linear-Regression-Models-(PLR)">
-     Partially Linear Regression Models (PLR)
+    <a class="reference internal nav-link" href="#The-Data-Backend:-DoubleMLData">
+     The Data Backend:
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       DoubleMLData
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Partially-Linear-Regression-Model-(PLR)">
+     Partially Linear Regression Model (PLR)
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -242,17 +248,24 @@
      Interactive Regression Model (IRM)
     </a>
    </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Local-Average-Treatment-Effects-of-401(k)-Participation-on-Net-Financial-Assets">
-     Local Average Treatment Effects of 401(k) Participation on Net Financial Assets
-    </a>
-   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Local-Average-Treatment-Effects-of-401(k)-Participation-on-Net-Financial-Assets">
+   Local Average Treatment Effects of 401(k) Participation on Net Financial Assets
+  </a>
+  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#Interactive-IV-Model-(IIVM)">
      Interactive IV Model (IIVM)
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Summary-of-Results">
+   Summary of Results
+  </a>
  </li>
 </ul>
 
@@ -705,12 +718,13 @@ Warning message:
 27371.58</div>
 </div>
 <p>As discussed, these estimates are biased since they do not account for saver heterogeneity and endogeneity of participation.</p>
-<div class="section" id="Double-ML-package">
-<h3>Double ML package<a class="headerlink" href="#Double-ML-package" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="The-DoubleML-package">
+<h2>The <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> package<a class="headerlink" href="#The-DoubleML-package" title="Permalink to this headline">¶</a></h2>
 <p>Let’s use the package <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> to estimate the average treatment effect of 401(k) eligibility, i.e. <code class="docutils literal notranslate"><span class="pre">e401</span></code>, and participation, i.e. <code class="docutils literal notranslate"><span class="pre">p401</span></code>, on net financial assets <code class="docutils literal notranslate"><span class="pre">net_tfa</span></code>.</p>
 </div>
-<div class="section" id="Estimating-the-ATE-of-401(k)-Eligibility-on-Net-Financial-Assets">
-<h3>Estimating the ATE of 401(k) Eligibility on Net Financial Assets<a class="headerlink" href="#Estimating-the-ATE-of-401(k)-Eligibility-on-Net-Financial-Assets" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="Estimating-the-Average-Treatment-Effect-of-401(k)-Eligibility-on-Net-Financial-Assets">
+<h2>Estimating the Average Treatment Effect of 401(k) Eligibility on Net Financial Assets<a class="headerlink" href="#Estimating-the-Average-Treatment-Effect-of-401(k)-Eligibility-on-Net-Financial-Assets" title="Permalink to this headline">¶</a></h2>
 <p>We first look at the treatment effect of <code class="docutils literal notranslate"><span class="pre">e401</span></code> on net total financial assets. We give estimates of the ATE in the linear model</p>
 <p><span class="math">\begin{equation*}
 Y = D \alpha + f(X)'\beta+ \epsilon,
@@ -723,12 +737,10 @@ Y = D \alpha + f(X)'\beta+ \epsilon,
 <p>We will use the basic model specification whenever we use nonlinear methods, for example regression trees or random forests, and use the flexible model for linear methods such as the lasso. There are, of course, multiple ways how the model can be specified even more flexibly, for example including interactions of variable and higher order interaction. However, for the sake of simplicity we stick to the specification above. Users who are interested in varying the model can manipulate the model
 formula below (<code class="docutils literal notranslate"><span class="pre">formula_flex</span></code>), for example implementing the orignal specification in Chernozhukov et al. (2018).</p>
 <p>In the first step, we report estimates of the average treatment effect (ATE) of 401(k) eligibility on net financial assets both in the partially linear regression (PLR) model and in the interactive regression model (IRM) allowing for heterogeneous treatment effects.</p>
-</div>
-</div>
 <div class="section" id="The-Data-Backend:-DoubleMLData">
-<h2>The Data Backend: <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code><a class="headerlink" href="#The-Data-Backend:-DoubleMLData" title="Permalink to this headline">¶</a></h2>
+<h3>The Data Backend: <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code><a class="headerlink" href="#The-Data-Backend:-DoubleMLData" title="Permalink to this headline">¶</a></h3>
 <p>To start our analysis, we initialize the data backend, i.e., a new instance of a <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLData.html">DoubleMLData</a> object. Here, we manually implement the regression model by using R’s formula interface. A shortcut would be to directly specify the options <code class="docutils literal notranslate"><span class="pre">polynomial_features</span></code> and <code class="docutils literal notranslate"><span class="pre">instrument</span></code> when calling <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/fetch_401k.html">fetch_401k()</a>.<span class="math notranslate nohighlight">\(^{**}\)</span></p>
-<p>To implement both models (basic and flexible), we generate two data backend: <code class="docutils literal notranslate"><span class="pre">data_dml_base</span></code> and <code class="docutils literal notranslate"><span class="pre">data_dml_flex</span></code>.</p>
+<p>To implement both models (basic and flexible), we generate two data backends: <code class="docutils literal notranslate"><span class="pre">data_dml_base</span></code> and <code class="docutils literal notranslate"><span class="pre">data_dml_flex</span></code>.</p>
 <p><span class="math notranslate nohighlight">\(^{**}\)</span> Note that the model specification using <code class="docutils literal notranslate"><span class="pre">polynomial_features</span></code> differs from the one used in our example.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -823,8 +835,9 @@ formula below (<code class="docutils literal notranslate"><span class="pre">form
     z_cols: NULL
 </pre></div></div>
 </div>
-<div class="section" id="Partially-Linear-Regression-Models-(PLR)">
-<h3>Partially Linear Regression Models (PLR)<a class="headerlink" href="#Partially-Linear-Regression-Models-(PLR)" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="Partially-Linear-Regression-Model-(PLR)">
+<h3>Partially Linear Regression Model (PLR)<a class="headerlink" href="#Partially-Linear-Regression-Model-(PLR)" title="Permalink to this headline">¶</a></h3>
 <p>We start using lasso to estimate the function <span class="math notranslate nohighlight">\(g_0\)</span> and <span class="math notranslate nohighlight">\(m_0\)</span> in the following PLR model:</p>
 <p><span class="math">\begin{eqnarray}
 & Y = D\theta_0 + g_0(X) + \zeta, &\quad E[\zeta \mid D,X]= 0,\\
@@ -1301,9 +1314,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <p>These estimates that flexibly account for confounding are substantially attenuated relative to the baseline estimate (<em>19559</em>) that does not account for confounding. They suggest much smaller causal effects of 401(k) eligiblity on financial asset holdings. The best model with lowest RMSE in both equations is the PLR model estimated via lasso. It gives the following estimate:</p>
 </div>
-<div class="section" id="Local-Average-Treatment-Effects-of-401(k)-Participation-on-Net-Financial-Assets">
-<h3>Local Average Treatment Effects of 401(k) Participation on Net Financial Assets<a class="headerlink" href="#Local-Average-Treatment-Effects-of-401(k)-Participation-on-Net-Financial-Assets" title="Permalink to this headline">¶</a></h3>
 </div>
+<div class="section" id="Local-Average-Treatment-Effects-of-401(k)-Participation-on-Net-Financial-Assets">
+<h2>Local Average Treatment Effects of 401(k) Participation on Net Financial Assets<a class="headerlink" href="#Local-Average-Treatment-Effects-of-401(k)-Participation-on-Net-Financial-Assets" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="Interactive-IV-Model-(IIVM)">
 <h3>Interactive IV Model (IIVM)<a class="headerlink" href="#Interactive-IV-Model-(IIVM)" title="Permalink to this headline">¶</a></h3>
 <p>In the examples above, we estimated the average treatment effect of <em>eligibility</em> on financial asset holdings. Now, we consider estimation of local average treatment effects (LATE) of <em>participation</em> using eligibility as an instrument for the participation decision. Under appropriate assumptions, the LATE identifies the treatment effect for so-called compliers, i.e., individuals who would only participate if eligible and otherwise not participate in the program.</p>
@@ -1318,7 +1331,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Initialize DoubleMLData (data-backend of DoubleML) with instrument</span>
+<span></span><span class="c1"># Initialize DoubleMLData with an instrument</span>
 
 <span class="c1"># Basic model</span>
 <span class="n">data_dml_base_iv</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span>
@@ -1360,12 +1373,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Initialize DoubleMLData (data-backend of DoubleML) with IV</span>
+<span></span><span class="c1"># Flexible model</span>
 <span class="n">model_data</span> <span class="o">=</span> <span class="nf">data.table</span><span class="p">(</span><span class="s">&quot;net_tfa&quot;</span> <span class="o">=</span> <span class="n">data</span><span class="p">[,</span> <span class="n">net_tfa</span><span class="p">],</span>
                         <span class="s">&quot;e401&quot;</span> <span class="o">=</span> <span class="n">data</span><span class="p">[,</span> <span class="n">e401</span><span class="p">],</span>
                         <span class="s">&quot;p401&quot;</span> <span class="o">=</span> <span class="n">data</span><span class="p">[,</span> <span class="n">p401</span><span class="p">],</span>
                         <span class="n">features_flex</span><span class="p">)</span>
-<span class="c1"># Flexible model</span>
 <span class="n">data_dml_flex_iv</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">model_data</span><span class="p">,</span>
                                     <span class="n">y_col</span> <span class="o">=</span> <span class="s">&quot;net_tfa&quot;</span><span class="p">,</span>
                                     <span class="n">d_cols</span> <span class="o">=</span> <span class="s">&quot;p401&quot;</span><span class="p">,</span>
@@ -1620,6 +1632,10 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <img alt="../_images/examples_R_double_ml_pension_60_1.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_60_1.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
+</div>
+</div>
+<div class="section" id="Summary-of-Results">
+<h2>Summary of Results<a class="headerlink" href="#Summary-of-Results" title="Permalink to this headline">¶</a></h2>
 <p>To sum up, let’s merge all our results so far and illustrate them in a plot.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
@@ -1654,14 +1670,13 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_double_ml_pension_63_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_63_0.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pension_64_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pension_64_0.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <p>We report results based on four ML methods for estimating the nuisance functions used in forming the orthogonal estimating equations. We find again that the estimates of the treatment effect are stable across ML methods. The estimates are highly significant, hence we would reject the hypothesis that 401(k) participation has no effect on financial wealth.</p>
 <hr class="docutils" />
 <p><strong>Acknowledgement</strong></p>
 <p><span class="math notranslate nohighlight">\(*\)</span> We would like to thank <a class="reference external" href="https://www.bwl.uni-hamburg.de/en/statistik/team/kueck.html">Jannis Kueck</a> for sharing <a class="reference external" href="https://www.kaggle.com/janniskueck/pm5-401k">the kaggle notebook</a>. The pension data set has been analyzed in several studies, among others <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>.</p>
-</div>
 </div>
 </div>
 
