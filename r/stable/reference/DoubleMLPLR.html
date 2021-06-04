@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DoubleML</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.1</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.3.0</span>
       </span>
     </div>
 
@@ -94,10 +94,10 @@
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/getstarted.html">Get started</a>
 </li>
 <li>
-  <a href="../articles/DoubleML.html">Get started</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -107,7 +107,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/install.html">Installing DoubleML</a>
+      <a href="../articles/install.html">Install DoubleML</a>
+    </li>
+    <li>
+      <a href="../articles/Introduction_to_DoubleML.html">Introduction to Double Machine Learning</a>
     </li>
   </ul>
 </li>
@@ -154,7 +157,10 @@
     <p>Partially linear regression (PLR) models take the form</p>
 <p>\(Y = D\theta_0 + g_0(X) + \zeta,\)</p>
 <p>\(D = m_0(X) + V,\)</p>
-<p>with \(E[\zeta|D,X]=0\) and \(E[V|X] = 0\). \(Y\) is the outcome variable variable and \(D\) is the policy variable of interest. The high-dimensional vector \(X = (X_1, \ldots, X_p)\) consists of other confounding covariates, and \(\zeta\) and \(V\) are stochastic errors.</p>
+<p>with \(E[\zeta|D,X]=0\) and \(E[V|X] = 0\). \(Y\) is the outcome
+variable variable and \(D\) is the policy variable of interest.
+The high-dimensional vector \(X = (X_1, \ldots, X_p)\) consists of other
+confounding covariates, and \(\zeta\) and \(V\) are stochastic errors.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other DoubleML: 
@@ -210,15 +216,35 @@
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
 <dt><code>data</code></dt><dd><p>(<code>DoubleMLData</code>) <br />
-The <code>DoubleMLData</code> object providing the data and specifying the variables of the causal model.</p></dd>
+The <code>DoubleMLData</code> object providing the data and specifying the
+variables of the causal model.</p></dd>
 
 <dt><code>ml_g</code></dt><dd><p>(<code><a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>LearnerRegr</a></code>, <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>,) <br />
-An object of the class <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3 regression learner</a> to pass a learner, possibly with specified parameters, for example <code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("regr.cv_glmnet", s = "lambda.min")</a></code>.
-Alternatively, a <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code> specifying the name of a <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3 regression learner</a> that is available in <a href='https://mlr3.mlr-org.com/index.html'>mlr3</a> or its extension packages <a href='https://mlr3learners.mlr-org.com/'>mlr3learners</a> or <a href='https://mlr3extralearners.mlr-org.com/'>mlr3extralearners</a>, for example <code>"regr.cv_glmnet"</code>. <br />
+An object of the class <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3 regression learner</a>
+to pass a learner, possibly with specified parameters, for example
+<code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("regr.cv_glmnet", s = "lambda.min")</a></code>.
+Alternatively, a <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code> specifying the name of a
+<a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3 regression learner</a> that is available in
+<a href='https://mlr3.mlr-org.com/index.html'>mlr3</a> or its extension packages
+<a href='https://mlr3learners.mlr-org.com/'>mlr3learners</a> or
+<a href='https://mlr3extralearners.mlr-org.com/'>mlr3extralearners</a>,
+for example <code>"regr.cv_glmnet"</code>. <br />
 <code>ml_g</code> refers to the nuisance function \(g_0(X) = E[Y|X]\).</p></dd>
 
-<dt><code>ml_m</code></dt><dd><p>(<code><a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>LearnerRegr</a></code>, <code><a href='https://mlr3.mlr-org.com/reference/LearnerClassif.html'>LearnerClassif</a></code>, <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>,) <br />
-An object of the class <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3 regression learner</a> to pass a learner, possibly with specified parameters, for example <code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("regr.cv_glmnet", s = "lambda.min")</a></code>. For binary treatment variables, an object of the class <code><a href='https://mlr3.mlr-org.com/reference/LearnerClassif.html'>LearnerClassif</a></code> can be passed, for example <code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("classif.cv_glmnet", s = "lambda.min")</a></code>. Alternatively, a <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code> specifying the name of a <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3 regression learner</a> that is available in <a href='https://mlr3.mlr-org.com/index.html'>mlr3</a> or its extension packages <a href='https://mlr3learners.mlr-org.com/'>mlr3learners</a> or <a href='https://mlr3extralearners.mlr-org.com/'>mlr3extralearners</a>, for example <code>"regr.cv_glmnet"</code>. <br />
+<dt><code>ml_m</code></dt><dd><p>(<code><a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>LearnerRegr</a></code>,
+<code><a href='https://mlr3.mlr-org.com/reference/LearnerClassif.html'>LearnerClassif</a></code>, <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>,) <br />
+An object of the class <a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3 regression learner</a> to
+pass a learner, possibly with specified parameters, for example
+<code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("regr.cv_glmnet", s = "lambda.min")</a></code>. For binary treatment
+variables, an object of the class
+<code><a href='https://mlr3.mlr-org.com/reference/LearnerClassif.html'>LearnerClassif</a></code> can be passed, for example
+<code><a href='https://mlr3.mlr-org.com/reference/mlr_sugar.html'>lrn("classif.cv_glmnet", s = "lambda.min")</a></code>. Alternatively, a
+<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code> specifying the name of a
+<a href='https://mlr3.mlr-org.com/reference/LearnerRegr.html'>mlr3 regression learner</a> that is available in
+<a href='https://mlr3.mlr-org.com/index.html'>mlr3</a> or its extension packages
+<a href='https://mlr3learners.mlr-org.com/'>mlr3learners</a> or
+<a href='https://mlr3extralearners.mlr-org.com/'>mlr3extralearners</a>, for example
+<code>"regr.cv_glmnet"</code>. <br />
 <code>ml_m</code> refers to the nuisance function \(m_0(X) = E[D|X]\).</p></dd>
 
 <dt><code>n_folds</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>)<br />
@@ -228,15 +254,20 @@ Number of folds. Default is <code>5</code>.</p></dd>
 Number of repetitions for the sample splitting. Default is <code>1</code>.</p></dd>
 
 <dt><code>score</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>, <code>function()</code>) <br />
-A <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code> (<code>"partialling out"</code> or <code>IV-type</code>) or a <code>function()</code> specifying the score function.
-If a <code>function()</code> is provided, it must be of the form <code>function(y, d, g_hat, m_hat, smpls)</code> and
-the returned output must be a named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code> with elements <code>psi_a</code> and <code>psi_b</code>. Default is <code>"partialling out"</code>.</p></dd>
+A <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code> (<code>"partialling out"</code> or <code>IV-type</code>) or a <code>function()</code>
+specifying the score function.
+If a <code>function()</code> is provided, it must be of the form
+<code>function(y, d, g_hat, m_hat, smpls)</code> and
+the returned output must be a named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code> with elements <code>psi_a</code> and
+<code>psi_b</code>. Default is <code>"partialling out"</code>.</p></dd>
 
 <dt><code>dml_procedure</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br />
-A <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code> (<code>"dml1"</code> or <code>"dml2"</code>) specifying the double machine learning algorithm. Default is <code>"dml2"</code>.</p></dd>
+A <code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code> (<code>"dml1"</code> or <code>"dml2"</code>) specifying the double machine
+learning algorithm. Default is <code>"dml2"</code>.</p></dd>
 
 <dt><code>draw_sample_splitting</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>) <br />
-Indicates whether the sample splitting should be drawn during initialization of the object. Default is <code>TRUE</code>.</p></dd>
+Indicates whether the sample splitting should be drawn during
+initialization of the object. Default is <code>TRUE</code>.</p></dd>
 
 <dt><code>apply_cross_fitting</code></dt><dd><p>(<code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>) <br />
 Indicates whether cross-fitting should be applied. Default is <code>TRUE</code>.</p></dd>
@@ -288,16 +319,18 @@ Indicates whether cross-fitting should be applied. Default is <code>TRUE</code>.
 <span class='va'>obj_dml_data</span> <span class='op'>=</span> <span class='fu'><a href='make_plr_CCDDHNR2018.html'>make_plr_CCDDHNR2018</a></span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>
 <span class='va'>dml_plr_obj</span> <span class='op'>=</span> <span class='va'>DoubleMLPLR</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>obj_dml_data</span>, <span class='va'>ml_g</span>, <span class='va'>ml_m</span><span class='op'>)</span>
 
-<span class='va'>param_grid</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"ml_g"</span> <span class='op'>=</span> <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamSet.html'>ParamSet</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
-                     <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamDbl.html'>ParamDbl</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"cp"</span>, lower <span class='op'>=</span> <span class='fl'>0.01</span>, upper <span class='op'>=</span> <span class='fl'>0.02</span><span class='op'>)</span>,
-                          <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamInt.html'>ParamInt</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"minsplit"</span>, lower <span class='op'>=</span> <span class='fl'>1</span>, upper <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
-                 <span class='st'>"ml_m"</span> <span class='op'>=</span> <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamSet.html'>ParamSet</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
-                     <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamDbl.html'>ParamDbl</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"cp"</span>, lower <span class='op'>=</span> <span class='fl'>0.01</span>, upper <span class='op'>=</span> <span class='fl'>0.02</span><span class='op'>)</span>,
-                          <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamInt.html'>ParamInt</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"minsplit"</span>, lower <span class='op'>=</span> <span class='fl'>1</span>, upper <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>param_grid</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+  <span class='st'>"ml_g"</span> <span class='op'>=</span> <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamSet.html'>ParamSet</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+    <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamDbl.html'>ParamDbl</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"cp"</span>, lower <span class='op'>=</span> <span class='fl'>0.01</span>, upper <span class='op'>=</span> <span class='fl'>0.02</span><span class='op'>)</span>,
+    <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamInt.html'>ParamInt</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"minsplit"</span>, lower <span class='op'>=</span> <span class='fl'>1</span>, upper <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
+  <span class='st'>"ml_m"</span> <span class='op'>=</span> <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamSet.html'>ParamSet</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+    <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamDbl.html'>ParamDbl</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"cp"</span>, lower <span class='op'>=</span> <span class='fl'>0.01</span>, upper <span class='op'>=</span> <span class='fl'>0.02</span><span class='op'>)</span>,
+    <span class='fu'>paradox</span><span class='fu'>::</span><span class='va'><a href='https://paradox.mlr-org.com/reference/ParamInt.html'>ParamInt</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"minsplit"</span>, lower <span class='op'>=</span> <span class='fl'>1</span>, upper <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># minimum requirements for tune_settings</span>
-<span class='va'>tune_settings</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>terminator <span class='op'>=</span> <span class='fu'>mlr3tuning</span><span class='fu'>::</span><span class='fu'><a href='https://bbotk.mlr-org.com/reference/trm.html'>trm</a></span><span class='op'>(</span><span class='st'>"evals"</span>, n_evals <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>, 
-                      algorithm <span class='op'>=</span> <span class='fu'>mlr3tuning</span><span class='fu'>::</span><span class='fu'><a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr</a></span><span class='op'>(</span><span class='st'>"grid_search"</span>, resolution <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>tune_settings</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+  terminator <span class='op'>=</span> <span class='fu'>mlr3tuning</span><span class='fu'>::</span><span class='fu'><a href='https://bbotk.mlr-org.com/reference/trm.html'>trm</a></span><span class='op'>(</span><span class='st'>"evals"</span>, n_evals <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>,
+  algorithm <span class='op'>=</span> <span class='fu'>mlr3tuning</span><span class='fu'>::</span><span class='fu'><a href='https://mlr3tuning.mlr-org.com/reference/tnr.html'>tnr</a></span><span class='op'>(</span><span class='st'>"grid_search"</span>, resolution <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>dml_plr_obj</span><span class='op'>$</span><span class='fu'>tune</span><span class='op'>(</span>param_set <span class='op'>=</span> <span class='va'>param_grid</span>, tune_settings <span class='op'>=</span> <span class='va'>tune_settings</span><span class='op'>)</span>
 <span class='va'>dml_plr_obj</span><span class='op'>$</span><span class='fu'>fit</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>dml_plr_obj</span><span class='op'>$</span><span class='fu'>summary</span><span class='op'>(</span><span class='op'>)</span>
