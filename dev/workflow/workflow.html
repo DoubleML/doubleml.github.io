@@ -50,8 +50,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="User guide" href="../guide/guide.html" />
-    <link rel="prev" title="Getting started" href="../intro/intro.html" />
+    <link rel="next" title="API reference" href="../api/api.html" />
+    <link rel="prev" title="9. Sample-splitting, cross-fitting and repeated cross-fitting" href="../guide/resampling.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -101,21 +101,15 @@
  </a>
 </li>
 
-<li class="toctree-l1 current active nav-item">
- <a class="current reference internal nav-link" href="#">
-  DoubleML Workflow
- </a>
-</li>
-
 <li class="toctree-l1 nav-item">
  <a class="reference internal nav-link" href="../guide/guide.html">
   User guide
  </a>
 </li>
 
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../examples/index.html">
-  Examples
+<li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  Workflow
  </a>
 </li>
 
@@ -128,6 +122,12 @@
 <li class="toctree-l1 nav-item">
  <a class="reference external nav-link" href="https://docs.doubleml.org/r/stable/">
   R API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../examples/index.html">
+  Examples
  </a>
 </li>
 
@@ -272,7 +272,7 @@
   <div class="section" id="doubleml-workflow">
 <h1>DoubleML Workflow<a class="headerlink" href="#doubleml-workflow" title="Permalink to this headline">¶</a></h1>
 <p>The following steps, which we call the DoubleML workflow, are intended to provide a rough structure for causal analyses
-with the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>. After a short explanation of the idea of each step, we illustrate their meaning in the 401(k)
+with <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>. After a short explanation of the idea of each step, we illustrate their meaning in the 401(k)
 example. In case you are interested in more details of the 401(k) example, you can visit the
 <a class="reference external" href="https://docs.doubleml.org/stable/examples/py_double_ml_pension.html">Python</a> and <a class="reference external" href="https://docs.doubleml.org/stable/examples/R_double_ml_pension.html">R</a>
 Notebooks that are available online.</p>
@@ -290,8 +290,8 @@ example, we have to base our analysis on observational data. Hence, we have to u
 on appropriately controlling for potential confounders.
 A complication that arises in the 401(k) example is due to so-called endogeneity of the treatment assignment. The treatment
 variable is an employee’s participation in a 401(k) pension plan which is a decision made by employees and likely
-to be affected by unobservable effects. For example, is seems reasonable that persons with higher income have a stronger
-preference to save and also to participate in a pension plan. If our analysis does not account for this self-selection into
+to be affected by unobservable effects. For example, is seems reasonable that persons with higher income have stronger
+preferences to save and also to participate in a pension plan. If our analysis does not account for this self-selection into
 treatment, the estimated effect is likely to be biased.</p>
 <p>To circumvent the endogenous treatment problem, it is possible to exploit randomness in eligibility for 401(k) plans.
 In other words, the access to the treatment can be considered as randomly assigned once we control for confounding variables.
@@ -305,9 +305,10 @@ and <a class="reference external" href="https://docs.doubleml.org/stable/example
 <p>The previous discussion focuses on the causal problem. Let’s also talk about the statistical methods used for estimation.
 For identification of the average treatment effect of participation or eligibility on assets, it is crucial that we appropriately
 account for the confounding factors. That’s where the machine learning tools come into play. Of course, we could simply estimate
-the causal effect by using a linear (IV) regression model. In these models, the researcher has to manually pick and, perhaps,
-transform variables. However, machine learning techniques offer greater flexibility in terms of a more data-driven specification
-of the main regression equation and the propensity score.</p>
+the causal effect by using a classical linear (IV) regression model: The researcher has to manually pick and, perhaps,
+transform the confounding variables in the regression model.
+However, machine learning techniques offer greater flexibility in terms of a more data-driven specification
+of the main regression equation and the first stage.</p>
 </div>
 <div class="section" id="data-backend">
 <h2>1. Data-Backend<a class="headerlink" href="#data-backend" title="Permalink to this headline">¶</a></h2>
@@ -319,8 +320,8 @@ The data-backend can be initialized from various data frame objects in Python an
 401(k) example, we use eligibility (<code class="docutils literal notranslate"><span class="pre">e401</span></code>) as the treatment variable of interest. The outcome variable is <code class="docutils literal notranslate"><span class="pre">net_tfa</span></code> and we
 control for confounding variables <code class="docutils literal notranslate"><span class="pre">['age',</span> <span class="pre">'inc',</span> <span class="pre">'educ',</span> <span class="pre">'fsize',</span> <span class="pre">'marr',</span> <span class="pre">'twoearn',</span> <span class="pre">'db',</span> <span class="pre">'pira',</span> <span class="pre">'hown']</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="8f283faf-ca55-41c0-bc3b-b2960cfc34ea" name="e271ea40-09b2-468a-83fd-56719437e4f4" type="radio">
-</input><label class="tabbed-label" for="8f283faf-ca55-41c0-bc3b-b2960cfc34ea">
+<input checked="checked" id="9f4efc74-86d5-4df0-9831-dd009fef08db" name="e12e67cc-accb-4246-a070-adc7a8411367" type="radio">
+</input><label class="tabbed-label" for="9f4efc74-86d5-4df0-9831-dd009fef08db">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLData</span>
 
@@ -336,8 +337,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="6f1d4a09-7485-4df0-b904-a5d3169932a5" name="e271ea40-09b2-468a-83fd-56719437e4f4" type="radio">
-</input><label class="tabbed-label" for="6f1d4a09-7485-4df0-b904-a5d3169932a5">
+<input id="ded8279e-983f-4644-aa80-e8c908554a1d" name="e12e67cc-accb-4246-a070-adc7a8411367" type="radio">
+</input><label class="tabbed-label" for="ded8279e-983f-4644-aa80-e8c908554a1d">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -372,12 +373,13 @@ R</label><div class="tabbed-content docutils">
 <h2>2. Causal Model<a class="headerlink" href="#causal-model" title="Permalink to this headline">¶</a></h2>
 <p>In Step 2. we choose a causal model. There are several models currently implemented in <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> which
 differ in terms of the underlying causal structure (e.g., including IV variables or not) and the underlying assumptions.</p>
+<a class="reference internal image-reference" href="../_images/doubleml_models.svg"><img alt="DoubleML Models" class="align-center" src="../_images/doubleml_models.svg" width="800" /></a>
 <p>According to the previous discussion, we are interested in estimation of the effect of eligibility on net financial assets.
 Hence, we do not need to use a model with both a treatment and instrumental variable. There are two potential models,
 the <a class="reference internal" href="../guide/models.html#plr-model"><span class="std std-ref">partially linear regression model (PLR)</span></a> and the <a class="reference internal" href="../guide/models.html#irm-model"><span class="std std-ref">interactive regression model (IRM)</span></a>. These models differ
 in terms of the type of the treatment variable (continuous vs. binary treatment) and the assumptions underlying the regression
-equation. For example, the PLR assumes a partially linear structure, whereas the IRM allows for heterogeneous treatment effects across
-individuals.</p>
+equation. For example, the PLR assumes a partially linear structure, whereas the IRM allows treatment effects to be heterogeneous across
+individuals. To keep the presentation short, we will choose a partially linear model.</p>
 </div>
 <div class="section" id="ml-methods">
 <h2>3. ML Methods<a class="headerlink" href="#ml-methods" title="Permalink to this headline">¶</a></h2>
@@ -387,10 +389,10 @@ We can generally choose any learner from <a class="reference external" href="htt
 In this example, let us specify a random forest and an xgboost learner for both prediction problems.
 We can directly pass the parameters during initialization of the learner objects.
 Because we have a binary treatment variable, we can use a classification learner for the corresponding nuisance part.
-We use a regression learner for the outcome variable net financial assets.</p>
+We use a regression learner for the continuous outcome variable net financial assets.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="5557fa97-0659-48d8-8051-548fe47354a7" name="c55bdf2b-8686-4346-a92d-bac683677022" type="radio">
-</input><label class="tabbed-label" for="5557fa97-0659-48d8-8051-548fe47354a7">
+<input checked="checked" id="ced2ad4b-a00e-4c8d-9cf9-41eb9df2dea2" name="a2307b75-a562-45c9-8f1e-9bdb8f50a79b" type="radio">
+</input><label class="tabbed-label" for="ced2ad4b-a00e-4c8d-9cf9-41eb9df2dea2">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Random forest learners</span>
 <span class="gp">In [5]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
@@ -418,8 +420,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="bfef34e0-2972-44e9-a218-0f865c2584ba" name="c55bdf2b-8686-4346-a92d-bac683677022" type="radio">
-</input><label class="tabbed-label" for="bfef34e0-2972-44e9-a218-0f865c2584ba">
+<input id="afc1895c-b318-45bc-b066-bf6842eafe52" name="a2307b75-a562-45c9-8f1e-9bdb8f50a79b" type="radio">
+</input><label class="tabbed-label" for="afc1895c-b318-45bc-b066-bf6842eafe52">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -451,13 +453,13 @@ R</label><div class="tabbed-content docutils">
 <p>In Step 4., we initialize and parametrize the model object which will later be used to perform the estimation.</p>
 <p>We initialize a <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLPLR.html">DoubleMLPLR (Python)</a> /
 <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLR.html">DoubleMLPLR (R)</a>
-using the previously generated data-backend. Moreover, we specify the resampling
+object using the previously generated data-backend. Moreover, we specify the resampling
 (= the number of repetitions and folds for <a class="reference internal" href="../guide/resampling.html#repeated-cross-fitting"><span class="std std-ref">repeated cross-fitting</span></a>),
 the dml algorithm (<a class="reference internal" href="../guide/algorithms.html#algorithms"><span class="std std-ref">DML1 vs. DML2</span></a>) and the score function (<a class="reference internal" href="../guide/scores.html#plr-score"><span class="std std-ref">“partialling out” or
 “IV-type”</span></a>).</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="f0841651-25ff-4274-8c21-4f005fc3db19" name="891fd7df-dbd4-48f5-841e-596e1240b271" type="radio">
-</input><label class="tabbed-label" for="f0841651-25ff-4274-8c21-4f005fc3db19">
+<input checked="checked" id="8c9216f1-b8ad-4d4d-afd7-7e7ec750c3dd" name="0ca398e4-c50a-4efc-8dc5-c06aa9b929d2" type="radio">
+</input><label class="tabbed-label" for="8c9216f1-b8ad-4d4d-afd7-7e7ec750c3dd">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLPLR</span>
 
@@ -483,8 +485,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="beba51bc-e8ed-45df-8cb5-2c9479bceb8b" name="891fd7df-dbd4-48f5-841e-596e1240b271" type="radio">
-</input><label class="tabbed-label" for="beba51bc-e8ed-45df-8cb5-2c9479bceb8b">
+<input id="eef22882-bb67-4969-9386-82e8df9d422e" name="0ca398e4-c50a-4efc-8dc5-c06aa9b929d2" type="radio">
+</input><label class="tabbed-label" for="eef22882-bb67-4969-9386-82e8df9d422e">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -517,18 +519,18 @@ R</label><div class="tabbed-content docutils">
 in the score are computed. As an output, users can access the coefficient estimates and standard errors either via the
 corresponding fields or via a summary.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="342672d2-37c2-4d29-884e-b0ee5bdf3327" name="22379b39-090a-45aa-99cf-43b2c2a3e746" type="radio">
-</input><label class="tabbed-label" for="342672d2-37c2-4d29-884e-b0ee5bdf3327">
+<input checked="checked" id="0f6851a1-4cdb-4283-91b9-a550baa948dd" name="6329ddee-ccde-451e-98c3-a9f7b15067fe" type="radio">
+</input><label class="tabbed-label" for="0f6851a1-4cdb-4283-91b9-a550baa948dd">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Estimation</span>
 <span class="gp">In [16]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[16]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f318afa5c70&gt;</span>
+<span class="gh">Out[16]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f3cdcaf1700&gt;</span>
 
 <span class="go"># Coefficient estimate</span>
 <span class="gp">In [17]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">coef</span>
 <span class="gh">Out[17]: </span><span class="go">array([8909.63407762])</span>
 
-<span class="go"># Stndard error</span>
+<span class="go"># Standard error</span>
 <span class="gp">In [18]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">se</span>
 <span class="gh">Out[18]: </span><span class="go">array([1321.82228913])</span>
 
@@ -542,8 +544,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="31ab0545-4534-4a87-9f2e-43d61abd3b4c" name="22379b39-090a-45aa-99cf-43b2c2a3e746" type="radio">
-</input><label class="tabbed-label" for="31ab0545-4534-4a87-9f2e-43d61abd3b4c">
+<input id="96821f6b-8b7a-4221-a617-3f3fb537128f" name="6329ddee-ccde-451e-98c3-a9f7b15067fe" type="radio">
+</input><label class="tabbed-label" for="96821f6b-8b7a-4221-a617-3f3fb537128f">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -553,7 +555,7 @@ R</label><div class="tabbed-content docutils">
 <span class="linenos"> 4</span># Coefficient estimate
 <span class="linenos"> 5</span>dml_plr_forest$coef
 <span class="linenos"> 6</span>
-<span class="linenos"> 7</span># Stndard error
+<span class="linenos"> 7</span># Standard error
 <span class="linenos"> 8</span>dml_plr_forest$se
 <span class="linenos"> 9</span>
 <span class="linenos">10</span># Summary
@@ -562,12 +564,12 @@ R</label><div class="tabbed-content docutils">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>INFO  [10:30:32.103] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/3) 
-INFO  [10:30:34.557] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/3) 
-INFO  [10:30:36.066] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/3) 
-INFO  [10:30:37.645] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 3/3) 
-INFO  [10:30:38.936] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 2/3) 
-INFO  [10:30:40.233] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 1/3) 
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>INFO  [12:43:31.146] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/3) 
+INFO  [12:43:33.397] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/3) 
+INFO  [12:43:34.731] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/3) 
+INFO  [12:43:36.138] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 3/3) 
+INFO  [12:43:37.310] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 2/3) 
+INFO  [12:43:38.495] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 1/3) 
 </pre></div>
 </div>
 <div class="output text_html"><strong>e401:</strong> 9126.99864670889</div><div class="output text_html"><strong>e401:</strong> 1312.93958082416</div><div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] &quot;Estimates and significance testing of the effect of target variables&quot;
@@ -590,13 +592,13 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 or, in case multiple causal parameters are estimated, adjust the analysis for multiple testing. <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
 supports various approaches to perform <a class="reference internal" href="../guide/sim_inf.html#sim-inf"><span class="std std-ref">valid simultaneous inference</span></a>
 which are partly based on a multiplier bootstrap.</p>
-<p>To conclude analysis on the average treatment effect of eligibility for 401(k) pension plans on net financial assets, we find a
-positive and significant effect: Being eligible for such a pension plan increases the amount of net financial assets by
-approximately <span class="math notranslate nohighlight">\($9,000\)</span>. This estimate is much smaller than the unconditional effect of elegibility on net financial assets:
+<p>To conclude the analysis on the intent-to-treat effect in the 401(k) example, i.e., the average treatment effect of eligibility for 401(k) pension plans
+on net financial assets, we find a positive and significant effect: Being eligible for such a pension plan increases the amount of net financial assets by
+approximately <span class="math notranslate nohighlight">\($9,000\)</span>. This estimate is much smaller than the unconditional effect of eligibility on net financial assets:
 If we did not control for the confounding variables, the average treatment effect would correspond to <span class="math notranslate nohighlight">\($19,559\)</span>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="5fd7fee0-0b17-4e15-8095-9c9b9fdc7081" name="2f0396d0-8a64-4eb1-add4-f040bacdd967" type="radio">
-</input><label class="tabbed-label" for="5fd7fee0-0b17-4e15-8095-9c9b9fdc7081">
+<input checked="checked" id="8e63e2b4-81da-491d-a6d1-2c83f2be1dae" name="7c11ac4b-55ca-4b62-b5f8-725d7d250510" type="radio">
+</input><label class="tabbed-label" for="8e63e2b4-81da-491d-a6d1-2c83f2be1dae">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Summary</span>
 <span class="gp">In [20]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">summary</span>
@@ -614,7 +616,7 @@ Python</label><div class="tabbed-content docutils">
 
 <span class="go"># Multiplier bootstrap (relevant in case with multiple treatment variables)</span>
 <span class="gp">In [22]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span>
-<span class="gh">Out[22]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f318afa5c70&gt;</span>
+<span class="gh">Out[22]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f3cdcaf1700&gt;</span>
 
 <span class="go"># Simultaneous confidence bands</span>
 <span class="gp">In [23]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">joint</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
@@ -624,8 +626,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="98ecd632-29b9-4035-a2c4-e31107ad9cc4" name="2f0396d0-8a64-4eb1-add4-f040bacdd967" type="radio">
-</input><label class="tabbed-label" for="98ecd632-29b9-4035-a2c4-e31107ad9cc4">
+<input id="2087626e-93dd-46b6-b259-4c1eb1439914" name="7c11ac4b-55ca-4b62-b5f8-725d7d250510" type="radio">
+</input><label class="tabbed-label" for="2087626e-93dd-46b6-b259-4c1eb1439914">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -684,8 +686,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
               
               <div class='prev-next-bottom'>
                 
-    <a class='left-prev' id="prev-link" href="../intro/intro.html" title="previous page">Getting started</a>
-    <a class='right-next' id="next-link" href="../guide/guide.html" title="next page">User guide</a>
+    <a class='left-prev' id="prev-link" href="../guide/resampling.html" title="previous page"><span class="section-number">9. </span>Sample-splitting, cross-fitting and repeated cross-fitting</a>
+    <a class='right-next' id="next-link" href="../api/api.html" title="next page">API reference</a>
 
               </div>
               
