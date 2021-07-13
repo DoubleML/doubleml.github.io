@@ -178,23 +178,60 @@
   </div>
 </nav><style>
 
+.toc-entry {
+  list-style: none;
+  margin-left: 0em;
+  min-height: 50px;
+  border-left: 2px solid rgba(var(--pst-color-text-base), 1);
+  padding: 0 0 50px 0px;
+  position: relative;
+}
+.toc-entry:last-child{
+  border-left: 0;
+  left: 2px;
+}
+
+.toc-entry::after{
+  border-left: 0;
+  position: absolute;
+  left: -8px;
+  top: 0px;
+  content: " ";
+  border: 2px solid rgba(255, 255, 255, 1);
+  border-radius: 500%;
+  background: rgba(var(--pst-color-toc-link-active), 1);
+  height: 15px;
+  width: 15px;
+}
+
+.toc-entry:hover::after {
+  background: rgba(var(--pst-color-link-hover), 1);
+  transition: all 200ms ease-in-out;
+}
+
 .toc-entry > .nav-link {
-  font-size: medium;
+  position: relative;
+  font-size: small;
   font-weight: 600;
-  border-radius: 25px;
-  background: LightGray;
-  padding: 15px;
-  width: 190px;
-  height: 80px;
-  margin: 5px;
-  text-align: center;
-  color: black;
+  text-align: left;
+  margin: 0;
+  top: -5px;
+  color: rgba(var(--pst-color-text-base), 1);
 }
 
 .toc-entry > .nav-link.active {
-  color: white;
-  background: rgba(var(--pst-color-toc-link-active), 1);
+  color: rgba(255, 255, 255, 1);
+  font-size: medium;
+  background-color: rgba(var(--pst-color-toc-link-active), 1);
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  border-left: 0;
+  margin-left: 2px;
+  padding-right: 15px;
+  top: -7px;
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out, border 200ms ease-in-out, font-size 200ms ease-in-out;
 }
+
 </style>
 
             </div>
@@ -320,8 +357,8 @@ The data-backend can be initialized from various data frame objects in Python an
 401(k) example, we use eligibility (<code class="docutils literal notranslate"><span class="pre">e401</span></code>) as the treatment variable of interest. The outcome variable is <code class="docutils literal notranslate"><span class="pre">net_tfa</span></code> and we
 control for confounding variables <code class="docutils literal notranslate"><span class="pre">['age',</span> <span class="pre">'inc',</span> <span class="pre">'educ',</span> <span class="pre">'fsize',</span> <span class="pre">'marr',</span> <span class="pre">'twoearn',</span> <span class="pre">'db',</span> <span class="pre">'pira',</span> <span class="pre">'hown']</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="642cda32-d169-4276-877f-a976cffa4b8c" name="8a878013-b8e4-4fe1-a281-72fa072f203c" type="radio">
-</input><label class="tabbed-label" for="642cda32-d169-4276-877f-a976cffa4b8c">
+<input checked="checked" id="316febe6-54e5-46d8-82f3-3662e65582f2" name="2e3051ba-ca59-47a7-a252-8bb8e8878034" type="radio">
+</input><label class="tabbed-label" for="316febe6-54e5-46d8-82f3-3662e65582f2">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLData</span>
 
@@ -337,8 +374,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="ea556ea4-d9d8-451d-a154-15f6ad0d0541" name="8a878013-b8e4-4fe1-a281-72fa072f203c" type="radio">
-</input><label class="tabbed-label" for="ea556ea4-d9d8-451d-a154-15f6ad0d0541">
+<input id="f40bee8a-03eb-4dec-81c5-78dbbd7c38f7" name="2e3051ba-ca59-47a7-a252-8bb8e8878034" type="radio">
+</input><label class="tabbed-label" for="f40bee8a-03eb-4dec-81c5-78dbbd7c38f7">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -391,8 +428,8 @@ We can directly pass the parameters during initialization of the learner objects
 Because we have a binary treatment variable, we can use a classification learner for the corresponding nuisance part.
 We use a regression learner for the continuous outcome variable net financial assets.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="8d12ead7-cf67-461e-aab7-dd9234a3fec9" name="69b91c6b-dcc6-44a0-8c12-38e3bb8c514f" type="radio">
-</input><label class="tabbed-label" for="8d12ead7-cf67-461e-aab7-dd9234a3fec9">
+<input checked="checked" id="ae3c997d-0135-4f7c-8bda-a9103872a861" name="85501efe-7fcf-4e45-b9ee-ef3e19b5c41b" type="radio">
+</input><label class="tabbed-label" for="ae3c997d-0135-4f7c-8bda-a9103872a861">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Random forest learners</span>
 <span class="gp">In [5]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
@@ -420,8 +457,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="30baa720-83ee-4571-aa2c-7eb680c6ca3c" name="69b91c6b-dcc6-44a0-8c12-38e3bb8c514f" type="radio">
-</input><label class="tabbed-label" for="30baa720-83ee-4571-aa2c-7eb680c6ca3c">
+<input id="3f8e6056-47fe-4a6c-92d1-a16411dd02a5" name="85501efe-7fcf-4e45-b9ee-ef3e19b5c41b" type="radio">
+</input><label class="tabbed-label" for="3f8e6056-47fe-4a6c-92d1-a16411dd02a5">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -458,8 +495,8 @@ object using the previously generated data-backend. Moreover, we specify the res
 the dml algorithm (<a class="reference internal" href="../guide/algorithms.html#algorithms"><span class="std std-ref">DML1 vs. DML2</span></a>) and the score function (<a class="reference internal" href="../guide/scores.html#plr-score"><span class="std std-ref">“partialling out” or
 “IV-type”</span></a>).</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="b3757e1a-3c25-4352-9110-0c6f6dbce7fb" name="430cee5b-947a-4cda-b0d2-cff2e61ca729" type="radio">
-</input><label class="tabbed-label" for="b3757e1a-3c25-4352-9110-0c6f6dbce7fb">
+<input checked="checked" id="5816e4ac-89a8-40df-97de-f73686df237f" name="32316283-0884-471a-a8a8-165cfa3482ab" type="radio">
+</input><label class="tabbed-label" for="5816e4ac-89a8-40df-97de-f73686df237f">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLPLR</span>
 
@@ -485,8 +522,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="4ecebc3a-d9f8-4df3-83ec-83da77b1f7fe" name="430cee5b-947a-4cda-b0d2-cff2e61ca729" type="radio">
-</input><label class="tabbed-label" for="4ecebc3a-d9f8-4df3-83ec-83da77b1f7fe">
+<input id="25fcd948-95b3-4351-b963-b91179ea117a" name="32316283-0884-471a-a8a8-165cfa3482ab" type="radio">
+</input><label class="tabbed-label" for="25fcd948-95b3-4351-b963-b91179ea117a">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -519,12 +556,12 @@ R</label><div class="tabbed-content docutils">
 in the score are computed. As an output, users can access the coefficient estimates and standard errors either via the
 corresponding fields or via a summary.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="1012be15-a6e0-4eab-861a-bb1eb23313dd" name="70fc5d5c-8acc-4fa2-9ee1-3b29663519f0" type="radio">
-</input><label class="tabbed-label" for="1012be15-a6e0-4eab-861a-bb1eb23313dd">
+<input checked="checked" id="20defe01-796e-4d21-8355-c42ebd803d33" name="978c14c8-575b-464c-829a-6710fd1f7b3b" type="radio">
+</input><label class="tabbed-label" for="20defe01-796e-4d21-8355-c42ebd803d33">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Estimation</span>
 <span class="gp">In [16]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[16]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f7791eeaf70&gt;</span>
+<span class="gh">Out[16]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f3472700fd0&gt;</span>
 
 <span class="go"># Coefficient estimate</span>
 <span class="gp">In [17]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">coef</span>
@@ -544,8 +581,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="39938b76-f5c6-405d-b589-5c1b826b7445" name="70fc5d5c-8acc-4fa2-9ee1-3b29663519f0" type="radio">
-</input><label class="tabbed-label" for="39938b76-f5c6-405d-b589-5c1b826b7445">
+<input id="e6488c45-51e0-4e4f-ad00-096a14806632" name="978c14c8-575b-464c-829a-6710fd1f7b3b" type="radio">
+</input><label class="tabbed-label" for="e6488c45-51e0-4e4f-ad00-096a14806632">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -564,12 +601,12 @@ R</label><div class="tabbed-content docutils">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>INFO  [15:24:22.395] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/3) 
-INFO  [15:24:24.522] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/3) 
-INFO  [15:24:25.757] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/3) 
-INFO  [15:24:27.098] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 3/3) 
-INFO  [15:24:28.177] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 2/3) 
-INFO  [15:24:29.245] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 1/3) 
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>INFO  [07:48:17.183] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 2/3) 
+INFO  [07:48:19.312] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 3/3) 
+INFO  [07:48:20.547] [mlr3]  Applying learner &#39;regr.ranger&#39; on task &#39;nuis_g&#39; (iter 1/3) 
+INFO  [07:48:21.883] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 3/3) 
+INFO  [07:48:22.958] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 2/3) 
+INFO  [07:48:24.084] [mlr3]  Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 1/3) 
 </pre></div>
 </div>
 <div class="output text_html"><strong>e401:</strong> 9126.99864670889</div><div class="output text_html"><strong>e401:</strong> 1312.93958082416</div><div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>[1] &quot;Estimates and significance testing of the effect of target variables&quot;
@@ -597,8 +634,8 @@ on net financial assets, we find a positive and significant effect: Being eligib
 approximately <span class="math notranslate nohighlight">\($9,000\)</span>. This estimate is much smaller than the unconditional effect of eligibility on net financial assets:
 If we did not control for the confounding variables, the average treatment effect would correspond to <span class="math notranslate nohighlight">\($19,559\)</span>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="b35518ca-c41e-47b4-8b16-eea688432e1c" name="86b0ff75-629f-482d-9df4-f1f342bffe36" type="radio">
-</input><label class="tabbed-label" for="b35518ca-c41e-47b4-8b16-eea688432e1c">
+<input checked="checked" id="3b82cd4e-9c92-4e8f-aee1-e21017a38ac3" name="67513457-1c5f-4584-995c-ba436e237ea0" type="radio">
+</input><label class="tabbed-label" for="3b82cd4e-9c92-4e8f-aee1-e21017a38ac3">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Summary</span>
 <span class="gp">In [20]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">summary</span>
@@ -616,7 +653,7 @@ Python</label><div class="tabbed-content docutils">
 
 <span class="go"># Multiplier bootstrap (relevant in case with multiple treatment variables)</span>
 <span class="gp">In [22]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span>
-<span class="gh">Out[22]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f7791eeaf70&gt;</span>
+<span class="gh">Out[22]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f3472700fd0&gt;</span>
 
 <span class="go"># Simultaneous confidence bands</span>
 <span class="gp">In [23]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">joint</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
@@ -626,8 +663,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="25fdb7da-19b6-4f91-891e-e306cfaff227" name="86b0ff75-629f-482d-9df4-f1f342bffe36" type="radio">
-</input><label class="tabbed-label" for="25fdb7da-19b6-4f91-891e-e306cfaff227">
+<input id="1dab8b2d-a0b5-4c34-98b2-8fffde8b263b" name="67513457-1c5f-4584-995c-ba436e237ea0" type="radio">
+</input><label class="tabbed-label" for="1dab8b2d-a0b5-4c34-98b2-8fffde8b263b">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
