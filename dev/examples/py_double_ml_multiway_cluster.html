@@ -1,0 +1,2064 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python: Cluster Robust Double Machine Learning &#8212; DoubleML  documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DML: Bonus Data" href="double_ml_bonus_data.html" />
+    <link rel="prev" title="Python: Impact of 401(k) on Financial Wealth" href="py_double_ml_pension.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">DoubleML</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  DoubleML
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../intro/install.html">
+  Install
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../intro/intro.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../guide/guide.html">
+  User guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../workflow/workflow.html">
+  Workflow
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../api/api.html">
+  Python API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://docs.doubleml.org/r/stable/">
+  R API
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="index.html">
+  Examples
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../release/release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/DoubleML/doubleml-for-py" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="R_double_ml_pension.html">
+   R: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="r_double_ml_multiway_cluster.html">
+   R: Cluster Robust Double Machine Learning
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pension.html">
+   Python: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Python: Cluster Robust Double Machine Learning
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_ml_bonus_data.html">
+   DML: Bonus Data
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Two-Way-Cluster-Robust-DML">
+   Two-Way Cluster Robust DML
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Simulate-multiway-cluster-data">
+     Simulate multiway cluster data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Data-Backend-for-Cluster-Data">
+     Data-Backend for Cluster Data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Initialize-the-objects-of-class-DoubleMLPLIV">
+     Initialize the objects of class DoubleMLPLIV
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Cluster-Robust-Cross-Fitting">
+     Cluster Robust Cross Fitting
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Cluster-Robust-Standard-Errors">
+     Cluster Robust Standard Errors
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#(One-Way)-Cluster-Robust-Double-Machine-Learing">
+   (One-Way) Cluster Robust Double Machine Learing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Data-Application">
+   Data Application
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Load-and-Process-Data">
+     Load and Process Data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Initialize-DoubleMLClusterData-object">
+     Initialize
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       DoubleMLClusterData
+      </span>
+     </code>
+     object
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Two-Way-Clustering-with-Respect-to-Product-and-Market">
+     Two-Way Clustering with Respect to Product and Market
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#One-Way-Clustering-with-Respect-to-the-Product">
+     One-Way Clustering with Respect to the Product
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#One-Way-Clustering-with-Respect-to-the-Market">
+     One-Way Clustering with Respect to the Market
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#No-Clustering-/-Zero-Way-Clustering">
+     No Clustering / Zero-Way Clustering
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Application-Results">
+     Application Results
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#References">
+   References
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+    <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/py_double_ml_multiway_cluster.ipynb">https://docs.doubleml.org/stable/examples/py_double_ml_multiway_cluster.ipynb</a>.
+
+    </ul>
+    </div><div class="section" id="Python:-Cluster-Robust-Double-Machine-Learning">
+<h1>Python: Cluster Robust Double Machine Learning<a class="headerlink" href="#Python:-Cluster-Robust-Double-Machine-Learning" title="Permalink to this headline">¶</a></h1>
+<p>This example demonstrates the cluster robust features of the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package. The theoretical foundations are given in Chiang et al. 2021.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">RepeatedKFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">clone</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span>
+
+<span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLClusterData</span><span class="p">,</span> <span class="n">DoubleMLData</span><span class="p">,</span> <span class="n">DoubleMLPLIV</span>
+
+<span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_pliv_multiway_cluster_CKMS2021</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Two-Way-Cluster-Robust-DML">
+<h2>Two-Way Cluster Robust DML<a class="headerlink" href="#Two-Way-Cluster-Robust-DML" title="Permalink to this headline">¶</a></h2>
+<p>In a first part, we show how the two-way cluster roboust DML (Chiang et al. 2021) can be implemented with the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package. Chiang et al. (2021) consider double-indexed data</p>
+<p><span class="math">\begin{equation}
+\lbrace W_{ij}: i \in \lbrace 1, \ldots, N \rbrace, j \in \lbrace 1, \ldots, M \rbrace \rbrace
+\end{equation}</span></p>
+<p>and the partially linear IV regression model (PLIV)</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+Y_{ij} = D_{ij} \theta_0 +  g_0(X_{ij}) + \epsilon_{ij}, &amp; &amp;\mathbb{E}(\epsilon_{ij} | X_{ij}, Z_{ij}) = 0, \\
+Z_{ij} = m_0(X_{ij}) + v_{ij}, &amp; &amp;\mathbb{E}(v_{ij} | X_{ij}) = 0.
+\end{aligned}\end{split}\]</div>
+<div class="section" id="Simulate-multiway-cluster-data">
+<h3>Simulate multiway cluster data<a class="headerlink" href="#Simulate-multiway-cluster-data" title="Permalink to this headline">¶</a></h3>
+<p>We use the PLIV data generating process described in Section 4.1 of Chiang et al. (2020). The DGP is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+Z_{ij} &amp;= X_{ij}' \xi_0 + V_{ij}, \\
+D_{ij} &amp;= Z_{ij}' \pi_{10} + X_{ij}' \pi_{20} + v_{ij}, \\
+Y_{ij} &amp;= D_{ij} \theta + X_{ij}' \zeta_0 + \varepsilon_{ij},
+\end{aligned}\end{split}\]</div>
+<p>with</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+X_{ij} &amp;= (1 - \omega_1^X - \omega_2^X) \alpha_{ij}^X
++ \omega_1^X \alpha_{i}^X + \omega_2^X \alpha_{j}^X, \\
+\varepsilon_{ij} &amp;= (1 - \omega_1^\varepsilon - \omega_2^\varepsilon) \alpha_{ij}^\varepsilon
++ \omega_1^\varepsilon \alpha_{i}^\varepsilon + \omega_2^\varepsilon \alpha_{j}^\varepsilon, \\
+v_{ij} &amp;= (1 - \omega_1^v - \omega_2^v) \alpha_{ij}^v
++ \omega_1^v \alpha_{i}^v + \omega_2^v \alpha_{j}^v, \\
+V_{ij} &amp;= (1 - \omega_1^V - \omega_2^V) \alpha_{ij}^V
++ \omega_1^V \alpha_{i}^V + \omega_2^V \alpha_{j}^V,
+\end{aligned}\end{split}\]</div>
+<p>and <span class="math notranslate nohighlight">\(\alpha_{ij}^X, \alpha_{i}^X, \alpha_{j}^X \sim \mathcal{N}(0, \Sigma)\)</span> where <span class="math notranslate nohighlight">\(\Sigma\)</span> is a <span class="math notranslate nohighlight">\(p_x \times p_x\)</span> matrix with entries <span class="math notranslate nohighlight">\(\Sigma_{kj} = s_X^{|j-k|}\)</span>. Further</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\left(\begin{matrix} \alpha_{ij}^\varepsilon \\ \alpha_{ij}^v \end{matrix}\right),
+\left(\begin{matrix} \alpha_{i}^\varepsilon \\ \alpha_{i}^v \end{matrix}\right),
+\left(\begin{matrix} \alpha_{j}^\varepsilon \\ \alpha_{j}^v \end{matrix}\right)
+\sim \mathcal{N}\left(0, \left(\begin{matrix} 1 &amp; s_{\varepsilon v} \\
+s_{\varepsilon v} &amp; 1 \end{matrix} \right) \right)
+\end{aligned}\end{split}\]</div>
+<p>and <span class="math notranslate nohighlight">\(\alpha_{ij}^V, \alpha_{i}^V, \alpha_{j}^V \sim \mathcal{N}(0, 1)\)</span>.</p>
+<p>Data from this DGP can be generated with the <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.datasets.make_pliv_multiway_cluster_CKMS2021.html#doubleml.datasets.make_pliv_multiway_cluster_CKMS2021">make_pliv_multiway_cluster_CKMS2021()</a> function from <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Set the simulation parameters</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">25</span>  <span class="c1"># number of observations (first dimension)</span>
+<span class="n">M</span> <span class="o">=</span> <span class="mi">25</span>  <span class="c1"># number of observations (second dimension)</span>
+<span class="n">dim_X</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># dimension of X</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span> <span class="c1"># set seed</span>
+
+<span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">make_pliv_multiway_cluster_CKMS2021</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">dim_X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Data-Backend-for-Cluster-Data">
+<h3>Data-Backend for Cluster Data<a class="headerlink" href="#Data-Backend-for-Cluster-Data" title="Permalink to this headline">¶</a></h3>
+<p>The implemenation of cluster robust double machine learning is based on a special data-backend called <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLClusterData.html#doubleml.DoubleMLClusterData">DoubleMLClusterData</a>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># The simulated data is of type DoubleMLClusterData</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLClusterData Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: Y
+Treatment variable(s): [&#39;D&#39;]
+Cluster variable(s): [&#39;cluster_var_i&#39;, &#39;cluster_var_j&#39;]
+Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]
+Instrument variable(s): [&#39;Z&#39;]
+No. Observations: 625
+
+------------------ DataFrame info    ------------------
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 625 entries, 0 to 624
+Columns: 105 entries, cluster_var_i to Z
+dtypes: float64(103), int64(2)
+memory usage: 512.8 KB
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># The cluster variables are part of the DataFrame</span>
+<span class="n">obj_dml_data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cluster_var_i</th>
+      <th>cluster_var_j</th>
+      <th>X1</th>
+      <th>X2</th>
+      <th>X3</th>
+      <th>X4</th>
+      <th>X5</th>
+      <th>X6</th>
+      <th>X7</th>
+      <th>X8</th>
+      <th>...</th>
+      <th>X94</th>
+      <th>X95</th>
+      <th>X96</th>
+      <th>X97</th>
+      <th>X98</th>
+      <th>X99</th>
+      <th>X100</th>
+      <th>Y</th>
+      <th>D</th>
+      <th>Z</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>-0.261903</td>
+      <td>-0.195564</td>
+      <td>-0.118952</td>
+      <td>0.508459</td>
+      <td>0.226598</td>
+      <td>-0.544555</td>
+      <td>0.183888</td>
+      <td>1.694919</td>
+      <td>...</td>
+      <td>-0.205938</td>
+      <td>-0.996934</td>
+      <td>-1.136836</td>
+      <td>0.010269</td>
+      <td>-0.396985</td>
+      <td>-0.161141</td>
+      <td>-0.614188</td>
+      <td>0.256567</td>
+      <td>-0.113780</td>
+      <td>0.104787</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>1</td>
+      <td>-1.082973</td>
+      <td>-0.303835</td>
+      <td>0.760778</td>
+      <td>-0.542671</td>
+      <td>-0.601598</td>
+      <td>-0.201768</td>
+      <td>0.234910</td>
+      <td>0.212844</td>
+      <td>...</td>
+      <td>0.427573</td>
+      <td>0.303324</td>
+      <td>0.247826</td>
+      <td>0.109273</td>
+      <td>-0.410795</td>
+      <td>-0.128408</td>
+      <td>0.633433</td>
+      <td>-1.816318</td>
+      <td>-1.002983</td>
+      <td>-0.942661</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>2</td>
+      <td>-0.110359</td>
+      <td>-0.679539</td>
+      <td>0.491245</td>
+      <td>-0.309772</td>
+      <td>-0.552727</td>
+      <td>0.036729</td>
+      <td>-0.673302</td>
+      <td>-1.024604</td>
+      <td>...</td>
+      <td>0.094381</td>
+      <td>-0.922996</td>
+      <td>-2.054068</td>
+      <td>-0.477474</td>
+      <td>-0.543380</td>
+      <td>-0.720664</td>
+      <td>-0.332996</td>
+      <td>-0.851366</td>
+      <td>-0.302648</td>
+      <td>0.628069</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>3</td>
+      <td>-0.010940</td>
+      <td>1.003427</td>
+      <td>0.412653</td>
+      <td>0.784238</td>
+      <td>0.014637</td>
+      <td>0.611269</td>
+      <td>0.323679</td>
+      <td>-0.557999</td>
+      <td>...</td>
+      <td>0.698694</td>
+      <td>1.342992</td>
+      <td>-1.136089</td>
+      <td>-0.632058</td>
+      <td>-0.509958</td>
+      <td>-0.456370</td>
+      <td>-0.557595</td>
+      <td>1.081488</td>
+      <td>0.438960</td>
+      <td>0.054162</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>4</td>
+      <td>-0.073207</td>
+      <td>-0.370736</td>
+      <td>-0.005857</td>
+      <td>-0.833907</td>
+      <td>-0.096337</td>
+      <td>-0.714240</td>
+      <td>0.094026</td>
+      <td>0.435401</td>
+      <td>...</td>
+      <td>-0.149714</td>
+      <td>-0.164864</td>
+      <td>-0.756805</td>
+      <td>0.518175</td>
+      <td>0.510385</td>
+      <td>-0.681176</td>
+      <td>-1.020271</td>
+      <td>-1.708190</td>
+      <td>-1.805007</td>
+      <td>-0.850321</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 105 columns</p>
+</div></div>
+</div>
+</div>
+<div class="section" id="Initialize-the-objects-of-class-DoubleMLPLIV">
+<h3>Initialize the objects of class DoubleMLPLIV<a class="headerlink" href="#Initialize-the-objects-of-class-DoubleMLPLIV" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Set machine learning methods for m, g &amp; r</span>
+<span class="n">learner</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span>
+<span class="n">ml_g</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+<span class="n">ml_r</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<span class="c1"># initialize the DoubleMLPLIV object</span>
+<span class="n">dml_pliv_obj</span> <span class="o">=</span> <span class="n">DoubleMLPLIV</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+                            <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">ml_r</span><span class="p">,</span>
+                            <span class="n">n_folds</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_pliv_obj</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLPLIV Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: Y
+Treatment variable(s): [&#39;D&#39;]
+Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]
+Instrument variable(s): [&#39;Z&#39;]
+Cluster variable(s): [&#39;cluster_var_i&#39;, &#39;cluster_var_j&#39;]
+No. Observations: 625
+
+------------------ Score &amp; algorithm ------------------
+Score function: partialling out
+DML algorithm: dml2
+
+------------------ Machine learner   ------------------
+Learner ml_g: LassoCV()
+Learner ml_m: LassoCV()
+Learner ml_r: LassoCV()
+
+------------------ Resampling        ------------------
+No. folds per cluster: 3
+No. folds: 9
+No. repeated sample splits: 1
+Apply cross-fitting: True
+
+------------------ Fit summary       ------------------
+Empty DataFrame
+Columns: [coef, std err, t, P&gt;|t|]
+Index: []
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Cluster-Robust-Cross-Fitting">
+<h3>Cluster Robust Cross Fitting<a class="headerlink" href="#Cluster-Robust-Cross-Fitting" title="Permalink to this headline">¶</a></h3>
+<p>A key element of cluster robust DML (Chiang et al. 2021) is a special sample splitting used for the cross-fitting. In case of two-way clustering, we assume <span class="math notranslate nohighlight">\(N\)</span> clusters in the first dimension and <span class="math notranslate nohighlight">\(M\)</span> clusters in the second dimension.</p>
+<p>For <span class="math notranslate nohighlight">\(K\)</span>-fold cross-fitting, Chiang et al. 2021 proposed to randomly partition <span class="math notranslate nohighlight">\([N]:=\{1,\ldots,N\}\)</span> into <span class="math notranslate nohighlight">\(K\)</span> subsets <span class="math notranslate nohighlight">\(\{I_1, \ldots, I_K\}\)</span> and <span class="math notranslate nohighlight">\([M]:=\{1,\ldots,N\}\)</span> into <span class="math notranslate nohighlight">\(K\)</span> subsets <span class="math notranslate nohighlight">\(\{J_1, \ldots, J_K\}\)</span>. Effectively, one then considers <span class="math notranslate nohighlight">\(K^2\)</span> folds. Basically for each <span class="math notranslate nohighlight">\((k, \ell) \in \{1, \ldots, K\} \times \{1, \ldots, K\}\)</span>, the nuisance functions are estimated for all double-indexed observations in
+<span class="math notranslate nohighlight">\(([N]\setminus I_K) \times ([M]\setminus J_\ell)\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\hat{\eta}_{k\ell} = \hat{\eta}\left((W_{ij})_{(i,j)\in ([N]\setminus I_K) \times ([M]\setminus J_\ell)}\right)\]</div>
+<p>The causal parameter is then estimated as usual by solving a moment condition with a Neyman orthogonal score function. For two-way cluster robust double machine learning with algorithm DML2 this results in solving</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{K^2} \sum_{k=1}^{K} \sum_{\ell=1}^{K} \frac{1}{|I_k| |J_\ell|} \sum_{(i,j) \in I_K \times J_\ell}
+\psi(W_{ij}, \tilde{\theta}_0, \hat{\eta}_{k\ell}) = 0\]</div>
+<p>for <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span>. Here <span class="math notranslate nohighlight">\(|I_k|\)</span> denotes the cardinality, i.e., the number of clusters in the <span class="math notranslate nohighlight">\(k\)</span>-th fold for the first cluster variable.</p>
+<p>We can visualize the sample splitting of the <span class="math notranslate nohighlight">\(N \cdot M = 625\)</span> observations into <span class="math notranslate nohighlight">\(K \cdot K = 9\)</span> folds.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#discrete color scheme</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="n">cMap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">12</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">smpls</span> <span class="o">=</span> <span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">smpls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">n_folds_per_cluster</span> <span class="o">=</span> <span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">_n_folds_per_cluster</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="o">*</span><span class="n">n_folds_per_cluster</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">i_split</span><span class="p">,</span> <span class="n">this_split_ind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">smpls</span><span class="p">):</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">this_split_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i_split</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">this_split_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i_split</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cMap</span><span class="p">);</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">();</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">]);</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fold&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Observation&#39;</span><span class="p">)</span>
+<span class="n">colorbar</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">colorbar</span>
+<span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="mf">0.667</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">])</span>
+<span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;Nuisance&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Score&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_multiway_cluster_14_0.png" src="../_images/examples_py_double_ml_multiway_cluster_14_0.png" />
+</div>
+</div>
+<p>If we visualize the sample splitting in terms of the cluster variables the sample splitting into <span class="math notranslate nohighlight">\(9\)</span> folds <span class="math notranslate nohighlight">\(I_k \times J_\ell\)</span> becomes clearer.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">smpls_cluster</span> <span class="o">=</span> <span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">smpls_cluster</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">n_folds_per_cluster</span> <span class="o">=</span> <span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">_n_folds_per_cluster</span>
+<span class="k">for</span> <span class="n">i_split</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">)):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">n_folds_per_cluster</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">,</span> <span class="n">i_split</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
+                  <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">([</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">)]),</span>
+                  <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">[</span><span class="n">i_split</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">[</span><span class="n">i_split</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+    <span class="n">df_wide</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;level_0&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;level_1&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="n">df_wide</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+    <span class="n">df_wide</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_wide</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cMap</span><span class="p">);</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">();</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">M</span><span class="p">]);</span>
+    <span class="n">colorbar</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">colorbar</span>
+    <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="mf">0.667</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">])</span>
+
+    <span class="n">l</span> <span class="o">=</span> <span class="n">i_split</span> <span class="o">%</span> <span class="n">n_folds_per_cluster</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor_divide</span><span class="p">(</span><span class="n">i_split</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Nuisance: $I_</span><span class="se">{{</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="se">}}</span><span class="s1">^C </span><span class="se">\\</span><span class="s1">times J_</span><span class="se">{{</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="se">}}</span><span class="s1">^C$; Score: $I_</span><span class="se">{{</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="se">}}</span><span class="s1"> </span><span class="se">\\</span><span class="s1">times J_</span><span class="se">{{</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="se">}}</span><span class="s1">$&#39;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">n_folds_per_cluster</span><span class="p">:</span>
+        <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;Nuisance&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Score&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;First Cluster Variable $k$&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Second Cluster Variable $\ell$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_multiway_cluster_16_0.png" src="../_images/examples_py_double_ml_multiway_cluster_16_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Cluster-Robust-Standard-Errors">
+<h3>Cluster Robust Standard Errors<a class="headerlink" href="#Cluster-Robust-Standard-Errors" title="Permalink to this headline">¶</a></h3>
+<p>In the abstract base class <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> the estimation of cluster robust standard errors is implemented for all supported double machine learning models. It is based on the assumption of a linear Neyman orthogonal score function. We use the notation <span class="math notranslate nohighlight">\(n \wedge m := \min\{n,m\}\)</span>. For the the asymptotic variance of <span class="math notranslate nohighlight">\(\sqrt{\underline{C}}(\tilde{\theta_0} - \theta_0\)</span> with <span class="math notranslate nohighlight">\(\underline{C} := N \wedge M\)</span> Chiang et al. 2021 then proposed the following estimator</p>
+<div class="math notranslate nohighlight">
+\[\hat{\sigma}^2 = \hat{J}^{-1} \hat{\Gamma} \hat{J}^{-1}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\hat{\Gamma} = \frac{1}{K^2} \sum_{(k, \ell) \in[K]^2}
+\Bigg[ \frac{|I_k| \wedge |J_\ell|}{(|I_k||J_\ell|)^2}
+\bigg(&amp;\sum_{i \in I_k} \sum_{j \in J_\ell} \sum_{j' \in J_\ell}
+\psi(W_{ij}; \tilde{\theta}, \hat{\eta}_{k \ell}) \psi(W_{ij'}; \tilde{\theta}_0, \hat{\eta}_{k \ell}) \\
+&amp;+ \sum_{i \in I_k} \sum_{i' \in I_k} \sum_{j \in J_\ell}
+\psi(W_{ij}; \tilde{\theta}, \hat{\eta}_{k \ell}) \psi(W_{i'j}; \tilde{\theta}_0, \hat{\eta}_{k \ell})
+\bigg)
+\Bigg]
+\end{aligned}\end{split}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\hat{J} = \frac{1}{K^2} \sum_{(k, \ell) \in[K]^2} \frac{1}{|I_k||J_\ell|}
+\sum_{i \in I_k} \sum_{j \in J_\ell}
+\psi_a(W_{ij}; \tilde{\theta}_0, \hat{\eta}_{k \ell}).
+\end{aligned}\]</div>
+<p>A <span class="math notranslate nohighlight">\((1-\alpha)\)</span> confidence interval is then given by (Chiang et al. 2020)</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\left[
+\tilde{\theta} \pm \Phi^{-1}(1-\alpha/2) \sqrt{\hat{\sigma}^2 / \underline{C}}
+\right]
+\end{aligned}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\underline{C} = N \wedge M\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Estimate the PLIV model with cluster robust double machine learning</span>
+<span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">summary</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>coef</th>
+      <th>std err</th>
+      <th>t</th>
+      <th>P&gt;|t|</th>
+      <th>2.5 %</th>
+      <th>97.5 %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>D</th>
+      <td>1.135871</td>
+      <td>0.118601</td>
+      <td>9.577271</td>
+      <td>9.964261e-22</td>
+      <td>0.903418</td>
+      <td>1.368324</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+</div>
+<div class="section" id="(One-Way)-Cluster-Robust-Double-Machine-Learing">
+<h2>(One-Way) Cluster Robust Double Machine Learing<a class="headerlink" href="#(One-Way)-Cluster-Robust-Double-Machine-Learing" title="Permalink to this headline">¶</a></h2>
+<p>We again use the PLIV data generating process described in Section 4.1 of Chiang et al. (2020). To obtain one-way clustered data, we set the following weights to zero</p>
+<div class="math notranslate nohighlight">
+\[\omega_2^X = \omega_2^\varepsilon = \omega_2^v = \omega_2^V = 0.\]</div>
+<p>Again we can simulate this data with <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.datasets.make_pliv_multiway_cluster_CKMS2021.html#doubleml.datasets.make_pliv_multiway_cluster_CKMS2021">make_pliv_multiway_cluster_CKMS2021()</a>. To prepare the data-backend for one-way clustering, we only have to alter the <code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code> to be <code class="docutils literal notranslate"><span class="pre">'cluster_var_i'</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">make_pliv_multiway_cluster_CKMS2021</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">dim_X</span><span class="p">,</span>
+                                                   <span class="n">omega_X</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+                                                   <span class="n">omega_epsilon</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+                                                   <span class="n">omega_v</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+                                                   <span class="n">omega_V</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">obj_dml_data</span><span class="o">.</span><span class="n">cluster_cols</span> <span class="o">=</span> <span class="s1">&#39;cluster_var_i&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLClusterData Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: Y
+Treatment variable(s): [&#39;D&#39;]
+Cluster variable(s): [&#39;cluster_var_i&#39;]
+Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]
+Instrument variable(s): [&#39;Z&#39;]
+No. Observations: 625
+
+------------------ DataFrame info    ------------------
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 625 entries, 0 to 624
+Columns: 105 entries, cluster_var_i to Z
+dtypes: float64(103), int64(2)
+memory usage: 512.8 KB
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Set machine learning methods for m &amp; g</span>
+<span class="n">learner</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span>
+<span class="n">ml_g</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+<span class="n">ml_r</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<span class="c1"># initialize the DoubleMLPLIV object</span>
+<span class="n">dml_pliv_obj</span> <span class="o">=</span> <span class="n">DoubleMLPLIV</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+                            <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">ml_r</span><span class="p">,</span>
+                            <span class="n">n_folds</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">summary</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>coef</th>
+      <th>std err</th>
+      <th>t</th>
+      <th>P&gt;|t|</th>
+      <th>2.5 %</th>
+      <th>97.5 %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>D</th>
+      <td>0.951532</td>
+      <td>0.047954</td>
+      <td>19.842625</td>
+      <td>1.276189e-87</td>
+      <td>0.857544</td>
+      <td>1.04552</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+<div class="section" id="Data-Application">
+<h2>Data Application<a class="headerlink" href="#Data-Application" title="Permalink to this headline">¶</a></h2>
+<p>As data application we revist the consumer demand example from Chiang et al. (2021). The U.S. automobile data of Berry, Levinsohn, and Pakes (1995) is obtained from the <code class="docutils literal notranslate"><span class="pre">R</span></code> package <code class="docutils literal notranslate"><span class="pre">hdm</span></code>.</p>
+<div class="section" id="Load-and-Process-Data">
+<h3>Load and Process Data<a class="headerlink" href="#Load-and-Process-Data" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">PolynomialFeatures</span>
+<span class="kn">from</span> <span class="nn">rpy2.robjects.packages</span> <span class="kn">import</span> <span class="n">importr</span><span class="p">,</span> <span class="n">data</span>
+<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">r</span><span class="p">,</span> <span class="n">pandas2ri</span>
+<span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hdm</span> <span class="o">=</span> <span class="n">importr</span><span class="p">(</span><span class="s1">&#39;hdm&#39;</span><span class="p">)</span>
+<span class="n">blp_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">(</span><span class="n">hdm</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;BLP&#39;</span><span class="p">)[</span><span class="s1">&#39;BLP&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">x_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hpwt&#39;</span><span class="p">,</span> <span class="s1">&#39;air&#39;</span><span class="p">,</span> <span class="s1">&#39;mpd&#39;</span><span class="p">,</span> <span class="s1">&#39;space&#39;</span><span class="p">]</span>
+<span class="n">blp_data</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model.name</th>
+      <th>model.id</th>
+      <th>firm.id</th>
+      <th>cdid</th>
+      <th>id</th>
+      <th>price</th>
+      <th>mpd</th>
+      <th>air</th>
+      <th>mpg</th>
+      <th>space</th>
+      <th>hpwt</th>
+      <th>trend</th>
+      <th>share</th>
+      <th>outshr</th>
+      <th>y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>AMGREM</td>
+      <td>23.0</td>
+      <td>15.0</td>
+      <td>1.0</td>
+      <td>129.0</td>
+      <td>-6.825617</td>
+      <td>1.888146</td>
+      <td>0.0</td>
+      <td>1.697</td>
+      <td>1.150200</td>
+      <td>0.528997</td>
+      <td>0.0</td>
+      <td>0.001051</td>
+      <td>0.880106</td>
+      <td>0.820366</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AMHORN</td>
+      <td>24.0</td>
+      <td>15.0</td>
+      <td>1.0</td>
+      <td>130.0</td>
+      <td>-6.245370</td>
+      <td>1.935989</td>
+      <td>0.0</td>
+      <td>1.740</td>
+      <td>1.278000</td>
+      <td>0.494324</td>
+      <td>0.0</td>
+      <td>0.000670</td>
+      <td>0.880106</td>
+      <td>0.369981</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AMJAVL</td>
+      <td>25.0</td>
+      <td>15.0</td>
+      <td>1.0</td>
+      <td>132.0</td>
+      <td>-4.652778</td>
+      <td>1.716799</td>
+      <td>0.0</td>
+      <td>1.543</td>
+      <td>1.459200</td>
+      <td>0.467613</td>
+      <td>0.0</td>
+      <td>0.000341</td>
+      <td>0.880106</td>
+      <td>-0.306915</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AMMATA</td>
+      <td>26.0</td>
+      <td>15.0</td>
+      <td>1.0</td>
+      <td>134.0</td>
+      <td>-4.921913</td>
+      <td>1.687871</td>
+      <td>0.0</td>
+      <td>1.517</td>
+      <td>1.606800</td>
+      <td>0.426540</td>
+      <td>0.0</td>
+      <td>0.000522</td>
+      <td>0.880106</td>
+      <td>0.120721</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>AMAMBS</td>
+      <td>18.0</td>
+      <td>15.0</td>
+      <td>1.0</td>
+      <td>136.0</td>
+      <td>-2.833024</td>
+      <td>1.504286</td>
+      <td>0.0</td>
+      <td>1.352</td>
+      <td>1.645800</td>
+      <td>0.452489</td>
+      <td>0.0</td>
+      <td>0.000442</td>
+      <td>0.880106</td>
+      <td>-0.045144</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2213</th>
+      <td>VV740</td>
+      <td>526.0</td>
+      <td>6.0</td>
+      <td>20.0</td>
+      <td>5584.0</td>
+      <td>4.378596</td>
+      <td>2.639135</td>
+      <td>1.0</td>
+      <td>2.100</td>
+      <td>1.305612</td>
+      <td>0.385917</td>
+      <td>19.0</td>
+      <td>0.000488</td>
+      <td>0.907801</td>
+      <td>0.022915</td>
+    </tr>
+    <tr>
+      <th>2214</th>
+      <td>VV760G</td>
+      <td>529.0</td>
+      <td>6.0</td>
+      <td>20.0</td>
+      <td>5585.0</td>
+      <td>14.225574</td>
+      <td>2.136442</td>
+      <td>1.0</td>
+      <td>1.700</td>
+      <td>1.305612</td>
+      <td>0.435967</td>
+      <td>19.0</td>
+      <td>0.000091</td>
+      <td>0.907801</td>
+      <td>-1.652350</td>
+    </tr>
+    <tr>
+      <th>2215</th>
+      <td>YGGVPL</td>
+      <td>555.0</td>
+      <td>23.0</td>
+      <td>20.0</td>
+      <td>5589.0</td>
+      <td>-8.368152</td>
+      <td>3.518846</td>
+      <td>0.0</td>
+      <td>2.800</td>
+      <td>0.843730</td>
+      <td>0.358289</td>
+      <td>19.0</td>
+      <td>0.000067</td>
+      <td>0.907801</td>
+      <td>-1.957375</td>
+    </tr>
+    <tr>
+      <th>2216</th>
+      <td>PS911C</td>
+      <td>425.0</td>
+      <td>12.0</td>
+      <td>20.0</td>
+      <td>5590.0</td>
+      <td>32.997571</td>
+      <td>3.016154</td>
+      <td>1.0</td>
+      <td>2.400</td>
+      <td>1.093950</td>
+      <td>0.814913</td>
+      <td>19.0</td>
+      <td>0.000039</td>
+      <td>0.907801</td>
+      <td>-2.512519</td>
+    </tr>
+    <tr>
+      <th>2217</th>
+      <td>PS944</td>
+      <td>438.0</td>
+      <td>12.0</td>
+      <td>20.0</td>
+      <td>5592.0</td>
+      <td>20.296729</td>
+      <td>3.267500</td>
+      <td>1.0</td>
+      <td>2.600</td>
+      <td>1.153587</td>
+      <td>0.693796</td>
+      <td>19.0</td>
+      <td>0.000025</td>
+      <td>0.907801</td>
+      <td>-2.953683</td>
+    </tr>
+  </tbody>
+</table>
+<p>2217 rows × 15 columns</p>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">construct_iv</span><span class="p">(</span><span class="n">blp_data</span><span class="p">,</span> <span class="n">x_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;hpwt&#39;</span><span class="p">,</span> <span class="s1">&#39;air&#39;</span><span class="p">,</span> <span class="s1">&#39;mpd&#39;</span><span class="p">,</span> <span class="s1">&#39;space&#39;</span><span class="p">]):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">blp_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_cols</span><span class="p">)</span>
+
+    <span class="n">firmid</span> <span class="o">=</span> <span class="n">blp_data</span><span class="p">[</span><span class="s1">&#39;firm.id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">cdid</span> <span class="o">=</span> <span class="n">blp_data</span><span class="p">[</span><span class="s1">&#39;cdid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">id_var</span> <span class="o">=</span> <span class="n">blp_data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">blp_data</span><span class="p">[</span><span class="n">x_cols</span><span class="p">]</span>
+
+    <span class="n">sum_other</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum.other.&#39;</span> <span class="o">+</span> <span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">x_cols</span><span class="p">],</span>
+                             <span class="n">index</span><span class="o">=</span><span class="n">blp_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">sum_rival</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum.rival.&#39;</span> <span class="o">+</span> <span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">x_cols</span><span class="p">],</span>
+                             <span class="n">index</span><span class="o">=</span><span class="n">blp_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">other_ind</span> <span class="o">=</span> <span class="p">(</span><span class="n">firmid</span> <span class="o">==</span> <span class="n">firmid</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">cdid</span> <span class="o">==</span> <span class="n">cdid</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">id_var</span> <span class="o">!=</span> <span class="n">id_var</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">rival_ind</span> <span class="o">=</span> <span class="p">(</span><span class="n">firmid</span> <span class="o">!=</span> <span class="n">firmid</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">cdid</span> <span class="o">==</span> <span class="n">cdid</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+            <span class="n">sum_other</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">j</span><span class="p">][</span><span class="n">other_ind</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">sum_rival</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">j</span><span class="p">][</span><span class="n">rival_ind</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">sum_other</span><span class="p">,</span> <span class="n">sum_rival</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">iv_vars</span> <span class="o">=</span> <span class="n">construct_iv</span><span class="p">(</span><span class="n">blp_data</span><span class="p">,</span> <span class="n">x_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;hpwt&#39;</span><span class="p">,</span> <span class="s1">&#39;air&#39;</span><span class="p">,</span> <span class="s1">&#39;mpd&#39;</span><span class="p">,</span> <span class="s1">&#39;space&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">poly</span> <span class="o">=</span> <span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">data_transf</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">blp_data</span><span class="p">[</span><span class="n">x_cols</span><span class="p">])</span>
+<span class="n">x_cols_poly</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">(</span><span class="n">x_cols</span><span class="p">)</span>
+<span class="n">data_transf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_transf</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">x_cols_poly</span><span class="p">)</span>
+<span class="n">data_transf</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">blp_data</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sel_cols_chiang</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">data_transf</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+                                    <span class="p">[</span><span class="s1">&#39;hpwt air mpd&#39;</span><span class="p">,</span> <span class="s1">&#39;hpwt air space&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;hpwt mpd space&#39;</span><span class="p">,</span> <span class="s1">&#39;air mpd space&#39;</span><span class="p">]))</span>
+<span class="n">sel_cols_chiang</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;air&#39;,
+ &#39;air mpd&#39;,
+ &#39;air mpd^2&#39;,
+ &#39;air space&#39;,
+ &#39;air space^2&#39;,
+ &#39;air^2&#39;,
+ &#39;air^2 mpd&#39;,
+ &#39;air^2 space&#39;,
+ &#39;air^3&#39;,
+ &#39;hpwt&#39;,
+ &#39;hpwt air&#39;,
+ &#39;hpwt air^2&#39;,
+ &#39;hpwt mpd&#39;,
+ &#39;hpwt mpd^2&#39;,
+ &#39;hpwt space&#39;,
+ &#39;hpwt space^2&#39;,
+ &#39;hpwt^2&#39;,
+ &#39;hpwt^2 air&#39;,
+ &#39;hpwt^2 mpd&#39;,
+ &#39;hpwt^2 space&#39;,
+ &#39;hpwt^3&#39;,
+ &#39;mpd&#39;,
+ &#39;mpd space&#39;,
+ &#39;mpd space^2&#39;,
+ &#39;mpd^2&#39;,
+ &#39;mpd^2 space&#39;,
+ &#39;mpd^3&#39;,
+ &#39;space&#39;,
+ &#39;space^2&#39;,
+ &#39;space^3&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">blp_data</span><span class="p">[</span><span class="s1">&#39;log_p&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">blp_data</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">11.761</span><span class="p">)</span>
+
+<span class="n">y_col</span> <span class="o">=</span> <span class="s1">&#39;y&#39;</span>
+<span class="n">d_col</span> <span class="o">=</span> <span class="s1">&#39;log_p&#39;</span>
+<span class="n">cluster_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;model.id&#39;</span><span class="p">,</span> <span class="s1">&#39;cdid&#39;</span><span class="p">]</span>
+<span class="n">all_z_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sum.other.hpwt&#39;</span><span class="p">,</span> <span class="s1">&#39;sum.other.mpd&#39;</span><span class="p">,</span> <span class="s1">&#39;sum.other.space&#39;</span><span class="p">]</span>
+<span class="n">z_col</span> <span class="o">=</span> <span class="n">all_z_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dml_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">blp_data</span><span class="p">[[</span><span class="n">y_col</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">d_col</span><span class="p">]</span> <span class="o">+</span> <span class="n">cluster_cols</span><span class="p">],</span>
+                    <span class="n">data_transf</span><span class="p">[</span><span class="n">sel_cols_chiang</span><span class="p">],</span>
+                    <span class="n">iv_vars</span><span class="p">[</span><span class="n">all_z_cols</span><span class="p">]),</span>
+                   <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dml_df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(2217, 37)
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Initialize-DoubleMLClusterData-object">
+<h3>Initialize <code class="docutils literal notranslate"><span class="pre">DoubleMLClusterData</span></code> object<a class="headerlink" href="#Initialize-DoubleMLClusterData-object" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLClusterData</span><span class="p">(</span><span class="n">dml_df</span><span class="p">,</span>
+                               <span class="n">y_col</span><span class="o">=</span><span class="n">y_col</span><span class="p">,</span>
+                               <span class="n">d_cols</span><span class="o">=</span><span class="n">d_col</span><span class="p">,</span>
+                               <span class="n">z_cols</span><span class="o">=</span><span class="n">z_col</span><span class="p">,</span>
+                               <span class="n">cluster_cols</span><span class="o">=</span><span class="n">cluster_cols</span><span class="p">,</span>
+                               <span class="n">x_cols</span><span class="o">=</span><span class="n">sel_cols_chiang</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLClusterData Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): [&#39;log_p&#39;]
+Cluster variable(s): [&#39;model.id&#39;, &#39;cdid&#39;]
+Covariates: [&#39;air&#39;, &#39;air mpd&#39;, &#39;air mpd^2&#39;, &#39;air space&#39;, &#39;air space^2&#39;, &#39;air^2&#39;, &#39;air^2 mpd&#39;, &#39;air^2 space&#39;, &#39;air^3&#39;, &#39;hpwt&#39;, &#39;hpwt air&#39;, &#39;hpwt air^2&#39;, &#39;hpwt mpd&#39;, &#39;hpwt mpd^2&#39;, &#39;hpwt space&#39;, &#39;hpwt space^2&#39;, &#39;hpwt^2&#39;, &#39;hpwt^2 air&#39;, &#39;hpwt^2 mpd&#39;, &#39;hpwt^2 space&#39;, &#39;hpwt^3&#39;, &#39;mpd&#39;, &#39;mpd space&#39;, &#39;mpd space^2&#39;, &#39;mpd^2&#39;, &#39;mpd^2 space&#39;, &#39;mpd^3&#39;, &#39;space&#39;, &#39;space^2&#39;, &#39;space^3&#39;]
+Instrument variable(s): [&#39;sum.other.hpwt&#39;]
+No. Observations: 2217
+
+------------------ DataFrame info    ------------------
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Index: 2217 entries, 1 to 2217
+Columns: 37 entries, y to sum.other.space
+dtypes: float64(34), object(3)
+memory usage: 658.2+ KB
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">learner</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">res_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">n_rep</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Two-Way-Clustering-with-Respect-to-Product-and-Market">
+<h3>Two-Way Clustering with Respect to Product and Market<a class="headerlink" href="#Two-Way-Clustering-with-Respect-to-Product-and-Market" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dml_data</span><span class="o">.</span><span class="n">z_cols</span> <span class="o">=</span> <span class="n">z_col</span>
+<span class="n">dml_data</span><span class="o">.</span><span class="n">cluster_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;model.id&#39;</span><span class="p">,</span> <span class="s1">&#39;cdid&#39;</span><span class="p">]</span>
+<span class="n">dml_pliv</span> <span class="o">=</span> <span class="n">DoubleMLPLIV</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span>
+                        <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span>
+                        <span class="n">n_folds</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_rep</span><span class="o">=</span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">dml_pliv</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">dml_pliv</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">res</span><span class="p">[</span><span class="s1">&#39;z_col&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">z_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">res</span><span class="p">[</span><span class="s1">&#39;clustering&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;two-way&#39;</span>
+<span class="n">res_df</span> <span class="o">=</span> <span class="n">res_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.8.11/x64/lib/python3.8/site-packages/sklearn/linear_model/_coordinate_descent.py:526: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Duality gap: 3.515478304779208, tolerance: 1.1187339840850312
+  model = cd_fast.enet_coordinate_descent_gram(
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="One-Way-Clustering-with-Respect-to-the-Product">
+<h3>One-Way Clustering with Respect to the Product<a class="headerlink" href="#One-Way-Clustering-with-Respect-to-the-Product" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dml_data</span><span class="o">.</span><span class="n">z_cols</span> <span class="o">=</span> <span class="n">z_col</span>
+<span class="n">dml_data</span><span class="o">.</span><span class="n">cluster_cols</span> <span class="o">=</span> <span class="s1">&#39;model.id&#39;</span>
+<span class="n">dml_pliv</span> <span class="o">=</span> <span class="n">DoubleMLPLIV</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span>
+                        <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span>
+                        <span class="n">n_folds</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_rep</span><span class="o">=</span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">dml_pliv</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">dml_pliv</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">res</span><span class="p">[</span><span class="s1">&#39;z_col&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">z_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">res</span><span class="p">[</span><span class="s1">&#39;clustering&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;one-way-product&#39;</span>
+<span class="n">res_df</span> <span class="o">=</span> <span class="n">res_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="One-Way-Clustering-with-Respect-to-the-Market">
+<h3>One-Way Clustering with Respect to the Market<a class="headerlink" href="#One-Way-Clustering-with-Respect-to-the-Market" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dml_data</span><span class="o">.</span><span class="n">z_cols</span> <span class="o">=</span> <span class="n">z_col</span>
+<span class="n">dml_data</span><span class="o">.</span><span class="n">cluster_cols</span> <span class="o">=</span> <span class="s1">&#39;cdid&#39;</span>
+<span class="n">dml_pliv</span> <span class="o">=</span> <span class="n">DoubleMLPLIV</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span>
+                        <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span>
+                        <span class="n">n_folds</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_rep</span><span class="o">=</span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">dml_pliv</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">dml_pliv</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">res</span><span class="p">[</span><span class="s1">&#39;z_col&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">z_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">res</span><span class="p">[</span><span class="s1">&#39;clustering&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;one-way-market&#39;</span>
+<span class="n">res_df</span> <span class="o">=</span> <span class="n">res_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="No-Clustering-/-Zero-Way-Clustering">
+<h3>No Clustering / Zero-Way Clustering<a class="headerlink" href="#No-Clustering-/-Zero-Way-Clustering" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="p">(</span><span class="n">dml_df</span><span class="p">,</span>
+                        <span class="n">y_col</span><span class="o">=</span><span class="n">y_col</span><span class="p">,</span>
+                        <span class="n">d_cols</span><span class="o">=</span><span class="n">d_col</span><span class="p">,</span>
+                        <span class="n">z_cols</span><span class="o">=</span><span class="n">z_col</span><span class="p">,</span>
+                        <span class="n">x_cols</span><span class="o">=</span><span class="n">sel_cols_chiang</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLData Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): [&#39;log_p&#39;]
+Covariates: [&#39;air&#39;, &#39;air mpd&#39;, &#39;air mpd^2&#39;, &#39;air space&#39;, &#39;air space^2&#39;, &#39;air^2&#39;, &#39;air^2 mpd&#39;, &#39;air^2 space&#39;, &#39;air^3&#39;, &#39;hpwt&#39;, &#39;hpwt air&#39;, &#39;hpwt air^2&#39;, &#39;hpwt mpd&#39;, &#39;hpwt mpd^2&#39;, &#39;hpwt space&#39;, &#39;hpwt space^2&#39;, &#39;hpwt^2&#39;, &#39;hpwt^2 air&#39;, &#39;hpwt^2 mpd&#39;, &#39;hpwt^2 space&#39;, &#39;hpwt^3&#39;, &#39;mpd&#39;, &#39;mpd space&#39;, &#39;mpd space^2&#39;, &#39;mpd^2&#39;, &#39;mpd^2 space&#39;, &#39;mpd^3&#39;, &#39;space&#39;, &#39;space^2&#39;, &#39;space^3&#39;]
+Instrument variable(s): [&#39;sum.other.hpwt&#39;]
+No. Observations: 2217
+
+------------------ DataFrame info    ------------------
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Index: 2217 entries, 1 to 2217
+Columns: 37 entries, y to sum.other.space
+dtypes: float64(34), object(3)
+memory usage: 658.2+ KB
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dml_data</span><span class="o">.</span><span class="n">z_cols</span> <span class="o">=</span> <span class="n">z_col</span>
+<span class="n">dml_pliv</span> <span class="o">=</span> <span class="n">DoubleMLPLIV</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span>
+                        <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span>
+                        <span class="n">n_folds</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_rep</span><span class="o">=</span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">dml_pliv</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">dml_pliv</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">res</span><span class="p">[</span><span class="s1">&#39;z_col&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">z_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">res</span><span class="p">[</span><span class="s1">&#39;clustering&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;zero-way&#39;</span>
+<span class="n">res_df</span> <span class="o">=</span> <span class="n">res_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Application-Results">
+<h3>Application Results<a class="headerlink" href="#Application-Results" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">res_df</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>coef</th>
+      <th>std err</th>
+      <th>t</th>
+      <th>P&gt;|t|</th>
+      <th>2.5 %</th>
+      <th>97.5 %</th>
+      <th>z_col</th>
+      <th>clustering</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-5.450152</td>
+      <td>1.262621</td>
+      <td>-4.316540</td>
+      <td>1.584942e-05</td>
+      <td>-7.924843</td>
+      <td>-2.975461</td>
+      <td>sum.other.hpwt</td>
+      <td>two-way</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>-5.757819</td>
+      <td>0.928947</td>
+      <td>-6.198218</td>
+      <td>5.710586e-10</td>
+      <td>-7.578523</td>
+      <td>-3.937116</td>
+      <td>sum.other.hpwt</td>
+      <td>one-way-product</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>-5.811825</td>
+      <td>0.784483</td>
+      <td>-7.408479</td>
+      <td>1.277561e-13</td>
+      <td>-7.349383</td>
+      <td>-4.274267</td>
+      <td>sum.other.hpwt</td>
+      <td>one-way-market</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>-5.754870</td>
+      <td>0.464284</td>
+      <td>-12.395136</td>
+      <td>2.776728e-35</td>
+      <td>-6.664850</td>
+      <td>-4.844889</td>
+      <td>sum.other.hpwt</td>
+      <td>zero-way</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+</div>
+<div class="section" id="References">
+<h2>References<a class="headerlink" href="#References" title="Permalink to this headline">¶</a></h2>
+<p>Berry, S., Levinsohn, J., and Pakes, A. (1995), “Automobile Prices in Market Equilibrium,” Econometrica: Journal of the Econometric Society, 63, 841-890.</p>
+<p>Chiang, H. D., Kato K., Ma, Y. and Sasaki, Y. (2021), Multiway Cluster Robust Double/Debiased Machine Learning, Journal of Business &amp; Economic Statistics, doi: <a class="reference external" href="https://doi.org/10.1080/07350015.2021.1895815">10.1080/07350015.2021.1895815</a>, arXiv: <a class="reference external" href="https://arxiv.org/abs/1909.03489">1909.03489</a>.</p>
+</div>
+</div>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="py_double_ml_pension.html" title="previous page">Python: Impact of 401(k) on Financial Wealth</a>
+    <a class='right-next' id="next-link" href="double_ml_bonus_data.html" title="next page">DML: Bonus Data</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2021, Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M..<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
