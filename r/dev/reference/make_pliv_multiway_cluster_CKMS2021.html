@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Wrapper for Double machine learning data-backend initialization
-from matrix. — double_ml_data_from_matrix • DoubleML</title>
+<title>Generates data from a partially linear IV regression model with
+multiway cluster sample used in Chiang et al. (2021). — make_pliv_multiway_cluster_CKMS2021 • DoubleML</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,9 +47,33 @@ from matrix. — double_ml_data_from_matrix • DoubleML</title>
 
 
 
-<meta property="og:title" content="Wrapper for Double machine learning data-backend initialization
-from matrix. — double_ml_data_from_matrix" />
-<meta property="og:description" content="Initalization of DoubleMLData from matrix() objects." />
+<meta property="og:title" content="Generates data from a partially linear IV regression model with
+multiway cluster sample used in Chiang et al. (2021). — make_pliv_multiway_cluster_CKMS2021" />
+<meta property="og:description" content="Generates data from a partially linear IV regression model with multiway
+cluster sample used in Chiang et al. (2021). The data generating process
+is defined as
+\(Z_{ij} = X_{ij}' \xi_0 + V_{ij},\)
+\(D_{ij} = Z_{ij}' \pi_{10} + X_{ij}' \pi_{20} + v_{ij},\)
+\(Y_{ij} = D_{ij} \theta + X_{ij}' \zeta_0 + \varepsilon_{ij},\)
+with
+\(X_{ij} = (1 - \omega_1^X - \omega_2^X) \alpha_{ij}^X
++ \omega_1^X \alpha_{i}^X + \omega_2^X \alpha_{j}^X,\)
+\(\varepsilon_{ij} = (1 - \omega_1^\varepsilon - \omega_2^\varepsilon) \alpha_{ij}^\varepsilon
++ \omega_1^\varepsilon \alpha_{i}^\varepsilon + \omega_2^\varepsilon \alpha_{j}^\varepsilon,\)
+\(v_{ij} = (1 - \omega_1^v - \omega_2^v) \alpha_{ij}^v
++ \omega_1^v \alpha_{i}^v + \omega_2^v \alpha_{j}^v,\)
+\(V_{ij} = (1 - \omega_1^V - \omega_2^V) \alpha_{ij}^V
++ \omega_1^V \alpha_{i}^V + \omega_2^V \alpha_{j}^V,\)
+and \(\alpha_{ij}^X, \alpha_{i}^X, \alpha_{j}^X \sim \mathcal{N}(0, \Sigma)\)
+where \(\Sigma\) is a \(p_x \times p_x\) matrix with entries
+\(\Sigma_{kj} = s_X^{|j-k|}\).
+Further
+\(\left(\begin{array}{c} \alpha_{ij}^\varepsilon \\ \alpha_{ij}^v \end{array}\right),
+\left(\begin{array}{c} \alpha_{i}^\varepsilon \\ \alpha_{i}^v \end{array}\right),
+\left(\begin{array}{c} \alpha_{j}^\varepsilon \\ \alpha_{j}^v \end{array}\right)
+\sim \mathcal{N}\left(0, \left(\begin{array}{cc} 1 &amp;amp; s_{\varepsilon v} \\
+s_{\varepsilon v} &amp;amp; 1 \end{array}\right) \right)\)
+and \(\alpha_{ij}^V, \alpha_{i}^V, \alpha_{j}^V \sim \mathcal{N}(0, 1)\)." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -140,80 +164,105 @@ from matrix. — double_ml_data_from_matrix" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Wrapper for Double machine learning data-backend initialization
-from matrix.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/DoubleML/doubleml-for-r/blob/master/R/double_ml_data.R'><code>R/double_ml_data.R</code></a></small>
-    <div class="hidden name"><code>double_ml_data_from_matrix.Rd</code></div>
+    <h1>Generates data from a partially linear IV regression model with
+multiway cluster sample used in Chiang et al. (2021).</h1>
+    <small class="dont-index">Source: <a href='https://github.com/DoubleML/doubleml-for-r/blob/master/R/datasets.R'><code>R/datasets.R</code></a></small>
+    <div class="hidden name"><code>make_pliv_multiway_cluster_CKMS2021.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Initalization of DoubleMLData from <code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code> objects.</p>
+    <p>Generates data from a partially linear IV regression model with multiway
+cluster sample used in Chiang et al. (2021). The data generating process
+is defined as</p>
+<p>\(Z_{ij} = X_{ij}' \xi_0 + V_{ij},\)</p>
+<p>\(D_{ij} = Z_{ij}' \pi_{10} + X_{ij}' \pi_{20} + v_{ij},\)</p>
+<p>\(Y_{ij} = D_{ij} \theta + X_{ij}' \zeta_0 + \varepsilon_{ij},\)</p>
+<p>with</p>
+<p>\(X_{ij} = (1 - \omega_1^X - \omega_2^X) \alpha_{ij}^X
++ \omega_1^X \alpha_{i}^X + \omega_2^X \alpha_{j}^X,\)</p>
+<p>\(\varepsilon_{ij} = (1 - \omega_1^\varepsilon - \omega_2^\varepsilon) \alpha_{ij}^\varepsilon
++ \omega_1^\varepsilon \alpha_{i}^\varepsilon + \omega_2^\varepsilon \alpha_{j}^\varepsilon,\)</p>
+<p>\(v_{ij} = (1 - \omega_1^v - \omega_2^v) \alpha_{ij}^v
++ \omega_1^v \alpha_{i}^v + \omega_2^v \alpha_{j}^v,\)</p>
+<p>\(V_{ij} = (1 - \omega_1^V - \omega_2^V) \alpha_{ij}^V
++ \omega_1^V \alpha_{i}^V + \omega_2^V \alpha_{j}^V,\)</p>
+<p>and \(\alpha_{ij}^X, \alpha_{i}^X, \alpha_{j}^X \sim \mathcal{N}(0, \Sigma)\)
+where \(\Sigma\) is a \(p_x \times p_x\) matrix with entries
+\(\Sigma_{kj} = s_X^{|j-k|}\).</p>
+<p>Further</p>
+<p>\(\left(\begin{array}{c} \alpha_{ij}^\varepsilon \\ \alpha_{ij}^v \end{array}\right),
+\left(\begin{array}{c} \alpha_{i}^\varepsilon \\ \alpha_{i}^v \end{array}\right),
+\left(\begin{array}{c} \alpha_{j}^\varepsilon \\ \alpha_{j}^v \end{array}\right)
+\sim \mathcal{N}\left(0, \left(\begin{array}{cc} 1 &amp; s_{\varepsilon v} \\
+s_{\varepsilon v} &amp; 1 \end{array}\right) \right)\)</p>
+<p>and \(\alpha_{ij}^V, \alpha_{i}^V, \alpha_{j}^V \sim \mathcal{N}(0, 1)\).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>double_ml_data_from_matrix</span><span class='op'>(</span>
-  X <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>y</span>,
-  <span class='va'>d</span>,
-  z <span class='op'>=</span> <span class='cn'>NULL</span>,
-  cluster_vars <span class='op'>=</span> <span class='cn'>NULL</span>,
-  data_class <span class='op'>=</span> <span class='st'>"DoubleMLData"</span>,
-  use_other_treat_as_covariate <span class='op'>=</span> <span class='cn'>TRUE</span>
+    <pre class="usage"><span class='fu'>make_pliv_multiway_cluster_CKMS2021</span><span class='op'>(</span>
+  N <span class='op'>=</span> <span class='fl'>25</span>,
+  M <span class='op'>=</span> <span class='fl'>25</span>,
+  dim_X <span class='op'>=</span> <span class='fl'>100</span>,
+  theta <span class='op'>=</span> <span class='fl'>1</span>,
+  return_type <span class='op'>=</span> <span class='st'>"DoubleMLClusterData"</span>,
+  <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>X</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code>) <br />
-Matrix of covariates.</p></td>
+      <th>N</th>
+      <td><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>) <br />
+The number of observations (first dimension).</p></td>
     </tr>
     <tr>
-      <th>y</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric()</a></code>) <br />
-Vector of outcome variable.</p></td>
+      <th>M</th>
+      <td><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>) <br />
+The number of observations (second dimension).</p></td>
     </tr>
     <tr>
-      <th>d</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code>) <br />
-Matrix of treatment variables.</p></td>
+      <th>dim_X</th>
+      <td><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>) <br />
+The number of covariates.</p></td>
     </tr>
     <tr>
-      <th>z</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code>) <br />
-Matrix of instruments.</p></td>
+      <th>theta</th>
+      <td><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>) <br />
+The value of the causal parameter.</p></td>
     </tr>
     <tr>
-      <th>cluster_vars</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code>) <br />
-Matrix of cluster variables.</p></td>
-    </tr>
-    <tr>
-      <th>data_class</th>
+      <th>return_type</th>
       <td><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br />
-Class of returned object. By default, an object of class <code>DoubleMLData</code> is
-returned. Setting <code>data_class = "data.table"</code> returns an object of class
-<code>data.table</code>.</p></td>
+If <code>"DoubleMLClusterData"</code>, returns a <code>DoubleMLClusterData</code> object.
+If <code>"data.frame"</code> returns a <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame()</a></code>.
+If <code>"data.table"</code> returns a <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table()</a></code>.
+If <code>"matrix"</code> a named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code> with entries <code>X</code>, <code>y</code>, <code>d</code>, <code>z</code> and
+<code>cluster_vars</code> is returned.
+Every entry in the list is a <code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code> object.  Default is <code>"DoubleMLClusterData"</code>.</p></td>
     </tr>
     <tr>
-      <th>use_other_treat_as_covariate</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/logical.html'>logical(1)</a></code>) <br />
-Indicates whether in the multiple-treatment case the other treatment
-variables should be added as covariates. Default is <code>TRUE</code>.</p></td>
+      <th>...</th>
+      <td><p><br />
+Additional keyword arguments to set non-default values for the parameters
+\(\pi_{10}=1.0\),
+\(\omega_X = \omega_{\varepsilon} = \omega_V = \omega_v = (0.25, 0.25)\),
+\(s_X = s_{\varepsilon v} = 0.25\), or the \(p_x\)-vectors
+\(\zeta_0 = \pi_{20} = \xi_0\) with default entries
+\(\zeta_{0})_j = 0.5^j\).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Creates a new instance of class <code>DoubleMLData</code>.</p>
+    <p>A data object according to the choice of <code>return_type</code>.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>matrix_list</span> <span class='op'>=</span> <span class='fu'><a href='make_plr_CCDDHNR2018.html'>make_plr_CCDDHNR2018</a></span><span class='op'>(</span>return_type <span class='op'>=</span> <span class='st'>"matrix"</span><span class='op'>)</span>
-<span class='va'>obj_dml_data</span> <span class='op'>=</span> <span class='fu'>double_ml_data_from_matrix</span><span class='op'>(</span>
-  X <span class='op'>=</span> <span class='va'>matrix_list</span><span class='op'>$</span><span class='va'>X</span>,
-  y <span class='op'>=</span> <span class='va'>matrix_list</span><span class='op'>$</span><span class='va'>y</span>,
-  d <span class='op'>=</span> <span class='va'>matrix_list</span><span class='op'>$</span><span class='va'>d</span><span class='op'>)</span>
-</div></pre>
+    <p>Chiang, H. D., Kato K., Ma, Y. and Sasaki, Y. (2021),
+Multiway Cluster Robust Double/Debiased Machine Learning,
+Journal of Business &amp; Economic Statistics,
+doi: <a href='https://doi.org/10.1080/07350015.2021.1895815'>10.1080/07350015.2021.1895815</a>
+, https://arxiv.org/abs/1909.03489.</p>
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
