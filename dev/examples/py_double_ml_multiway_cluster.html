@@ -264,11 +264,6 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Define-Helper-Functions-for-Plotting">
-     Define Helper Functions for Plotting
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#Cluster-Robust-Cross-Fitting">
      Cluster Robust Cross Fitting
     </a>
@@ -336,6 +331,11 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#References">
    References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Define-Helper-Functions-for-Plotting">
+   Define Helper Functions for Plotting
   </a>
  </li>
 </ul>
@@ -702,7 +702,9 @@ V_{ij} &amp;= (1 - \omega_1^V - \omega_2^V) \alpha_{ij}^V
 s_{\varepsilon v} &amp; 1 \end{matrix} \right) \right)
 \end{aligned}\end{split}\]</div>
 <p>and <span class="math notranslate nohighlight">\(\alpha_{ij}^V, \alpha_{i}^V, \alpha_{j}^V \sim \mathcal{N}(0, 1)\)</span>.</p>
-<p>Data from this DGP can be generated with the <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.datasets.make_pliv_multiway_cluster_CKMS2021.html#doubleml.datasets.make_pliv_multiway_cluster_CKMS2021">make_pliv_multiway_cluster_CKMS2021()</a> function from <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>.</p>
+<p>Data from this DGP can be generated with the <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.datasets.make_pliv_multiway_cluster_CKMS2021.html#doubleml.datasets.make_pliv_multiway_cluster_CKMS2021">make_pliv_multiway_cluster_CKMS2021()</a> function from <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>. Analogously to <a class="reference external" href="https://doi.org/10.1080/07350015.2021.1895815">Chiang et al. (2021, Section 5)</a> we use the following parameter setting: <span class="math notranslate nohighlight">\(\theta=1.0\)</span>, <span class="math notranslate nohighlight">\(N=M=25\)</span>,
+<span class="math notranslate nohighlight">\(p_x=100\)</span>, <span class="math notranslate nohighlight">\(\pi_{10}=1.0\)</span>, <span class="math notranslate nohighlight">\(\omega_X = \omega_{\varepsilon} = \omega_V = \omega_v = (0.25, 0.25)\)</span>, <span class="math notranslate nohighlight">\(s_X = s_{\varepsilon v} = 0.25\)</span> and the <span class="math notranslate nohighlight">\(j\)</span>-th entries of the <span class="math notranslate nohighlight">\(p_x\)</span>-vectors <span class="math notranslate nohighlight">\(\zeta_0 = \pi_{20} = \xi_0\)</span> are <span class="math notranslate nohighlight">\((\zeta_{0})_j = 0.5^j\)</span>. This are also the default values of
+<a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.datasets.make_pliv_multiway_cluster_CKMS2021.html#doubleml.datasets.make_pliv_multiway_cluster_CKMS2021">make_pliv_multiway_cluster_CKMS2021()</a>.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
@@ -1006,85 +1008,6 @@ Index: []
 </pre></div></div>
 </div>
 </section>
-<section id="Define-Helper-Functions-for-Plotting">
-<h3>Define Helper Functions for Plotting<a class="headerlink" href="#Define-Helper-Functions-for-Plotting" title="Permalink to this headline">¶</a></h3>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#discrete color scheme</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
-<span class="n">cMap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">]])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">12</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.3</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">def</span> <span class="nf">plt_smpls</span><span class="p">(</span><span class="n">smpls</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">):</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="o">*</span><span class="n">n_folds_per_cluster</span><span class="p">]))</span>
-    <span class="k">for</span> <span class="n">i_split</span><span class="p">,</span> <span class="n">this_split_ind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">smpls</span><span class="p">):</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">this_split_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i_split</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">this_split_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i_split</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
-
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cMap</span><span class="p">);</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">();</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">]);</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fold&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Observation&#39;</span><span class="p">)</span>
-    <span class="n">colorbar</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">colorbar</span>
-    <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="mf">0.667</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">])</span>
-    <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;Nuisance&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Score&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">def</span> <span class="nf">plt_smpls_cluster</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">i_split</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">)):</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">n_folds_per_cluster</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">,</span> <span class="n">i_split</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
-                      <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">([</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">)]),</span>
-                      <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-
-        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">[</span><span class="n">i_split</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">[</span><span class="n">i_split</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">1.</span>
-
-        <span class="n">df_wide</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;level_0&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;level_1&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
-        <span class="n">df_wide</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-        <span class="n">df_wide</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_wide</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cMap</span><span class="p">);</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">();</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">M</span><span class="p">]);</span>
-        <span class="n">colorbar</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">colorbar</span>
-        <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="mf">0.667</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">])</span>
-
-        <span class="n">l</span> <span class="o">=</span> <span class="n">i_split</span> <span class="o">%</span> <span class="n">n_folds_per_cluster</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor_divide</span><span class="p">(</span><span class="n">i_split</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Nuisance: $I_</span><span class="se">{{</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="se">}}</span><span class="s1">^C </span><span class="se">\\</span><span class="s1">times J_</span><span class="se">{{</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="se">}}</span><span class="s1">^C$; Score: $I_</span><span class="se">{{</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="se">}}</span><span class="s1"> </span><span class="se">\\</span><span class="s1">times J_</span><span class="se">{{</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="se">}}</span><span class="s1">$&#39;</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">n_folds_per_cluster</span><span class="p">:</span>
-            <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;Nuisance&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Score&#39;</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;First Cluster Variable $k$&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Second Cluster Variable $\ell$&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</section>
 <section id="Cluster-Robust-Cross-Fitting">
 <h3>Cluster Robust Cross Fitting<a class="headerlink" href="#Cluster-Robust-Cross-Fitting" title="Permalink to this headline">¶</a></h3>
 <p>A key element of cluster robust DML (<a class="reference external" href="https://doi.org/10.1080/07350015.2021.1895815">Chiang et al. 2021</a>) is a special sample splitting used for the cross-fitting. In case of two-way clustering, we assume <span class="math notranslate nohighlight">\(N\)</span> clusters in the first dimension and <span class="math notranslate nohighlight">\(M\)</span> clusters in the second dimension.</p>
@@ -1101,11 +1024,12 @@ observations in <span class="math notranslate nohighlight">\(([N]\setminus I_K) 
 an observation is left out from the sample splitting.</p>
 <p>For example, the first observation as displayed on the very bottom of the figure (using Python indexing starting at <code class="docutils literal notranslate"><span class="pre">0</span></code>) is used for training of the nuisance parts in the first (<code class="docutils literal notranslate"><span class="pre">0</span></code>), the third (<code class="docutils literal notranslate"><span class="pre">2</span></code>), fourth (<code class="docutils literal notranslate"><span class="pre">3</span></code>) and sixth (<code class="docutils literal notranslate"><span class="pre">5</span></code>) fold and used for generation of the predictions in fold eight (<code class="docutils literal notranslate"><span class="pre">7</span></code>). At the same time the observation is left out from the sample splitting procedure in folds two (<code class="docutils literal notranslate"><span class="pre">1</span></code>), five (<code class="docutils literal notranslate"><span class="pre">4</span></code>), seven (<code class="docutils literal notranslate"><span class="pre">6</span></code>) and nine (<code class="docutils literal notranslate"><span class="pre">8</span></code>).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">plt_smpls</span><span class="p">(</span><span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">smpls</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">_n_folds_per_cluster</span><span class="p">)</span>
+<span></span><span class="c1"># The function plt_smpls is defined at the end of the Notebook</span>
+<span class="n">plt_smpls</span><span class="p">(</span><span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">smpls</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">_n_folds_per_cluster</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1113,7 +1037,7 @@ an observation is left out from the sample splitting.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_py_double_ml_multiway_cluster_17_0.png" src="../_images/examples_py_double_ml_multiway_cluster_17_0.png" />
+<img alt="../_images/examples_py_double_ml_multiway_cluster_14_0.png" src="../_images/examples_py_double_ml_multiway_cluster_14_0.png" />
 </div>
 </div>
 <p>If we visualize the sample splitting in terms of the cluster variables, the partitioning of the data into <span class="math notranslate nohighlight">\(9\)</span> folds <span class="math notranslate nohighlight">\(I_k \times J_\ell\)</span> becomes clear. The identifiers for the first cluster variable <span class="math notranslate nohighlight">\([N]:=\{1,\ldots,N\}\)</span> have been randomly partioned into <span class="math notranslate nohighlight">\(K=3\)</span> folds denoted by <span class="math notranslate nohighlight">\(\{I_1, I_2, I_3\}\)</span> and the identifiers for the second cluster variable <span class="math notranslate nohighlight">\([M]:=\{1,\ldots,M\}\)</span> have also been randomly partioned into <span class="math notranslate nohighlight">\(K=3\)</span> folds denoted by
@@ -1125,11 +1049,12 @@ the first cluster variable is in <span class="math notranslate nohighlight">\(I_
 <p>This way we guarantee that there are never observations from the same cluster (first and/or second cluster dimension) in the sample for the nuisance function estimation (blue) and at the same time in the sample for solving the score function (red). As a result of this special sample splitting proposed by <a class="reference external" href="https://doi.org/10.1080/07350015.2021.1895815">Chiang et al. (2021)</a>, the observations in the score (red) and nuisance (blue) sample can be considered independent and the standard
 cross-fitting approach for double machine learning can be applied.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">plt_smpls_cluster</span><span class="p">(</span><span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">smpls_cluster</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">_n_folds_per_cluster</span><span class="p">)</span>
+<span></span><span class="c1"># The function plt_smpls_cluster is defined at the end of the Notebook</span>
+<span class="n">plt_smpls_cluster</span><span class="p">(</span><span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">smpls_cluster</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dml_pliv_obj</span><span class="o">.</span><span class="n">_n_folds_per_cluster</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1137,7 +1062,7 @@ cross-fitting approach for double machine learning can be applied.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_py_double_ml_multiway_cluster_19_0.png" src="../_images/examples_py_double_ml_multiway_cluster_19_0.png" />
+<img alt="../_images/examples_py_double_ml_multiway_cluster_16_0.png" src="../_images/examples_py_double_ml_multiway_cluster_16_0.png" />
 </div>
 </div>
 </section>
@@ -1175,7 +1100,7 @@ propose the following estimator</p>
 \end{aligned}\]</div>
 <p>with <span class="math notranslate nohighlight">\(\underline{C} = N \wedge M\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1186,7 +1111,7 @@ propose the following estimator</p>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1239,7 +1164,7 @@ propose the following estimator</p>
 \[\omega_2^X = \omega_2^\varepsilon = \omega_2^v = \omega_2^V = 0.\]</div>
 <p>Again we can simulate this data with <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.datasets.make_pliv_multiway_cluster_CKMS2021.html#doubleml.datasets.make_pliv_multiway_cluster_CKMS2021">make_pliv_multiway_cluster_CKMS2021()</a>. To prepare the data-backend for one-way clustering, we only have to alter the <code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code> to be <code class="docutils literal notranslate"><span class="pre">'cluster_var_i'</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1252,7 +1177,7 @@ propose the following estimator</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1286,7 +1211,7 @@ memory usage: 512.8 KB
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1304,7 +1229,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1314,7 +1239,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1365,7 +1290,7 @@ memory usage: 512.8 KB
 <section id="Load-and-Process-Data">
 <h3>Load and Process Data<a class="headerlink" href="#Load-and-Process-Data" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1377,7 +1302,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1387,7 +1312,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1397,7 +1322,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1641,7 +1566,7 @@ memory usage: 512.8 KB
 </div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1671,7 +1596,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1680,7 +1605,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1693,7 +1618,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1705,7 +1630,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1743,7 +1668,7 @@ memory usage: 512.8 KB
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1758,7 +1683,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1770,7 +1695,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1779,7 +1704,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1791,7 +1716,7 @@ memory usage: 512.8 KB
 <section id="Initialize-DoubleMLClusterData-object">
 <h3>Initialize <code class="docutils literal notranslate"><span class="pre">DoubleMLClusterData</span></code> object<a class="headerlink" href="#Initialize-DoubleMLClusterData-object" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1805,7 +1730,7 @@ memory usage: 512.8 KB
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1838,7 +1763,7 @@ memory usage: 658.2+ KB
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1847,7 +1772,7 @@ memory usage: 658.2+ KB
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1860,7 +1785,7 @@ memory usage: 658.2+ KB
 <section id="Two-Way-Clustering-with-Respect-to-Product-and-Market">
 <h3>Two-Way Clustering with Respect to Product and Market<a class="headerlink" href="#Two-Way-Clustering-with-Respect-to-Product-and-Market" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1882,7 +1807,7 @@ memory usage: 658.2+ KB
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/sklearn/linear_model/_coordinate_descent.py:526: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Duality gap: 3.515478273505323, tolerance: 1.1187339840850312
+/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/sklearn/linear_model/_coordinate_descent.py:526: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Duality gap: 3.515478304779208, tolerance: 1.1187339840850312
   model = cd_fast.enet_coordinate_descent_gram(
 </pre></div></div>
 </div>
@@ -1890,7 +1815,7 @@ memory usage: 658.2+ KB
 <section id="One-Way-Clustering-with-Respect-to-the-Product">
 <h3>One-Way Clustering with Respect to the Product<a class="headerlink" href="#One-Way-Clustering-with-Respect-to-the-Product" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1911,7 +1836,7 @@ memory usage: 658.2+ KB
 <section id="One-Way-Clustering-with-Respect-to-the-Market">
 <h3>One-Way Clustering with Respect to the Market<a class="headerlink" href="#One-Way-Clustering-with-Respect-to-the-Market" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1932,7 +1857,7 @@ memory usage: 658.2+ KB
 <section id="No-Clustering-/-Zero-Way-Clustering">
 <h3>No Clustering / Zero-Way Clustering<a class="headerlink" href="#No-Clustering-/-Zero-Way-Clustering" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1945,7 +1870,7 @@ memory usage: 658.2+ KB
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1977,7 +1902,7 @@ memory usage: 658.2+ KB
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1997,7 +1922,7 @@ memory usage: 658.2+ KB
 <section id="Application-Results">
 <h3>Application Results<a class="headerlink" href="#Application-Results" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2006,7 +1931,7 @@ memory usage: 658.2+ KB
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -2095,6 +2020,71 @@ memory usage: 658.2+ KB
 <p>Cameron, A. C., Gelbach, J. B. and Miller, D. L. (2011), Robust Inference with Multiway Clustering, Journal of Business &amp; Economic Statistics, 29:2, 238-249, doi: <a class="reference external" href="https://doi.org/10.1198/jbes.2010.07136">10.1198/jbes.2010.07136</a>.</p>
 <p>Chernozhukov, V., Chetverikov, D., Demirer, M., Duflo, E., Hansen, C., Newey, W. and Robins, J. (2018), Double/debiased machine learning for treatment and structural parameters. The Econometrics Journal, 21: C1-C68, doi: <a class="reference external" href="https://doi.org/10.1111/ectj.12097">10.1111/ectj.12097</a>.</p>
 <p>Chiang, H. D., Kato K., Ma, Y. and Sasaki, Y. (2021), Multiway Cluster Robust Double/Debiased Machine Learning, Journal of Business &amp; Economic Statistics, doi: <a class="reference external" href="https://doi.org/10.1080/07350015.2021.1895815">10.1080/07350015.2021.1895815</a>, arXiv: <a class="reference external" href="https://arxiv.org/abs/1909.03489">1909.03489</a>.</p>
+</section>
+<section id="Define-Helper-Functions-for-Plotting">
+<h2>Define Helper Functions for Plotting<a class="headerlink" href="#Define-Helper-Functions-for-Plotting" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#discrete color scheme</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="n">cMap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">12</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.3</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plt_smpls</span><span class="p">(</span><span class="n">smpls</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="o">*</span><span class="n">n_folds_per_cluster</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">i_split</span><span class="p">,</span> <span class="n">this_split_ind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">smpls</span><span class="p">):</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">this_split_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i_split</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">this_split_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i_split</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cMap</span><span class="p">);</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">();</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">]);</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Observation&#39;</span><span class="p">)</span>
+    <span class="n">colorbar</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">colorbar</span>
+    <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="mf">0.667</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">])</span>
+    <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;Nuisance&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Score&#39;</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">plt_smpls_cluster</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i_split</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">)):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">n_folds_per_cluster</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">,</span> <span class="n">i_split</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
+                      <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">([</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">)]),</span>
+                      <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">[</span><span class="n">i_split</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">(</span><span class="n">smpls_cluster</span><span class="p">[</span><span class="n">i_split</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="n">df_wide</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;level_0&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;level_1&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+        <span class="n">df_wide</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+        <span class="n">df_wide</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_wide</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cMap</span><span class="p">);</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">();</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">M</span><span class="p">]);</span>
+        <span class="n">colorbar</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">colorbar</span>
+        <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="mf">0.667</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">])</span>
+
+        <span class="n">l</span> <span class="o">=</span> <span class="n">i_split</span> <span class="o">%</span> <span class="n">n_folds_per_cluster</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor_divide</span><span class="p">(</span><span class="n">i_split</span><span class="p">,</span> <span class="n">n_folds_per_cluster</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Nuisance: $I_</span><span class="se">{{</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="se">}}</span><span class="s1">^C </span><span class="se">\\</span><span class="s1">times J_</span><span class="se">{{</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="se">}}</span><span class="s1">^C$; Score: $I_</span><span class="se">{{</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="se">}}</span><span class="s1"> </span><span class="se">\\</span><span class="s1">times J_</span><span class="se">{{</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="se">}}</span><span class="s1">$&#39;</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">n_folds_per_cluster</span><span class="p">:</span>
+            <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;Nuisance&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Score&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">colorbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;First Cluster Variable $k$&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Second Cluster Variable $\ell$&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 </section>
 </section>
 
