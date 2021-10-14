@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generates data from a partially linear regression model used in a blog
-article by Turrell (2018). — make_plr_turrell2018 • DoubleML</title>
+<title>Generates data from a partially linear IV regression model with
+multiway cluster sample used in Chiang et al. (2021). — make_pliv_multiway_cluster_CKMS2021 • DoubleML</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,20 +47,33 @@ article by Turrell (2018). — make_plr_turrell2018 • DoubleML</title>
 
 
 
-<meta property="og:title" content="Generates data from a partially linear regression model used in a blog
-article by Turrell (2018). — make_plr_turrell2018" />
-<meta property="og:description" content="Generates data from a partially linear regression model used in a blog
-article by Turrell (2018). The data generating process is defined as
-\(d_i = m_0(x_i' b) + v_i,\)
-\(y_i = \theta d_i + g_0(x_i' b) + u_i,\)
-with \(v_i \sim \mathcal{N}(0,1)\), \(u_i \sim \mathcal{N}(0,1)\), and
-covariates \(x_i \sim \mathcal{N}(0, \Sigma)\), where  \(\Sigma\)
-is a random symmetric, positive-definite matrix generated with
-clusterGeneration::genPositiveDefMat(). \(b\) is a vector with entries
-\(b_j=\frac{1}{j}\) and the nuisance functions are given by
-\(m_0(x_i) = \frac{1}{2 \pi}
-\frac{\sinh(\gamma)}{\cosh(\gamma) - \cos(x_i-\nu)},\)
-\(g_0(x_i) = \sin(x_i)^2.\)" />
+<meta property="og:title" content="Generates data from a partially linear IV regression model with
+multiway cluster sample used in Chiang et al. (2021). — make_pliv_multiway_cluster_CKMS2021" />
+<meta property="og:description" content="Generates data from a partially linear IV regression model with multiway
+cluster sample used in Chiang et al. (2021). The data generating process
+is defined as
+\(Z_{ij} = X_{ij}' \xi_0 + V_{ij},\)
+\(D_{ij} = Z_{ij}' \pi_{10} + X_{ij}' \pi_{20} + v_{ij},\)
+\(Y_{ij} = D_{ij} \theta + X_{ij}' \zeta_0 + \varepsilon_{ij},\)
+with
+\(X_{ij} = (1 - \omega_1^X - \omega_2^X) \alpha_{ij}^X
++ \omega_1^X \alpha_{i}^X + \omega_2^X \alpha_{j}^X,\)
+\(\varepsilon_{ij} = (1 - \omega_1^\varepsilon - \omega_2^\varepsilon) \alpha_{ij}^\varepsilon
++ \omega_1^\varepsilon \alpha_{i}^\varepsilon + \omega_2^\varepsilon \alpha_{j}^\varepsilon,\)
+\(v_{ij} = (1 - \omega_1^v - \omega_2^v) \alpha_{ij}^v
++ \omega_1^v \alpha_{i}^v + \omega_2^v \alpha_{j}^v,\)
+\(V_{ij} = (1 - \omega_1^V - \omega_2^V) \alpha_{ij}^V
++ \omega_1^V \alpha_{i}^V + \omega_2^V \alpha_{j}^V,\)
+and \(\alpha_{ij}^X, \alpha_{i}^X, \alpha_{j}^X \sim \mathcal{N}(0, \Sigma)\)
+where \(\Sigma\) is a \(p_x \times p_x\) matrix with entries
+\(\Sigma_{kj} = s_X^{|j-k|}\).
+Further
+\(\left(\begin{array}{c} \alpha_{ij}^\varepsilon \\ \alpha_{ij}^v \end{array}\right),
+\left(\begin{array}{c} \alpha_{i}^\varepsilon \\ \alpha_{i}^v \end{array}\right),
+\left(\begin{array}{c} \alpha_{j}^\varepsilon \\ \alpha_{j}^v \end{array}\right)
+\sim \mathcal{N}\left(0, \left(\begin{array}{cc} 1 &amp;amp; s_{\varepsilon v} \\
+s_{\varepsilon v} &amp;amp; 1 \end{array}\right) \right)\)
+and \(\alpha_{ij}^V, \alpha_{i}^V, \alpha_{j}^V \sim \mathcal{N}(0, 1)\)." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -151,46 +164,64 @@ clusterGeneration::genPositiveDefMat(). \(b\) is a vector with entries
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generates data from a partially linear regression model used in a blog
-article by Turrell (2018).</h1>
+    <h1>Generates data from a partially linear IV regression model with
+multiway cluster sample used in Chiang et al. (2021).</h1>
     <small class="dont-index">Source: <a href='https://github.com/DoubleML/doubleml-for-r/blob/master/R/datasets.R'><code>R/datasets.R</code></a></small>
-    <div class="hidden name"><code>make_plr_turrell2018.Rd</code></div>
+    <div class="hidden name"><code>make_pliv_multiway_cluster_CKMS2021.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generates data from a partially linear regression model used in a blog
-article by Turrell (2018). The data generating process is defined as</p>
-<p>\(d_i = m_0(x_i' b) + v_i,\)</p>
-<p>\(y_i = \theta d_i + g_0(x_i' b) + u_i,\)</p>
-<p>with \(v_i \sim \mathcal{N}(0,1)\), \(u_i \sim \mathcal{N}(0,1)\), and
-covariates \(x_i \sim \mathcal{N}(0, \Sigma)\), where  \(\Sigma\)
-is a random symmetric, positive-definite matrix generated with
-<code><a href='https://rdrr.io/pkg/clusterGeneration/man/genPositiveDefMat.html'>clusterGeneration::genPositiveDefMat()</a></code>. \(b\) is a vector with entries
-\(b_j=\frac{1}{j}\) and the nuisance functions are given by</p>
-<p>\(m_0(x_i) = \frac{1}{2 \pi}
-\frac{\sinh(\gamma)}{\cosh(\gamma) - \cos(x_i-\nu)},\)</p>
-<p>\(g_0(x_i) = \sin(x_i)^2.\)</p>
+    <p>Generates data from a partially linear IV regression model with multiway
+cluster sample used in Chiang et al. (2021). The data generating process
+is defined as</p>
+<p>\(Z_{ij} = X_{ij}' \xi_0 + V_{ij},\)</p>
+<p>\(D_{ij} = Z_{ij}' \pi_{10} + X_{ij}' \pi_{20} + v_{ij},\)</p>
+<p>\(Y_{ij} = D_{ij} \theta + X_{ij}' \zeta_0 + \varepsilon_{ij},\)</p>
+<p>with</p>
+<p>\(X_{ij} = (1 - \omega_1^X - \omega_2^X) \alpha_{ij}^X
++ \omega_1^X \alpha_{i}^X + \omega_2^X \alpha_{j}^X,\)</p>
+<p>\(\varepsilon_{ij} = (1 - \omega_1^\varepsilon - \omega_2^\varepsilon) \alpha_{ij}^\varepsilon
++ \omega_1^\varepsilon \alpha_{i}^\varepsilon + \omega_2^\varepsilon \alpha_{j}^\varepsilon,\)</p>
+<p>\(v_{ij} = (1 - \omega_1^v - \omega_2^v) \alpha_{ij}^v
++ \omega_1^v \alpha_{i}^v + \omega_2^v \alpha_{j}^v,\)</p>
+<p>\(V_{ij} = (1 - \omega_1^V - \omega_2^V) \alpha_{ij}^V
++ \omega_1^V \alpha_{i}^V + \omega_2^V \alpha_{j}^V,\)</p>
+<p>and \(\alpha_{ij}^X, \alpha_{i}^X, \alpha_{j}^X \sim \mathcal{N}(0, \Sigma)\)
+where \(\Sigma\) is a \(p_x \times p_x\) matrix with entries
+\(\Sigma_{kj} = s_X^{|j-k|}\).</p>
+<p>Further</p>
+<p>\(\left(\begin{array}{c} \alpha_{ij}^\varepsilon \\ \alpha_{ij}^v \end{array}\right),
+\left(\begin{array}{c} \alpha_{i}^\varepsilon \\ \alpha_{i}^v \end{array}\right),
+\left(\begin{array}{c} \alpha_{j}^\varepsilon \\ \alpha_{j}^v \end{array}\right)
+\sim \mathcal{N}\left(0, \left(\begin{array}{cc} 1 &amp; s_{\varepsilon v} \\
+s_{\varepsilon v} &amp; 1 \end{array}\right) \right)\)</p>
+<p>and \(\alpha_{ij}^V, \alpha_{i}^V, \alpha_{j}^V \sim \mathcal{N}(0, 1)\).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>make_plr_turrell2018</span><span class='op'>(</span>
-  n_obs <span class='op'>=</span> <span class='fl'>100</span>,
-  dim_x <span class='op'>=</span> <span class='fl'>20</span>,
-  theta <span class='op'>=</span> <span class='fl'>0.5</span>,
-  return_type <span class='op'>=</span> <span class='st'>"DoubleMLData"</span>,
-  nu <span class='op'>=</span> <span class='fl'>0</span>,
-  gamma <span class='op'>=</span> <span class='fl'>1</span>
+    <pre class="usage"><span class='fu'>make_pliv_multiway_cluster_CKMS2021</span><span class='op'>(</span>
+  N <span class='op'>=</span> <span class='fl'>25</span>,
+  M <span class='op'>=</span> <span class='fl'>25</span>,
+  dim_X <span class='op'>=</span> <span class='fl'>100</span>,
+  theta <span class='op'>=</span> <span class='fl'>1</span>,
+  return_type <span class='op'>=</span> <span class='st'>"DoubleMLClusterData"</span>,
+  <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>n_obs</th>
+      <th>N</th>
       <td><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>) <br />
-The number of observations to simulate.</p></td>
+The number of observations (first dimension).</p></td>
     </tr>
     <tr>
-      <th>dim_x</th>
+      <th>M</th>
+      <td><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>) <br />
+The number of observations (second dimension).</p></td>
+    </tr>
+    <tr>
+      <th>dim_X</th>
       <td><p>(<code><a href='https://rdrr.io/r/base/integer.html'>integer(1)</a></code>) <br />
 The number of covariates.</p></td>
     </tr>
@@ -202,21 +233,21 @@ The value of the causal parameter.</p></td>
     <tr>
       <th>return_type</th>
       <td><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br />
-If <code>"DoubleMLData"</code>, returns a <code>DoubleMLData</code> object.
+If <code>"DoubleMLClusterData"</code>, returns a <code>DoubleMLClusterData</code> object.
 If <code>"data.frame"</code> returns a <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame()</a></code>.
 If <code>"data.table"</code> returns a <code><a href='https://Rdatatable.gitlab.io/data.table/reference/data.table.html'>data.table()</a></code>.
-If <code>"matrix"</code> a named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code> with entries <code>X</code>, <code>y</code> and <code>d</code> is returned.
-Every entry in the list is a <code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code> object.  Default is <code>"DoubleMLData"</code>.</p></td>
+If <code>"matrix"</code> a named <code><a href='https://rdrr.io/r/base/list.html'>list()</a></code> with entries <code>X</code>, <code>y</code>, <code>d</code>, <code>z</code> and
+<code>cluster_vars</code> is returned.
+Every entry in the list is a <code><a href='https://rdrr.io/r/base/matrix.html'>matrix()</a></code> object.  Default is <code>"DoubleMLClusterData"</code>.</p></td>
     </tr>
     <tr>
-      <th>nu</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>) <br />
-The value of the parameter \(\nu\). Default is <code>0</code>.</p></td>
-    </tr>
-    <tr>
-      <th>gamma</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/numeric.html'>numeric(1)</a></code>) <br />
-The value of the parameter \(\gamma\). Default is <code>1</code>.</p></td>
+      <th>...</th>
+      <td><p>Additional keyword arguments to set non-default values for the parameters
+\(\pi_{10}=1.0\),
+\(\omega_X = \omega_{\varepsilon} = \omega_V = \omega_v = (0.25, 0.25)\),
+\(s_X = s_{\varepsilon v} = 0.25\), or the \(p_x\)-vectors
+\(\zeta_0 = \pi_{20} = \xi_0\) with default entries
+\(\zeta_{0})_j = 0.5^j\).</p></td>
     </tr>
     </table>
 
@@ -225,10 +256,11 @@ The value of the parameter \(\gamma\). Default is <code>1</code>.</p></td>
     <p>A data object according to the choice of <code>return_type</code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Turrell, A. (2018), Econometrics in Python part I - Double
-machine learning, Markov Wanderer: A blog on economics, science, coding and
-data.
-<a href='http://aeturrell.com/2018/02/10/econometrics-in-python-partI-ML/'>http://aeturrell.com/2018/02/10/econometrics-in-python-partI-ML/</a>.</p>
+    <p>Chiang, H. D., Kato K., Ma, Y. and Sasaki, Y. (2021),
+Multiway Cluster Robust Double/Debiased Machine Learning,
+Journal of Business &amp; Economic Statistics,
+doi: <a href='https://doi.org/10.1080/07350015.2021.1895815'>10.1080/07350015.2021.1895815</a>
+, https://arxiv.org/abs/1909.03489.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
