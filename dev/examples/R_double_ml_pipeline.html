@@ -1059,24 +1059,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <h2>Use ensemble learners based on <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code><a class="headerlink" href="#Use-ensemble-learners-based-on-mlr3pipelines" title="Permalink to this headline">¶</a></h2>
 <p>First, let’s see how we can use more complicated <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/mlr_learners_graph.html">GraphLearner</a>s like ensemble learners in <a class="reference external" href="https://docs.doubleml.org/">DoubleML</a>. For example, we want to create a learner with predictions that are generated as an average from three different learners. In the first step, we split up the pipeline into three branches. In our example, the learners estimate the nuisance parts independently of each other. In the last step,
 we average the predictions. Thereby we will use the pipe operator <code class="docutils literal notranslate"><span class="pre">%&gt;&gt;%</span></code>. For more details, we refer to the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter in the mlr3book</a>.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
-</div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre>
-<span></span><span class="n">graph_ensemble</span> <span class="o">=</span> <span class="nf">po</span><span class="p">(</span><span class="s">&quot;branch&quot;</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;lasso&quot;</span><span class="p">,</span> <span class="s">&quot;forest&quot;</span><span class="p">,</span> <span class="s">&quot;tree&quot;</span><span class="p">))</span> <span class="o">%&gt;&gt;%</span>
-  <span class="nf">gunion</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;lambda.min&quot;</span><span class="p">)),</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)),</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.rpart&quot;</span><span class="p">,</span> <span class="n">cp</span> <span class="o">=</span> <span class="m">0.01</span><span class="p">))</span>
-  <span class="p">))</span> <span class="o">%&gt;&gt;%</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;unbranch&quot;</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;lasso&quot;</span><span class="p">,</span> <span class="s">&quot;forest&quot;</span><span class="p">,</span> <span class="s">&quot;tree&quot;</span><span class="p">))</span> <span class="o">%&gt;&gt;%</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;regravg&quot;</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1088,8 +1072,8 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
   <span class="p">))</span> <span class="o">%&gt;&gt;%</span>
     <span class="nf">po</span><span class="p">(</span><span class="s">&quot;regravg&quot;</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
 
-<span class="c1"># Class of &#39; graph_ensemble&#39;</span>
-<span class="nf">class</span><span class="p">(</span><span class="n">graph_ensemble</span><span class="p">)</span>
+<span class="c1"># Class of &#39; graph_ensemble_regr&#39;</span>
+<span class="nf">class</span><span class="p">(</span><span class="n">graph_ensemble_regr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1105,7 +1089,7 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 <ol class=list-inline><li>'Graph'</li><li>'R6'</li></ol></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1118,11 +1102,11 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_double_ml_pipeline_23_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pipeline_23_0.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pipeline_22_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pipeline_22_0.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1134,7 +1118,7 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
   <span class="p">))</span> <span class="o">%&gt;&gt;%</span>
     <span class="nf">po</span><span class="p">(</span><span class="s">&quot;classifavg&quot;</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
 
-<span class="c1"># Class of &#39;graph_ensemble&#39;</span>
+<span class="c1"># Class of &#39;graph_ensemble_classif&#39;</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">graph_ensemble_classif</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1151,7 +1135,7 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 <ol class=list-inline><li>'Graph'</li><li>'R6'</li></ol></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1164,12 +1148,12 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_double_ml_pipeline_25_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pipeline_25_0.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pipeline_24_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pipeline_24_0.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <p>We create a new instance of a <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/mlr_learners_graph.html">GraphLearner</a> which is later used in <a class="reference external" href="https://docs.doubleml.org">DoubleML</a>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1180,7 +1164,7 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 </div>
 <p>Let’s estimate the two PLR examples with the ensemble learner.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1233,7 +1217,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1286,7 +1270,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <p>Alternatively, different learners could also be stacked. Here we simply repeat the example from the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html#pipe-model-ensembles-stacking">Pipelines Chapter in the mlr3book</a> in our Bonus data example.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1297,7 +1281,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1307,7 +1291,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1316,7 +1300,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1329,11 +1313,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_double_ml_pipeline_35_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pipeline_35_0.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pipeline_34_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pipeline_34_0.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1396,7 +1380,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <h3>Data preprocessing<a class="headerlink" href="#Data-preprocessing" title="Permalink to this headline">¶</a></h3>
 <p>Let’s perform some data preprocessing and then use a regression tree for prediction.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1409,7 +1393,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <p>Collect them in a graph and plot it.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1434,7 +1418,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <ol class=list-inline><li>'Graph'</li><li>'R6'</li></ol></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1446,12 +1430,12 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_R_double_ml_pipeline_42_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pipeline_42_0.png" style="width: 420px; height: 420px;" />
+<img alt="../_images/examples_R_double_ml_pipeline_41_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_pipeline_41_0.png" style="width: 420px; height: 420px;" />
 </div>
 </div>
 <p>Create a new learner.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1460,7 +1444,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1499,7 +1483,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <ol class=list-inline><li>'GraphLearner'</li><li>'Learner'</li><li>'R6'</li></ol></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1552,7 +1536,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <p>Let’s see how to set hyperparameters with a pipeline.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1561,7 +1545,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1618,7 +1602,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>Next, we will shortly illustrate how to perform parameter tuning in the simulated data example. Here, we use a pipeline to tune the penalty of the lasso. To do so, we generate a <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/mlr_learners_graph.html">GraphLearner</a> and then call <a class="reference external" href="https://docs.doubleml.org">DoubleML</a>’s <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleML.html#method-tune">tune()</a> method.</p>
 <p>Let’s define a <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/mlr_learners_graph.html">GraphLearner</a> based on the lasso.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1632,7 +1616,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <p>Let’s specify the parameter grid and more settings that are required for the parameter tuning. For more details, we refer to <a class="reference external" href="https://docs.doubleml.org/stable/guide/learners.html#r-learners-and-hyperparameters">the DoubleML user guide</a>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1644,7 +1628,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1659,7 +1643,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
@@ -1679,140 +1663,140 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-INFO  [09:30:58.961] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;OptimizerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
-INFO  [09:30:58.996] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:30:59.825] [bbotk] Result of batch 1:
-INFO  [09:30:59.829] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:30:59.829] [bbotk]          0.07222222            0.6666667 107.2925             0.49
-INFO  [09:30:59.829] [bbotk]                                 uhash
-INFO  [09:30:59.829] [bbotk]  d9ac201a-33b1-4a58-bddf-c095ccc2e851
-INFO  [09:30:59.831] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:00.644] [bbotk] Result of batch 2:
-INFO  [09:31:00.647] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:00.647] [bbotk]                 0.1            0.6666667 106.2652            0.481
-INFO  [09:31:00.647] [bbotk]                                 uhash
-INFO  [09:31:00.647] [bbotk]  e709f409-c646-4f7f-9ad7-ee618673043d
-INFO  [09:31:00.649] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:01.534] [bbotk] Result of batch 3:
-INFO  [09:31:01.537] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:01.537] [bbotk]                 0.1            0.4166667 482.9753             0.54
-INFO  [09:31:01.537] [bbotk]                                 uhash
-INFO  [09:31:01.537] [bbotk]  de6186f7-f02f-48da-8a14-f526cf184f78
-INFO  [09:31:01.540] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:02.367] [bbotk] Result of batch 4:
-INFO  [09:31:02.370] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:02.370] [bbotk]          0.09444444                 0.75 112.1054            0.488
-INFO  [09:31:02.370] [bbotk]                                 uhash
-INFO  [09:31:02.370] [bbotk]  52aa4408-dbd6-4b56-9f44-97c1798a65ab
-INFO  [09:31:02.372] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:03.233] [bbotk] Result of batch 5:
-INFO  [09:31:03.235] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:03.235] [bbotk]          0.08333333            0.9166667 10.81856            0.515
-INFO  [09:31:03.235] [bbotk]                                 uhash
-INFO  [09:31:03.235] [bbotk]  cdc02430-2e08-4195-b9af-dff40a096e00
-INFO  [09:31:03.238] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:04.075] [bbotk] Result of batch 6:
-INFO  [09:31:04.078] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:04.078] [bbotk]          0.08888889            0.9166667 10.74189            0.493
-INFO  [09:31:04.078] [bbotk]                                 uhash
-INFO  [09:31:04.078] [bbotk]  7dcc41ac-3b89-4125-b001-0251d08341aa
-INFO  [09:31:04.081] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:04.934] [bbotk] Result of batch 7:
-INFO  [09:31:04.937] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:04.937] [bbotk]          0.07777778            0.5833333 201.8513            0.493
-INFO  [09:31:04.937] [bbotk]                                 uhash
-INFO  [09:31:04.937] [bbotk]  ae24974f-d7c8-4022-b942-db15bcd4560e
-INFO  [09:31:04.939] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:05.784] [bbotk] Result of batch 8:
-INFO  [09:31:05.787] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:05.787] [bbotk]          0.07222222            0.3333333 531.5255            0.501
-INFO  [09:31:05.787] [bbotk]                                 uhash
-INFO  [09:31:05.787] [bbotk]  31142648-8126-4152-9e38-a8ad226eb9ad
-INFO  [09:31:05.789] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:06.653] [bbotk] Result of batch 9:
-INFO  [09:31:06.656] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:06.656] [bbotk]          0.06111111            0.9166667 11.17823            0.506
-INFO  [09:31:06.656] [bbotk]                                 uhash
-INFO  [09:31:06.656] [bbotk]  67187c62-49ac-436a-9f86-ed63cb07f000
-INFO  [09:31:06.658] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:07.507] [bbotk] Result of batch 10:
-INFO  [09:31:07.510] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:07.510] [bbotk]          0.08888889                 0.25  538.991            0.503
-INFO  [09:31:07.510] [bbotk]                                 uhash
-INFO  [09:31:07.510] [bbotk]  89d520c9-da58-4f69-b234-c78c52e373d0
-INFO  [09:31:07.519] [bbotk] Finished optimizing after 10 evaluation(s)
-INFO  [09:31:07.521] [bbotk] Result:
-INFO  [09:31:07.523] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain regr.mse
-INFO  [09:31:07.523] [bbotk]          0.08888889            0.9166667          &lt;list[5]&gt; &lt;list[2]&gt; 10.74189
-INFO  [09:31:07.739] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;OptimizerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
-INFO  [09:31:07.745] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:08.697] [bbotk] Result of batch 1:
-INFO  [09:31:08.700] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:08.700] [bbotk]          0.08888889            0.5833333  12.6173            0.531
-INFO  [09:31:08.700] [bbotk]                                 uhash
-INFO  [09:31:08.700] [bbotk]  3a117d46-db41-4bf9-8e37-b2ad590b0a76
-INFO  [09:31:08.702] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:09.623] [bbotk] Result of batch 2:
-INFO  [09:31:09.627] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:09.627] [bbotk]                 0.1            0.5833333  12.5155            0.531
-INFO  [09:31:09.627] [bbotk]                                 uhash
-INFO  [09:31:09.627] [bbotk]  4ec920f6-ec24-4d97-aba3-c8ce043eeb36
-INFO  [09:31:09.630] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:10.587] [bbotk] Result of batch 3:
-INFO  [09:31:10.590] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse runtime_learners
-INFO  [09:31:10.590] [bbotk]          0.08333333                 0.75 0.9870004            0.535
-INFO  [09:31:10.590] [bbotk]                                 uhash
-INFO  [09:31:10.590] [bbotk]  b0141e2a-53d8-492a-ad42-7f95630e102e
-INFO  [09:31:10.592] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:11.568] [bbotk] Result of batch 4:
-INFO  [09:31:11.571] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:11.571] [bbotk]          0.07222222                  0.5 17.75887            0.583
-INFO  [09:31:11.571] [bbotk]                                 uhash
-INFO  [09:31:11.571] [bbotk]  d6967c26-61a1-4297-9699-c54fda6d8229
-INFO  [09:31:11.573] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:12.529] [bbotk] Result of batch 5:
-INFO  [09:31:12.533] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:12.533] [bbotk]          0.08333333            0.5833333  12.6722             0.56
-INFO  [09:31:12.533] [bbotk]                                 uhash
-INFO  [09:31:12.533] [bbotk]  cafd7f71-2ec9-4591-920d-4d9412410a24
-INFO  [09:31:12.536] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:13.477] [bbotk] Result of batch 6:
-INFO  [09:31:13.481] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:13.481] [bbotk]          0.07222222            0.5833333 12.78818            0.525
-INFO  [09:31:13.481] [bbotk]                                 uhash
-INFO  [09:31:13.481] [bbotk]  6121c16b-2a48-42ea-8e72-6f233e753be8
-INFO  [09:31:13.484] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:14.446] [bbotk] Result of batch 7:
-INFO  [09:31:14.449] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:14.449] [bbotk]          0.07777778                  0.5 17.69921            0.527
-INFO  [09:31:14.449] [bbotk]                                 uhash
-INFO  [09:31:14.449] [bbotk]  f80bc321-665a-4788-bb4b-b60b22205ad0
-INFO  [09:31:14.453] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:15.490] [bbotk] Result of batch 8:
-INFO  [09:31:15.493] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse runtime_learners
-INFO  [09:31:15.493] [bbotk]          0.07777778            0.9166667 0.9880384            0.616
-INFO  [09:31:15.493] [bbotk]                                 uhash
-INFO  [09:31:15.493] [bbotk]  a93a8acd-fa19-4b67-b7e5-19458d1e9437
-INFO  [09:31:15.495] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:16.528] [bbotk] Result of batch 9:
-INFO  [09:31:16.531] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:16.531] [bbotk]          0.07777778            0.4166667 22.43294            0.571
-INFO  [09:31:16.531] [bbotk]                                 uhash
-INFO  [09:31:16.531] [bbotk]  ff5bc104-10d3-4f6e-a330-567d0d85fd3e
-INFO  [09:31:16.533] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:31:17.509] [bbotk] Result of batch 10:
-INFO  [09:31:17.513] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
-INFO  [09:31:17.513] [bbotk]          0.07222222            0.3333333 27.31378            0.574
-INFO  [09:31:17.513] [bbotk]                                 uhash
-INFO  [09:31:17.513] [bbotk]  f9fc1513-eaa3-4552-8f09-46367fbb9e5a
-INFO  [09:31:17.525] [bbotk] Finished optimizing after 10 evaluation(s)
-INFO  [09:31:17.527] [bbotk] Result:
-INFO  [09:31:17.530] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain  regr.mse
-INFO  [09:31:17.530] [bbotk]          0.08333333                 0.75          &lt;list[5]&gt; &lt;list[2]&gt; 0.9870004
+INFO  [13:39:58.245] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;OptimizerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
+INFO  [13:39:58.292] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:39:59.352] [bbotk] Result of batch 1:
+INFO  [13:39:59.356] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:39:59.356] [bbotk]          0.07222222            0.6666667 107.2925            0.631
+INFO  [13:39:59.356] [bbotk]                                 uhash
+INFO  [13:39:59.356] [bbotk]  55f89855-3597-4d7a-bc4b-feac92ee0165
+INFO  [13:39:59.359] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:00.407] [bbotk] Result of batch 2:
+INFO  [13:40:00.411] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:00.411] [bbotk]                 0.1            0.6666667 106.2652             0.61
+INFO  [13:40:00.411] [bbotk]                                 uhash
+INFO  [13:40:00.411] [bbotk]  716b7b69-eb39-4cdf-83e8-cf5e57903d9b
+INFO  [13:40:00.413] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:01.456] [bbotk] Result of batch 3:
+INFO  [13:40:01.459] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:01.459] [bbotk]                 0.1            0.4166667 482.9753            0.605
+INFO  [13:40:01.459] [bbotk]                                 uhash
+INFO  [13:40:01.459] [bbotk]  f25055fe-7903-4129-a3d3-c3fea737b2b7
+INFO  [13:40:01.462] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:02.499] [bbotk] Result of batch 4:
+INFO  [13:40:02.502] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:02.502] [bbotk]          0.09444444                 0.75 112.1054            0.622
+INFO  [13:40:02.502] [bbotk]                                 uhash
+INFO  [13:40:02.502] [bbotk]  a5f82495-e9ec-4d61-badf-80570d6ae18e
+INFO  [13:40:02.505] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:03.541] [bbotk] Result of batch 5:
+INFO  [13:40:03.547] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:03.547] [bbotk]          0.08333333            0.9166667 10.81856            0.631
+INFO  [13:40:03.547] [bbotk]                                 uhash
+INFO  [13:40:03.547] [bbotk]  a9ea45c5-58b1-4586-a7b7-ecb4660c0f8e
+INFO  [13:40:03.549] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:04.591] [bbotk] Result of batch 6:
+INFO  [13:40:04.595] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:04.595] [bbotk]          0.08888889            0.9166667 10.74189            0.628
+INFO  [13:40:04.595] [bbotk]                                 uhash
+INFO  [13:40:04.595] [bbotk]  ba2e037b-0aa2-46bd-887f-2ce184c93284
+INFO  [13:40:04.597] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:05.617] [bbotk] Result of batch 7:
+INFO  [13:40:05.621] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:05.621] [bbotk]          0.07777778            0.5833333 201.8513            0.611
+INFO  [13:40:05.621] [bbotk]                                 uhash
+INFO  [13:40:05.621] [bbotk]  68452e73-6cba-4d07-86b4-382d05c92390
+INFO  [13:40:05.623] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:06.647] [bbotk] Result of batch 8:
+INFO  [13:40:06.651] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:06.651] [bbotk]          0.07222222            0.3333333 531.5255            0.614
+INFO  [13:40:06.651] [bbotk]                                 uhash
+INFO  [13:40:06.651] [bbotk]  212b00bb-893c-4bfc-9931-f58d3a6a8daf
+INFO  [13:40:06.654] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:07.682] [bbotk] Result of batch 9:
+INFO  [13:40:07.685] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:07.685] [bbotk]          0.06111111            0.9166667 11.17823            0.617
+INFO  [13:40:07.685] [bbotk]                                 uhash
+INFO  [13:40:07.685] [bbotk]  88842cbc-f196-4905-bde8-e2d9bfb67c37
+INFO  [13:40:07.688] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:08.732] [bbotk] Result of batch 10:
+INFO  [13:40:08.735] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:08.735] [bbotk]          0.08888889                 0.25  538.991            0.622
+INFO  [13:40:08.735] [bbotk]                                 uhash
+INFO  [13:40:08.735] [bbotk]  477cbbab-cae7-411f-bba8-7cdaf3c5f5ce
+INFO  [13:40:08.746] [bbotk] Finished optimizing after 10 evaluation(s)
+INFO  [13:40:08.748] [bbotk] Result:
+INFO  [13:40:08.751] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain regr.mse
+INFO  [13:40:08.751] [bbotk]          0.08888889            0.9166667          &lt;list[5]&gt; &lt;list[2]&gt; 10.74189
+INFO  [13:40:08.936] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;OptimizerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
+INFO  [13:40:08.941] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:09.998] [bbotk] Result of batch 1:
+INFO  [13:40:10.002] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:10.002] [bbotk]          0.08888889            0.5833333  12.6173             0.61
+INFO  [13:40:10.002] [bbotk]                                 uhash
+INFO  [13:40:10.002] [bbotk]  bde59885-c974-4036-926f-adfda8dee96a
+INFO  [13:40:10.004] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:11.065] [bbotk] Result of batch 2:
+INFO  [13:40:11.068] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:11.068] [bbotk]                 0.1            0.5833333  12.5155            0.627
+INFO  [13:40:11.068] [bbotk]                                 uhash
+INFO  [13:40:11.068] [bbotk]  fa3a5303-afb4-49b5-9f4e-2a61dbc48efa
+INFO  [13:40:11.071] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:12.129] [bbotk] Result of batch 3:
+INFO  [13:40:12.132] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse runtime_learners
+INFO  [13:40:12.132] [bbotk]          0.08333333                 0.75 0.9870004            0.618
+INFO  [13:40:12.132] [bbotk]                                 uhash
+INFO  [13:40:12.132] [bbotk]  9f5145e2-4dfe-4d5e-aa06-21c92f9245ff
+INFO  [13:40:12.135] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:13.177] [bbotk] Result of batch 4:
+INFO  [13:40:13.180] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:13.180] [bbotk]          0.07222222                  0.5 17.75887            0.613
+INFO  [13:40:13.180] [bbotk]                                 uhash
+INFO  [13:40:13.180] [bbotk]  d76920a9-534c-4c14-8af0-98f747c53aea
+INFO  [13:40:13.183] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:14.220] [bbotk] Result of batch 5:
+INFO  [13:40:14.223] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:14.223] [bbotk]          0.08333333            0.5833333  12.6722            0.614
+INFO  [13:40:14.223] [bbotk]                                 uhash
+INFO  [13:40:14.223] [bbotk]  c9dcc309-29f9-41e7-8a01-778469b5aff2
+INFO  [13:40:14.226] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:15.276] [bbotk] Result of batch 6:
+INFO  [13:40:15.279] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:15.279] [bbotk]          0.07222222            0.5833333 12.78818            0.616
+INFO  [13:40:15.279] [bbotk]                                 uhash
+INFO  [13:40:15.279] [bbotk]  98831cf5-aaed-4f6c-b6ce-7d9a2f3373a6
+INFO  [13:40:15.282] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:16.754] [bbotk] Result of batch 7:
+INFO  [13:40:16.757] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:16.757] [bbotk]          0.07777778                  0.5 17.69921            0.601
+INFO  [13:40:16.757] [bbotk]                                 uhash
+INFO  [13:40:16.757] [bbotk]  292723b1-0d63-44ab-a015-6f511f6c5354
+INFO  [13:40:16.760] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:17.787] [bbotk] Result of batch 8:
+INFO  [13:40:17.790] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse runtime_learners
+INFO  [13:40:17.790] [bbotk]          0.07777778            0.9166667 0.9880384              0.6
+INFO  [13:40:17.790] [bbotk]                                 uhash
+INFO  [13:40:17.790] [bbotk]  9559bd37-760e-4267-b83d-4108cf02308f
+INFO  [13:40:17.794] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:18.821] [bbotk] Result of batch 9:
+INFO  [13:40:18.824] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:18.824] [bbotk]          0.07777778            0.4166667 22.43294            0.608
+INFO  [13:40:18.824] [bbotk]                                 uhash
+INFO  [13:40:18.824] [bbotk]  9a17dbf6-1e91-48c8-b414-dd4adbc5321f
+INFO  [13:40:18.827] [bbotk] Evaluating 1 configuration(s)
+INFO  [13:40:19.855] [bbotk] Result of batch 10:
+INFO  [13:40:19.858] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse runtime_learners
+INFO  [13:40:19.858] [bbotk]          0.07222222            0.3333333 27.31378            0.596
+INFO  [13:40:19.858] [bbotk]                                 uhash
+INFO  [13:40:19.858] [bbotk]  c584e64a-bbeb-4fe5-8007-9472ade655f9
+INFO  [13:40:19.868] [bbotk] Finished optimizing after 10 evaluation(s)
+INFO  [13:40:19.870] [bbotk] Result:
+INFO  [13:40:19.873] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain  regr.mse
+INFO  [13:40:19.873] [bbotk]          0.08333333                 0.75          &lt;list[5]&gt; &lt;list[2]&gt; 0.9870004
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre>
