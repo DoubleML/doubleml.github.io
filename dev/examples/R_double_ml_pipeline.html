@@ -744,9 +744,9 @@ No. Observations: 5099
 <span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
 
 <span class="n">learner_lasso</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
-<span class="n">ml_g_lasso</span> <span class="o">=</span> <span class="n">learner_lasso</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_l_lasso</span> <span class="o">=</span> <span class="n">learner_lasso</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
 <span class="n">ml_m_lasso</span> <span class="o">=</span> <span class="n">learner_lasso</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
-<span class="nf">class</span><span class="p">(</span><span class="n">ml_g_lasso</span><span class="p">)</span>
+<span class="nf">class</span><span class="p">(</span><span class="n">ml_l_lasso</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -765,7 +765,7 @@ No. Observations: 5099
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Random forest learner for nuisance part ml_g</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Random forest learner for nuisance part ml_l</span>
 <span class="n">learner_forest_regr</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span>
                           <span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span> <span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
                           <span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> <span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
@@ -776,9 +776,9 @@ No. Observations: 5099
                              <span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
                              <span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> <span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
 
-<span class="n">ml_g_forest</span> <span class="o">=</span> <span class="n">learner_forest_regr</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_l_forest</span> <span class="o">=</span> <span class="n">learner_forest_regr</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
 <span class="n">ml_m_forest</span> <span class="o">=</span> <span class="n">learner_forest_classif</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
-<span class="nf">class</span><span class="p">(</span><span class="n">ml_g_forest</span><span class="p">)</span>
+<span class="nf">class</span><span class="p">(</span><span class="n">ml_l_forest</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -800,7 +800,7 @@ No. Observations: 5099
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
-                                  <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g_lasso</span><span class="p">,</span>
+                                  <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso</span><span class="p">,</span>
                                   <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_lasso</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_sim</span><span class="p">)</span>
@@ -827,7 +827,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.cv_glmnet
+ml_l: regr.cv_glmnet
 ml_m: regr.cv_glmnet
 
 ------------------ Resampling        ------------------
@@ -851,7 +851,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                    <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g_forest</span><span class="p">,</span>
+                                    <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_forest</span><span class="p">,</span>
                                     <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_forest</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus</span><span class="p">)</span>
@@ -878,7 +878,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.ranger
+ml_l: regr.ranger
 ml_m: classif.ranger
 
 ------------------ Resampling        ------------------
@@ -908,11 +908,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lasso learner</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">mlr3pipelines</span><span class="p">)</span>
 <span class="n">pipe_lasso</span> <span class="o">=</span> <span class="nf">po</span><span class="p">(</span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">),</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
-<span class="n">ml_g_lasso_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_lasso</span><span class="p">)</span>
+<span class="n">ml_l_lasso_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_lasso</span><span class="p">)</span>
 <span class="n">ml_m_lasso_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_lasso</span><span class="p">)</span>
 
 <span class="c1"># Class of the lasso learner</span>
-<span class="nf">class</span><span class="p">(</span><span class="n">ml_g_lasso_pipe</span><span class="p">)</span>
+<span class="nf">class</span><span class="p">(</span><span class="n">ml_l_lasso_pipe</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -931,7 +931,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Random forest learner for nuisance part ml_g</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Random forest learner for nuisance part ml_l</span>
 <span class="n">pipe_forest_regr</span> <span class="o">=</span> <span class="nf">po</span><span class="p">(</span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">),</span>
                       <span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span> <span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
                       <span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> <span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
@@ -942,11 +942,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
                              <span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
                              <span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> <span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
 
-<span class="n">ml_g_forest_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_forest_regr</span><span class="p">)</span>
+<span class="n">ml_l_forest_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_forest_regr</span><span class="p">)</span>
 <span class="n">ml_m_forest_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_forest_classif</span><span class="p">)</span>
 
 <span class="c1"># Class of the random forest learners</span>
-<span class="nf">class</span><span class="p">(</span><span class="n">ml_g_forest_pipe</span><span class="p">)</span>
+<span class="nf">class</span><span class="p">(</span><span class="n">ml_l_forest_pipe</span><span class="p">)</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">ml_m_forest_pipe</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -980,7 +980,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim_pipe</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
-                                       <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g_lasso_pipe</span><span class="p">,</span>
+                                       <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso_pipe</span><span class="p">,</span>
                                        <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_lasso_pipe</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim_pipe</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_sim_pipe</span><span class="p">)</span>
@@ -1007,7 +1007,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.cv_glmnet
+ml_l: regr.cv_glmnet
 ml_m: regr.cv_glmnet
 
 ------------------ Resampling        ------------------
@@ -1031,7 +1031,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                    <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g_forest_pipe</span><span class="p">,</span>
+                                    <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_forest_pipe</span><span class="p">,</span>
                                     <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_forest_pipe</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe</span><span class="p">)</span>
@@ -1058,7 +1058,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.ranger
+ml_l: regr.ranger
 ml_m: classif.ranger
 
 ------------------ Resampling        ------------------
@@ -1202,7 +1202,7 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initiate new DoubleML object and estimate with graph learner</span>
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim_pipe_ensemble</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
-                                                <span class="n">ml_g</span> <span class="o">=</span> <span class="n">ensemble_pipe_regr</span><span class="p">,</span>
+                                                <span class="n">ml_l</span> <span class="o">=</span> <span class="n">ensemble_pipe_regr</span><span class="p">,</span>
                                                 <span class="n">ml_m</span> <span class="o">=</span> <span class="n">ensemble_pipe_regr</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim_pipe_ensemble</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_sim_pipe_ensemble</span><span class="p">)</span>
@@ -1229,7 +1229,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.cv_glmnet.regr.ranger.regr.rpart.regravg
+ml_l: regr.cv_glmnet.regr.ranger.regr.rpart.regravg
 ml_m: regr.cv_glmnet.regr.ranger.regr.rpart.regravg
 
 ------------------ Resampling        ------------------
@@ -1253,7 +1253,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe_ensemble</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                    <span class="n">ml_g</span> <span class="o">=</span> <span class="n">ensemble_pipe_regr</span><span class="p">,</span>
+                                    <span class="n">ml_l</span> <span class="o">=</span> <span class="n">ensemble_pipe_regr</span><span class="p">,</span>
                                     <span class="n">ml_m</span> <span class="o">=</span> <span class="n">ensemble_pipe_classif</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe_ensemble</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe_ensemble</span><span class="p">)</span>
@@ -1280,7 +1280,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.cv_glmnet.regr.ranger.regr.rpart.regravg
+ml_l: regr.cv_glmnet.regr.ranger.regr.rpart.regravg
 ml_m: classif.cv_glmnet.classif.ranger.classif.rpart.classifavg
 
 ------------------ Resampling        ------------------
@@ -1351,7 +1351,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                         <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g_forest</span><span class="p">,</span>
+                                         <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_forest</span><span class="p">,</span>
                                          <span class="n">ml_m</span><span class="o">=</span><span class="n">stacklrn</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe</span><span class="p">)</span>
@@ -1378,7 +1378,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.ranger
+ml_l: regr.ranger
 ml_m: rpart_cv.nop.featureunion.classif.rpart
 
 ------------------ Resampling        ------------------
@@ -1508,7 +1508,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe2</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                          <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g_lasso</span><span class="p">,</span>
+                                          <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso</span><span class="p">,</span>
                                           <span class="n">ml_m</span><span class="o">=</span><span class="n">glrn</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe2</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe2</span><span class="p">)</span>
@@ -1535,7 +1535,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.cv_glmnet
+ml_l: regr.cv_glmnet
 ml_m: mutate.variance.classif.rpart
 
 ------------------ Resampling        ------------------
@@ -1568,7 +1568,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe3</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                          <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g_lasso</span><span class="p">,</span>
+                                          <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso</span><span class="p">,</span>
                                           <span class="n">ml_m</span><span class="o">=</span><span class="n">glrn</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe3</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe3</span><span class="p">)</span>
@@ -1595,7 +1595,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.cv_glmnet
+ml_l: regr.cv_glmnet
 ml_m: mutate.variance.classif.rpart
 
 ------------------ Resampling        ------------------
@@ -1651,7 +1651,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <span class="n">tune_settings</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">terminator</span> <span class="o">=</span> <span class="nf">trm</span><span class="p">(</span><span class="s">&quot;evals&quot;</span><span class="p">,</span> <span class="n">n_evals</span> <span class="o">=</span> <span class="m">10</span><span class="p">),</span>
                       <span class="n">algorithm</span> <span class="o">=</span> <span class="nf">tnr</span><span class="p">(</span><span class="s">&quot;grid_search&quot;</span><span class="p">,</span> <span class="n">resolution</span> <span class="o">=</span> <span class="m">10</span><span class="p">),</span>
                       <span class="n">rsmp_tune</span> <span class="o">=</span> <span class="nf">rsmp</span><span class="p">(</span><span class="s">&quot;cv&quot;</span><span class="p">,</span> <span class="n">folds</span> <span class="o">=</span> <span class="m">5</span><span class="p">),</span>
-                      <span class="n">measure</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_g&quot;</span> <span class="o">=</span> <span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">),</span>
+                      <span class="n">measure</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span> <span class="o">=</span> <span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">),</span>
                                      <span class="s">&quot;ml_m&quot;</span> <span class="o">=</span> <span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">)))</span>
 </pre></div>
 </div>
@@ -1663,9 +1663,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initiate new DoubleML object and execute tuning with graph learner</span>
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim_pipe_tune</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
-                                            <span class="n">ml_g</span><span class="o">=</span><span class="n">glrn_lasso</span><span class="p">,</span>
+                                            <span class="n">ml_l</span><span class="o">=</span><span class="n">glrn_lasso</span><span class="p">,</span>
                                             <span class="n">ml_m</span><span class="o">=</span><span class="n">glrn_lasso</span><span class="p">)</span>
-<span class="n">obj_dml_plr_sim_pipe_tune</span><span class="o">$</span><span class="nf">tune</span><span class="p">(</span><span class="n">param_set</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_g&quot;</span> <span class="o">=</span> <span class="n">par_grids</span><span class="p">,</span>
+<span class="n">obj_dml_plr_sim_pipe_tune</span><span class="o">$</span><span class="nf">tune</span><span class="p">(</span><span class="n">param_set</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span> <span class="o">=</span> <span class="n">par_grids</span><span class="p">,</span>
                                                 <span class="s">&quot;ml_m&quot;</span> <span class="o">=</span> <span class="n">par_grids</span><span class="p">),</span>
                                <span class="n">tune_settings</span><span class="o">=</span><span class="n">tune_settings</span><span class="p">)</span>
 </pre></div>
@@ -1676,136 +1676,136 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-INFO  [19:46:51.385] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
-INFO  [19:46:51.425] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:52.150] [bbotk] Result of batch 1:
-INFO  [19:46:52.154] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:52.154] [bbotk]          0.07222222            0.6666667 107.2925        0      0
-INFO  [19:46:52.154] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:52.154] [bbotk]              0.57 8360d22a-0cae-47f2-a18e-dfcd81f98f98
-INFO  [19:46:52.156] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:52.848] [bbotk] Result of batch 2:
-INFO  [19:46:52.851] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:52.851] [bbotk]                 0.1            0.6666667 106.2652        0      0
-INFO  [19:46:52.851] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:52.851] [bbotk]             0.549 85e9f533-a1c7-484f-bfb3-d38f251f9fbc
-INFO  [19:46:52.853] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:53.543] [bbotk] Result of batch 3:
-INFO  [19:46:53.545] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:53.545] [bbotk]                 0.1            0.4166667 482.9753        0      0
-INFO  [19:46:53.545] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:53.545] [bbotk]             0.546 acf5b5fe-b578-4b7d-8f74-6b8017963a74
-INFO  [19:46:53.548] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:54.260] [bbotk] Result of batch 4:
-INFO  [19:46:54.263] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:54.263] [bbotk]          0.09444444                 0.75 112.1054        0      0
-INFO  [19:46:54.263] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:54.263] [bbotk]             0.569 6c86275a-1612-440f-9962-e0e35acbef11
-INFO  [19:46:54.266] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:55.006] [bbotk] Result of batch 5:
-INFO  [19:46:55.010] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:55.010] [bbotk]          0.08333333            0.9166667 10.81856        0      0
-INFO  [19:46:55.010] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:55.010] [bbotk]             0.577 fa45b932-377f-4e4f-b3a6-fca585f108bf
-INFO  [19:46:55.013] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:55.732] [bbotk] Result of batch 6:
-INFO  [19:46:55.735] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:55.735] [bbotk]          0.08888889            0.9166667 10.74189        0      0
-INFO  [19:46:55.735] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:55.735] [bbotk]             0.572 306292c6-b08a-401b-a849-8083789e68e2
-INFO  [19:46:55.737] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:56.461] [bbotk] Result of batch 7:
-INFO  [19:46:56.464] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:56.464] [bbotk]          0.07777778            0.5833333 201.8513        0      0
-INFO  [19:46:56.464] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:56.464] [bbotk]             0.577 d277aba8-3db8-4645-8dbb-fa936e48bb43
-INFO  [19:46:56.466] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:57.192] [bbotk] Result of batch 8:
-INFO  [19:46:57.195] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:57.195] [bbotk]          0.07222222            0.3333333 531.5255        0      0
-INFO  [19:46:57.195] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:57.195] [bbotk]             0.561 61537123-f79d-4f95-9874-df7cac4755c6
-INFO  [19:46:57.198] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:57.933] [bbotk] Result of batch 9:
-INFO  [19:46:57.936] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:57.936] [bbotk]          0.06111111            0.9166667 11.17823        0      0
-INFO  [19:46:57.936] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:57.936] [bbotk]             0.585 f5a36eec-fbd5-4d74-ae5e-e13b2ddab509
-INFO  [19:46:57.938] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:58.679] [bbotk] Result of batch 10:
-INFO  [19:46:58.682] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:58.682] [bbotk]          0.08888889                 0.25  538.991        0      0
-INFO  [19:46:58.682] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:58.682] [bbotk]             0.587 a72dfb5f-ec67-4d39-b67a-f477d19bb12c
-INFO  [19:46:58.693] [bbotk] Finished optimizing after 10 evaluation(s)
-INFO  [19:46:58.695] [bbotk] Result:
-INFO  [19:46:58.697] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain regr.mse
-INFO  [19:46:58.697] [bbotk]          0.08888889            0.9166667          &lt;list[5]&gt; &lt;list[2]&gt; 10.74189
-INFO  [19:46:58.892] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
-INFO  [19:46:58.897] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:46:59.640] [bbotk] Result of batch 1:
-INFO  [19:46:59.643] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:46:59.643] [bbotk]          0.08888889            0.5833333  12.6173        0      0
-INFO  [19:46:59.643] [bbotk]  runtime_learners                                uhash
-INFO  [19:46:59.643] [bbotk]             0.597 a9ae9e09-046f-4cad-a14e-abb38dca6af1
-INFO  [19:46:59.646] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:47:00.413] [bbotk] Result of batch 2:
-INFO  [19:47:00.416] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:47:00.416] [bbotk]                 0.1            0.5833333  12.5155        0      0
-INFO  [19:47:00.416] [bbotk]  runtime_learners                                uhash
-INFO  [19:47:00.416] [bbotk]             0.614 e9466732-ba4a-49ee-b4e0-7eadbe7c3aa8
-INFO  [19:47:00.419] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:47:01.161] [bbotk] Result of batch 3:
-INFO  [19:47:01.164] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
-INFO  [19:47:01.164] [bbotk]          0.08333333                 0.75 0.9870004        0      0
-INFO  [19:47:01.164] [bbotk]  runtime_learners                                uhash
-INFO  [19:47:01.164] [bbotk]              0.59 012d6913-d7da-47a6-b3d0-f9fabda76515
-INFO  [19:47:01.167] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:47:02.014] [bbotk] Result of batch 4:
-INFO  [19:47:02.019] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:47:02.019] [bbotk]          0.07222222                  0.5 17.75887        0      0
-INFO  [19:47:02.019] [bbotk]  runtime_learners                                uhash
-INFO  [19:47:02.019] [bbotk]             0.605 66210257-7232-40bc-ab91-cfe65243988d
-INFO  [19:47:02.023] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:47:02.839] [bbotk] Result of batch 5:
-INFO  [19:47:02.842] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:47:02.842] [bbotk]          0.08333333            0.5833333  12.6722        0      0
-INFO  [19:47:02.842] [bbotk]  runtime_learners                                uhash
-INFO  [19:47:02.842] [bbotk]             0.636 27766916-347d-4deb-9d84-d46197c171a1
-INFO  [19:47:02.845] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:47:03.635] [bbotk] Result of batch 6:
-INFO  [19:47:03.638] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:47:03.638] [bbotk]          0.07222222            0.5833333 12.78818        0      0
-INFO  [19:47:03.638] [bbotk]  runtime_learners                                uhash
-INFO  [19:47:03.638] [bbotk]             0.632 482a16bf-13e8-4558-9146-ae7cb43d11aa
-INFO  [19:47:03.641] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:47:04.417] [bbotk] Result of batch 7:
-INFO  [19:47:04.420] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:47:04.420] [bbotk]          0.07777778                  0.5 17.69921        0      0
-INFO  [19:47:04.420] [bbotk]  runtime_learners                                uhash
-INFO  [19:47:04.420] [bbotk]             0.619 db1f2525-001d-4d94-89f2-555743e8e8c9
-INFO  [19:47:04.423] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:47:05.247] [bbotk] Result of batch 8:
-INFO  [19:47:05.250] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
-INFO  [19:47:05.250] [bbotk]          0.07777778            0.9166667 0.9880384        0      0
-INFO  [19:47:05.250] [bbotk]  runtime_learners                                uhash
-INFO  [19:47:05.250] [bbotk]             0.638 dfb8eb6e-1f1f-4f9c-a741-184ff8e2fbd5
-INFO  [19:47:05.253] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:47:06.027] [bbotk] Result of batch 9:
-INFO  [19:47:06.030] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:47:06.030] [bbotk]          0.07777778            0.4166667 22.43294        0      0
-INFO  [19:47:06.030] [bbotk]  runtime_learners                                uhash
-INFO  [19:47:06.030] [bbotk]             0.617 7f6c0aa1-dcdb-45d8-82bd-2000b0a3f80c
-INFO  [19:47:06.033] [bbotk] Evaluating 1 configuration(s)
-INFO  [19:47:06.806] [bbotk] Result of batch 10:
-INFO  [19:47:06.809] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [19:47:06.809] [bbotk]          0.07222222            0.3333333 27.31378        0      0
-INFO  [19:47:06.809] [bbotk]  runtime_learners                                uhash
-INFO  [19:47:06.809] [bbotk]             0.618 f993831c-b3e6-4aaa-9988-49373ac08d9f
-INFO  [19:47:06.819] [bbotk] Finished optimizing after 10 evaluation(s)
-INFO  [19:47:06.821] [bbotk] Result:
-INFO  [19:47:06.823] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain  regr.mse
-INFO  [19:47:06.823] [bbotk]          0.08333333                 0.75          &lt;list[5]&gt; &lt;list[2]&gt; 0.9870004
+INFO  [08:27:50.015] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
+INFO  [08:27:50.048] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:50.619] [bbotk] Result of batch 1:
+INFO  [08:27:50.622] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:50.622] [bbotk]          0.07222222            0.6666667 107.2925        0      0
+INFO  [08:27:50.622] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:50.622] [bbotk]             0.446 e0e7ee0a-e8c8-4b12-880b-a7ddc0a96e8f
+INFO  [08:27:50.624] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:51.195] [bbotk] Result of batch 2:
+INFO  [08:27:51.198] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:51.198] [bbotk]                 0.1            0.6666667 106.2652        0      0
+INFO  [08:27:51.198] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:51.198] [bbotk]             0.455 df6cefee-368e-4322-afd3-e52eace11ffc
+INFO  [08:27:51.200] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:51.754] [bbotk] Result of batch 3:
+INFO  [08:27:51.756] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:51.756] [bbotk]                 0.1            0.4166667 482.9753        0      0
+INFO  [08:27:51.756] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:51.756] [bbotk]             0.439 52763d30-1a49-43db-9a56-8665e6051379
+INFO  [08:27:51.758] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:52.319] [bbotk] Result of batch 4:
+INFO  [08:27:52.321] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:52.321] [bbotk]          0.09444444                 0.75 112.1054        0      0
+INFO  [08:27:52.321] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:52.321] [bbotk]             0.445 9b02800c-9737-492a-b3d1-cb6ae8a83fe6
+INFO  [08:27:52.323] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:52.870] [bbotk] Result of batch 5:
+INFO  [08:27:52.872] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:52.872] [bbotk]          0.08333333            0.9166667 10.81856        0      0
+INFO  [08:27:52.872] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:52.872] [bbotk]             0.436 c7310b23-4215-458d-b4a8-920766260be0
+INFO  [08:27:52.874] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:53.435] [bbotk] Result of batch 6:
+INFO  [08:27:53.437] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:53.437] [bbotk]          0.08888889            0.9166667 10.74189        0      0
+INFO  [08:27:53.437] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:53.437] [bbotk]             0.448 e84b957f-8c51-4cb6-b8db-2351f30be6db
+INFO  [08:27:53.439] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:53.999] [bbotk] Result of batch 7:
+INFO  [08:27:54.001] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:54.001] [bbotk]          0.07777778            0.5833333 201.8513        0      0
+INFO  [08:27:54.001] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:54.001] [bbotk]             0.445 7d1eba9d-a763-4549-b2fd-744b8195633c
+INFO  [08:27:54.003] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:54.566] [bbotk] Result of batch 8:
+INFO  [08:27:54.568] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:54.568] [bbotk]          0.07222222            0.3333333 531.5255        0      0
+INFO  [08:27:54.568] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:54.568] [bbotk]             0.449 c0cfbae1-6647-4e7b-b795-f067c3fcd53e
+INFO  [08:27:54.570] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:55.140] [bbotk] Result of batch 9:
+INFO  [08:27:55.142] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:55.142] [bbotk]          0.06111111            0.9166667 11.17823        0      0
+INFO  [08:27:55.142] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:55.142] [bbotk]             0.456 4f5b65f3-7289-4129-ad09-011a2affb404
+INFO  [08:27:55.144] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:55.687] [bbotk] Result of batch 10:
+INFO  [08:27:55.689] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:55.689] [bbotk]          0.08888889                 0.25  538.991        0      0
+INFO  [08:27:55.689] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:55.689] [bbotk]             0.427 0fc9b444-6042-47e8-817b-79754b677693
+INFO  [08:27:55.697] [bbotk] Finished optimizing after 10 evaluation(s)
+INFO  [08:27:55.699] [bbotk] Result:
+INFO  [08:27:55.700] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain regr.mse
+INFO  [08:27:55.700] [bbotk]          0.08888889            0.9166667          &lt;list[5]&gt; &lt;list[2]&gt; 10.74189
+INFO  [08:27:55.850] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
+INFO  [08:27:55.854] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:56.401] [bbotk] Result of batch 1:
+INFO  [08:27:56.403] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:56.403] [bbotk]          0.08888889            0.5833333  12.6173        0      0
+INFO  [08:27:56.403] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:56.403] [bbotk]             0.435 beb946a8-be87-47fc-af2a-449001231525
+INFO  [08:27:56.405] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:56.965] [bbotk] Result of batch 2:
+INFO  [08:27:56.968] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:56.968] [bbotk]                 0.1            0.5833333  12.5155        0      0
+INFO  [08:27:56.968] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:56.968] [bbotk]             0.445 27352881-25fe-4e0d-9324-a45d0a227b7a
+INFO  [08:27:56.970] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:57.536] [bbotk] Result of batch 3:
+INFO  [08:27:57.538] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
+INFO  [08:27:57.538] [bbotk]          0.08333333                 0.75 0.9870004        0      0
+INFO  [08:27:57.538] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:57.538] [bbotk]             0.451 2bbbde2a-4d2a-4f68-8580-89706833ca57
+INFO  [08:27:57.540] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:58.104] [bbotk] Result of batch 4:
+INFO  [08:27:58.107] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:58.107] [bbotk]          0.07222222                  0.5 17.75887        0      0
+INFO  [08:27:58.107] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:58.107] [bbotk]             0.448 715b09b7-194c-4b76-97c7-4b53e81ce275
+INFO  [08:27:58.109] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:58.677] [bbotk] Result of batch 5:
+INFO  [08:27:58.679] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:58.679] [bbotk]          0.08333333            0.5833333  12.6722        0      0
+INFO  [08:27:58.679] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:58.679] [bbotk]             0.454 763c94da-f99c-4b9d-9c8d-1093fc092af7
+INFO  [08:27:58.681] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:59.235] [bbotk] Result of batch 6:
+INFO  [08:27:59.237] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:59.237] [bbotk]          0.07222222            0.5833333 12.78818        0      0
+INFO  [08:27:59.237] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:59.237] [bbotk]             0.438 1555aa3c-3179-4dba-afdd-dab1f626c4b7
+INFO  [08:27:59.239] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:27:59.804] [bbotk] Result of batch 7:
+INFO  [08:27:59.806] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:27:59.806] [bbotk]          0.07777778                  0.5 17.69921        0      0
+INFO  [08:27:59.806] [bbotk]  runtime_learners                                uhash
+INFO  [08:27:59.806] [bbotk]             0.437 9ab83d3f-5674-49c3-a2f4-1b76190e6c50
+INFO  [08:27:59.808] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:28:00.380] [bbotk] Result of batch 8:
+INFO  [08:28:00.383] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
+INFO  [08:28:00.383] [bbotk]          0.07777778            0.9166667 0.9880384        0      0
+INFO  [08:28:00.383] [bbotk]  runtime_learners                                uhash
+INFO  [08:28:00.383] [bbotk]             0.454 6569f2d4-3492-480f-a31a-c6467ba08029
+INFO  [08:28:00.385] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:28:00.945] [bbotk] Result of batch 9:
+INFO  [08:28:00.947] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:28:00.947] [bbotk]          0.07777778            0.4166667 22.43294        0      0
+INFO  [08:28:00.947] [bbotk]  runtime_learners                                uhash
+INFO  [08:28:00.947] [bbotk]             0.445 24fedae3-9a8a-4a8a-a46c-310867209c00
+INFO  [08:28:00.949] [bbotk] Evaluating 1 configuration(s)
+INFO  [08:28:01.513] [bbotk] Result of batch 10:
+INFO  [08:28:01.515] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [08:28:01.515] [bbotk]          0.07222222            0.3333333 27.31378        0      0
+INFO  [08:28:01.515] [bbotk]  runtime_learners                                uhash
+INFO  [08:28:01.515] [bbotk]              0.45 b7a88bcb-922b-4309-b6df-38cae739337c
+INFO  [08:28:01.523] [bbotk] Finished optimizing after 10 evaluation(s)
+INFO  [08:28:01.524] [bbotk] Result:
+INFO  [08:28:01.526] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain  regr.mse
+INFO  [08:28:01.526] [bbotk]          0.08333333                 0.75          &lt;list[5]&gt; &lt;list[2]&gt; 0.9870004
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1837,7 +1837,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.cv_glmnet
+ml_l: regr.cv_glmnet
 ml_m: regr.cv_glmnet
 
 ------------------ Resampling        ------------------

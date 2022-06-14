@@ -314,8 +314,8 @@ of <span class="math notranslate nohighlight">\(\theta_0\)</span> and the sampli
 <p>As an example we consider a partially linear regression model (PLR)
 implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="fe9d1a1e-b0e9-4a09-ad5b-db21f02a9279" name="c3ce972d-6863-4190-9fc9-7d7e3cfe58fd" type="radio">
-</input><label class="tabbed-label" for="fe9d1a1e-b0e9-4a09-ad5b-db21f02a9279">
+<input checked="checked" id="4ed87d2b-06df-4578-979c-acc513c1176e" name="83e275cd-d3dd-4f05-848e-db315167a156" type="radio">
+</input><label class="tabbed-label" for="4ed87d2b-06df-4578-979c-acc513c1176e">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -329,7 +329,7 @@ Python</label><div class="tabbed-content docutils">
 
 <span class="gp">In [6]: </span><span class="n">learner</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [7]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+<span class="gp">In [7]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
 
 <span class="gp">In [8]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
 
@@ -337,14 +337,14 @@ Python</label><div class="tabbed-content docutils">
 
 <span class="gp">In [10]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
-<span class="gp">In [11]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="gp">In [11]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
 <span class="gp">In [12]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
-<input id="d4681b7a-d418-4a09-abd1-30234352c254" name="c3ce972d-6863-4190-9fc9-7d7e3cfe58fd" type="radio">
-</input><label class="tabbed-label" for="d4681b7a-d418-4a09-abd1-30234352c254">
+<input id="709c981b-065a-4380-8bd5-371dcc7e2e89" name="83e275cd-d3dd-4f05-848e-db315167a156" type="radio">
+</input><label class="tabbed-label" for="709c981b-065a-4380-8bd5-371dcc7e2e89">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -355,12 +355,12 @@ library(data.table)
 lgr::get_logger(&quot;mlr3&quot;)$set_threshold(&quot;warn&quot;)
 
 learner = lrn(&quot;regr.ranger&quot;, num.trees = 100, mtry = 20, min.node.size = 2, max.depth = 5)
-ml_g = learner$clone()
+ml_l = learner$clone()
 ml_m = learner$clone()
 
 set.seed(3141)
 obj_dml_data = make_plr_CCDDHNR2018(alpha=0.5)
-dml_plr_obj = DoubleMLPLR$new(obj_dml_data, ml_g, ml_m)
+dml_plr_obj = DoubleMLPLR$new(obj_dml_data, ml_l, ml_m)
 dml_plr_obj$fit()
 </pre></div>
 </div>
@@ -373,16 +373,16 @@ dml_plr_obj$fit()
 <p>The <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method of <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>
 stores the estimate <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span> in its <code class="docutils literal notranslate"><span class="pre">coef</span></code> attribute.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="a24c3b81-8502-497b-a915-49eaf629171b" name="9bbf55f8-fc0e-45a0-bf52-33c49210da36" type="radio">
-</input><label class="tabbed-label" for="a24c3b81-8502-497b-a915-49eaf629171b">
+<input checked="checked" id="f719812a-d2ef-4a7f-a1f3-b7422df72351" name="25f2f4b3-0659-48bb-a660-4d3a473acb02" type="radio">
+</input><label class="tabbed-label" for="f719812a-d2ef-4a7f-a1f3-b7422df72351">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">coef</span><span class="p">)</span>
 <span class="go">[0.46280962]</span>
 </pre></div>
 </div>
 </div>
-<input id="a1e09a4a-93c0-45ea-b13c-f041a42ea162" name="9bbf55f8-fc0e-45a0-bf52-33c49210da36" type="radio">
-</input><label class="tabbed-label" for="a1e09a4a-93c0-45ea-b13c-f041a42ea162">
+<input id="e491c00e-0631-4e97-8438-73650f5f3b06" name="25f2f4b3-0659-48bb-a660-4d3a473acb02" type="radio">
+</input><label class="tabbed-label" for="e491c00e-0631-4e97-8438-73650f5f3b06">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -401,16 +401,16 @@ R</label><div class="tabbed-content docutils">
 </div>
 <p>The asymptotic standard error <span class="math notranslate nohighlight">\(\hat{\sigma}/\sqrt{N}\)</span> is stored in its <code class="docutils literal notranslate"><span class="pre">se</span></code> attribute.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="5822444f-7b57-4b83-8395-091dbdf30967" name="4148bb81-a642-4fb5-bdc1-9baf731b368d" type="radio">
-</input><label class="tabbed-label" for="5822444f-7b57-4b83-8395-091dbdf30967">
+<input checked="checked" id="f9029089-b078-4fa5-99e1-97cfd0ea47d6" name="0d9e2235-1437-48b8-8073-64e7e1877a96" type="radio">
+</input><label class="tabbed-label" for="f9029089-b078-4fa5-99e1-97cfd0ea47d6">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">se</span><span class="p">)</span>
 <span class="go">[0.04105558]</span>
 </pre></div>
 </div>
 </div>
-<input id="ee3778b8-50e7-46ba-9639-6cde8b41b543" name="4148bb81-a642-4fb5-bdc1-9baf731b368d" type="radio">
-</input><label class="tabbed-label" for="ee3778b8-50e7-46ba-9639-6cde8b41b543">
+<input id="678f44eb-7746-401c-929b-d663c719511d" name="0d9e2235-1437-48b8-8073-64e7e1877a96" type="radio">
+</input><label class="tabbed-label" for="678f44eb-7746-401c-929b-d663c719511d">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -430,8 +430,8 @@ R</label><div class="tabbed-content docutils">
 <p>Additionally, the value of the <span class="math notranslate nohighlight">\(t\)</span>-statistic and the corresponding p-value are provided in the attributes
 <code class="docutils literal notranslate"><span class="pre">t_stat</span></code> and <code class="docutils literal notranslate"><span class="pre">pval</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="e1dbda26-922b-43be-a5f7-bf8d80c6d88d" name="05dafee0-e5e0-4686-92ef-543fad47db7d" type="radio">
-</input><label class="tabbed-label" for="e1dbda26-922b-43be-a5f7-bf8d80c6d88d">
+<input checked="checked" id="6ab591b0-a3ee-4917-bb3a-22b3a5b2792c" name="be302bc9-62c4-4544-8ccc-e21ecb84edf0" type="radio">
+</input><label class="tabbed-label" for="6ab591b0-a3ee-4917-bb3a-22b3a5b2792c">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">t_stat</span><span class="p">)</span>
 <span class="go">[11.27275855]</span>
@@ -441,8 +441,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="1366221b-2b72-4a2a-8aee-581ed1678088" name="05dafee0-e5e0-4686-92ef-543fad47db7d" type="radio">
-</input><label class="tabbed-label" for="1366221b-2b72-4a2a-8aee-581ed1678088">
+<input id="244c0b80-cc62-40d3-b555-3f5b5008b5c6" name="be302bc9-62c4-4544-8ccc-e21ecb84edf0" type="radio">
+</input><label class="tabbed-label" for="244c0b80-cc62-40d3-b555-3f5b5008b5c6">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -474,8 +474,8 @@ confidence intervals.</p></li>
 </ul>
 </div>
 <div class="tabbed-set docutils">
-<input checked="checked" id="1f69601e-1a88-405e-93e7-c3ec80fd12ce" name="5a65db39-ac3a-4037-a81b-ce21f908adf6" type="radio">
-</input><label class="tabbed-label" for="1f69601e-1a88-405e-93e7-c3ec80fd12ce">
+<input checked="checked" id="23eb2767-665a-4dcf-9833-f12688ff8143" name="20fde567-8dc4-4307-8e3d-c45baca18158" type="radio">
+</input><label class="tabbed-label" for="23eb2767-665a-4dcf-9833-f12688ff8143">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [17]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 <span class="go">      coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
@@ -483,8 +483,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="e9ea56d3-b952-4d0f-bb9f-8048cd432f99" name="5a65db39-ac3a-4037-a81b-ce21f908adf6" type="radio">
-</input><label class="tabbed-label" for="e9ea56d3-b952-4d0f-bb9f-8048cd432f99">
+<input id="b5c169c3-4e07-44db-8f49-0ecc25cc8ba7" name="20fde567-8dc4-4307-8e3d-c45baca18158" type="radio">
+</input><label class="tabbed-label" for="b5c169c3-4e07-44db-8f49-0ecc25cc8ba7">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -519,8 +519,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>A more detailed overview of the fitted model, its specifications and the summary can be obtained via the
 string-representation of the object.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="d61ed10e-920d-465b-8b96-25ea772041e4" name="ab096436-1e07-43d6-9916-3f010ce8f381" type="radio">
-</input><label class="tabbed-label" for="d61ed10e-920d-465b-8b96-25ea772041e4">
+<input checked="checked" id="2392d107-ea33-488c-b2ac-60535d475f42" name="06530270-5b48-4b4e-a96d-083b5934c06a" type="radio">
+</input><label class="tabbed-label" for="2392d107-ea33-488c-b2ac-60535d475f42">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="p">)</span>
 <span class="go">================== DoubleMLPLR Object ==================</span>
@@ -537,7 +537,7 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">DML algorithm: dml2</span>
 
 <span class="go">------------------ Machine learner   ------------------</span>
-<span class="go">Learner ml_g: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
+<span class="go">Learner ml_l: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Learner ml_m: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 
 <span class="go">------------------ Resampling        ------------------</span>
@@ -551,8 +551,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="e970f3e0-4abc-4cb5-9a93-d484cc65d928" name="ab096436-1e07-43d6-9916-3f010ce8f381" type="radio">
-</input><label class="tabbed-label" for="e970f3e0-4abc-4cb5-9a93-d484cc65d928">
+<input id="6646211d-e88e-4a11-8553-58036e4d219f" name="06530270-5b48-4b4e-a96d-083b5934c06a" type="radio">
+</input><label class="tabbed-label" for="6646211d-e88e-4a11-8553-58036e4d219f">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -576,7 +576,7 @@ Score function: partialling out
 DML algorithm: dml2
 
 ------------------ Machine learner   ------------------
-ml_g: regr.ranger
+ml_l: regr.ranger
 ml_m: regr.ranger
 
 ------------------ Resampling        ------------------
