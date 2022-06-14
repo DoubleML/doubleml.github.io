@@ -117,6 +117,8 @@ Indicates whether instruments \(Z\) should be partialled out.</p></dd>
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
 <ul><li><p><a href="#method-new"><code>DoubleMLPLIV$new()</code></a></p></li>
+<li><p><a href="#method-set_ml_nuisance_params"><code>DoubleMLPLIV$set_ml_nuisance_params()</code></a></p></li>
+<li><p><a href="#method-tune"><code>DoubleMLPLIV$tune()</code></a></p></li>
 <li><p><a href="#method-clone"><code>DoubleMLPLIV$clone()</code></a></p></li>
 </ul></div><p><details><summary>Inherited methods</summary><ul><li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="bootstrap"><a href="DoubleML.html#method-bootstrap"><code>DoubleML::DoubleML$bootstrap()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="confint"><a href="DoubleML.html#method-confint"><code>DoubleML::DoubleML$confint()</code></a></span></p></li>
@@ -126,20 +128,19 @@ Indicates whether instruments \(Z\) should be partialled out.</p></dd>
 <li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="p_adjust"><a href="DoubleML.html#method-p_adjust"><code>DoubleML::DoubleML$p_adjust()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="params_names"><a href="DoubleML.html#method-params_names"><code>DoubleML::DoubleML$params_names()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="print"><a href="DoubleML.html#method-print"><code>DoubleML::DoubleML$print()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="set_ml_nuisance_params"><a href="DoubleML.html#method-set_ml_nuisance_params"><code>DoubleML::DoubleML$set_ml_nuisance_params()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="set_sample_splitting"><a href="DoubleML.html#method-set_sample_splitting"><code>DoubleML::DoubleML$set_sample_splitting()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="split_samples"><a href="DoubleML.html#method-split_samples"><code>DoubleML::DoubleML$split_samples()</code></a></span></p></li>
 <li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="summary"><a href="DoubleML.html#method-summary"><code>DoubleML::DoubleML$summary()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="DoubleML" data-topic="DoubleML" data-id="tune"><a href="DoubleML.html#method-tune"><code>DoubleML::DoubleML$tune()</code></a></span></p></li>
 </ul></details></p><hr><a id="method-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Creates a new instance of this R6 class.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/DoubleMLPLIV.html">DoubleMLPLIV</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
   <span class="va">data</span>,
-  <span class="va">ml_g</span>,
+  <span class="va">ml_l</span>,
   <span class="va">ml_m</span>,
   <span class="va">ml_r</span>,
+  ml_g <span class="op">=</span> <span class="cn">NULL</span>,
   partialX <span class="op">=</span> <span class="cn">TRUE</span>,
   partialZ <span class="op">=</span> <span class="cn">FALSE</span>,
   n_folds <span class="op">=</span> <span class="fl">5</span>,
@@ -159,7 +160,7 @@ The <code>DoubleMLData</code> object providing the data and specifying the varia
 of the causal model.</p></dd>
 
 
-<dt><code>ml_g</code></dt>
+<dt><code>ml_l</code></dt>
 <dd><p>(<code><a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">LearnerRegr</a></code>,
 <code><a href="https://mlr3.mlr-org.com/reference/Learner.html" class="external-link">Learner</a></code>, <code>character(1)</code>) <br>
 A learner of the class <code><a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">LearnerRegr</a></code>, which is
@@ -170,7 +171,7 @@ Alternatively, a <code><a href="https://mlr3.mlr-org.com/reference/Learner.html"
 <code>task_type = "regr"</code> can be passed, for example of class
 <code><a href="https://mlr3pipelines.mlr-org.com/reference/mlr_learners_graph.html" class="external-link">GraphLearner</a></code>. The learner can possibly
 be passed with specified parameters, for example
-<code>lrn("regr.cv_glmnet", s = "lambda.min")</code>.  <br><code>ml_g</code> refers to the nuisance function \(g_0(X) = E[Y|X]\).</p></dd>
+<code>lrn("regr.cv_glmnet", s = "lambda.min")</code>.  <br><code>ml_l</code> refers to the nuisance function \(l_0(X) = E[Y|X]\).</p></dd>
 
 
 <dt><code>ml_m</code></dt>
@@ -201,6 +202,22 @@ be passed with specified parameters, for example
 <code>lrn("regr.cv_glmnet", s = "lambda.min")</code>. <br><code>ml_r</code> refers to the nuisance function \(r_0(X) = E[D|X]\).</p></dd>
 
 
+<dt><code>ml_g</code></dt>
+<dd><p>(<code><a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">LearnerRegr</a></code>,
+<code><a href="https://mlr3.mlr-org.com/reference/Learner.html" class="external-link">Learner</a></code>, <code>character(1)</code>) <br>
+A learner of the class <code><a href="https://mlr3.mlr-org.com/reference/LearnerRegr.html" class="external-link">LearnerRegr</a></code>, which is
+available from <a href="https://mlr3.mlr-org.com/index.html" class="external-link">mlr3</a> or its
+extension packages <a href="https://mlr3learners.mlr-org.com/" class="external-link">mlr3learners</a> or
+<a href="https://mlr3extralearners.mlr-org.com/" class="external-link">mlr3extralearners</a>.
+Alternatively, a <code><a href="https://mlr3.mlr-org.com/reference/Learner.html" class="external-link">Learner</a></code> object with public field
+<code>task_type = "regr"</code> can be passed, for example of class
+<code><a href="https://mlr3pipelines.mlr-org.com/reference/mlr_learners_graph.html" class="external-link">GraphLearner</a></code>. The learner can possibly
+be passed with specified parameters, for example
+<code>lrn("regr.cv_glmnet", s = "lambda.min")</code>. <br><code>ml_g</code> refers to the nuisance function \(g_0(X) = E[Y - D\theta_0|X]\).
+Note: The learner <code>ml_g</code> is only required for the score <code>'IV-type'</code>.
+Optionally, it can be specified and estimated for callable scores.</p></dd>
+
+
 <dt><code>partialX</code></dt>
 <dd><p>(<code>logical(1)</code>)  <br>
 Indicates whether covariates \(X\) should be partialled out.
@@ -225,10 +242,10 @@ Number of repetitions for the sample splitting. Default is <code>1</code>.</p></
 
 <dt><code>score</code></dt>
 <dd><p>(<code>character(1)</code>, <code>function()</code>) <br>
-A <code>character(1)</code> (<code>"partialling out"</code> is the only choice) or a
-<code>function()</code> specifying the score function.
+A <code>character(1)</code> (<code>"partialling out"</code> or <code>"IV-type"</code>) or a <code>function()</code>
+specifying the score function.
 If a <code>function()</code> is provided, it must be of the form
-<code>function(y, z, d, g_hat, m_hat, r_hat, smpls)</code> and
+<code>function(y, z, d, l_hat, m_hat, r_hat, g_hat, smpls)</code> and
 the returned output must be a named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> with elements
 <code>psi_a</code> and <code>psi_b</code>. Default is <code>"partialling out"</code>.</p></dd>
 
@@ -253,15 +270,145 @@ Indicates whether cross-fitting should be applied. Default is <code>TRUE</code>.
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
-<p>The objects of this class are cloneable with this method.</p><div class="section">
+</div><p></p><hr><a id="method-set_ml_nuisance_params"></a><div class="section">
+<h3 id="method-set-ml-nuisance-params-">Method <code>set_ml_nuisance_params()</code><a class="anchor" aria-label="anchor" href="#method-set-ml-nuisance-params-"></a></h3>
+<p>Set hyperparameters for the nuisance models of DoubleML models.</p>
+<p>Note that in the current implementation, either all parameters have to
+be set globally or all parameters have to be provided fold-specific.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">DoubleMLPLIV</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">DoubleMLPLIV</span><span class="op">$</span><span class="fu">set_ml_nuisance_params</span><span class="op">(</span>
+  learner <span class="op">=</span> <span class="cn">NULL</span>,
+  treat_var <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">params</span>,
+  set_fold_specific <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>learner</code></dt>
+<dd><p>(<code>character(1)</code>) <br>
+The nuisance model/learner (see method <code>params_names</code>).</p></dd>
+
+
+<dt><code>treat_var</code></dt>
+<dd><p>(<code>character(1)</code>) <br>
+The treatment varaible (hyperparameters can be set treatment-variable
+specific).</p></dd>
+
+
+<dt><code>params</code></dt>
+<dd><p>(named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>) <br>
+A named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> with estimator parameters. Parameters are used for all
+folds by default. Alternatively, parameters can be passed in a
+fold-specific way if option  <code>fold_specific</code>is <code>TRUE</code>. In this case, the
+outer list needs to be of length <code>n_rep</code> and the inner list of length
+<code>n_folds</code>.</p></dd>
+
+
+<dt><code>set_fold_specific</code></dt>
+<dd><p>(<code>logical(1)</code>) <br>
+Indicates if the parameters passed in <code>params</code> should be passed in
+fold-specific way. Default is <code>FALSE</code>. If <code>TRUE</code>, the outer list needs
+to be of length <code>n_rep</code> and the inner list of length <code>n_folds</code>.
+Note that in the current implementation, either all parameters have to
+be set globally or all parameters have to be provided fold-specific.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<p>self</p>
+</div>
+
+</div><p></p><hr><a id="method-tune"></a><div class="section">
+<h3 id="method-tune-">Method <code><a href="https://mlr3tuning.mlr-org.com/reference/tune.html" class="external-link">tune()</a></code><a class="anchor" aria-label="anchor" href="#method-tune-"></a></h3>
+<p>Hyperparameter-tuning for DoubleML models.</p>
+<p>The hyperparameter-tuning is performed using the tuning methods provided
+in the <a href="https://mlr3tuning.mlr-org.com/" class="external-link">mlr3tuning</a> package. For more
+information on tuning in <a href="https://mlr3.mlr-org.com/" class="external-link">mlr3</a>, we refer to
+the section on parameter tuning in the
+<a href="https://mlr3book.mlr-org.com/optimization.html#tuning" class="external-link">mlr3 book</a>.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">DoubleMLPLIV</span><span class="op">$</span><span class="fu">tune</span><span class="op">(</span>
+  <span class="va">param_set</span>,
+  tune_settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>n_folds_tune <span class="op">=</span> <span class="fl">5</span>, rsmp_tune <span class="op">=</span> <span class="fu">mlr3</span><span class="fu">::</span><span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">rsmp</a></span><span class="op">(</span><span class="st">"cv"</span>, folds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
+    measure <span class="op">=</span> <span class="cn">NULL</span>, terminator <span class="op">=</span> <span class="fu">mlr3tuning</span><span class="fu">::</span><span class="fu"><a href="https://bbotk.mlr-org.com/reference/trm.html" class="external-link">trm</a></span><span class="op">(</span><span class="st">"evals"</span>, n_evals <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>, algorithm <span class="op">=</span>
+    <span class="fu">mlr3tuning</span><span class="fu">::</span><span class="fu"><a href="https://mlr3tuning.mlr-org.com/reference/tnr.html" class="external-link">tnr</a></span><span class="op">(</span><span class="st">"grid_search"</span><span class="op">)</span>, resolution <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
+  tune_on_folds <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>param_set</code></dt>
+<dd><p>(named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>) <br>
+A named <code>list</code> with a parameter grid for each nuisance model/learner
+(see method <code>learner_names()</code>). The parameter grid must be an object of
+class <a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">ParamSet</a>.</p></dd>
+
+
+<dt><code>tune_settings</code></dt>
+<dd><p>(named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>) <br>
+A named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> with arguments passed to the hyperparameter-tuning with
+<a href="https://mlr3tuning.mlr-org.com/" class="external-link">mlr3tuning</a> to set up
+<a href="https://mlr3tuning.mlr-org.com/reference/TuningInstanceSingleCrit.html" class="external-link">TuningInstance</a> objects.
+<code>tune_settings</code> has entries</p><ul><li><p><code>terminator</code> (<a href="https://bbotk.mlr-org.com/reference/Terminator.html" class="external-link">Terminator</a>) <br>
+A <a href="https://bbotk.mlr-org.com/reference/Terminator.html" class="external-link">Terminator</a> object. Specification of <code>terminator</code>
+is required to perform tuning.</p></li>
+<li><p><code>algorithm</code> (<a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html" class="external-link">Tuner</a> or <code>character(1)</code>) <br>
+A <a href="https://mlr3tuning.mlr-org.com/reference/Tuner.html" class="external-link">Tuner</a> object (recommended) or key passed to the
+respective dictionary to specify the tuning algorithm used in
+<a href="https://mlr3tuning.mlr-org.com/reference/tnr.html" class="external-link">tnr()</a>. <code>algorithm</code> is passed as an argument to
+<a href="https://mlr3tuning.mlr-org.com/reference/tnr.html" class="external-link">tnr()</a>. If <code>algorithm</code> is not specified by the users,
+default is set to <code>"grid_search"</code>. If set to <code>"grid_search"</code>, then
+additional argument <code>"resolution"</code> is required.</p></li>
+<li><p><code>rsmp_tune</code> (<a href="https://mlr3.mlr-org.com/reference/Resampling.html" class="external-link">Resampling</a> or <code>character(1)</code>)<br>
+A <a href="https://mlr3.mlr-org.com/reference/Resampling.html" class="external-link">Resampling</a> object (recommended) or option passed
+to <a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">rsmp()</a> to initialize a
+<a href="https://mlr3.mlr-org.com/reference/Resampling.html" class="external-link">Resampling</a> for parameter tuning in <code>mlr3</code>.
+If not specified by the user, default is set to <code>"cv"</code>
+(cross-validation).</p></li>
+<li><p><code>n_folds_tune</code> (<code>integer(1)</code>, optional) <br>
+If <code>rsmp_tune = "cv"</code>, number of folds used for cross-validation.
+If not specified by the user, default is set to <code>5</code>.</p></li>
+<li><p><code>measure</code> (<code>NULL</code>, named <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>, optional) <br>
+Named list containing the measures used for parameter tuning. Entries in
+list must either be <a href="https://mlr3.mlr-org.com/reference/Measure.html" class="external-link">Measure</a> objects or keys to be
+passed to passed to <a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">msr()</a>. The names of the entries must
+match the learner names (see method <code>learner_names()</code>). If set to <code>NULL</code>,
+default measures are used, i.e., <code>"regr.mse"</code> for continuous outcome
+variables and <code>"classif.ce"</code> for binary outcomes.</p></li>
+<li><p><code>resolution</code> (<code>character(1)</code>) <br> The key passed to the respective
+dictionary to specify  the tuning algorithm used in
+<a href="https://mlr3tuning.mlr-org.com/reference/tnr.html" class="external-link">tnr()</a>. <code>resolution</code> is passed as an argument to
+<a href="https://mlr3tuning.mlr-org.com/reference/tnr.html" class="external-link">tnr()</a>.</p></li>
+</ul></dd>
+
+
+<dt><code>tune_on_folds</code></dt>
+<dd><p>(<code>logical(1)</code>) <br>
+Indicates whether the tuning should be done fold-specific or globally.
+Default is <code>FALSE</code>.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<p>self</p>
+</div>
+
+</div><p></p><hr><a id="method-clone"></a><div class="section">
+<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+<p>The objects of this class are cloneable with this method.</p><div class="section">
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">DoubleMLPLIV</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -281,11 +428,11 @@ Indicates whether cross-fitting should be applied. Default is <code>TRUE</code>.
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3learners.mlr-org.com" class="external-link">mlr3learners</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ml_g</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span>, num.trees <span class="op">=</span> <span class="fl">100</span>, mtry <span class="op">=</span> <span class="fl">20</span>, min.node.size <span class="op">=</span> <span class="fl">2</span>, max.depth <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ml_m</span> <span class="op">=</span> <span class="va">ml_g</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ml_r</span> <span class="op">=</span> <span class="va">ml_g</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">ml_l</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span>, num.trees <span class="op">=</span> <span class="fl">100</span>, mtry <span class="op">=</span> <span class="fl">20</span>, min.node.size <span class="op">=</span> <span class="fl">2</span>, max.depth <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">ml_m</span> <span class="op">=</span> <span class="va">ml_l</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">ml_r</span> <span class="op">=</span> <span class="va">ml_l</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">obj_dml_data</span> <span class="op">=</span> <span class="fu"><a href="make_pliv_CHS2015.html">make_pliv_CHS2015</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, n_obs <span class="op">=</span> <span class="fl">500</span>, dim_x <span class="op">=</span> <span class="fl">20</span>, dim_z <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dml_pliv_obj</span> <span class="op">=</span> <span class="va">DoubleMLPLIV</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">obj_dml_data</span>, <span class="va">ml_g</span>, <span class="va">ml_m</span>, <span class="va">ml_r</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">dml_pliv_obj</span> <span class="op">=</span> <span class="va">DoubleMLPLIV</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">obj_dml_data</span>, <span class="va">ml_l</span>, <span class="va">ml_m</span>, <span class="va">ml_r</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">dml_pliv_obj</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">dml_pliv_obj</span><span class="op">$</span><span class="fu">summary</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimates and significance testing of the effect of target variables</span>
@@ -304,15 +451,15 @@ Indicates whether cross-fitting should be applied. Default is <code>TRUE</code>.
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3tuning.mlr-org.com" class="external-link">mlr3tuning</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ml_g</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.rpart"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ml_m</span> <span class="op">=</span> <span class="va">ml_g</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ml_r</span> <span class="op">=</span> <span class="va">ml_g</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">ml_l</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.rpart"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">ml_m</span> <span class="op">=</span> <span class="va">ml_l</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">ml_r</span> <span class="op">=</span> <span class="va">ml_l</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">obj_dml_data</span> <span class="op">=</span> <span class="fu"><a href="make_pliv_CHS2015.html">make_pliv_CHS2015</a></span><span class="op">(</span></span>
 <span class="r-in">  alpha <span class="op">=</span> <span class="fl">1</span>, n_obs <span class="op">=</span> <span class="fl">500</span>, dim_x <span class="op">=</span> <span class="fl">20</span>,</span>
 <span class="r-in">  dim_z <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dml_pliv_obj</span> <span class="op">=</span> <span class="va">DoubleMLPLIV</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">obj_dml_data</span>, <span class="va">ml_g</span>, <span class="va">ml_m</span>, <span class="va">ml_r</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">dml_pliv_obj</span> <span class="op">=</span> <span class="va">DoubleMLPLIV</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">obj_dml_data</span>, <span class="va">ml_l</span>, <span class="va">ml_m</span>, <span class="va">ml_r</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">param_grid</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"ml_g"</span> <span class="op">=</span> <span class="fu">paradox</span><span class="fu">::</span><span class="va"><a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">ParamSet</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span class="r-in">  <span class="st">"ml_l"</span> <span class="op">=</span> <span class="fu">paradox</span><span class="fu">::</span><span class="va"><a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">ParamSet</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span class="r-in">    <span class="fu">paradox</span><span class="fu">::</span><span class="va"><a href="https://paradox.mlr-org.com/reference/ParamDbl.html" class="external-link">ParamDbl</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"cp"</span>, lower <span class="op">=</span> <span class="fl">0.01</span>, upper <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span>,</span>
 <span class="r-in">    <span class="fu">paradox</span><span class="fu">::</span><span class="va"><a href="https://paradox.mlr-org.com/reference/ParamInt.html" class="external-link">ParamInt</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"minsplit"</span>, lower <span class="op">=</span> <span class="fl">1</span>, upper <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span class="r-in">  <span class="st">"ml_m"</span> <span class="op">=</span> <span class="fu">paradox</span><span class="fu">::</span><span class="va"><a href="https://paradox.mlr-org.com/reference/ParamSet.html" class="external-link">ParamSet</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -344,7 +491,7 @@ Indicates whether cross-fitting should be applied. Default is <code>TRUE</code>.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
