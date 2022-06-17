@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Causal Machine Learning with DoubleML</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="UseR!2022, June 20, 2022, online" />
+    <script src="Lect1_Introduction_to_DML_files/header-attrs/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Causal Machine Learning with DoubleML
+]
+.subtitle[
+## Introduction to Double Machine Learning
+]
+.author[
+### UseR!2022, June 20, 2022, online
+]
+.date[
+### Philipp Bach, Martin Spindler, Oliver Schacht (Uni Hamburg)
+]
+
+---
+
+
+
+
+
+
+class: inverse center middle, hide-logo
+
+## Motivation for Causal Machine Learning
+
+---
+
+## Motivation for Causal ML
+
+&lt;center&gt;&lt;img src="figures/causalml.png" height="550px" /&gt;&lt;/center&gt;
+
+
+---
+
+## Predictive vs. Causal ML 
+
+
+.pull-left[
+
+### Predictive ML
+
+#### How can we build a good prediction rule, `\(f(X)\)`, that uses features `\(X\)` to predict `\(Y\)`?
+
+Example: **Customer Churn**
+
+&gt; "*How well can we predict whether customers churn?*"
+
+]
+
+.pull-right[
+
+### Causal ML
+
+#### What is the causal effect of a treatment `\(A\)` on an outcome `\(Y\)`?
+
+&lt;br&gt;
+
+&gt; "*Why do customer churn?*"
+
+&gt; "*How can we retain customers?*"
+
+]
+
+
+---
+
+## Motivation for Causal ML
+
+### Typical (research) questions in industry, business and economics:
+
+.pull-left[
+
+* What is the **effect** of the **new website (feature)** on our **sales**?
+
+* Will our new **app design** **increase** the **time spent** in the app?
+
+]
+
+.pull-right[
+
+* How much **additional revenue** did our **latest newsletter** **generate**?
+
+* Which product would **benefit** most from a **marketing campaign**?
+
+]
+
+&lt;br&gt;
+
+### General Question
+
+#### What is the causal effect of a treatment `\(A\)` on an outcome `\(Y\)`?
+
+
+---
+
+## Application: Randomized Experiments
+
+.pull-left[
+
+&lt;center&gt;&lt;img src="figures/abtest.png" height="165px" /&gt;&lt;/center&gt;
+
+
+&lt;br&gt;
+
+#### Problem in practice
+
+1. No pure A/B-testing experiments possible
+    
+2. A/B test suffers from low power
+
+]
+
+.pull-right[
+
+* **General:** What is the **effect** of a **certain variable** `\(D\)` on a relevant **outcome variable** `\(Y\)`?
+
+* **Randomized experiments** are a direct way to estimate such effects (assuming they are conducted properly)
+
+&lt;br&gt;
+
+#### Solution with DoubleML
+
+1. **Observational study**: Include control variables `\(X\)` which may also impact the variables `\(Y\)` or `\(D\)`
+
+2. Include covariates `\(X\)` that help to predict the outcome `\(Y\)` using ML methods.
+
+]
+
+
+---
+
+## Example: Price Elasticity of Demand
+
+#### **Price Elasticity of Demand: How does the price impact sales?**
+&gt; - Price increase of EUR 100 `\(\rightarrow\)` Drop in sales of 10 million units
+&gt; - Absolute change in price (EUR 100) and the resulting absolute change in sales (10 million units) can be difficult to interpret
+&gt; - Initial price: 100 or 1000 EUR? `\(\rightarrow\)`  **1000 EUR** 
+&gt; - Initial sales: 10 or 200 million units? `\(\rightarrow\)` **200 million**
+&gt; - **Price elasticity of demand**: Percentage change in quantity demanded `\(Q\)` when there is a one percent increase in price `\(P\)` 
+
+&lt;br&gt;
+
+`$$E_d = \frac{\Delta Q / Q}{\Delta P / P} = \frac{-10 / 200}{100 / 1000} = \frac{-0.05}{0.1} = - 0.5$$`
+
+**Econometric model** for estimating the **price elasticity** `\(\theta\)`:
+
+`$$\log(Q) = \alpha +\log(P) \theta + X \beta + \varepsilon,$$`
+
+where the vector of controls `\(X\)` can be very **high-dimensional**
+
+---
+
+## Motivation for Causal Machine Learning
+
+
+- Machine Learning methods usually tailored for **prediction**
+
+- In econometrics and industry both prediction (stock market, demand, ...) and learning of **causal relationship** is of interest
+
+- Here: **Focus on causal inference** with machine Learning methods
+
+- Examples for causal inference: 
+  
+  - Effect of a new website, app design or the latest newsletter
+  
+  - Price elasticity of demand
+
+- General: What is the **effect** of a certain **treatment** on a relevant **outcome** variable?
+
+---
+
+## Motivation for Causal Machine Learning
+
+
+#### Typical problem - Potential endogeneity of the treatment assignment
+
+* Potential sources
+
+  - Optimizing behavior of the individuals with regard to the outcome
+  
+  - Simultaneity (price elasticity of demand)
+  
+  - Unobserved heterogeneity
+  
+  - Omitted variables
+  
+  - The treatment assignment is observed rather than randomly assigned
+
+* Possible Solutions
+
+  - **Selection on observable characteristics (controls)**
+  
+  - Instrumental Variable (IV) estimation
+  
+  - ...
+
+---
+
+## Motivation for Causal Machine Learning
+
+#### Additional challenge: "Big data"
+
+* **High-dimensional setting** with `\(p\)` (# of variables) even larger than `\(n\)` (# of observations), and / or 
+
+* a highly **non-linear functional form** for the relationship between variables of interest
+
+
+#### Solution
+
+* Use ML methods for estimation that perform regularization / variable selection and / or are able to model non-linearities
+
+---
+
+## Motivation for Causal Machine Learning
+
+
+#### Controls are needed for two reasons
+
+.pull-left[
+
+####  **Identification:**
+
+We need them to ensure `\(D\)` is as good as randomly assigned (exogenous) conditional on `\(X\)`. Along these lines, we can think of the confounding equation:
+
+`$$D = m_0(X) + V, E[V|X] = 0.$$`
+
+`\(\rightarrow\)` Variation in `\(V\)` is quasi-experimental
+
+
+&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
+
+
+]
+
+.pull-right[
+
+#### **Efficiency:**
+
+Some controls may explain part of the variation in the outcome `\(Y\)`
+
+&lt;br&gt; 
+
+&lt;br&gt; 
+
+`\(\rightarrow\)` The effect can be estimated more accurately
+
+
+&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-2-1.png" width="100%" /&gt;
+
+]
+
+
+
+---
+
+class: inverse center middle, hide-logo
+
+## What is Double/Debiased Machine Learning (DML)?
+
+
+---
+
+## What is Double/Debiased Machine Learning (DML)?
+
+
+- **Double/debiased machine learning (DML)** introduced by Chernozhukov et al. (2018)
+
+- General framework for causal inference and treatment effects based on machine learning tools using big data
+
+- Combines the strength of **machine learning** and **econometrics**
+
+- Our object-oriented implementation **DoubleML** (in R and Python) provides a general interface for the growing number of models and methods for DML
+
+- **Documentation** &amp; **user guide**: https://docs.doubleml.org
+
+- The R package is available on CRAN
+
+
+```r
+# latest CRAN release
+install.packages("DoubleML")
+
+# development version from GitHub
+remotes::install_github("DoubleML/doubleml-for-r")
+```
+
+
+
+---
+
+## What is Double/Debiased Machine Learning (DML)?
+
+
+- **Exploiting the strengths of two disciplines:**
+
+.center[
+
+&lt;center&gt;&lt;img src="figures/dml_description.png" height="200px" /&gt;&lt;/center&gt;
+
+]
+
+- **Result / output** from the DML framework:
+
+  - Estimate of the causal effect (with valid confidence intervals `\(\rightarrow\)` statistical tests for effects)
+  
+  - Good statistical properties ( `\(\sqrt{N}\)` rate of convergence; unbiased; approximately Gaussian)
+  
+  - Multiple treatment effects; heterogeneous treatment effects, ...
+
+
+---
+
+class: inverse center middle, hide-logo
+
+## A Motivating Example: Basics of Double Machine Learning 
+
+---
+
+## Partially Linear Regression
+
+#### Partially linear regression (PLR) model
+
+`$$\begin{align*}
+&amp;Y = D \theta_0 + g_0(X) + \zeta, &amp; &amp;\mathbb{E}[\zeta | D,X] = 0, \\
+&amp;D = m_0(X) + V, &amp; &amp;\mathbb{E}[V | X] = 0,
+\end{align*}$$`
+with 
+* Outcome variable `\(Y\)`
+* Policy or treatment variable of interest `\(D\)`
+* High-dimensional vector of confounding covariates `\(X = (X_1, \ldots, X_p)\)`
+* Stochastic errors `\(\zeta\)` and `\(V\)`
+
+.center[
+
+
+&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-4-1.png" width="50%" /&gt;
+
+]
+
+---
+
+## Partially Linear Regression
+
+#### Partially linear regression (PLR) model
+
+`$$\begin{align*}
+&amp;Y = D \theta_0 + g_0(X) + \zeta, &amp; &amp;\mathbb{E}[\zeta | D,X] = 0, \\
+&amp;D = m_0(X) + V, &amp; &amp;\mathbb{E}[V | X] = 0,
+\end{align*}$$`
+with 
+* Outcome variable `\(Y\)`
+* Policy or treatment variable of interest `\(D\)`
+* High-dimensional vector of confounding covariates `\(X = (X_1, \ldots, X_p)\)`
+* Stochastic errors `\(\zeta\)` and `\(V\)`
+
+#### Regularization bias
+
+Problem of simple "plug-in" approaches 
+
+* If we use an ML model to estimate `\(\hat{g}\)` and simply plug in the predictions `\(\hat{g}\)`, the final estimate on `\(\theta_0\)` will not be unbiased and neither be asymptotically normal.
+
+---
+
+## Partially Linear Regression 
+
+.center[
+
+#### Illustration of naive approach: App
+
+]
+
+&lt;!-- TODO: Insert link to app --&gt;
+
+---
+
+## Frisch-Waugh-Lovell Theorem
+
+
+### Solution to regularization bias: Orthogonalization
+
+* Remember the Frisch-Waugh-Lovell Theorem in a **linear regression model**
+
+`$$Y = D \theta_0 + X\beta + \varepsilon$$`
+* `\(\theta_0\)` can be consistently estimated by **partialling out** `\(X\)`, i.e,
+
+    1. OLS regression of `\(Y\)` on `\(X\)`: `\(\tilde{\beta} = (X'X)^{-1} X'Y\)` `\(\rightarrow\)` Residuals `\(\hat{\varepsilon}\)`
+    
+    2. OLS regression of `\(D\)` on `\(X\)`: `\(\tilde{\gamma} = (X'X)^{-1} X'D\)` `\(\rightarrow\)` Residuals `\(\hat{\zeta}\)`
+    
+    3.  Final OLS regression of `\(\hat{\varepsilon}\)` on `\(\hat{\zeta}\)`
+    
+
+---
+
+## Partially Linear Regression
+
+.center[
+
+#### Illustration of FWL approach: APP
+
+]
+
+---
+
+class: inverse center middle, hide-logo
+
+## The Key Ingredients of Double Machine Learning 
+
+---
+
+## The Key Ingredients of DML
+
+&gt; #### 1. Neyman Orthogonality
+
+&gt; The inference is based on a score function `\(\psi(W; \theta, \eta)\)` that satisfies
+
+&gt; `$$E[\psi(W; \theta_0, \eta_0)] = 0,$$`
+&gt; where `\(W:=(Y,D,X,Z)\)` and with `\(\theta_0\)` being the unique solution that obeys the **Neyman orthogonality condition**
+
+&gt; `$$\left.\partial_\eta \mathbb{E}[\psi(W; \theta_0, \eta] \right|_{\eta=\eta_0} = 0.$$`
+
+&lt;br&gt;
+
+- `\(\partial_{\eta}\)` denotes the pathwise (Gateaux) derivative operator
+
+- **Neyman orthogonality** ensures that the **moment condition** identifying `\(\theta_0\)` is **insensitive to small pertubations** of the nuisance function `\(\eta\)` around `\(\eta_0\)`
+
+- Using a Neyman-orthogonal score **eliminates the first order biases** arising from the replacement of `\(\eta_0\)` with a ML estimator `\(\hat{\eta}_0\)`
+
+---
+
+## The Key Ingredients of DML
+
+
+&gt; #### 1. Neyman Orthogonality
+
+&gt; The inference is based on a score function `\(\psi(W; \theta, \eta)\)` that satisfies
+
+&gt; `$$E[\psi(W; \theta_0, \eta_0)] = 0,$$`
+&gt; where `\(W:=(Y,D,X,Z)\)` and with `\(\theta_0\)` being the unique solution that obeys the **Neyman orthogonality condition**
+
+&gt; `$$\left.\partial_\eta \mathbb{E}[\psi(W; \theta_0, \eta] \right|_{\eta=\eta_0} = 0.$$`
+
+&lt;br&gt;
+
+- For many models the Neyman orthogonal **score functions** are **linear** in `\(\theta\)`
+`$$\psi(W;\theta, \eta) = \psi_a(W; \eta) \theta + \psi_b(W; \eta)$$`
+
+- The estimator `\(\tilde{\theta}_{0}\)` then takes the form 
+`$$\tilde{\theta}_0 = - \left(\mathbb{E}_N[\psi_a(W; \eta)]\right)^{-1}\mathbb{E}_N[\psi_b(W; \eta)]$$`
+
+---
+
+## The Key Ingredients of DML
+
+&gt; #### 2. High-Quality Machine Learning Estimators
+&gt; The nuisance parameters are estimated with high-quality (fast-enough converging) machine learning methods.
+
+&lt;br&gt;
+
+- Different structural assumptions on `\(\eta_0\)` lead to the use of different machine-learning tools for estimating `\(\eta_0\)` (Chernozhukov et al., 
+2018, Chapter 3)
+
+&lt;br&gt;
+  
+&gt; #### 3. Sample Splitting
+&gt; To avoid the biases arising from overfitting, a form of **sample splitting** is used at the stage of producing the estimator of the main parameter `\(\theta_0\)`.
+
+&lt;br&gt;
+
+- Cross-fitting performs well empirically (efficiency gain by switching roles)
+
+---
+
+
+## Key Ingredients of DML
+
+#### Illustration of the cross-fitting algorithm
+
+&lt;!-- `\(\Rightarrow\)` [Video](https://www.youtube.com/watch?v=86ZJcPzjvqw) --&gt;
+
+.center[
+
+&lt;iframe width="750" height="415" src="https://www.youtube.com/embed/BMAr27rp4uA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+
+]
+
+
+---
+
+## Partially Linear Regression
+
+.center[
+
+#### Illustration of FWL approach: Key ingredients, let participants play, 5 min break
+
+]
+
+---
+
+## References
+
+#### Double Machine Learning Approach
+
+* Chernozhukov, V., Chetverikov, D., Demirer, M., Duflo, E., Hansen, C., Newey, W. and Robins, J. (2018), Double/debiased machine learning for treatment and structural parameters. The Econometrics Journal, 21: C1-C68, doi:10.1111/ectj.12097.
+
+* Chernozhukov, V., Hansen, C., Spindler, M., and Syrgkanis, V. (forthcoming), Applied Causal Inference Powered by ML and AI.
+
+
+#### DoubleML Package for Python and R
+
+* Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M. (2021), DoubleML - An Object-Oriented Implementation of Double Machine Learning in R, [arXiv:2103.09603](https://arxiv.org/abs/2103.09603).
+
+* Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M. (2022), DoubleML - An Object-Oriented Implementation of Double Machine Learning in Python, Journal of Machine Learning Research, 23(53): 1-6, https://www.jmlr.org/papers/v23/21-0862.html.
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<style>
+.logo {
+  background-image: url(logo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  width: 320px;
+  height: 102px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

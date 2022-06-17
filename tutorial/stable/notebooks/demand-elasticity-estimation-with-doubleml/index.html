@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.100.1" />
+
+
+<title>Demand Elasticity Estimation with DoubleML - Causal ML with DoubleML</title>
+<meta property="og:title" content="Demand Elasticity Estimation with DoubleML - Causal ML with DoubleML">
+
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/2022/06/15/welcome-user-2022/">Welcome, UseR!2022</a></li>
+    
+    <li><a href="/getstarted">Getting Started</a></li>
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="/team/">Team</a></li>
+    
+    <li><a href="https://github.com/DoubleML/doubleml-for-r">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+
+    <h1 class="article-title">Demand Elasticity Estimation with DoubleML</h1>
+
+    
+
+    <div class="article-content">
+      
+
+
+<p><img src="figures/demand.png" /></p>
+<p>In this example, we will demonstrate the use of the <a href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package in a real-data industry example: Estimation of price elasticity of demand. This notebook is based on a <a href="https://towardsdatascience.com/causal-inference-example-elasticity-de4a3e2e621b">blogpost by Lars Roemheld (Roemheld, 2021)</a> with code and preprocessed data being available from <a href="https://github.com/larsroemheld/causalinf_ex_elasticity">GitHub</a>. The original data file is made available as a public domain (CC0 1.0 Universal) data set and shared on <a href="https://www.kaggle.com/vijayuv/onlineretail">kaggle</a>. It contains data on sales from an online retailer in the period of December 2010 until December 2011.</p>
+<p>The data preprocessing is performed in a <a href="https://github.com/DoubleML/doubleml-docs/blob/master/doc/examples/py_elasticity_preprocessing.ipynb">separate notebook that is available online</a>. To keep the computational effort at a moderate level, we will only use a subset of the data that is used in <a href="https://towardsdatascience.com/causal-inference-example-elasticity-de4a3e2e621b">Roemheld (2021)</a>. Our main goal is to illustrate the main steps of elasticity estimation with <a href="https://docs.doubleml.org/stable/index.html">DoubleML</a>.</p>
+<p>The following case study is organized according to the steps of the <a href="https://docs.doubleml.org/stable/workflow/workflow.html">DoubleML workflow</a>.</p>
+<div id="problem-formulation-estimation-of-price-elasticity-of-demand" class="section level2">
+<h2>0. Problem Formulation: Estimation of Price Elasticity of Demand</h2>
+<p>“Supply” and “demand” are probably the very first terms that economics and business students hear in their studies. In industry, the price elasticity of demand is a very important quantity: It indicates how much the demand for a product (= the quantity sold by the firm) changes due to a change in its price. As a retailer, this quantity is of great interest because it makes it possible to increase revenues, and eventually profits, by optimally adjusting prices according to elasticities.</p>
+<p>The price elasticity of demand is formally defined as the relative change of the demanded quantity (<span class="math inline">\(q\)</span>) of a product given a percent-change of the price (<span class="math inline">\(p\)</span>)</p>
+<p><span class="math display">\[\theta_0 = \frac{\partial q/q}{\partial p/p}.\]</span></p>
+<p>In words, the parameter <span class="math inline">\(\theta_0\)</span> can be interpreted as follows: Provided the price for a product increases by <span class="math inline">\(1\%\)</span>, the demanded quantity changes by <span class="math inline">\(\theta_0\%\)</span>.</p>
+<p>In general, it would be possible to estimate <span class="math inline">\(\theta_0\)</span> based on an experiment or A/B test. However, this is not possible in our case as the data set only contains information on actual purchases in the period of consideration.</p>
+<p>The causal problem of price estimation based on an observational study is quite complex: It involves many (simultaneous) decisions made by the customers and the sellers. One approach for estimation of the causal parameter <span class="math inline">\(\theta_0\)</span> would be to account for confounding variables, that might have an effect to both the price and the quantity sold. The approach taken in <a href="https://towardsdatascience.com/causal-inference-example-elasticity-de4a3e2e621b">Roemheld (2021)</a> is to flexibly account for and construct confounding variables, for example including similarities in their product description or seasonal patterns, and thereby justifying identification of <span class="math inline">\(\theta_0\)</span>.</p>
+<p>We can use a <a href="https://docs.doubleml.org/stable/guide/models.html#partially-linear-regression-model-plr">partially linear regression</a> (PLR) model for estimation of <span class="math inline">\(\theta_0\)</span></p>
+<p><span class="math display">\[\log Q = \theta_0 \log P + g_0(X) + \zeta,\]</span></p>
+<p>with <span class="math inline">\(\mathbb{E}(\zeta|D,X)=0\)</span>. The confounders can enter the regression equation nonlinearily via the function <span class="math inline">\(g_0(X)\)</span>. In order to equip <span class="math inline">\(\theta_0\)</span> (approximately) with the interpretation of a price elasticity, we applied the <span class="math inline">\(\log()\)</span> to both the demanded quantity (<span class="math inline">\(Q\)</span>) and the prices (<span class="math inline">\(P\)</span>), i.e., we set up a <span class="math inline">\(\log\)</span>-<span class="math inline">\(\log\)</span>-regression.</p>
+<p>Before we proceed with the data analysis, it is important to mention a potential drawback to our analysis: The data only contains information on sales, not on stock days. Hence, based on this data set, it is not possible to assess what happened on days without sales (sales = 0). This drawback must be kept in mind when we draw causal conclusions from this analysis.</p>
+</div>
+<div id="data-backend" class="section level2">
+<h2>1. Data-Backend</h2>
+<p>To give an idea on the general setting we briefly load an exemplary data excerpt from the original data set. We can see that the data lists the transaction of a (online) retailer selling products like inflatable political globes or fancy pens.</p>
+<pre class="r"><code># load required packages
+library(data.table)
+library(mlr3)
+library(mlr3learners)
+library(DoubleML)
+library(ggplot2)
+
+# suppress messages during fitting
+lgr::get_logger(&quot;mlr3&quot;)$set_threshold(&quot;warn&quot;)</code></pre>
+<pre class="r"><code># Load example data set from URL
+url = &#39;https://raw.githubusercontent.com/DoubleML/doubleml-docs/master/doc/examples/data/orig_demand_data_example.csv&#39;
+data_example = fread(url)
+data_example</code></pre>
+<pre><code>##     V1       Date StockCode        Country                  Description
+##  1:  0 2010-12-01     10002         France   INFLATABLE POLITICAL GLOBE
+##  2:  1 2010-12-01     10002 United Kingdom   INFLATABLE POLITICAL GLOBE
+##  3:  2 2010-12-01     10125 United Kingdom      MINI FUNKY DESIGN TAPES
+##  4:  3 2010-12-01     10133 United Kingdom COLOURING PENCILS BROWN TUBE
+##  5:  4 2010-12-01     10135 United Kingdom COLOURING PENCILS BROWN TUBE
+##  6:  5 2010-12-01     11001 United Kingdom  ASSTD DESIGN RACING CAR PEN
+##  7:  6 2010-12-01    15044B United Kingdom           BLUE PAPER PARASOL
+##  8:  7 2010-12-01   15056BL United Kingdom      EDWARDIAN PARASOL BLACK
+##  9:  8 2010-12-01    15056N United Kingdom    EDWARDIAN PARASOL NATURAL
+## 10:  9 2010-12-01    15056P United Kingdom       EDWARDIAN PARASOL PINK
+##     Quantity revenue UnitPrice
+##  1:       48   40.80     0.850
+##  2:       12   10.20     0.850
+##  3:        2    1.70     0.850
+##  4:        5    4.25     0.850
+##  5:        1    2.51     2.510
+##  6:        3   10.08     3.360
+##  7:        1    2.95     2.950
+##  8:       20  113.00     5.650
+##  9:       50  236.30     4.726
+## 10:       48  220.80     4.600</code></pre>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
