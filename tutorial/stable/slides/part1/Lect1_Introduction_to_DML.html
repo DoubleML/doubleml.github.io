@@ -39,7 +39,7 @@ class: inverse center middle, hide-logo
 
 ## Motivation for Causal ML
 
-&lt;center&gt;&lt;img src="figures/causalml.png" height="550px" /&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src="figures/causalml.png" height="550px" alt="An illustration of Causal Machine Learning based on three circles. The circle in the middle has the title 'Causal Machine Learning'. There are arrows going from the left and right circle pointing at the circle in the center. Below the left circle that carries the title 'Why' a box lists three points: Learning causal relationships, Going beyond correlations, and Pioneers: Pearl, Rubin, Imbens (Nobel Prize 2021). Below the circle on the right which has the title 'ML', three points are listed: Learning complex patterns in the data, correlation based and good at forecasting." /&gt;&lt;/center&gt;
 
 
 ---
@@ -109,7 +109,7 @@ Example: **Customer Churn**
 
 .pull-left[
 
-&lt;center&gt;&lt;img src="figures/abtest.png" height="165px" /&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src="figures/abtest.png" height="165px" alt="An illustration of AB testing. A stylized browser window shows a double-headed rhino which is a variant of the DoubleML package logo. The screen is divided vertically in two parts. The left part of the screen has the tag 'A' and differs from the right part called 'B' in that the colors are inverted." /&gt;&lt;/center&gt;
 
 
 &lt;br&gt;
@@ -144,11 +144,21 @@ Example: **Customer Churn**
 ## Example: Price Elasticity of Demand
 
 #### **Price Elasticity of Demand: How does the price impact sales?**
-&gt; - Price increase of EUR 100 `\(\rightarrow\)` Drop in sales of 10 million units
-&gt; - Absolute change in price (EUR 100) and the resulting absolute change in sales (10 million units) can be difficult to interpret
-&gt; - Initial price: 100 or 1000 EUR? `\(\rightarrow\)`  **1000 EUR** 
-&gt; - Initial sales: 10 or 200 million units? `\(\rightarrow\)` **200 million**
-&gt; - **Price elasticity of demand**: Percentage change in quantity demanded `\(Q\)` when there is a one percent increase in price `\(P\)` 
+
+.pull-left[
+
+&lt;center&gt;&lt;img src="figures/demand.png" height="165px" alt="An illustration of demand estimation. On the left hand side two hands are displayed on top of each other. Between the hands there are two arrows showing up and down. On the right hand side, there is a price tag with a dollar sign attached to a circular graph." /&gt;&lt;/center&gt;
+
+
+]
+
+.pull-right[
+
+- Absolute change in price (EUR 100) and the resulting absolute change in sales (10 million units) can be difficult to interpret
+
+- **Price elasticity of demand**: Percentage change in quantity demanded `\(Q\)` when there is a one percent increase in price `\(P\)` 
+
+]
 
 &lt;br&gt;
 
@@ -183,34 +193,31 @@ where the vector of controls `\(X\)` can be very **high-dimensional**
 
 ## Motivation for Causal Machine Learning
 
+#### Challenge I: Identification of causal parameter
 
-#### Typical problem - Potential endogeneity of the treatment assignment
+**Typical problem** - Potential endogeneity of the treatment assignment
 
 * Potential sources
-
   - Optimizing behavior of the individuals with regard to the outcome
-  
   - Simultaneity (price elasticity of demand)
-  
   - Unobserved heterogeneity
-  
   - Omitted variables
-  
   - The treatment assignment is observed rather than randomly assigned
+  - Example: Covid vaccination
+
+&lt;br&gt;
 
 * Possible Solutions
-
   - **Selection on observable characteristics (controls)**
-  
   - Instrumental Variable (IV) estimation
-  
   - ...
+
 
 ---
 
 ## Motivation for Causal Machine Learning
 
-#### Additional challenge: "Big data"
+#### Challenge II: "Big data"
 
 * **High-dimensional setting** with `\(p\)` (# of variables) even larger than `\(n\)` (# of observations), and / or 
 
@@ -219,27 +226,32 @@ where the vector of controls `\(X\)` can be very **high-dimensional**
 
 #### Solution
 
-* Use ML methods for estimation that perform regularization / variable selection and / or are able to model non-linearities
+* Use ML methods for estimation that ...
 
+    + ... perform regularization, e.g., variable selection
+
+    + ... are able to model non-linearities
+
+  
 ---
 
 ## Motivation for Causal Machine Learning
 
 
-#### Controls are needed for two reasons
+#### Challenge I &amp; II: Controls are needed for two reasons
 
 .pull-left[
 
 ####  **Identification:**
 
-We need them to ensure `\(D\)` is as good as randomly assigned (exogenous) conditional on `\(X\)`. Along these lines, we can think of the confounding equation:
+We need them to ensure `\(D\)` is as good as randomly assigned (exogenous) *conditional on* `\(X\)`. Along these lines, we can think of the confounding equation:
 
 `$$D = m_0(X) + V, E[V|X] = 0.$$`
 
 `\(\rightarrow\)` Variation in `\(V\)` is quasi-experimental
 
 
-&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
+&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-1-1.png" title="A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to D, from X to Y, from D to Y" alt="A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to D, from X to Y, from D to Y" width="100%" /&gt;
 
 
 ]
@@ -250,17 +262,16 @@ We need them to ensure `\(D\)` is as good as randomly assigned (exogenous) condi
 
 Some controls may explain part of the variation in the outcome `\(Y\)`
 
-&lt;br&gt; 
+ML methods may deliver more accurate results than OLS or `\(t\)`-tests
 
 &lt;br&gt; 
 
 `\(\rightarrow\)` The effect can be estimated more accurately
 
 
-&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-2-1.png" width="100%" /&gt;
+&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-2-1.png" title="A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to Y, from D to Y" alt="A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to Y, from D to Y" width="100%" /&gt;
 
 ]
-
 
 
 ---
@@ -307,7 +318,7 @@ remotes::install_github("DoubleML/doubleml-for-r")
 
 .center[
 
-&lt;center&gt;&lt;img src="figures/dml_description.png" height="200px" /&gt;&lt;/center&gt;
+&lt;center&gt;&lt;img src="figures/doubleml_ml_eco_useR.png" height="200px" alt = "A diagram with three boxes. On top, there are two boxes. On the left, a box with title PREDICTION - MACHINE LEARNING; on the right a box with title INFERENCE - ECONOMETRICS AND STATISTICS. In the first box (prediction) it is written: Powerful methods in high-dimensional and non-linear settings, for example, lasso, ridge, regression trees, random forests and boosted trees. In the second box (inference) it is written: Statistical framework for estimation of causal effects, this is, structural equation models, identification, asymptotic theory, hypothesis tests and confidence intervals" /&gt;&lt;/center&gt;
 
 ]
 
@@ -345,7 +356,7 @@ with
 .center[
 
 
-&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-4-1.png" width="50%" /&gt;
+&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-4-1.png" title="A directed acyclical graph with nodes A, X, V and Y. The following edges connect the nodes. From V to A, from X to A, from X to Y, from A to Y" alt="A directed acyclical graph with nodes A, X, V and Y. The following edges connect the nodes. From V to A, from X to A, from X to Y, from A to Y" width="50%" /&gt;
 
 ]
 
@@ -365,19 +376,23 @@ with
 * High-dimensional vector of confounding covariates `\(X = (X_1, \ldots, X_p)\)`
 * Stochastic errors `\(\zeta\)` and `\(V\)`
 
-#### Regularization bias
+#### Problem of simple "plug-in" approaches: Regularization bias
 
-Problem of simple "plug-in" approaches 
-
-* If we use an ML model to estimate `\(\hat{g}\)` and simply plug in the predictions `\(\hat{g}\)`, the final estimate on `\(\theta_0\)` will not be unbiased and neither be asymptotically normal.
+* If we use an ML model to estimate `\(\hat{g}\)` and simply plug in the predictions `\(\hat{g}\)`, the final estimate on `\(\theta_0\)` will not be unbiased and neither be asymptotically normal
 
 ---
 
 ## Partially Linear Regression 
 
+&lt;br&gt;
+
 .center[
 
 #### Illustration of naive approach: App
+
+Example based on Chernozhukov et al. (2018) and
+
+[https://docs.doubleml.org/stable/guide/basics.html](https://docs.doubleml.org/stable/guide/basics.html)
 
 ]
 
@@ -390,7 +405,7 @@ Problem of simple "plug-in" approaches
 
 ### Solution to regularization bias: Orthogonalization
 
-* Remember the Frisch-Waugh-Lovell Theorem in a **linear regression model**
+* Remember the Frisch-Waugh-Lovell (FWL) Theorem in a **linear regression model**
 
 `$$Y = D \theta_0 + X\beta + \varepsilon$$`
 * `\(\theta_0\)` can be consistently estimated by **partialling out** `\(X\)`, i.e,
@@ -400,17 +415,27 @@ Problem of simple "plug-in" approaches
     2. OLS regression of `\(D\)` on `\(X\)`: `\(\tilde{\gamma} = (X'X)^{-1} X'D\)` `\(\rightarrow\)` Residuals `\(\hat{\zeta}\)`
     
     3.  Final OLS regression of `\(\hat{\varepsilon}\)` on `\(\hat{\zeta}\)`
-    
+
+* Orthogonalization: The idea of the FWL Theorem can be generalized to using ML estimators instead of OLS
 
 ---
 
 ## Partially Linear Regression
 
+
+&lt;br&gt;
+
 .center[
 
-#### Illustration of FWL approach: APP
+#### Illustration of naive approach: App
+
+Example based on Chernozhukov et al. (2018) and
+
+[https://docs.doubleml.org/stable/guide/basics.html](https://docs.doubleml.org/stable/guide/basics.html)
 
 ]
+
+
 
 ---
 
@@ -502,9 +527,11 @@ class: inverse center middle, hide-logo
 
 ## Partially Linear Regression
 
+&lt;br&gt;
+
 .center[
 
-#### Illustration of FWL approach: Key ingredients, let participants play, 5 min break
+#### Illustration of FWL approach
 
 ]
 
@@ -525,6 +552,30 @@ class: inverse center middle, hide-logo
 
 * Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M. (2022), DoubleML - An Object-Oriented Implementation of Double Machine Learning in Python, Journal of Machine Learning Research, 23(53): 1-6, https://www.jmlr.org/papers/v23/21-0862.html.
 
+
+---
+
+## Examples: Covid Vaccination
+
+#### Does the COVID-19 vaccine increase mortality?
+
+&lt;center&gt;&lt;img src="figures/covid_vaccination.png" height="500px" /&gt;&lt;/center&gt;
+
+.footnote[Source: [Tagesschau.de](https://www.tagesschau.de/faktenfinder/impfquote-sterblichkeitsrate-101.html)]
+
+---
+
+## Examples: Covid Vaccination
+
+#### Does the COVID-19 vaccine increase mortality?
+
+.center[
+
+&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-5-1.png" width="60%" /&gt;
+
+]
+
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
