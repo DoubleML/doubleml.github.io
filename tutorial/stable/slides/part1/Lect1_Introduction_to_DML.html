@@ -63,7 +63,7 @@ Example: **Customer Churn**
 
 ### Causal ML
 
-#### What is the causal effect of a treatment `\(A\)` on an outcome `\(Y\)`?
+#### What is the causal effect of a treatment `\(D\)` on an outcome `\(Y\)`?
 
 &lt;br&gt;
 
@@ -100,7 +100,7 @@ Example: **Customer Churn**
 
 ### General Question
 
-#### What is the causal effect of a treatment `\(A\)` on an outcome `\(Y\)`?
+#### What is the causal effect of a treatment `\(D\)` on an outcome `\(Y\)`?
 
 
 ---
@@ -164,9 +164,9 @@ Example: **Customer Churn**
 
 `$$E_d = \frac{\Delta Q / Q}{\Delta P / P} = \frac{-10 / 200}{100 / 1000} = \frac{-0.05}{0.1} = - 0.5$$`
 
-**Econometric model** for estimating the **price elasticity** `\(\theta\)`:
+**Econometric model** for estimating the **price elasticity** `\(\theta_0\)`:
 
-`$$\log(Q) = \alpha +\log(P) \theta + X \beta + \varepsilon,$$`
+`$$\log(Q) = \alpha +\log(P) \theta_0 + X \beta + \varepsilon,$$`
 
 where the vector of controls `\(X\)` can be very **high-dimensional**
 
@@ -251,7 +251,7 @@ We need them to ensure `\(D\)` is as good as randomly assigned (exogenous) *cond
 `\(\rightarrow\)` Variation in `\(V\)` is quasi-experimental
 
 
-&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-1-1.png" title="A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to D, from X to Y, from D to Y" alt="A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to D, from X to Y, from D to Y" width="100%" /&gt;
+&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-1-1.png" title="Case I: Identification. A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to D, from X to Y, from D to Y" alt="Case I: Identification. A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to D, from X to Y, from D to Y" width="100%" /&gt;
 
 
 ]
@@ -269,7 +269,7 @@ ML methods may deliver more accurate results than OLS or `\(t\)`-tests
 `\(\rightarrow\)` The effect can be estimated more accurately
 
 
-&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-2-1.png" title="A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to Y, from D to Y" alt="A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to Y, from D to Y" width="100%" /&gt;
+&lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-2-1.png" title="Case II: Efficiency. A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to Y, from D to Y" alt="Case II: Efficiency. A directed acyclical graph with nodes D, X, V and Y. The following edges connect the nodes. From V to D, from X to Y, from D to Y" width="100%" /&gt;
 
 ]
 
@@ -288,7 +288,7 @@ class: inverse center middle, hide-logo
 
 - **Double/debiased machine learning (DML)** introduced by Chernozhukov et al. (2018)
 
-- General framework for causal inference and treatment effects based on machine learning tools using big data
+- General framework for causal inference and estimation of treatment effects based on machine learning tools using big data
 
 - Combines the strength of **machine learning** and **econometrics**
 
@@ -394,6 +394,9 @@ Example based on Chernozhukov et al. (2018) and
 
 [https://docs.doubleml.org/stable/guide/basics.html](https://docs.doubleml.org/stable/guide/basics.html)
 
+
+App available via GitHub: https://github.com/DoubleML/BasicsDML
+
 ]
 
 &lt;!-- TODO: Insert link to app --&gt;
@@ -432,6 +435,8 @@ Example based on Chernozhukov et al. (2018) and
 Example based on Chernozhukov et al. (2018) and
 
 [https://docs.doubleml.org/stable/guide/basics.html](https://docs.doubleml.org/stable/guide/basics.html)
+
+App available via GitHub: https://github.com/DoubleML/BasicsDML
 
 ]
 
@@ -485,6 +490,25 @@ class: inverse center middle, hide-logo
 
 - The estimator `\(\tilde{\theta}_{0}\)` then takes the form 
 `$$\tilde{\theta}_0 = - \left(\mathbb{E}_N[\psi_a(W; \eta)]\right)^{-1}\mathbb{E}_N[\psi_b(W; \eta)]$$`
+---
+
+## The Key Ingredients of DML
+
+&gt; #### 1. Neyman Orthogonality
+
+&gt; The inference is based on a score function `\(\psi(W; \theta, \eta)\)` that satisfies
+
+&gt; `$$E[\psi(W; \theta_0, \eta_0)] = 0,$$`
+&gt; where `\(W:=(Y,D,X,Z)\)` and with `\(\theta_0\)` being the unique solution that obeys the **Neyman orthogonality condition**
+
+&gt; `$$\left.\partial_\eta \mathbb{E}[\psi(W; \theta_0, \eta] \right|_{\eta=\eta_0} = 0.$$`
+
+&lt;br&gt;
+
+* PLR example: Orthogonality by including the first-stage regression, i.e., the regression relationship of the treatment variable `\(D\)` and the regressors `\(X\)`. 
+
+* Orthogonal score function `\(\psi(\cdot)= (Y-g(x)-\theta D)(D-m(X)\)`.
+
 
 ---
 
@@ -514,7 +538,7 @@ class: inverse center middle, hide-logo
 
 #### Illustration of the cross-fitting algorithm
 
-&lt;!-- `\(\Rightarrow\)` [Video](https://www.youtube.com/watch?v=86ZJcPzjvqw) --&gt;
+&lt;!-- `\(\Rightarrow\)` [Video](https://www.youtube.com/watch?v=BMAr27rp4uA&amp;t=1s) --&gt;
 
 .center[
 
@@ -531,9 +555,21 @@ class: inverse center middle, hide-logo
 
 .center[
 
-#### Illustration of FWL approach
+#### Illustration of DML approach: App
+
+Example based on Chernozhukov et al. (2018) and
+
+[https://docs.doubleml.org/stable/guide/basics.html](https://docs.doubleml.org/stable/guide/basics.html)
+
+App available via GitHub: https://github.com/DoubleML/BasicsDML
 
 ]
+
+---
+
+class: inverse center middle, hide-logo
+
+## References
 
 ---
 
@@ -555,6 +591,13 @@ class: inverse center middle, hide-logo
 
 ---
 
+class: inverse center middle, hide-logo
+
+## Appendix
+
+---
+
+
 ## Examples: Covid Vaccination
 
 #### Does the COVID-19 vaccine increase mortality?
@@ -574,8 +617,6 @@ class: inverse center middle, hide-logo
 &lt;img src="Lect1_Introduction_to_DML_files/figure-html/unnamed-chunk-5-1.png" width="60%" /&gt;
 
 ]
-
----
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
