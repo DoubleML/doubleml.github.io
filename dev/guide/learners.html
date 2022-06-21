@@ -303,18 +303,28 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id8">
+    <a class="reference internal nav-link" href="#id9">
      6.2.2. Specifying learners and set hyperparameters
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id11">
-     6.2.3. Hyperparameter tuning
+    <a class="reference internal nav-link" href="#using-pipelines-to-construct-learners">
+     6.2.3. Using pipelines to construct learners
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id16">
+     6.2.4. Hyperparameter tuning
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hyperparameter-tuning-with-pipelines">
+     6.2.5. Hyperparameter tuning with pipelines
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#references">
-       6.2.3.1. References
+       6.2.5.1. References
       </a>
      </li>
     </ul>
@@ -379,8 +389,8 @@ Lets simulate some data and consider the partially linear regression model.
 We need to specify learners for the nuisance functions <span class="math notranslate nohighlight">\(g_0(X) = E[Y|X]\)</span> and <span class="math notranslate nohighlight">\(m_0(X) = E[D|X]\)</span>,
 for example <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="(in scikit-learn v1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.RandomForestRegressor</span></code></a>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="eb37c0ed-15f3-4b3c-a7a3-f418b874c5d7" name="09de7bc8-29c4-4566-9b44-887828f73a8c" type="radio">
-</input><label class="tabbed-label" for="eb37c0ed-15f3-4b3c-a7a3-f418b874c5d7">
+<input checked="checked" id="cd452bfe-a324-49ac-8ce5-11ed011f4de9" name="4c0023f5-442b-4abd-90c2-74e44d87eacc" type="radio">
+</input><label class="tabbed-label" for="cd452bfe-a324-49ac-8ce5-11ed011f4de9">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -402,8 +412,8 @@ Python</label><div class="tabbed-content docutils">
 
 <span class="gp">In [10]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
 <span class="gh">Out[10]: </span><span class="go"></span>
-<span class="go">       coef  std err         t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.543018   0.0443  12.25767  1.528308e-34  0.456191  0.629845</span>
+<span class="go">       coef   std err         t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.543694  0.044073  12.33621  5.781357e-35  0.457313  0.630076</span>
 </pre></div>
 </div>
 </div>
@@ -417,8 +427,8 @@ Python</label><div class="tabbed-content docutils">
 </ul>
 </div></blockquote>
 <div class="tabbed-set docutils">
-<input checked="checked" id="60fbc086-3998-4c11-a352-4f82287a8541" name="544f419d-d857-4c00-aa58-e224a2038781" type="radio">
-</input><label class="tabbed-label" for="60fbc086-3998-4c11-a352-4f82287a8541">
+<input checked="checked" id="97b75f09-4372-486c-95b7-77f80153a31e" name="14861d3b-0179-4691-9d22-853b731a0c8a" type="radio">
+</input><label class="tabbed-label" for="97b75f09-4372-486c-95b7-77f80153a31e">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
 
@@ -428,8 +438,8 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">   ....: </span>
 
 <span class="gp">In [13]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.568982  0.041863  13.591678  4.486760e-42  0.486933  0.651032</span>
+<span class="go">       coef   std err         t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.568324  0.042163  13.47916  2.074547e-41  0.485686  0.650962</span>
 
 <span class="gp">In [14]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
 
@@ -441,8 +451,8 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">In [16]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_l&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">});</span>
 
 <span class="gp">In [17]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.568982  0.041863  13.591678  4.486760e-42  0.486933  0.651032</span>
+<span class="go">       coef   std err         t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.568324  0.042163  13.47916  2.074547e-41  0.485686  0.650962</span>
 </pre></div>
 </div>
 </div>
@@ -465,8 +475,8 @@ length <code class="docutils literal notranslate"><span class="pre">n_rep</span>
 the <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method.
 To illustrate the parameter tuning, we generate data from a sparse partially linear regression model.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="25ab23aa-1918-4016-98b8-0772c2103447" name="ec36c38b-d04d-408e-9ef2-5b85919113ac" type="radio">
-</input><label class="tabbed-label" for="25ab23aa-1918-4016-98b8-0772c2103447">
+<input checked="checked" id="6175e107-003b-479a-8512-738841e7b0de" name="6d5687da-7b31-4e85-8cb8-89996da9489e" type="radio">
+</input><label class="tabbed-label" for="6175e107-003b-479a-8512-738841e7b0de">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -495,8 +505,8 @@ Python</label><div class="tabbed-content docutils">
 implemented in <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> or via a randomized search implemented in
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="(in scikit-learn v1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.RandomizedSearchCV</span></code></a>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="ebe93166-5460-44bf-bcfa-604dba8b97b9" name="a2e3c52e-d572-4d4e-a526-2b80b835da50" type="radio">
-</input><label class="tabbed-label" for="ebe93166-5460-44bf-bcfa-604dba8b97b9">
+<input checked="checked" id="782cc933-1bab-4f52-a7c2-325d60d07339" name="54226be9-202b-4388-af0f-f95eebcaed57" type="radio">
+</input><label class="tabbed-label" for="782cc933-1bab-4f52-a7c2-325d60d07339">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [28]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -544,8 +554,8 @@ a regularization path implemented in <a class="reference external" href="https:/
 In this case the tuning should be done externally and the parameters can then be set via the
 <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="352c920c-0108-4763-81b5-48a0405ee21f" name="446414e3-2390-4b79-9977-ca2fa76c503c" type="radio">
-</input><label class="tabbed-label" for="352c920c-0108-4763-81b5-48a0405ee21f">
+<input checked="checked" id="51973bd2-8b10-4250-b211-52b7b4e96bb2" name="ac4e69bb-9627-4920-8856-30d36f434d4c" type="radio">
+</input><label class="tabbed-label" for="51973bd2-8b10-4250-b211-52b7b4e96bb2">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [42]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -595,17 +605,21 @@ To specify a specific learner in <a class="reference internal" href="../index.ht
 <a class="reference external" href="https://mlr3.mlr-org.com/reference/Learner.html">Learner</a>. A fast way to construct these objects is to use the
 <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a>  function <a class="reference external" href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn()</a>.
 An introduction to learners in <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a>  is provided in the <a class="reference external" href="https://mlr3book.mlr-org.com/02-basics-learners.html">chapter on learners of the mlr3 book</a>.</p></li>
+<li><p>It is also possible to pass learners that have been constructed from a pipeline with the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a>
+package.</p></li>
 <li><p>The models <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLIRM.html">DoubleML::DoubleMLIRM</a> and
-<a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLIIVM.html">DoubleML::DoubleMLIIVM</a> require classifiers.</p></li>
-<li><p>Hyperparameters of learners can either be set at instantiation in mlr3 or after instantiation using the
-<code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p></li>
+<a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLIIVM.html">DoubleML::DoubleMLIIVM</a> require classifiers.
+Users can also specify classifiers in the <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLR.html">DoubleML::DoubleMLPLR</a>
+in cases with binary treatment variables.</p></li>
+<li><p>Hyperparameters of learners can either be set at instantiation in <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> or after
+instantiation using the <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p></li>
 </ul>
 </div></blockquote>
 <p>An interactive list of provided learners in the <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> and extension packages can be found on the
 <a class="reference external" href="https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html">website of the mlr3extralearners package</a>.</p>
 </section>
-<section id="id8">
-<h3><span class="section-number">6.2.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#id8" title="Permalink to this headline">#</a></h3>
+<section id="id9">
+<h3><span class="section-number">6.2.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#id9" title="Permalink to this headline">#</a></h3>
 <p>The learners are set during initialization of the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> model classes
 <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLR.html">DoubleML::DoubleMLPLR</a>,
 <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLIV.html">DoubleML::DoubleMLPLIV</a> ,
@@ -617,8 +631,8 @@ for example <a class="reference external" href="https://mlr3learners.mlr-org.com
 (<code class="docutils literal notranslate"><span class="pre">lrn(&quot;regr.ranger&quot;)</span></code>) for regression with random forests based on the  <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a>
 package for R.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="e4dfe134-5724-441d-b8ca-a85ace08850f" name="ad6c11ef-b45b-4ad4-9d83-d7441a55b58f" type="radio">
-</input><label class="tabbed-label" for="e4dfe134-5724-441d-b8ca-a85ace08850f">
+<input checked="checked" id="6144549c-b658-47f2-9466-a51f19af64b3" name="eb1bf8f7-753f-4775-a8c0-d9fdb78cb985" type="radio">
+</input><label class="tabbed-label" for="6144549c-b658-47f2-9466-a51f19af64b3">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -664,8 +678,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </ul>
 </div></blockquote>
 <div class="tabbed-set docutils">
-<input checked="checked" id="e0e7be53-8d6e-4b68-aebf-4c9dec39f067" name="0c80ff9e-f913-4961-9f8d-f95381972e5c" type="radio">
-</input><label class="tabbed-label" for="e0e7be53-8d6e-4b68-aebf-4c9dec39f067">
+<input checked="checked" id="9f5736ac-d15c-4b6e-b1b0-8d0b747bb01c" name="d22540ab-98b1-4288-a460-343cb012d9b1" type="radio">
+</input><label class="tabbed-label" for="9f5736ac-d15c-4b6e-b1b0-8d0b747bb01c">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -729,8 +743,8 @@ fields <code class="docutils literal notranslate"><span class="pre">$learner</sp
 </ul>
 </div></blockquote>
 <div class="tabbed-set docutils">
-<input checked="checked" id="8b5d3cfb-f9b7-48c2-a852-3c2b79bc0a3e" name="3da364b7-021a-42c7-8810-1a4e8dc677ec" type="radio">
-</input><label class="tabbed-label" for="8b5d3cfb-f9b7-48c2-a852-3c2b79bc0a3e">
+<input checked="checked" id="a70a4f3e-8485-46a2-afa1-213211a890f7" name="0fe33bbd-987f-44b2-9d90-969b966865f3" type="radio">
+</input><label class="tabbed-label" for="a70a4f3e-8485-46a2-afa1-213211a890f7">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -795,8 +809,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <p>The following example illustrates how to set parameters for each fold.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="0aea8b3e-44d8-4281-80a8-211aa718b0d8" name="6903fca0-0a0a-49d9-b983-fe3a59ba655e" type="radio">
-</input><label class="tabbed-label" for="0aea8b3e-44d8-4281-80a8-211aa718b0d8">
+<input checked="checked" id="d23961b6-fcf7-4b17-b070-998c32342337" name="29a11927-e84f-40b9-94be-42dd106b91e2" type="radio">
+</input><label class="tabbed-label" for="d23961b6-fcf7-4b17-b070-998c32342337">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -886,16 +900,147 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 </section>
-<section id="id11">
-<h3><span class="section-number">6.2.3. </span>Hyperparameter tuning<a class="headerlink" href="#id11" title="Permalink to this headline">#</a></h3>
+<section id="using-pipelines-to-construct-learners">
+<h3><span class="section-number">6.2.3. </span>Using pipelines to construct learners<a class="headerlink" href="#using-pipelines-to-construct-learners" title="Permalink to this headline">#</a></h3>
+<p>Users can also specify learners that have been constructed from a pipeline using the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a>
+package. In general, pipelines can be used to perform data preprocessing, feature selection, combine learners and even
+to perform hyperparameter tuning. In the following, we provide two examples on how to construct a single learner and how
+to stack different learners via a pipeline. For a more detailed introduction to <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a>,
+we refer to the <a class="reference external" href="https://mlr3book.mlr-org.com/05-pipelines.html">Pipelines Chapter in the mlr3book</a>. Moreover, a
+notebook on how to use <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> in combination with <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
+is available in the example gallery.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="955ab0e3-8114-4c91-a624-06c742fa0af3" name="44facb4f-f4fd-4e92-8ae8-23b7be6c3f1b" type="radio">
+</input><label class="tabbed-label" for="955ab0e3-8114-4c91-a624-06c742fa0af3">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>library(mlr3pipelines)
+
+set.seed(3141)
+# Define random forest learner in a pipeline
+single_learner_pipeline = po(&quot;learner&quot;, lrn(&quot;regr.ranger&quot;, num.trees = 10))
+
+# Use pipeline to create a new instance of a learner
+ml_g = as_learner(single_learner_pipeline)
+ml_m = as_learner(single_learner_pipeline)
+
+obj_dml_data = DoubleMLData$new(data, y_col=&quot;y&quot;, d_cols=&quot;d&quot;)
+
+n_rep = 2
+n_folds = 3
+dml_plr_obj = DoubleMLPLR$new(obj_dml_data, ml_g, ml_m, n_rep=n_rep, n_folds=n_folds)
+dml_plr_obj$learner
+dml_plr_obj$fit()
+dml_plr_obj$summary()
+
+set.seed(3141)
+# Define ensemble learner in a pipeline
+ensemble_learner_pipeline = gunion(list(
+        po(&quot;learner&quot;, lrn(&quot;regr.cv_glmnet&quot;, s = &quot;lambda.min&quot;)),
+        po(&quot;learner&quot;, lrn(&quot;regr.ranger&quot;)),
+        po(&quot;learner&quot;, lrn(&quot;regr.rpart&quot;, cp = 0.01)))) %&gt;&gt;%
+    po(&quot;regravg&quot;, 3)
+
+# Use pipeline to create a new instance of a learner
+ml_g = as_learner(ensemble_learner_pipeline)
+ml_m = as_learner(ensemble_learner_pipeline)
+
+obj_dml_data = DoubleMLData$new(data, y_col=&quot;y&quot;, d_cols=&quot;d&quot;)
+
+n_rep = 2
+n_folds = 3
+dml_plr_obj = DoubleMLPLR$new(obj_dml_data, ml_g, ml_m, n_rep=n_rep, n_folds=n_folds)
+dml_plr_obj$learner
+dml_plr_obj$fit()
+dml_plr_obj$summary()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>$ml_l
+&lt;GraphLearner:regr.ranger&gt;
+* Model: -
+* Parameters: regr.ranger.num.threads=1, regr.ranger.num.trees=10
+* Packages: mlr3, mlr3pipelines, mlr3learners, ranger
+* Predict Type: response
+* Feature types: logical, integer, numeric, character, factor, ordered,
+  POSIXct
+* Properties: featureless, hotstart_backward, hotstart_forward,
+  importance, loglik, missings, oob_error, selected_features, weights
+
+$ml_m
+&lt;GraphLearner:regr.ranger&gt;
+* Model: -
+* Parameters: regr.ranger.num.threads=1, regr.ranger.num.trees=10
+* Packages: mlr3, mlr3pipelines, mlr3learners, ranger
+* Predict Type: response
+* Feature types: logical, integer, numeric, character, factor, ordered,
+  POSIXct
+* Properties: featureless, hotstart_backward, hotstart_forward,
+  importance, loglik, missings, oob_error, selected_features, weights
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d    0.5249     0.0459   11.43   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>$ml_l
+&lt;GraphLearner:regr.cv_glmnet.regr.ranger.regr.rpart.regravg&gt;
+* Model: -
+* Parameters: regr.cv_glmnet.family=gaussian,
+  regr.cv_glmnet.s=lambda.min, regr.ranger.num.threads=1,
+  regr.rpart.xval=0, regr.rpart.cp=0.01, regravg.weights=1
+* Packages: mlr3, mlr3pipelines, mlr3learners, glmnet, ranger, rpart
+* Predict Type: response
+* Feature types: logical, integer, numeric, character, factor, ordered,
+  POSIXct
+* Properties: featureless, hotstart_backward, hotstart_forward,
+  importance, loglik, missings, oob_error, selected_features, weights
+
+$ml_m
+&lt;GraphLearner:regr.cv_glmnet.regr.ranger.regr.rpart.regravg&gt;
+* Model: -
+* Parameters: regr.cv_glmnet.family=gaussian,
+  regr.cv_glmnet.s=lambda.min, regr.ranger.num.threads=1,
+  regr.rpart.xval=0, regr.rpart.cp=0.01, regravg.weights=1
+* Packages: mlr3, mlr3pipelines, mlr3learners, glmnet, ranger, rpart
+* Predict Type: response
+* Feature types: logical, integer, numeric, character, factor, ordered,
+  POSIXct
+* Properties: featureless, hotstart_backward, hotstart_forward,
+  importance, loglik, missings, oob_error, selected_features, weights
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d   0.55173    0.04631   11.91   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="id16">
+<h3><span class="section-number">6.2.4. </span>Hyperparameter tuning<a class="headerlink" href="#id16" title="Permalink to this headline">#</a></h3>
 <p>Parameter tuning of learners for the nuisance functions of <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models can be done via the <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method.
 The <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method passes various options and parameters to the tuning interface provided by the
 <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a> package. The <a class="reference external" href="https://mlr3book.mlr-org.com/">mlr3 book</a> provides a
 <a class="reference external" href="https://mlr3book.mlr-org.com/04-optimization.html">step-by-step introduction to parameter tuning</a>.</p>
 <p>To illustrate the parameter tuning, we generate data from a sparse partially linear regression model.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="e7772b09-89b3-4708-b083-40d0d68482f5" name="ce5468f4-ecf2-4a36-bf8a-7ec708b43381" type="radio">
-</input><label class="tabbed-label" for="e7772b09-89b3-4708-b083-40d0d68482f5">
+<input checked="checked" id="a6d68e99-1491-497f-9113-54fa9a7dc453" name="e6161e74-2489-452f-b5fc-ad1df73a16e8" type="radio">
+</input><label class="tabbed-label" for="a6d68e99-1491-497f-9113-54fa9a7dc453">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -955,8 +1100,8 @@ which are later used in the fitting stage for all folds.</p>
 For example, if we set <code class="docutils literal notranslate"><span class="pre">n_folds=2</span></code> at initialization of the <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> object and use a 5-fold cross-validated error
 for tuning, each of the two folds would be split up into 5 subfolds and the error would be evaluated on these subfolds.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="48e26f5c-6ce8-487e-9ca7-9bec46f797af" name="cb24fb7a-f852-482d-810b-e55e57a66177" type="radio">
-</input><label class="tabbed-label" for="48e26f5c-6ce8-487e-9ca7-9bec46f797af">
+<input checked="checked" id="02dbb750-bcff-411d-b806-3972f001b8d4" name="0999f988-eb29-4cd3-b74b-607858f5c651" type="radio">
+</input><label class="tabbed-label" for="02dbb750-bcff-411d-b806-3972f001b8d4">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1099,8 +1244,8 @@ Alternatively, the powerful functionalities of the <a class="reference external"
 external parameter tuning of the nuisance parts. The optimally chosen parameters can then be passed to the
 <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models using the <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="e7e744b6-759d-40a5-86d3-396d91a35941" name="a311c7b9-5fb8-4956-9be5-d643860de191" type="radio">
-</input><label class="tabbed-label" for="e7e744b6-759d-40a5-86d3-396d91a35941">
+<input checked="checked" id="98cce934-7cb1-4943-be2c-19aefd4c7d96" name="f1798282-ef0e-4f4c-8c49-acb030a930c9" type="radio">
+</input><label class="tabbed-label" for="98cce934-7cb1-4943-be2c-19aefd4c7d96">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1140,8 +1285,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 as provided by the  <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a> package. In this example, we use random search to find optimal
 parameters <code class="docutils literal notranslate"><span class="pre">mtry</span></code> and <code class="docutils literal notranslate"><span class="pre">max.depth</span></code> of a random forest. Evaluation is based on 3-fold cross-validation.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="c674b974-99f4-4ab1-b136-1fc22a78abcf" name="c2627b5a-fc5a-4852-ae97-fa7905602b1a" type="radio">
-</input><label class="tabbed-label" for="c674b974-99f4-4ab1-b136-1fc22a78abcf">
+<input checked="checked" id="432718a0-056d-40c9-9956-7fd73ae44974" name="faddd469-c8a4-4bf9-a248-f53f51990372" type="radio">
+</input><label class="tabbed-label" for="432718a0-056d-40c9-9956-7fd73ae44974">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1219,8 +1364,71 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 </div>
+</section>
+<section id="hyperparameter-tuning-with-pipelines">
+<h3><span class="section-number">6.2.5. </span>Hyperparameter tuning with pipelines<a class="headerlink" href="#hyperparameter-tuning-with-pipelines" title="Permalink to this headline">#</a></h3>
+<p>As an alternative to the previously presented tuning approach, it is possible to base the parameter tuning on a pipeline
+as provided by the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> package. The basic idea of this approach is to
+define a learner via a pipeline and then perform the tuning via the <code class="docutils literal notranslate"><span class="pre">tune()</span></code>. We will shortly repeat the lasso example
+from above. In general, the pipeline-based approach can be used to find optimal values not only for the parameters of
+one or multiple learners, but also for other parameters, which are, for example, involved in the data preprocessing. We
+refer to more details provided in the <a class="reference external" href="https://mlr3book.mlr-org.com/05-pipelines.html">Pipelines Chapter in the mlr3book</a>.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="3089d027-846c-449d-a9ae-502404b6ca9c" name="91d5a3d5-1076-4801-8dd8-b13822138ad2" type="radio">
+</input><label class="tabbed-label" for="3089d027-846c-449d-a9ae-502404b6ca9c">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>library(DoubleML)
+library(mlr3)
+library(mlr3tuning)
+library(mlr3pipelines)
+lgr::get_logger(&quot;mlr3&quot;)$set_threshold(&quot;warn&quot;)
+lgr::get_logger(&quot;bbotk&quot;)$set_threshold(&quot;warn&quot;)
+
+# Define learner in a pipeline
+set.seed(1234)
+lasso_pipe = po(&quot;learner&quot;,
+    learner = lrn(&quot;regr.glmnet&quot;))
+ml_g = as_learner(lasso_pipe)
+ml_m = as_learner(lasso_pipe)
+
+# Instantiate a DoubleML object
+dml_plr_obj = DoubleMLPLR$new(dml_data, ml_g, ml_m)
+
+# Parameter grid for lambda
+par_grids = ps(regr.glmnet.lambda = p_dbl(lower = 0.05, upper = 0.1))
+
+tune_settings = list(terminator = trm(&quot;evals&quot;, n_evals = 100),
+                     algorithm = tnr(&quot;grid_search&quot;, resolution = 10),
+                     rsmp_tune = rsmp(&quot;cv&quot;, folds = 5),
+                     measure = list(&quot;ml_g&quot; = msr(&quot;regr.mse&quot;),
+                                    &quot;ml_m&quot; = msr(&quot;regr.mse&quot;)))
+dml_plr_obj$tune(param_set = list(&quot;ml_g&quot; = par_grids,
+                                  &quot;ml_m&quot; = par_grids),
+                                  tune_settings=tune_settings,
+                                  tune_on_fold=TRUE)
+dml_plr_obj$fit()
+dml_plr_obj$summary()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d    3.0425     0.1424   21.37   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <section id="references">
-<h4><span class="section-number">6.2.3.1. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h4>
+<h4><span class="section-number">6.2.5.1. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h4>
 <ul class="simple">
 <li><p>Lang, M., Binder, M., Richter, J., Schratz, P., Pfisterer, F., Coors, S., Au, Q., Casalicchio, G., Kotthoff, L., Bischl, B. (2019), mlr3: A modern object-oriented machine learing framework in R. Journal of Open Source Software, <a class="reference external" href="https://doi.org/10.21105/joss.01903">doi:10.21105/joss.01903</a>.</p></li>
 <li><p>Becker, M., Binder, M., Bischl, B., Lang, M., Pfisterer, F., Reich, N.G., Richter, J., Schratz, P., Sonabend, R. (2020), mlr3 book, available at <a class="reference external" href="https://mlr3book.mlr-org.com">https://mlr3book.mlr-org.com</a>.</p></li>
