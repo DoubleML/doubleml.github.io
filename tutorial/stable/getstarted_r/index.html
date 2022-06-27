@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.100.1" />
+
+
+<title>Getting Started - Causal ML with DoubleML</title>
+<meta property="og:title" content="Getting Started - Causal ML with DoubleML">
+
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/tutorial/stable/css/fonts.css" media="all">
+<link rel="stylesheet" href="/tutorial/stable/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/tutorial/stable/" class="nav-logo">
+    <img src="/tutorial/stable/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/tutorial/stable/2022/06/18/welcome-user-2022/">UseR!2022</a></li>
+    
+    <li><a href="/tutorial/stable/2022/07/31/welcome-uai2022/">uai2022</a></li>
+    
+    <li><a href="/tutorial/stable/getstarted">Getting Started</a></li>
+    
+    <li><a href="/tutorial/stable/about/">About</a></li>
+    
+    <li><a href="https://github.com/DoubleML/tutorial_materials">GitHub</a></li>
+    
+    <li><a href="/tutorial/stable/team/">Team</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+
+    <h1 class="article-title">Getting Started</h1>
+
+    
+
+    <div class="article-content">
+      
+
+
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>Please read the following installation instructions and make sure you installed the latest release of <code>DoubleML</code> on your local machine prior to our tutorial.</p>
+<p>In case you want to learn more about <code>DoubleML</code> upfront, feel free to read through our <a href="https://docs.doubleml.org/stable/guide/guide.html">user guide</a>.</p>
+<div id="install-latest-release-from-cran" class="section level3">
+<h3>Install latest release from CRAN</h3>
+<p>Install latest release from CRAN via</p>
+<pre class="r"><code>install.packages(&quot;DoubleML&quot;)</code></pre>
+</div>
+<div id="install-development-version-from-github" class="section level3">
+<h3>Install development version from GitHub</h3>
+<p>The DoubleML package for R can be downloaded using the command (previous installation of the remotes package is required).</p>
+<pre class="r"><code>remotes::install_github(&quot;DoubleML/doubleml-for-r&quot;)</code></pre>
+</div>
+</div>
+<div id="load-doubleml" class="section level2">
+<h2>Load DoubleML</h2>
+<p>Load the package after completed installation.</p>
+<pre class="r"><code>library(DoubleML)</code></pre>
+</div>
+<div id="install-packages-for-learners" class="section level2">
+<h2>Install packages for learners</h2>
+<p>As described in our <a href="https://docs.doubleml.org/stable/guide/learners.html#r-learners-and-hyperparameters">user guide section on learners</a> and the <a href="https://mlr3book.mlr-org.com/02-basics-learners.html">corresponding chapter of the mlr3book</a>, we have to install the packages that are required for using the ML learners. In our tutorial, we will use the R packages <code>ranger</code>, <code>glmnet</code> and <code>xgboost</code>.</p>
+<pre class="r"><code>install.packages(&quot;ranger&quot;)
+install.packages(&quot;glmnet&quot;)
+install.packages(&quot;xgboost&quot;)</code></pre>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>Once you installed all packages, try to run the following example. Load the <code>DoubleML</code> package.</p>
+<pre class="r"><code>library(DoubleML)</code></pre>
+<p>Load the Bonus data set.</p>
+<pre class="r"><code>df_bonus = fetch_bonus(return_type=&quot;data.table&quot;)
+head(df_bonus)</code></pre>
+<pre><code>##    inuidur1 female black othrace dep1 dep2 q2 q3 q4 q5 q6 agelt35 agegt54
+## 1: 2.890372      0     0       0    0    1  0  0  0  1  0       0       0
+## 2: 0.000000      0     0       0    0    0  0  0  0  1  0       0       0
+## 3: 3.295837      0     0       0    0    0  0  0  1  0  0       0       0
+## 4: 2.197225      0     0       0    0    0  0  1  0  0  0       1       0
+## 5: 3.295837      0     0       0    1    0  0  0  0  1  0       0       1
+## 6: 3.295837      1     0       0    0    0  0  0  0  1  0       0       1
+##    durable lusd husd tg
+## 1:       0    0    1  0
+## 2:       0    1    0  0
+## 3:       0    1    0  0
+## 4:       0    0    0  1
+## 5:       1    1    0  0
+## 6:       0    1    0  0</code></pre>
+<p>Create a data backend.</p>
+<pre class="r"><code># Specify the data and variables for the causal model
+dml_data_bonus = DoubleMLData$new(df_bonus,
+                             y_col = &quot;inuidur1&quot;,
+                             d_cols = &quot;tg&quot;,
+                             x_cols = c(&quot;female&quot;, &quot;black&quot;, &quot;othrace&quot;, &quot;dep1&quot;, &quot;dep2&quot;,
+                                        &quot;q2&quot;, &quot;q3&quot;, &quot;q4&quot;, &quot;q5&quot;, &quot;q6&quot;, &quot;agelt35&quot;, &quot;agegt54&quot;,
+                                          &quot;durable&quot;, &quot;lusd&quot;, &quot;husd&quot;))
+print(dml_data_bonus)</code></pre>
+<pre><code>## ================= DoubleMLData Object ==================
+## 
+## 
+## ------------------ Data summary      ------------------
+## Outcome variable: inuidur1
+## Treatment variable(s): tg
+## Covariates: female, black, othrace, dep1, dep2, q2, q3, q4, q5, q6, agelt35, agegt54, durable, lusd, husd
+## Instrument(s): 
+## No. Observations: 5099</code></pre>
+<p>Create two learners for the nuisance components using <code>mlr3</code> and <code>mlr3learners</code>.</p>
+<pre class="r"><code>library(mlr3)
+library(mlr3learners)
+# surpress messages from mlr3 package during fitting
+lgr::get_logger(&quot;mlr3&quot;)$set_threshold(&quot;warn&quot;)
+
+learner = lrn(&quot;regr.ranger&quot;, num.trees=500, max.depth=5, min.node.size=2)
+ml_l_bonus = learner$clone()
+ml_m_bonus = learner$clone()</code></pre>
+<p>Create a new instance of a causal model, here a partially linear regression model via <code>DoubleMLPLR</code>.</p>
+<pre class="r"><code>set.seed(3141)
+obj_dml_plr_bonus = DoubleMLPLR$new(dml_data_bonus, ml_l=ml_l_bonus, ml_m=ml_m_bonus)
+obj_dml_plr_bonus$fit()
+print(obj_dml_plr_bonus)</code></pre>
+<pre><code>## ================= DoubleMLPLR Object ==================
+## 
+## 
+## ------------------ Data summary      ------------------
+## Outcome variable: inuidur1
+## Treatment variable(s): tg
+## Covariates: female, black, othrace, dep1, dep2, q2, q3, q4, q5, q6, agelt35, agegt54, durable, lusd, husd
+## Instrument(s): 
+## No. Observations: 5099
+## 
+## ------------------ Score &amp; algorithm ------------------
+## Score function: partialling out
+## DML algorithm: dml2
+## 
+## ------------------ Machine learner   ------------------
+## ml_l: regr.ranger
+## ml_m: regr.ranger
+## 
+## ------------------ Resampling        ------------------
+## No. folds: 5
+## No. repeated sample splits: 1
+## Apply cross-fitting: TRUE
+## 
+## ------------------ Fit summary       ------------------
+##  Estimates and significance testing of the effect of target variables
+##    Estimate. Std. Error t value Pr(&gt;|t|)  
+## tg  -0.07561    0.03536  -2.139   0.0325 *
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="ready-to-go--" class="section level2">
+<h2>Ready to go :-)</h2>
+<p>Once you are able to run this code, you are ready for our tutorial!</p>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/tutorial/stable/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/tutorial/stable/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/tutorial/stable/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

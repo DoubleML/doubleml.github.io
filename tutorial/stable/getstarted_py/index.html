@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.100.1" />
+
+
+<title>Getting Started - Causal ML with DoubleML</title>
+<meta property="og:title" content="Getting Started - Causal ML with DoubleML">
+
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/tutorial/stable/css/fonts.css" media="all">
+<link rel="stylesheet" href="/tutorial/stable/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/tutorial/stable/" class="nav-logo">
+    <img src="/tutorial/stable/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/tutorial/stable/2022/06/18/welcome-user-2022/">UseR!2022</a></li>
+    
+    <li><a href="/tutorial/stable/2022/07/31/welcome-uai2022/">uai2022</a></li>
+    
+    <li><a href="/tutorial/stable/getstarted">Getting Started</a></li>
+    
+    <li><a href="/tutorial/stable/about/">About</a></li>
+    
+    <li><a href="https://github.com/DoubleML/tutorial_materials">GitHub</a></li>
+    
+    <li><a href="/tutorial/stable/team/">Team</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+
+    <h1 class="article-title">Getting Started</h1>
+
+    
+
+    <div class="article-content">
+      
+
+
+<div id="installation-doubleml-for-python" class="section level2">
+<h2>Installation: DoubleML for Python</h2>
+<p>Please read the installation instructions and make sure you installed the latest release of <code>DoubleML</code> on your local machine prior to our tutorial.</p>
+<p>In case you want to learn more about <code>DoubleML</code> upfront, feel free to read through our <a href="https://docs.doubleml.org/stable/guide/guide.html">user guide</a>.</p>
+<div id="quick-start" class="section level3">
+<h3>Quick start</h3>
+<p>To install <code>DoubleML</code> via pip or conda without a virtual environment type</p>
+<pre class="python"><code>pip install -U DoubleML</code></pre>
+<p>or</p>
+<pre class="python"><code>conda install -c conda-forge doubleml</code></pre>
+</div>
+<div id="more-detailed-installation-instructions" class="section level3">
+<h3>More detailed installation instructions</h3>
+<p>For more information on installing <code>DoubleML</code> read our <a href="https://docs.doubleml.org/stable/intro/install.html">online installation guide docs.doubleml.org</a>.</p>
+</div>
+</div>
+<div id="load-doubleml" class="section level2">
+<h2>Load DoubleML</h2>
+<p>Load the <code>DoubleML</code> package after completed installation.</p>
+<pre class="python"><code>import doubleml as dml</code></pre>
+</div>
+<div id="getting-ready-for-the-tutorial" class="section level2">
+<h2>Getting Ready for the Tutorial</h2>
+<p>To check whether you are ready for the tutorial, run the following example.</p>
+<p>Load the Bonus data set.</p>
+<pre class="python"><code>from doubleml.datasets import fetch_bonus
+
+# Load bonus data
+df_bonus = fetch_bonus(&#39;DataFrame&#39;)
+print(df_bonus.head(5))</code></pre>
+<pre><code>##    index   abdt  tg  inuidur1  inuidur2  ...  lusd  husd  muld  dep1  dep2
+## 0      0  10824   0  2.890372        18  ...     0     1     0   0.0   1.0
+## 1      3  10824   0  0.000000         1  ...     1     0     0   0.0   0.0
+## 2      4  10747   0  3.295837        27  ...     1     0     0   0.0   0.0
+## 3     11  10607   1  2.197225         9  ...     0     0     1   0.0   0.0
+## 4     12  10831   0  3.295837        27  ...     1     0     0   1.0   0.0
+## 
+## [5 rows x 26 columns]</code></pre>
+<p>Create a data backend.</p>
+<pre class="python"><code># Specify the data and variables for the causal model
+from doubleml import DoubleMLData
+
+dml_data_bonus = DoubleMLData(df_bonus,
+                                   y_col=&#39;inuidur1&#39;,
+                                   d_cols=&#39;tg&#39;,
+                                   x_cols=[&#39;female&#39;, &#39;black&#39;, &#39;othrace&#39;, &#39;dep1&#39;, &#39;dep2&#39;,
+                                           &#39;q2&#39;, &#39;q3&#39;, &#39;q4&#39;, &#39;q5&#39;, &#39;q6&#39;, &#39;agelt35&#39;, &#39;agegt54&#39;,
+                                           &#39;durable&#39;, &#39;lusd&#39;, &#39;husd&#39;])
+print(dml_data_bonus)</code></pre>
+<pre><code>## ================== DoubleMLData Object ==================
+## 
+## ------------------ Data summary      ------------------
+## Outcome variable: inuidur1
+## Treatment variable(s): [&#39;tg&#39;]
+## Covariates: [&#39;female&#39;, &#39;black&#39;, &#39;othrace&#39;, &#39;dep1&#39;, &#39;dep2&#39;, &#39;q2&#39;, &#39;q3&#39;, &#39;q4&#39;, &#39;q5&#39;, &#39;q6&#39;, &#39;agelt35&#39;, &#39;agegt54&#39;, &#39;durable&#39;, &#39;lusd&#39;, &#39;husd&#39;]
+## Instrument variable(s): None
+## No. Observations: 5099
+## 
+## ------------------ DataFrame info    ------------------
+## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+## RangeIndex: 5099 entries, 0 to 5098
+## Columns: 26 entries, index to dep2
+## dtypes: float64(3), int64(23)
+## memory usage: 1.0 MB</code></pre>
+<p>Create two learners for the nuisance components using <code>scikit-learn</code>.</p>
+<pre class="python"><code>from sklearn.base import clone
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LassoCV
+
+learner = RandomForestRegressor(n_estimators = 500, max_features = &#39;sqrt&#39;, max_depth= 5)
+
+ml_l_bonus = clone(learner)
+ml_m_bonus = clone(learner)</code></pre>
+<p>Create a new instance of a causal model, here a partially linear regression model via <code>DoubleMLPLR</code>.</p>
+<pre class="python"><code>import numpy as np
+from doubleml import DoubleMLPLR
+
+np.random.seed(3141)
+obj_dml_plr_bonus = DoubleMLPLR(dml_data_bonus, ml_l_bonus, ml_m_bonus)
+obj_dml_plr_bonus.fit();
+print(obj_dml_plr_bonus)</code></pre>
+<pre><code>## ================== DoubleMLPLR Object ==================
+## 
+## ------------------ Data summary      ------------------
+## Outcome variable: inuidur1
+## Treatment variable(s): [&#39;tg&#39;]
+## Covariates: [&#39;female&#39;, &#39;black&#39;, &#39;othrace&#39;, &#39;dep1&#39;, &#39;dep2&#39;, &#39;q2&#39;, &#39;q3&#39;, &#39;q4&#39;, &#39;q5&#39;, &#39;q6&#39;, &#39;agelt35&#39;, &#39;agegt54&#39;, &#39;durable&#39;, &#39;lusd&#39;, &#39;husd&#39;]
+## Instrument variable(s): None
+## No. Observations: 5099
+## 
+## ------------------ Score &amp; algorithm ------------------
+## Score function: partialling out
+## DML algorithm: dml2
+## 
+## ------------------ Machine learner   ------------------
+## Learner ml_g: RandomForestRegressor(bootstrap=True, ccp_alpha=0.0, criterion=&#39;mse&#39;,
+##                       max_depth=5, max_features=&#39;sqrt&#39;, max_leaf_nodes=None,
+##                       max_samples=None, min_impurity_decrease=0.0,
+##                       min_impurity_split=None, min_samples_leaf=1,
+##                       min_samples_split=2, min_weight_fraction_leaf=0.0,
+##                       n_estimators=500, n_jobs=None, oob_score=False,
+##                       random_state=None, verbose=0, warm_start=False)
+## Learner ml_m: RandomForestRegressor(bootstrap=True, ccp_alpha=0.0, criterion=&#39;mse&#39;,
+##                       max_depth=5, max_features=&#39;sqrt&#39;, max_leaf_nodes=None,
+##                       max_samples=None, min_impurity_decrease=0.0,
+##                       min_impurity_split=None, min_samples_leaf=1,
+##                       min_samples_split=2, min_weight_fraction_leaf=0.0,
+##                       n_estimators=500, n_jobs=None, oob_score=False,
+##                       random_state=None, verbose=0, warm_start=False)
+## 
+## ------------------ Resampling        ------------------
+## No. folds: 5
+## No. repeated sample splits: 1
+## Apply cross-fitting: True
+## 
+## ------------------ Fit summary       ------------------
+##         coef   std err         t     P&gt;|t|     2.5 %    97.5 %
+## tg -0.076691  0.035411 -2.165731  0.030332 -0.146096 -0.007286</code></pre>
+</div>
+<div id="ready-to-go--" class="section level2">
+<h2>Ready to go :-)</h2>
+<p>Once you are able to run this code, you are ready for our tutorial!</p>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/tutorial/stable/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/tutorial/stable/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+
+    
+  </body>
+</html>
+
