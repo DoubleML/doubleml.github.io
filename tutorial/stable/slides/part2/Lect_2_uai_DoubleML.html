@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Double ML: Causal Inference based on ML</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="uai2022, August 1, 2022, Eindhoven" />
+    <script src="Lect_2_uai_DoubleML_files/header-attrs/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Double ML: Causal Inference based on ML
+]
+.subtitle[
+## Double Machine Learning in Practice
+]
+.author[
+### uai2022, August 1, 2022, Eindhoven
+]
+.date[
+### Philipp Bach, Martin Spindler
+]
+
+---
+
+
+
+
+
+
+
+
+class: inverse center middle, hide-logo
+
+# Introduction to DoubleML
+
+&lt;center&gt;&lt;img src="figures/DoubleML_Rhino_1000x1000.png" alt="The DoubleML logo - a double-headed rhino" height="250px" /&gt;&lt;/center&gt;
+
+---
+
+## Overview
+
+* `DoubleML` provides a general implementation of the Double Machine Learning approach by Chernozhukov et al. (2018) in Python and R
+
+* There are also other open source libraries available for causal machine learning
+    + `CausalML` (uber, https://github.com/uber/causalml, Chen et al., 2020) - variety of causal ML learners, i.a. with focus on uplift modeling, CATEs and IATEs
+    
+    + `EconML` (microsoft research, https://github.com/microsoft/EconML, Battocchi et al., 2021) - various causal estimators based on machine learnign, among others based on double machine learning approach
+    
+  + ...
+
+--
+
+`CausalML` and `EconML` have a focus on heterogeneity of treatment effects from their start on
+
+`DoubleML` focuses on implementing the DML approach and its extensions (example: heterogeneity)
+
+`\(\rightarrow\)` Object-orientated implementation based on orthogonal score 
+
+`\(\rightarrow\)` Extendibility and flexibility
+
+---
+
+## Building Principles
+
+### Key ingredient and Implementation
+
+- **Orthogonal Score**
+  - Object-oriented implementation
+  - Exploit common structure being centered around a (linear) score function `\(\psi(\cdot)\)`
+
+- **High-quality ML**
+  - State-of-the-art ML prediction and tuning methods
+  - Provided by `scikit-learn` and `sckit-learn`-like learners
+
+- **Sample Splitting**
+  - General implementation of sample splitting
+
+
+
+---
+
+## DoubleML Package Dependencies
+
+
+.pull-left[
+
+
+`scikit-learn`
+
+&lt;img src="figures/sklearn.png" alt="The logo of the sklearn module for Python" height="50px" /&gt;
+
+
+`pandas`
+
+&lt;img src="figures/pandas.png" alt="The logo of the pandas module for Python" height="50px" /&gt;
+
+
+`numpy`
+
+&lt;img src="figures/numpy.png" alt="The logo of the numpy module for Python" height="50px" /&gt;
+
+
+]
+
+.pull-right[
+
+
+`SciPy`
+
+&lt;img src="figures/scipy.png" alt="The logo of the scipy module for Python" height="50px" /&gt;
+
+
+`statsmodels`
+
+&lt;img src="figures/statsmodels.png" alt="The logo of the statsmodels module for Python" height="50px" /&gt;
+
+`joblib`
+
+
+&lt;img src="figures/joblib.png" alt="The logo of the joblib module for Python" height="50px" /&gt;
+
+
+]
+
+
+---
+
+## Why an Object-Orientated Implementation?
+
+*  Given the components `\(\psi^a(\cdot)\)` &amp; `\(\psi^b(\cdot)\)` of a linear Neyman orthogonal score function `\(\psi(\cdot)\)`, a **general implementation** is possible for
+  - The estimation of the **orthogonal parameters**
+  - The computation of the **score** `\(\psi(W; \theta, \eta)\)`
+  - The estimation of **standard errors**
+  - The computation of **confidence intervals**
+  - A **multiplier bootstrap** procedure for simultaneous inference
+
+&lt;br&gt; 
+
+*  The **sample splitting** can be implemented in general as well
+
+`\(\rightarrow\)` Implemented in the **abstract base class** `DoubleML`
+
+&lt;br&gt; 
+
+* The **score components** and the estimation of the **nuisance models** have to be implemented **model-specifically**
+
+`\(\rightarrow\)` Implemented in **model-specific classes** inherited from `DoubleML`
+
+---
+
+## Class Structure and Causal Models
+
+
+&lt;center&gt;&lt;img src="figures/doubleml_models_with_linear_score_classes_methods_py.png" height="500px" alt="Description of Figure (alt-text): The figure shows a diagramm of the object class structure in `DoubleML`. On top, there is a box illustrating the base class `DoubleML`. In this class, inference methods that are based on a linear score function `\(\psi\)` are implemented, for example the methods `fit()`, `bootstrap()` and `confint()` for parameter estimation and construction of confidence intervals. Below, there are four different boxes indicating four different model classes: `DoubleMLPLR` for partially linear regression models, `DoubleMLPLIV` for partially linear instrumental variable regression, `DoubleMLIRM` for an interactive or nonparametric regression  model and `DoubleMLIIVM` for an IV-version of this interactive regression model. Each of these models is characterized by a different score function `\(\psi\)`." /&gt;&lt;/center&gt;
+
+
+---
+
+## Advantages of the Object-Orientation
+
+* `DoubleML` gives the user a **high flexibility** with regard to the specification of DML models:
+  - Choice of ML methods for approximating the nuisance functions
+  - Different resampling schemes (repeated cross-fitting)
+  - DML algorithms DML1 and DML2
+  - Different Neyman orthogonal score functions
+
+&lt;br&gt; 
+
+* `DoubleML` can be **easily extended**
+  - New model classes with appropriate Neyman orthogonal score function can be inherited from `DoubleML`
+  - The package features `callables` as score functions which makes it easy to extend existing model classes
+  - The resampling schemes are customizable in a flexible way
+
+---
+
+class: inverse center middle, hide-logo
+
+# Getting started with DoubleML!
+
+
+---
+
+## Installation
+
+Install the latest release via pip or conda, see [installation guide](https://docs.doubleml.org/stable/intro/install.html)
+
+
+```python
+pip install -U DoubleML
+```
+
+
+```python
+conda install -c conda-forge doubleml
+```
+
+&lt;br&gt;
+
+Install development version from GitHub **https://github.com/DoubleML/doubleml-for-py**
+
+&lt;br&gt;
+
+See the **Getting Started** page of the tutorial website for more information on prerequisites.
+
+
+---
+
+
+## Data Example: Demand Estimation
+
+.pull-left[
+
+
+
+&lt;center&gt;&lt;img src="figures/demand.png" alt="An illustration of demand estimation. On the left hand side two hands are displayed on top of each other. Between the hands there are two arrows showing up and down. On the right hand side, there is a price tag with a dollar sign attached to a circular graph." height="165px" /&gt;&lt;/center&gt;
+
+
+&lt;br&gt;
+
+#### Data Source
+
+* Data example based on a [**blogpost by Lars Roemheld (Roemheld, 2021)**](https://towardsdatascience.com/causal-inference-example-elasticity-de4a3e2e621b)
+
+* Original real data set publicly available via [**kaggle**](https://www.kaggle.com/vijayuv/onlineretail), [**preprocessing notebook available online**](https://github.com/DoubleML/doubleml-docs/blob/master/doc/examples/py_elasticity_preprocessing.ipynb)
+
+]
+
+.pull-right[
+
+#### Causal Problem
+
+* **Price elasticity of demand:** What is the **effect** of a **price change**, `\(dLnP\)`, on **demanded quantity**, `\(dLnQ\)`?
+
+* **Observational study**: Flexibly adjust for confounding variables `\(X\)`, e.g. product characteristics
+
+&lt;br&gt;
+
+#### Causal Diagram (DAG)
+
+&lt;img src="Lect_2_uai_DoubleML_files/figure-html/unnamed-chunk-3-1.png" title="A directed acyclical graph with nodes dLnP, X, U and dLnQ. The following edges connect the nodes. From U to dLnP, from X to dLnP, from X to dLnQ, from dLnP to dLnQ" alt="A directed acyclical graph with nodes dLnP, X, U and dLnQ. The following edges connect the nodes. From U to dLnP, from X to dLnP, from X to dLnQ, from dLnP to dLnQ" width="80%" /&gt;
+
+]
+
+---
+
+class: inverse center middle, hide-logo
+
+# Hands On! Interactive Breakout Sessions
+
+&lt;center&gt;&lt;img src="figures/abtest.png" height="165px" alt="An illustration of AB testing. A stylized browser window shows a double-headed rhino which is a variant of the DoubleML package logo. The screen is divided vertically in two parts. The left part of the screen has the tag 'A' and differs from the right part called 'B' in that the colors are inverted." /&gt;&lt;/center&gt;
+
+---
+
+## Data Example: A/B Testing
+
+.pull-left[
+
+
+&lt;center&gt;&lt;img src="figures/abtest.png" alt="An illustration of AB testing. A stylized browser window shows a double-headed rhino which is a variant of the DoubleML package logo. The screen is divided vertically in two parts. The left part of the screen has the tag 'A' and differs from the right part called 'B' in that the colors are inverted." height="165px" /&gt;&lt;/center&gt;
+
+
+&lt;br&gt;
+
+#### Data Source
+
+* Data example based on a randomly chosen DGP created for the [**2019 ACIC Data Challenge**](https://sites.google.com/view/acic2019datachallenge/data-challenge). 
+
+
+]
+
+.pull-right[
+
+#### Causal Problem
+
+* **Online shop:** What is the **effect** of a **new ad design** `\(A\)` on **sales** `\(Y\)` (in $100 )?
+
+* **Observational study**: Necessary to adjust for confounding variables `\(V\)`
+
+&lt;br&gt;
+
+#### Causal Diagram (DAG)
+
+&lt;img src="Lect_2_uai_DoubleML_files/figure-html/unnamed-chunk-4-1.png" title="A directed acyclical graph with nodes A, V, U and Y. The following edges connect the nodes. From U to A, from V to A, from V to Y, from A to Y" alt="A directed acyclical graph with nodes A, V, U and Y. The following edges connect the nodes. From U to A, from V to A, from V to Y, from A to Y" width="80%" /&gt;
+
+]
+
+
+---
+
+## Online Resources
+
+
+* The notebook is organized according to the [**DoubleML Workflow**](https://docs.doubleml.org/stable/workflow/workflow.html)
+
+* Extensive [**User Guide**](https://docs.doubleml.org/stable/guide/guide.html) available via [**docs.doubleml.org**](https://docs.doubleml.org)
+
+* [**Documentation for the Python API**](https://docs.doubleml.org/stable/api/api.html) available via [**https://docs.doubleml.org/stable/api/api.html**](https://docs.doubleml.org/stable/api/api.html)
+
+* Paper for the Python package available from [**JMLR**](http://jmlr.org/papers/v23/21-0862.html) or [**arxiv**](https://arxiv.org/abs/2104.03220)
+
+---
+
+class: inverse center middle, hide-logo
+
+# References
+
+---
+
+## References
+
+#### Double Machine Learning Approach
+
+* Chernozhukov, V., Chetverikov, D., Demirer, M., Duflo, E., Hansen, C., Newey, W. and Robins, J. (2018), Double/debiased machine learning for treatment and structural parameters. The Econometrics Journal, 21: C1-C68, doi:10.1111/ectj.12097.
+
+* Chernozhukov, V., Hansen, C., Spindler, M., and Syrgkanis, V. (forthcoming), Applied Causal Inference Powered by ML and AI.
+
+
+#### DoubleML Package for Python and R
+
+* Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M. (2021), DoubleML - An Object-Oriented Implementation of Double Machine Learning in R, [arXiv:2103.09603](https://arxiv.org/abs/2103.09603).
+
+* Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M. (2022), DoubleML - An Object-Oriented Implementation of Double Machine Learning in Python, Journal of Machine Learning Research, 23(53): 1-6, https://www.jmlr.org/papers/v23/21-0862.html.
+
+
+---
+
+## References
+
+#### Open-Source Libraries for Causal Machine Learning
+
+* Battocchi, K, Dillon, E., Hei, M., Lewis, G., Oka, P., Oprescu, M. and Syrgkanis, V. (2021), EconML: A Python package for ML-based heterogeneous treatment effects estimation, https://github.com/microsoft/EconML. Version 0.11.1
+
+* Chen, H., Harinen, T., Lee, J.-Y., Yung, M. and Zhao, Z. (2020), CausalML: Python package for
+causal machine learning, [**arXiv:2002.11631**](https://arxiv.org/abs/2002.11631) [cs.CY]
+
+
+---
+
+class: inverse center middle, hide-logo
+
+# Appendix
+
+---
+
+## DoubleML Class Structure
+
+
+&lt;center&gt;&lt;img src="figures/oop_python_smaller.png" height="450px" alt="A tree diagram illustrating the class structure of the DoubleML package for Python. The abstract base class DoubleML has attributes coef and se, among others and implements general inference procedures in the methods fit and bootstrap, among others. The abstract private methods ml_nuisance_est and ml_nuisance_tuning are then called from the specific model classes that inherit from the base class. The model classes DoubleMLPLR, DoubleMLPLIV, DoubleMLIRM and DoubleMLIIVM that are illustrated as four orange boxes on the lowest leve of the tree have attributes learner and params, among others. The model-specific functions to fit the nuisance functions are implemented as private methods in these subclasses."  /&gt;&lt;/center&gt;
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<style>
+.logo {
+  background-image: url(logo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  width: 320px;
+  height: 102px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
