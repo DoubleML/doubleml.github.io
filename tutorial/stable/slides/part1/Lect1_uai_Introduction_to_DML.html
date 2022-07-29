@@ -15,13 +15,14 @@ class: center, middle, inverse, title-slide
 # Double ML: Causal Inference based on ML
 ]
 .subtitle[
-## Introduction to Causal Machine Learning
+## Part I: Introduction to Causal Machine Learning
 ]
 .author[
 ### uai2022, August 1, 2022, Eindhoven
 ]
 .date[
-### Philipp Bach, Martin Spindler
+### Philipp Bach, Martin Spindler (UHH &amp; Economic AI)
+Collaborators: Victor Chernozhukov (MIT), Malte Kurz (TUM)
 ]
 
 ---
@@ -101,7 +102,7 @@ Example: **Customer Churn**
 
 .pull-left[
 
-* What is the causal effect of **active labor market policies** on **labor market participation**
+* What is the causal effect of **active labor market policies** on **labor market participation**?
 
 ]
 
@@ -111,6 +112,7 @@ Example: **Customer Churn**
 
 ]
 
+&lt;br&gt; 
 
 ### General Question
 
@@ -128,11 +130,13 @@ Example: **Customer Churn**
 
 &lt;br&gt;
 
-#### Problem in practice
+#### Challenges in practice
 
-1. No pure A/B-testing experiments possible
+1. No (pure) A/B-testing / experiments possible -&gt; observational data 
     
 2. A/B test suffers from low power
+
+3. Heterogenous treatment effects
 
 ]
 
@@ -149,6 +153,8 @@ Example: **Customer Churn**
 1. **Observational study**: Include control variables `\(X\)` which may also impact the variables `\(Y\)` or `\(D\)`
 
 2. Include covariates `\(X\)` that help to predict the outcome `\(Y\)` using ML methods.
+
+3. Detection of complex treatment effect patterns
 
 ]
 
@@ -180,7 +186,7 @@ Example: **Customer Churn**
 
 **Econometric model** for estimating the **price elasticity** `\(\theta_0\)`:
 
-`$$\log(Q) = \alpha +\log(P) \theta_0 + X \beta + \varepsilon,$$`
+`$$\log(Q) = \alpha + \theta_0 \log(P) + X' \beta + \varepsilon,$$`
 
 where the vector of controls `\(X\)` can be very **high-dimensional**
 
@@ -191,7 +197,7 @@ where the vector of controls `\(X\)` can be very **high-dimensional**
 
 - Machine Learning methods usually tailored for **prediction**
 
-- In econometrics and industry both prediction (stock market, demand, ...) and learning of **causal relationship** is of interest
+- In science and industry both prediction (stock market, demand, ...) and learning of **causal relationship** is of interest
 
 - Here: **Focus on causal inference** with machine Learning methods
 
@@ -300,7 +306,7 @@ class: inverse center middle, hide-logo
 ## What is Double/Debiased Machine Learning (DML)?
 
 
-- **Double/debiased machine learning (DML)** introduced by Chernozhukov et al. (2018)
+- **Double/debiased machine learning (DML)** surveyed  by Chernozhukov et al. (2018)
 
 - General framework for causal inference and estimation of treatment effects based on machine learning tools using big data
 
@@ -522,10 +528,63 @@ class: inverse center middle, hide-logo
 
 * PLR example: Orthogonality by including the first-stage regression, i.e., the regression relationship of the treatment variable `\(D\)` and the regressors `\(X\)`. 
 
-* Orthogonal score function `\(\psi(\cdot)= (Y-g(x)-\theta D)(D-m(X)\)`.
+* Orthogonal score function `\(\psi(\cdot)= (Y-g(x)-\theta D)(D-m(X))\)`.
 
 
 ---
+
+## Neyman Orthogonality
+
+The two strategies rely on very different moment conditions for identifying and estimating `\(\theta_0\)`:
+`$$\mathbb{E} [\psi(W, \theta_0, \eta_0)] = 0$$`
+
+.pull-left[
+
+#### Naive approach
+`\begin{align}
+\psi (W, \theta_0, \eta) = &amp; (Y - D\theta_0 - g_0(X))D
+\end{align}`
+
+&lt;br&gt;
+
+Regression adjustment score
+
+`\begin{align}
+\eta &amp;= g(X), \\
+\eta_0 &amp;= g_0(X),
+\end{align}`
+
+]
+
+.pull-right[
+
+#### FWL partialling out
+
+`\begin{align}
+\psi (W, \theta_0, \eta_0) = &amp;  ((Y- E[Y|X])-(D-E[D|X])\theta_0)\\
+&amp; (D-E[D|X])
+\end{align}`
+
+Neyman-orthogonal score (Frisch-Waugh-Lovell)
+
+`\begin{align}
+\eta &amp;= (g(X), m(X)), \\
+\eta_0 &amp;= ( g_0(X), m_0(X)) = ( \mathbb{E} [Y \mid X], \mathbb{E}[D \mid X])
+\end{align}`
+
+
+]
+
+
+Both estimators solve  the empirical analog of the moment conditions:
+$$
+\frac{1}{n} \sum_{i=1}^n  \psi (W_i, \theta, \hat \eta_0)  = 0,
+$$
+where instead of unknown nuisance functions we plug-in their ML-based (hold-out) estimators
+
+---
+
+
 
 ## The Key Ingredients of DML
 
