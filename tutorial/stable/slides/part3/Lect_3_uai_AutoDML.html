@@ -113,7 +113,7 @@ $$
 \theta = E[Y(D+1)- Y(D)] = E[g(D+1,X,A)]- E Y.
 $$
 
-* Average Policy Effect (APEC) from covariate Shift:
+* Average Policy Effect (APEC) from covariate shift:
 $$
 \theta = \int E [Y(d) \mid X=x] \mathrm{d} ({F_1}(x) - d F_0(x)).  
 $$
@@ -201,7 +201,7 @@ $$
 
 &lt;br&gt; 
 
-* Chernozhukov et al. (2021a) and Chernozhukov et al. (2018c)] employ this formulation to learn the Riesz representer without knowing the functional form
+* Chernozhukov et al. (2021a) and Chernozhukov et al. (2018c) employ this formulation to learn the Riesz representer without knowing the functional form
 
 
 * Chernozhukov et al. (2020) and Chernozhukov et al. (2018b) employ adversarial method of moments 
@@ -254,7 +254,7 @@ $$
 
 ## Case I: No Unobserved Confounders
 
-**Narrow the Path Even More**:  Use Cross-Fitting to Eliminate Overfitting Biases (Entopy Bias)
+**Narrow the Path Even More**:  Use Cross-Fitting to Eliminate Overfitting Biases (Entropy Bias)
 
 &lt;center&gt;&lt;img src="Expert.png" alt="" height="250px" /&gt;&lt;/center&gt;
 
@@ -276,38 +276,6 @@ Debiased machine learning is a generic recipe that isolates the narrow path. It 
 
 Applies more broadly than the setting discussed here, for example for economic models identified through conditional method of moments (Chamberlain, 1987), albeit much more work is needed in this area.
 
-
----
-
-class: inverse center middle, hide-logo
-
-# References
-
----
-
-## References
-
-* Guido W Imbens and Donald B Rubin. Causal inference in statistics,
-social, and biomedical sciences. Cambridge University Press, 2015.
-* Victor Chernozhukov et al. ‘Automatic Debiased Machine Learning via Neural Nets for Generalized Linear Regression’. In: arXiv preprint arXiv:2104.14737 (2021a).
-* Victor Chernozhukov et al. ‘Adversarial estimation of riesz representers’. In: arXiv preprint arXiv:2101.00009 (2020).
-* Rahul Singh. ‘A Finite Sample Theorem for Longitudinal Causal Inference with Machine Learning: Long Term, Dynamic, and
-Mediated Effects’. In: arXiv preprint arXiv:2112.14249 (2021).
-* Victor Chernozhukov, Whitney Newey, and Rahul Singh. ‘De-biased machine learning of global and local parameters using regularized Riesz representers’. In: arXiv preprint arXiv:1802.08667 (2018b).
-* Victor Chernozhukov et al. ‘Automatic Debiased Machine Learning for Dynamic Treatment Effects’. In: arXiv preprint arXiv:2203.13887 (2022).
-* Victor Chernozhukov et al. RieszNet and ForestRiesz: Automatic Debiased Machine Learning with Neural Nets and Random Forests (2021b).
-
-* Victor Chernozhukov, Whitney K Newey, and Rahul Singh. ‘Automatic debiased machine learning of causal and structural effects’. In: arXiv preprint arXiv:1809.05224 (2018c).
-* G. Chamberlain. ‘Asymptotic Efficiency in Estimation with Conditional Moment Restrictions’. In: Journal of Econometrics 34 (1987), pp. 305–334.
-* Victor Chernozhukov et al. ‘Double/debiased machine learning for treatment and structural parameters’. In: The Econometrics Journal (2018a). ArXiv 2016; arXiv:1608.00060.
-* Victor Chernozhukov et al. ‘Long Story Short: Omitted Variable Bias in Causal Machine Learning’. In: arXiv preprint arXiv:2112.13398 (2021c)
-
----
-
-class: inverse center middle, hide-logo
-
-# Appendix
-
 ---
 
 ## Theoretical Details
@@ -317,16 +285,16 @@ $$
 \theta = E [m(W, g) + (Y- g) \alpha],
 $$ 
 We have that
+
 $$
 \theta - E [m(W, \bar g) + (Y- \bar g) \bar \alpha] = - E (\bar g- g) (\bar \alpha - \alpha).
 $$
 Therefore, this  representation has the Neyman orthogonality property:
 
-$$
-\partial_{\bar g, \bar \alpha} E [m(W, \bar g) + (Y- \bar g) \bar \alpha] \Big |_{\bar \alpha = \alpha, \bar g = g} =0,
-$$
+`$$\partial_{\bar g, \bar \alpha} E [m(W, \bar g) + (Y- \bar g) \bar \alpha] \Big |_{\bar \alpha = \alpha, \bar g = g} =0,$$`
 
-where `\(\partial\)` is the Gateaux (pathwise derivative) operator. 
+where `\(\partial\)` is the Gateaux (pathwise derivative) operator.
+
 ---
 
 ## Theoretical Details
@@ -343,27 +311,12 @@ $$
 
 
 Generic DML is a method-of-moments estimator that utilizes **any** Neyman orthogonal score, together with cross-fitting.
----
-
-## Theoretical Details
-
-#### Definition: DML ( `\(\psi\)` )
-
-Input the Neyman-orthogonal score `\(\psi(Z; \beta, \eta)\)`, where `\(\eta =  (g, \alpha)\)` are nuisance parameters and `\(\beta\)` is the target parameter. Input random sample `\((Z_i:=(Y_i,D_i, X_i,A_i))_{i=1}^n\)`.
-Then
-* Randomly partition `\(\{1,...,n\}\)`  into folds `\((I_{\ell})_{\ell=1}^L\)` of approximately equal size. For each `\(\ell\)`, estimate `\(\widehat \eta_\ell = (\widehat{g}_{\ell}, \widehat{\alpha}_{\ell})\)` from observations **excluding**  `\(I_{\ell}\)`.
-
-* Estimate `\(\beta\)` as a root of:
-
-`$$0 = n^{-1} \sum_{l=1}^L \sum_{i \in I_l} \psi (\beta, Z_i; \widehat \eta_l)$$`
-
-Output `\(\widehat \beta\)` and the estimated scores `\(\widehat \psi^o (Z_i) =\psi(\widehat \beta, Z_i; \widehat \eta_{\ell})\)`
 
 ---
 
 ## Theoretical Details
 
-R notebook, http://www.kaggle.com/r4hu15in9h/auto-dml
+**R notebook** (http://www.kaggle.com/r4hu15in9h/auto-dml)
 
 #### Lasso Learner for Nuisance Parameters:
 
@@ -418,6 +371,64 @@ and Gaussian with influence functions:
 `$$\psi^o_\theta(Z) := \psi_{\theta} (Z; \theta, g, \alpha),$$`
 &gt; evaluated at the true parameter values. Efficiency follows from Newey (1994). The covariance of the scores can be estimated by the empirical analogues using the covariance of the estimated scores.
 
+---
+
+class: inverse center middle, hide-logo
+
+# References
+
+---
+
+## References
+
+* Guido W Imbens and Donald B Rubin. Causal inference in statistics,
+social, and biomedical sciences. Cambridge University Press, 2015.
+
+* Victor Chernozhukov et al. ‘Automatic Debiased Machine Learning via Neural Nets for Generalized Linear Regression’. In: arXiv preprint arXiv:2104.14737 (2021a).
+
+* Victor Chernozhukov et al. ‘Adversarial estimation of riesz representers’. In: arXiv preprint arXiv:2101.00009 (2020).
+* Rahul Singh. ‘A Finite Sample Theorem for Longitudinal Causal Inference with Machine Learning: Long Term, Dynamic, and
+Mediated Effects’. In: arXiv preprint arXiv:2112.14249 (2021).
+
+* Victor Chernozhukov, Whitney Newey, and Rahul Singh. ‘De-biased machine learning of global and local parameters using regularized Riesz representers’. In: arXiv preprint arXiv:1802.08667 (2018b).
+
+* Victor Chernozhukov et al. ‘Automatic Debiased Machine Learning for Dynamic Treatment Effects’. In: arXiv preprint arXiv:2203.13887 (2022).
+
+* Victor Chernozhukov et al. RieszNet and ForestRiesz: Automatic Debiased Machine Learning with Neural Nets and Random Forests (2021b).
+
+---
+
+## References
+
+* Victor Chernozhukov, Whitney K Newey, and Rahul Singh. ‘Automatic debiased machine learning of causal and structural effects’. In: arXiv preprint arXiv:1809.05224 (2018c).
+
+* G. Chamberlain. ‘Asymptotic Efficiency in Estimation with Conditional Moment Restrictions’. In: Journal of Econometrics 34 (1987), pp. 305–334.
+
+* Victor Chernozhukov et al. ‘Double/debiased machine learning for treatment and structural parameters’. In: The Econometrics Journal (2018a). ArXiv 2016; arXiv:1608.00060.
+
+* Victor Chernozhukov et al. ‘Long Story Short: Omitted Variable Bias in Causal Machine Learning’. In: arXiv preprint arXiv:2112.13398 (2021c)
+
+---
+
+class: inverse center middle, hide-logo
+
+# Appendix
+
+---
+
+## Algorithm
+
+#### Definition: DML ( `\(\psi\)` )
+
+Input the Neyman-orthogonal score `\(\psi(Z; \beta, \eta)\)`, where `\(\eta =  (g, \alpha)\)` are nuisance parameters and `\(\beta\)` is the target parameter. Input random sample `\((Z_i:=(Y_i,D_i, X_i,A_i))_{i=1}^n\)`.
+Then
+* Randomly partition `\(\{1,...,n\}\)`  into folds `\((I_{\ell})_{\ell=1}^L\)` of approximately equal size. For each `\(\ell\)`, estimate `\(\widehat \eta_\ell = (\widehat{g}_{\ell}, \widehat{\alpha}_{\ell})\)` from observations **excluding**  `\(I_{\ell}\)`.
+
+* Estimate `\(\beta\)` as a root of:
+
+`$$0 = n^{-1} \sum_{l=1}^L \sum_{i \in I_l} \psi (\beta, Z_i; \widehat \eta_l)$$`
+
+Output `\(\widehat \beta\)` and the estimated scores `\(\widehat \psi^o (Z_i) =\psi(\widehat \beta, Z_i; \widehat \eta_{\ell})\)`
 
 ---
 
