@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>Getting started &#8212; DoubleML  documentation</title>
 <script>
@@ -31,15 +31,16 @@
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-dropdown.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
 
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
@@ -54,7 +55,7 @@
     <link rel="next" title="User guide" href="../guide/guide.html" />
     <link rel="prev" title="Installing DoubleML" href="install.html" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="docsearch:language" content="en">
+<meta name="docsearch:language" content="None">
   </head>
   
   
@@ -279,16 +280,96 @@
               <article class="bd-article" role="main">
                 
   <section id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h1>
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">#</a></h1>
 <p>The purpose of the following case-studies is to demonstrate the core functionalities of
 <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>.</p>
 <section id="data">
-<h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h2>
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">#</a></h2>
 <p>For our case study we download the Bonus data set from the Pennsylvania Reemployment Bonus experiment and as a second
 example we simulate data from a partially linear regression model.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="dff45602-5986-4450-a643-294dadd53c9e" name="a3a162e5-aaf1-44c3-984d-71c95a0d5cd7" type="radio">
+</input><label class="tabbed-label" for="dff45602-5986-4450-a643-294dadd53c9e">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [2]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">fetch_bonus</span>
+
+<span class="go"># Load bonus data</span>
+<span class="gp">In [3]: </span><span class="n">df_bonus</span> <span class="o">=</span> <span class="n">fetch_bonus</span><span class="p">(</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="nb">print</span><span class="p">(</span><span class="n">df_bonus</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="go">   index   abdt  tg  inuidur1  inuidur2  ...  lusd  husd  muld  dep1  dep2</span>
+<span class="go">0      0  10824   0  2.890372        18  ...     0     1     0   0.0   1.0</span>
+<span class="go">1      3  10824   0  0.000000         1  ...     1     0     0   0.0   0.0</span>
+<span class="go">2      4  10747   0  3.295837        27  ...     1     0     0   0.0   0.0</span>
+<span class="go">3     11  10607   1  2.197225         9  ...     0     0     1   0.0   0.0</span>
+<span class="go">4     12  10831   0  3.295837        27  ...     1     0     0   1.0   0.0</span>
+
+<span class="go">[5 rows x 26 columns]</span>
+
+<span class="go"># Simulate data</span>
+<span class="gp">In [5]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="gp">In [7]: </span><span class="n">n_vars</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="gp">In [8]: </span><span class="n">theta</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="gp">In [9]: </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">))</span>
+
+<span class="gp">In [10]: </span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+
+<span class="gp">In [11]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+<input id="8846d728-6542-4b87-a4d5-6dd6a4f198f6" name="a3a162e5-aaf1-44c3-984d-71c95a0d5cd7" type="radio">
+</input><label class="tabbed-label" for="8846d728-6542-4b87-a4d5-6dd6a4f198f6">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+
+<span class="c1"># Load bonus data</span>
+<span class="n">df_bonus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">fetch_bonus</span><span class="p">(</span><span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.table&quot;</span><span class="p">)</span>
+<span class="nf">head</span><span class="p">(</span><span class="n">df_bonus</span><span class="p">)</span>
+
+<span class="c1"># Simulate data</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">n_obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">500</span>
+<span class="n">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+<span class="n">theta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">matrix</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="o">*</span><span class="n">n_vars</span><span class="p">),</span><span class="w"> </span><span class="n">nrow</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="o">=</span><span class="n">n_vars</span><span class="p">)</span>
+<span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span><span class="o">%*%</span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+<span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">theta</span><span class="o">*</span><span class="n">d</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span><span class="o">%*%</span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="dataframe">
+<caption>A data.table: 6 × 17</caption>
+<thead>
+	<tr><th scope=col>inuidur1</th><th scope=col>female</th><th scope=col>black</th><th scope=col>othrace</th><th scope=col>dep1</th><th scope=col>dep2</th><th scope=col>q2</th><th scope=col>q3</th><th scope=col>q4</th><th scope=col>q5</th><th scope=col>q6</th><th scope=col>agelt35</th><th scope=col>agegt54</th><th scope=col>durable</th><th scope=col>lusd</th><th scope=col>husd</th><th scope=col>tg</th></tr>
+	<tr><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><td>2.890372</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+	<tr><td>0.000000</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+	<tr><td>3.295837</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+	<tr><td>2.197225</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+	<tr><td>3.295837</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+	<tr><td>3.295837</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+</tbody>
+</table>
+</div></div>
+</div>
+</div>
+</div>
 </section>
 <section id="the-causal-model">
-<h2>The causal model<a class="headerlink" href="#the-causal-model" title="Permalink to this heading">#</a></h2>
+<h2>The causal model<a class="headerlink" href="#the-causal-model" title="Permalink to this headline">#</a></h2>
 <p>Exemplarily we specify a partially linear regression model (PLR). <strong>Partially linear regression (PLR)</strong> models take the
 form</p>
 <div class="math notranslate nohighlight">
@@ -300,16 +381,118 @@ For details about the implemented models in the <a class="reference internal" hr
 <a class="reference internal" href="../guide/models.html#models"><span class="std std-ref">Models</span></a>.</p>
 </section>
 <section id="the-data-backend-doublemldata">
-<h2>The data-backend DoubleMLData<a class="headerlink" href="#the-data-backend-doublemldata" title="Permalink to this heading">#</a></h2>
+<h2>The data-backend DoubleMLData<a class="headerlink" href="#the-data-backend-doublemldata" title="Permalink to this headline">#</a></h2>
 <p><a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> provides interfaces to dataframes as well as arrays.
 Details on the data-backend and the interfaces can be found in the <a class="reference internal" href="../guide/data_backend.html#data-backend"><span class="std std-ref">user guide</span></a>.
 The <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> class serves as data-backend and can be initialized from a dataframe by
 specifying the column <code class="docutils literal notranslate"><span class="pre">y_col='inuidur1'</span></code> serving as outcome variable <span class="math notranslate nohighlight">\(Y\)</span>, the column(s) <code class="docutils literal notranslate"><span class="pre">d_cols</span> <span class="pre">=</span> <span class="pre">'tg'</span></code>
 serving as treatment variable <span class="math notranslate nohighlight">\(D\)</span> and the columns <code class="docutils literal notranslate"><span class="pre">x_cols</span></code> specifying the confounders.
 Alternatively an array interface can be used as shown below for the simulated data.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="38b3b437-9711-41f1-9b12-ce42b1bfc8b1" name="90824923-6789-4668-ae48-d6f3a7ffb139" type="radio">
+</input><label class="tabbed-label" for="38b3b437-9711-41f1-9b12-ce42b1bfc8b1">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [12]: </span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLData</span>
+
+<span class="go"># Specify the data and the variables for the causal model</span>
+<span class="gp">In [13]: </span><span class="n">dml_data_bonus</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="p">(</span><span class="n">df_bonus</span><span class="p">,</span>
+<span class="gp">   ....: </span>                                  <span class="n">y_col</span><span class="o">=</span><span class="s1">&#39;inuidur1&#39;</span><span class="p">,</span>
+<span class="gp">   ....: </span>                                  <span class="n">d_cols</span><span class="o">=</span><span class="s1">&#39;tg&#39;</span><span class="p">,</span>
+<span class="gp">   ....: </span>                                  <span class="n">x_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="s1">&#39;othrace&#39;</span><span class="p">,</span> <span class="s1">&#39;dep1&#39;</span><span class="p">,</span> <span class="s1">&#39;dep2&#39;</span><span class="p">,</span>
+<span class="gp">   ....: </span>                                          <span class="s1">&#39;q2&#39;</span><span class="p">,</span> <span class="s1">&#39;q3&#39;</span><span class="p">,</span> <span class="s1">&#39;q4&#39;</span><span class="p">,</span> <span class="s1">&#39;q5&#39;</span><span class="p">,</span> <span class="s1">&#39;q6&#39;</span><span class="p">,</span> <span class="s1">&#39;agelt35&#39;</span><span class="p">,</span> <span class="s1">&#39;agegt54&#39;</span><span class="p">,</span>
+<span class="gp">   ....: </span>                                          <span class="s1">&#39;durable&#39;</span><span class="p">,</span> <span class="s1">&#39;lusd&#39;</span><span class="p">,</span> <span class="s1">&#39;husd&#39;</span><span class="p">])</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">)</span>
+<span class="go">================== DoubleMLData Object ==================</span>
+
+<span class="go">------------------ Data summary      ------------------</span>
+<span class="go">Outcome variable: inuidur1</span>
+<span class="go">Treatment variable(s): [&#39;tg&#39;]</span>
+<span class="go">Covariates: [&#39;female&#39;, &#39;black&#39;, &#39;othrace&#39;, &#39;dep1&#39;, &#39;dep2&#39;, &#39;q2&#39;, &#39;q3&#39;, &#39;q4&#39;, &#39;q5&#39;, &#39;q6&#39;, &#39;agelt35&#39;, &#39;agegt54&#39;, &#39;durable&#39;, &#39;lusd&#39;, &#39;husd&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">No. Observations: 5099</span>
+
+<span class="go">------------------ DataFrame info    ------------------</span>
+<span class="go">&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span>
+<span class="go">RangeIndex: 5099 entries, 0 to 5098</span>
+<span class="go">Columns: 26 entries, index to dep2</span>
+<span class="go">dtypes: float64(3), int64(23)</span>
+<span class="go">memory usage: 1.0 MB</span>
+
+
+<span class="go"># array interface to DoubleMLData</span>
+<span class="gp">In [15]: </span><span class="n">dml_data_sim</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="gp">In [16]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">)</span>
+<span class="go">================== DoubleMLData Object ==================</span>
+
+<span class="go">------------------ Data summary      ------------------</span>
+<span class="go">Outcome variable: y</span>
+<span class="go">Treatment variable(s): [&#39;d&#39;]</span>
+<span class="go">Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">No. Observations: 500</span>
+
+<span class="go">------------------ DataFrame info    ------------------</span>
+<span class="go">&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span>
+<span class="go">RangeIndex: 500 entries, 0 to 499</span>
+<span class="go">Columns: 102 entries, X1 to d</span>
+<span class="go">dtypes: float64(102)</span>
+<span class="go">memory usage: 398.6 KB</span>
+</pre></div>
+</div>
+</div>
+<input id="c4b52e91-a882-4146-8757-0238f1a71a95" name="90824923-6789-4668-ae48-d6f3a7ffb139" type="radio">
+</input><label class="tabbed-label" for="c4b52e91-a882-4146-8757-0238f1a71a95">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Specify the data and variables for the causal model</span>
+<span class="n">dml_data_bonus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">df_bonus</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">y_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;inuidur1&quot;</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">d_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;tg&quot;</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">x_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;female&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;othrace&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dep1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dep2&quot;</span><span class="p">,</span>
+<span class="w">                                        </span><span class="s">&quot;q2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;q3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;q4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;q5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;q6&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;agelt35&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;agegt54&quot;</span><span class="p">,</span>
+<span class="w">                                          </span><span class="s">&quot;durable&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;lusd&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;husd&quot;</span><span class="p">))</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">)</span>
+
+<span class="c1"># matrix interface to DoubleMLData</span>
+<span class="n">dml_data_sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="n">dml_data_sim</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>================= DoubleMLData Object ==================
+
+
+------------------ Data summary      ------------------
+Outcome variable: inuidur1
+Treatment variable(s): tg
+Covariates: female, black, othrace, dep1, dep2, q2, q3, q4, q5, q6, agelt35, agegt54, durable, lusd, husd
+Instrument(s): 
+No. Observations: 5099
+</pre></div>
+</div>
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>================= DoubleMLData Object ==================
+
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): d
+Covariates: X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31, X32, X33, X34, X35, X36, X37, X38, X39, X40, X41, X42, X43, X44, X45, X46, X47, X48, X49, X50, X51, X52, X53, X54, X55, X56, X57, X58, X59, X60, X61, X62, X63, X64, X65, X66, X67, X68, X69, X70, X71, X72, X73, X74, X75, X76, X77, X78, X79, X80, X81, X82, X83, X84, X85, X86, X87, X88, X89, X90, X91, X92, X93, X94, X95, X96, X97, X98, X99, X100
+Instrument(s): 
+No. Observations: 500
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="learners-to-estimate-the-nuisance-models">
-<h2>Learners to estimate the nuisance models<a class="headerlink" href="#learners-to-estimate-the-nuisance-models" title="Permalink to this heading">#</a></h2>
+<h2>Learners to estimate the nuisance models<a class="headerlink" href="#learners-to-estimate-the-nuisance-models" title="Permalink to this headline">#</a></h2>
 <p>To estimate our partially linear regression (PLR) model with the double machine learning algorithm, we first have to
 specify learners to estimate <span class="math notranslate nohighlight">\(m_0\)</span> and <span class="math notranslate nohighlight">\(g_0\)</span>. For the bonus data we use a random forest
 regression model and for our simulated data from a sparse partially linear model we use a Lasso regression model.
@@ -317,9 +500,58 @@ The implementation of <a class="reference internal" href="../index.html#doubleml
 <a class="reference external" href="https://scikit-learn.org/">scikit-learn</a> (Pedregosa et al., 2011) for Python
 and <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> (Lang et al, 2019) for R.
 For details on the specification of learners and their hyperparameters we refer to the user guide <a class="reference internal" href="../guide/learners.html#learners"><span class="std std-ref">Learners, hyperparameters and hyperparameter tuning</span></a>.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="6f9c141e-a67e-45af-afd5-757e95046674" name="58e238e4-3362-4bcb-86af-6d6fdfe66674" type="radio">
+</input><label class="tabbed-label" for="6f9c141e-a67e-45af-afd5-757e95046674">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [17]: </span><span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">clone</span>
+
+<span class="gp">In [18]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+
+<span class="gp">In [19]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span>
+
+<span class="gp">In [20]: </span><span class="n">learner</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">max_features</span> <span class="o">=</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="gp">In [21]: </span><span class="n">ml_l_bonus</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<span class="gp">In [22]: </span><span class="n">ml_m_bonus</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<span class="gp">In [23]: </span><span class="n">learner</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span>
+
+<span class="gp">In [24]: </span><span class="n">ml_l_sim</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<span class="gp">In [25]: </span><span class="n">ml_m_sim</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="45b8fb74-a52b-415a-bef0-6954ee570b27" name="58e238e4-3362-4bcb-86af-6d6fdfe66674" type="radio">
+</input><label class="tabbed-label" for="45b8fb74-a52b-415a-bef0-6954ee570b27">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+<span class="c1"># surpress messages from mlr3 package during fitting</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">n_vars</span><span class="p">)),</span><span class="w"> </span><span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<span class="n">ml_l_bonus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m_bonus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+
+<span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="o">=</span><span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
+<span class="n">ml_l_sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m_sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="cross-fitting-dml-algorithms-and-neyman-orthogonal-score-functions">
-<h2>Cross-fitting, DML algorithms and Neyman-orthogonal score functions<a class="headerlink" href="#cross-fitting-dml-algorithms-and-neyman-orthogonal-score-functions" title="Permalink to this heading">#</a></h2>
+<h2>Cross-fitting, DML algorithms and Neyman-orthogonal score functions<a class="headerlink" href="#cross-fitting-dml-algorithms-and-neyman-orthogonal-score-functions" title="Permalink to this headline">#</a></h2>
 <p>When initializing the object for PLR models <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>, we can further set parameters specifying the
 resampling: The number of folds used for cross-fitting <code class="docutils literal notranslate"><span class="pre">n_folds</span></code> (defaults to <code class="docutils literal notranslate"><span class="pre">n_folds</span> <span class="pre">=</span> <span class="pre">5</span></code>) as well as the number
 of repetitions when applying repeated cross-fitting <code class="docutils literal notranslate"><span class="pre">n_rep</span></code> (defaults to <code class="docutils literal notranslate"><span class="pre">n_rep</span> <span class="pre">=</span> <span class="pre">1</span></code>).
@@ -331,7 +563,7 @@ For the PLR model the default <code class="docutils literal notranslate"><span c
 and the <a class="reference internal" href="../guide/scores.html#scores"><span class="std std-ref">Score functions</span></a>.</p>
 </section>
 <section id="estimate-double-debiased-machine-learning-models">
-<h2>Estimate double/debiased machine learning models<a class="headerlink" href="#estimate-double-debiased-machine-learning-models" title="Permalink to this heading">#</a></h2>
+<h2>Estimate double/debiased machine learning models<a class="headerlink" href="#estimate-double-debiased-machine-learning-models" title="Permalink to this headline">#</a></h2>
 <p>We now initialize <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> objects for our examples using default parameters.
 The models are estimated by calling the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method and we can for example inspect the estimated treatment effect
 using the <code class="docutils literal notranslate"><span class="pre">summary</span></code> property.
@@ -339,8 +571,167 @@ A more detailed result summary can be obtained via the string-representation of 
 Besides the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> model classes also provide functionalities to perform
 statistical inference like <code class="docutils literal notranslate"><span class="pre">bootstrap()</span></code>, <code class="docutils literal notranslate"><span class="pre">confint()</span></code> and <code class="docutils literal notranslate"><span class="pre">p_adjust()</span></code>, for details see the user guide
 <a class="reference internal" href="../guide/se_confint.html#se-confint"><span class="std std-ref">Variance estimation and confidence intervals for a causal parameter of interest</span></a>.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="5df4565f-f1af-43cd-82df-65bbbe0529fb" name="a8270540-5c7c-4c9b-a5de-92f04e9c1043" type="radio">
+</input><label class="tabbed-label" for="5df4565f-f1af-43cd-82df-65bbbe0529fb">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [26]: </span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLPLR</span>
+
+<span class="gp">In [27]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+
+<span class="gp">In [28]: </span><span class="n">obj_dml_plr_bonus</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span> <span class="n">ml_l_bonus</span><span class="p">,</span> <span class="n">ml_m_bonus</span><span class="p">)</span>
+
+<span class="gp">In [29]: </span><span class="n">obj_dml_plr_bonus</span><span class="o">.</span><span class="n">fit</span><span class="p">();</span>
+
+<span class="gp">In [30]: </span><span class="nb">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus</span><span class="p">)</span>
+<span class="go">================== DoubleMLPLR Object ==================</span>
+
+<span class="go">------------------ Data summary      ------------------</span>
+<span class="go">Outcome variable: inuidur1</span>
+<span class="go">Treatment variable(s): [&#39;tg&#39;]</span>
+<span class="go">Covariates: [&#39;female&#39;, &#39;black&#39;, &#39;othrace&#39;, &#39;dep1&#39;, &#39;dep2&#39;, &#39;q2&#39;, &#39;q3&#39;, &#39;q4&#39;, &#39;q5&#39;, &#39;q6&#39;, &#39;agelt35&#39;, &#39;agegt54&#39;, &#39;durable&#39;, &#39;lusd&#39;, &#39;husd&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">No. Observations: 5099</span>
+
+<span class="go">------------------ Score &amp; algorithm ------------------</span>
+<span class="go">Score function: partialling out</span>
+<span class="go">DML algorithm: dml2</span>
+
+<span class="go">------------------ Machine learner   ------------------</span>
+<span class="go">Learner ml_l: RandomForestRegressor(max_depth=5, max_features=&#39;sqrt&#39;, n_estimators=500)</span>
+<span class="go">Learner ml_m: RandomForestRegressor(max_depth=5, max_features=&#39;sqrt&#39;, n_estimators=500)</span>
+
+<span class="go">------------------ Resampling        ------------------</span>
+<span class="go">No. folds: 5</span>
+<span class="go">No. repeated sample splits: 1</span>
+<span class="go">Apply cross-fitting: True</span>
+
+<span class="go">------------------ Fit summary       ------------------</span>
+<span class="go">       coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">tg -0.07669  0.035412 -2.165689  0.030335 -0.146096 -0.007285</span>
+
+<span class="gp">In [31]: </span><span class="n">obj_dml_plr_sim</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span> <span class="n">ml_l_sim</span><span class="p">,</span> <span class="n">ml_m_sim</span><span class="p">)</span>
+
+<span class="gp">In [32]: </span><span class="n">obj_dml_plr_sim</span><span class="o">.</span><span class="n">fit</span><span class="p">();</span>
+
+<span class="gp">In [33]: </span><span class="nb">print</span><span class="p">(</span><span class="n">obj_dml_plr_sim</span><span class="p">)</span>
+<span class="go">================== DoubleMLPLR Object ==================</span>
+
+<span class="go">------------------ Data summary      ------------------</span>
+<span class="go">Outcome variable: y</span>
+<span class="go">Treatment variable(s): [&#39;d&#39;]</span>
+<span class="go">Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">No. Observations: 500</span>
+
+<span class="go">------------------ Score &amp; algorithm ------------------</span>
+<span class="go">Score function: partialling out</span>
+<span class="go">DML algorithm: dml2</span>
+
+<span class="go">------------------ Machine learner   ------------------</span>
+<span class="go">Learner ml_l: LassoCV()</span>
+<span class="go">Learner ml_m: LassoCV()</span>
+
+<span class="go">------------------ Resampling        ------------------</span>
+<span class="go">No. folds: 5</span>
+<span class="go">No. repeated sample splits: 1</span>
+<span class="go">Apply cross-fitting: True</span>
+
+<span class="go">------------------ Fit summary       ------------------</span>
+<span class="go">      coef   std err          t  P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  3.02092  0.045379  66.570722    0.0  2.931978  3.109861</span>
+</pre></div>
+</div>
+</div>
+<input id="31b9aef5-9730-4720-86a4-d0b4d50275e3" name="a8270540-5c7c-4c9b-a5de-92f04e9c1043" type="radio">
+</input><label class="tabbed-label" for="31b9aef5-9730-4720-86a4-d0b4d50275e3">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">obj_dml_plr_bonus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_bonus</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_bonus</span><span class="p">)</span>
+<span class="n">obj_dml_plr_bonus</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus</span><span class="p">)</span>
+
+<span class="n">obj_dml_plr_sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_sim</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_sim</span><span class="p">)</span>
+<span class="n">obj_dml_plr_sim</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_sim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>================= DoubleMLPLR Object ==================
+
+
+------------------ Data summary      ------------------
+Outcome variable: inuidur1
+Treatment variable(s): tg
+Covariates: female, black, othrace, dep1, dep2, q2, q3, q4, q5, q6, agelt35, agegt54, durable, lusd, husd
+Instrument(s): 
+No. Observations: 5099
+
+------------------ Score &amp; algorithm ------------------
+Score function: partialling out
+DML algorithm: dml2
+
+------------------ Machine learner   ------------------
+ml_l: regr.ranger
+ml_m: regr.ranger
+
+------------------ Resampling        ------------------
+No. folds: 5
+No. repeated sample splits: 1
+Apply cross-fitting: TRUE
+
+------------------ Fit summary       ------------------
+ Estimates and significance testing of the effect of target variables
+   Estimate. Std. Error t value Pr(&gt;|t|)  
+tg  -0.07385    0.03528  -2.093   0.0364 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>================= DoubleMLPLR Object ==================
+
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): d
+Covariates: X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31, X32, X33, X34, X35, X36, X37, X38, X39, X40, X41, X42, X43, X44, X45, X46, X47, X48, X49, X50, X51, X52, X53, X54, X55, X56, X57, X58, X59, X60, X61, X62, X63, X64, X65, X66, X67, X68, X69, X70, X71, X72, X73, X74, X75, X76, X77, X78, X79, X80, X81, X82, X83, X84, X85, X86, X87, X88, X89, X90, X91, X92, X93, X94, X95, X96, X97, X98, X99, X100
+Instrument(s): 
+No. Observations: 500
+
+------------------ Score &amp; algorithm ------------------
+Score function: partialling out
+DML algorithm: dml2
+
+------------------ Machine learner   ------------------
+ml_l: regr.cv_glmnet
+ml_m: regr.cv_glmnet
+
+------------------ Resampling        ------------------
+No. folds: 5
+No. repeated sample splits: 1
+Apply cross-fitting: TRUE
+
+------------------ Fit summary       ------------------
+ Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d   3.03411    0.04486   67.64   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <section id="references">
-<h3>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h3>
+<h3>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Lang, M., Binder, M., Richter, J., Schratz, P., Pfisterer, F., Coors, S., Au, Q., Casalicchio, G., Kotthoff, L., Bischl, B. (2019), mlr3: A modern object-oriented machine learing framework in R. Journal of Open Source Software, <a class="reference external" href="https://doi.org/10.21105/joss.01903">doi:10.21105/joss.01903</a>.</p></li>
 <li><p>Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M. and Duchesnay, E. (2011), Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research, 12: 2825–2830, <a class="reference external" href="https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html">https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html</a>.</p></li>
@@ -394,7 +785,7 @@ statistical inference like <code class="docutils literal notranslate"><span clas
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.0.0.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
 </p>
   </div>
   

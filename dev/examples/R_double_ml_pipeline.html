@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>R: Ensemble Learners and More with mlr3pipelines &#8212; DoubleML  documentation</title>
 <script>
@@ -31,15 +31,16 @@
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-dropdown.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
 
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
@@ -52,9 +53,9 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="DML: Bonus Data" href="double_ml_bonus_data.html" />
-    <link rel="prev" title="Python: Cluster Robust Double Machine Learning" href="py_double_ml_multiway_cluster.html" />
+    <link rel="prev" title="Python: Conditional Average Treatment Effects (CATEs)" href="py_double_ml_cate.html" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="docsearch:language" content="en">
+<meta name="docsearch:language" content="None">
   </head>
   
   
@@ -220,6 +221,16 @@
  <li class="toctree-l1">
   <a class="reference internal" href="py_double_ml_multiway_cluster.html">
    Python: Cluster Robust Double Machine Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_gate.html">
+   Python: Group Average Treatment Effects (GATEs)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cate.html">
+   Python: Conditional Average Treatment Effects (CATEs)
   </a>
  </li>
 </ul>
@@ -623,7 +634,7 @@ Download Jupyter notebook:
 
     </ul>
     </div><section id="R:-Ensemble-Learners-and-More-with-mlr3pipelines">
-<h1>R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code><a class="headerlink" href="#R:-Ensemble-Learners-and-More-with-mlr3pipelines" title="Permalink to this heading">#</a></h1>
+<h1>R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code><a class="headerlink" href="#R:-Ensemble-Learners-and-More-with-mlr3pipelines" title="Permalink to this headline">#</a></h1>
 <p>This notebook illustrates how to exploit the powerful tools provided by the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> package (Binder et al. 2021). For example, <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> can be used in combination with <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> for feature engineering, combination of learners (ensemble learners, stacking), subsampling and hyperparameter tuning. The underlying idea of
 <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> is to define a pipeline that incorporates a user’s desired operations. As a result, the pipeline returns an object of class <a class="reference external" href="https://mlr3.mlr-org.com/reference/Learner.html">Learner</a> which can easily be passed to <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>. For an introduction to <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a>, we refer to the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter</a> in the
 <a class="reference external" href="https://mlr3book.mlr-org.com">mlr3book</a> (Becker et al. 2020) and to the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">package website</a>.</p>
@@ -729,7 +740,7 @@ No. Observations: 5099
 <p>To specify a learner for the nuisance part in a causal model, we can either use <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a>’s <a class="reference external" href="https://mlr3.mlr-org.com/reference/LearnerRegr.html">LearnerRegr</a> for a model’s nuisance part with a continuous dependent variable or a <a class="reference external" href="https://mlr3.mlr-org.com/reference/LearnerClassif.html">LearnerClassif</a> if the corresponding outcome variable is binary.</p>
 <p>Moreover, it’s possible to create a learner based on a pipeline. For example, we could think of <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html#pipe-model-ensembles">ensemble learners</a> which combine several estimators.</p>
 <section id="Using-learners-from-mlr3,-mlr3learners-and-mlr3extralearners">
-<h2>Using learners from <code class="docutils literal notranslate"><span class="pre">mlr3</span></code>, <code class="docutils literal notranslate"><span class="pre">mlr3learners</span></code> and <code class="docutils literal notranslate"><span class="pre">mlr3extralearners</span></code><a class="headerlink" href="#Using-learners-from-mlr3,-mlr3learners-and-mlr3extralearners" title="Permalink to this heading">#</a></h2>
+<h2>Using learners from <code class="docutils literal notranslate"><span class="pre">mlr3</span></code>, <code class="docutils literal notranslate"><span class="pre">mlr3learners</span></code> and <code class="docutils literal notranslate"><span class="pre">mlr3extralearners</span></code><a class="headerlink" href="#Using-learners-from-mlr3,-mlr3learners-and-mlr3extralearners" title="Permalink to this headline">#</a></h2>
 <p>Let’s begin with a “standard” example on how to use any of the learners provided by <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> (Lang et al. 2020), <a class="reference external" href="https://mlr3learners.mlr-org.com/">mlr3learners</a> (Lang et al. 2021) and <a class="reference external" href="https://mlr3extralearners.mlr-org.com/">mlr3extralearners</a> (Sonabend and Schratz 2021) in <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>: We create an object of the class <a class="reference external" href="https://mlr3.mlr-org.com/reference/Learner.html">Learner</a> which
 <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> internally uses for model training and generation of predictions.</p>
 <p>In the simulated example, we will use a lasso estimator for the continuous treatment variable, which is based on the <a class="reference external" href="https://glmnet.stanford.edu/index.html">glmnet package</a>. For the binary treatment variable in the Bonus data example, we use a random forest classifier as provided by <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a>.</p>
@@ -898,7 +909,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="Set-up-learners-based-on-mlr3pipelines">
-<h2>Set up learners based on <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code><a class="headerlink" href="#Set-up-learners-based-on-mlr3pipelines" title="Permalink to this heading">#</a></h2>
+<h2>Set up learners based on <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code><a class="headerlink" href="#Set-up-learners-based-on-mlr3pipelines" title="Permalink to this headline">#</a></h2>
 <p>These learners can also be constructed using <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a>. We’ll first use the PipeOp constructor <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/po.html">po()</a> to define the learner construction and then initiate a new instance of the <a class="reference external" href="https://mlr3.mlr-org.com/reference/Learner.html">Learner</a> class. <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/po.html">po()</a> implements a computational step in a pipeline. For more information, we refer to the
 <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter in the mlr3book</a>.</p>
 <div class="nbinput docutils container">
@@ -1078,7 +1089,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="Use-ensemble-learners-based-on-mlr3pipelines">
-<h2>Use ensemble learners based on <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code><a class="headerlink" href="#Use-ensemble-learners-based-on-mlr3pipelines" title="Permalink to this heading">#</a></h2>
+<h2>Use ensemble learners based on <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code><a class="headerlink" href="#Use-ensemble-learners-based-on-mlr3pipelines" title="Permalink to this headline">#</a></h2>
 <p>First, let’s see how we can use more complicated <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/mlr_learners_graph.html">GraphLearner</a>s like ensemble learners in <a class="reference external" href="https://docs.doubleml.org/">DoubleML</a>. For example, we want to create a learner with predictions that are generated as an average from three different learners. In the first step, we split up the pipeline into three branches. In our example, the learners estimate the nuisance parts independently of each other. In the last step,
 we average the predictions. Thereby we will use the pipe operator <code class="docutils literal notranslate"><span class="pre">%&gt;&gt;%</span></code>. For more details, we refer to the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter in the mlr3book</a>.</p>
 <div class="nbinput docutils container">
@@ -1383,11 +1394,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="How-to-exploit-more-features-of-mlr3pipelines-in-DoubleML">
-<h2>How to exploit more features of <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code> in <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code><a class="headerlink" href="#How-to-exploit-more-features-of-mlr3pipelines-in-DoubleML" title="Permalink to this heading">#</a></h2>
+<h2>How to exploit more features of <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code> in <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code><a class="headerlink" href="#How-to-exploit-more-features-of-mlr3pipelines-in-DoubleML" title="Permalink to this headline">#</a></h2>
 <p><a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/Graph.html">mlr3pipelines</a> can do much more. For example, we could use it to perform some <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html#pipe-modeling">feature engineering</a> and even perform pipeline-based <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html#pipe-tuning">parameter tuning</a>. We just have to define the steps we want to have in our pipeline by using the PipeOps.</p>
 <p>Let’s have a look at two more examples from the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter in the mlr3book</a>. In the first one, we will do some data manipulation. The second example illustrate how we could use <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/Graph.html">mlr3pipelines</a> for parameter tuning.</p>
 <section id="Data-preprocessing">
-<h3>Data preprocessing<a class="headerlink" href="#Data-preprocessing" title="Permalink to this heading">#</a></h3>
+<h3>Data preprocessing<a class="headerlink" href="#Data-preprocessing" title="Permalink to this headline">#</a></h3>
 <p>Let’s perform some data preprocessing and then use a regression tree for prediction.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
@@ -1600,7 +1611,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="Parameter-tuning">
-<h3>Parameter tuning<a class="headerlink" href="#Parameter-tuning" title="Permalink to this heading">#</a></h3>
+<h3>Parameter tuning<a class="headerlink" href="#Parameter-tuning" title="Permalink to this headline">#</a></h3>
 <p>Next, we will shortly illustrate how to perform parameter tuning in the simulated data example. Here, we use a pipeline to tune the penalty of the lasso. To do so, we generate a <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/mlr_learners_graph.html">GraphLearner</a> and then call <a class="reference external" href="https://docs.doubleml.org">DoubleML</a>’s <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleML.html#method-tune-">tune()</a> method.</p>
 <p>Let’s define a <a class="reference external" href="https://mlr3pipelines.mlr-org.com/reference/mlr_learners_graph.html">GraphLearner</a> based on the lasso.</p>
 <div class="nbinput nblast docutils container">
@@ -1661,136 +1672,136 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-INFO  [09:02:25.400] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
-INFO  [09:02:25.437] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:26.131] [bbotk] Result of batch 1:
-INFO  [09:02:26.135] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:26.135] [bbotk]          0.07222222            0.6666667 107.2925        0      0
-INFO  [09:02:26.135] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:26.135] [bbotk]             0.526 e44d2c68-dbdb-437a-8a3e-ea673f7bc943
-INFO  [09:02:26.137] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:26.816] [bbotk] Result of batch 2:
-INFO  [09:02:26.819] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:26.819] [bbotk]                 0.1            0.6666667 106.2652        0      0
-INFO  [09:02:26.819] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:26.819] [bbotk]             0.521 60055aca-eaac-48eb-98f2-92365b7f1560
-INFO  [09:02:26.821] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:27.502] [bbotk] Result of batch 3:
-INFO  [09:02:27.505] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:27.505] [bbotk]                 0.1            0.4166667 482.9753        0      0
-INFO  [09:02:27.505] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:27.505] [bbotk]             0.524 a8d69ff1-58d5-480e-b10f-b758684fbe45
-INFO  [09:02:27.507] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:28.208] [bbotk] Result of batch 4:
-INFO  [09:02:28.211] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:28.211] [bbotk]          0.09444444                 0.75 112.1054        0      0
-INFO  [09:02:28.211] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:28.211] [bbotk]             0.537 21ed96b5-c2e9-40d9-b8f3-81c83c7c33e8
-INFO  [09:02:28.214] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:28.962] [bbotk] Result of batch 5:
-INFO  [09:02:28.965] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:28.965] [bbotk]          0.08333333            0.9166667 10.81856        0      0
-INFO  [09:02:28.965] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:28.965] [bbotk]             0.581 4aded775-76d7-4927-8a03-94ce80da6cc5
-INFO  [09:02:28.968] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:29.691] [bbotk] Result of batch 6:
-INFO  [09:02:29.694] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:29.694] [bbotk]          0.08888889            0.9166667 10.74189        0      0
-INFO  [09:02:29.694] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:29.694] [bbotk]              0.56 05532183-8e10-45b1-aa06-e1595768e5cd
-INFO  [09:02:29.697] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:30.421] [bbotk] Result of batch 7:
-INFO  [09:02:30.424] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:30.424] [bbotk]          0.07777778            0.5833333 201.8513        0      0
-INFO  [09:02:30.424] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:30.424] [bbotk]             0.554 54057b4f-adac-4b36-97be-74d9aff7dac3
-INFO  [09:02:30.427] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:31.137] [bbotk] Result of batch 8:
-INFO  [09:02:31.140] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:31.140] [bbotk]          0.07222222            0.3333333 531.5255        0      0
-INFO  [09:02:31.140] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:31.140] [bbotk]             0.542 9b10ffd2-bd0f-4ccd-a484-f650cad72243
-INFO  [09:02:31.142] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:32.034] [bbotk] Result of batch 9:
-INFO  [09:02:32.037] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:32.037] [bbotk]          0.06111111            0.9166667 11.17823        0      0
-INFO  [09:02:32.037] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:32.037] [bbotk]             0.706 14707636-39e2-453d-b413-60bcbfbbe34a
-INFO  [09:02:32.040] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:32.715] [bbotk] Result of batch 10:
-INFO  [09:02:32.718] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:32.718] [bbotk]          0.08888889                 0.25  538.991        0      0
-INFO  [09:02:32.718] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:32.718] [bbotk]             0.512 2ec63b6c-8897-467e-ac30-e2c883b51aae
-INFO  [09:02:32.728] [bbotk] Finished optimizing after 10 evaluation(s)
-INFO  [09:02:32.729] [bbotk] Result:
-INFO  [09:02:32.731] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain regr.mse
-INFO  [09:02:32.731] [bbotk]          0.08888889            0.9166667          &lt;list[5]&gt; &lt;list[2]&gt; 10.74189
-INFO  [09:02:32.934] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
-INFO  [09:02:32.939] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:33.615] [bbotk] Result of batch 1:
-INFO  [09:02:33.618] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:33.618] [bbotk]          0.08888889            0.5833333  12.6173        0      0
-INFO  [09:02:33.618] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:33.618] [bbotk]             0.515 31a12c50-dae9-4bda-9dd6-5c7022d121c6
-INFO  [09:02:33.620] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:34.336] [bbotk] Result of batch 2:
-INFO  [09:02:34.339] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:34.339] [bbotk]                 0.1            0.5833333  12.5155        0      0
-INFO  [09:02:34.339] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:34.339] [bbotk]              0.55 9acf1673-6bb5-43c0-96b9-25930195a730
-INFO  [09:02:34.341] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:35.063] [bbotk] Result of batch 3:
-INFO  [09:02:35.066] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
-INFO  [09:02:35.066] [bbotk]          0.08333333                 0.75 0.9870004        0      0
-INFO  [09:02:35.066] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:35.066] [bbotk]             0.552 d2aa4959-8784-4e3b-959f-018fe0f24d46
-INFO  [09:02:35.068] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:35.750] [bbotk] Result of batch 4:
-INFO  [09:02:35.753] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:35.753] [bbotk]          0.07222222                  0.5 17.75887        0      0
-INFO  [09:02:35.753] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:35.753] [bbotk]             0.517 8510ef0c-f88b-48e0-978e-f3f5fc12119b
-INFO  [09:02:35.776] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:36.486] [bbotk] Result of batch 5:
-INFO  [09:02:36.489] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:36.489] [bbotk]          0.08333333            0.5833333  12.6722        0      0
-INFO  [09:02:36.489] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:36.489] [bbotk]             0.522 68922809-e559-4f83-a339-ed85b0beaf53
-INFO  [09:02:36.491] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:37.204] [bbotk] Result of batch 6:
-INFO  [09:02:37.206] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:37.206] [bbotk]          0.07222222            0.5833333 12.78818        0      0
-INFO  [09:02:37.206] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:37.206] [bbotk]             0.549 3279edfd-cbe3-41fa-9cde-1cf048f9e348
-INFO  [09:02:37.209] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:37.912] [bbotk] Result of batch 7:
-INFO  [09:02:37.915] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:37.915] [bbotk]          0.07777778                  0.5 17.69921        0      0
-INFO  [09:02:37.915] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:37.915] [bbotk]             0.539 08f9f1f2-f9aa-429f-afff-3642ab1307a9
-INFO  [09:02:37.917] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:38.594] [bbotk] Result of batch 8:
-INFO  [09:02:38.597] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
-INFO  [09:02:38.597] [bbotk]          0.07777778            0.9166667 0.9880384        0      0
-INFO  [09:02:38.597] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:38.597] [bbotk]             0.516 03348856-344f-4aa4-a6ae-0c03f2a9074e
-INFO  [09:02:38.599] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:39.310] [bbotk] Result of batch 9:
-INFO  [09:02:39.312] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:39.312] [bbotk]          0.07777778            0.4166667 22.43294        0      0
-INFO  [09:02:39.312] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:39.312] [bbotk]             0.524 948291cc-62c9-4927-aee2-62b83b8acf37
-INFO  [09:02:39.315] [bbotk] Evaluating 1 configuration(s)
-INFO  [09:02:40.023] [bbotk] Result of batch 10:
-INFO  [09:02:40.025] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [09:02:40.025] [bbotk]          0.07222222            0.3333333 27.31378        0      0
-INFO  [09:02:40.025] [bbotk]  runtime_learners                                uhash
-INFO  [09:02:40.025] [bbotk]             0.543 7e1676b1-0157-4fd8-9e99-8f50bd69479c
-INFO  [09:02:40.035] [bbotk] Finished optimizing after 10 evaluation(s)
-INFO  [09:02:40.037] [bbotk] Result:
-INFO  [09:02:40.039] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain  regr.mse
-INFO  [09:02:40.039] [bbotk]          0.08333333                 0.75          &lt;list[5]&gt; &lt;list[2]&gt; 0.9870004
+INFO  [21:08:42.906] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
+INFO  [21:08:42.941] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:43.599] [bbotk] Result of batch 1:
+INFO  [21:08:43.602] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:43.602] [bbotk]          0.07222222            0.6666667 107.2925        0      0
+INFO  [21:08:43.602] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:43.602] [bbotk]             0.498 dbeb039a-79d4-49f6-9431-5b6650c1bfab
+INFO  [21:08:43.605] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:44.286] [bbotk] Result of batch 2:
+INFO  [21:08:44.289] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:44.289] [bbotk]                 0.1            0.6666667 106.2652        0      0
+INFO  [21:08:44.289] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:44.289] [bbotk]             0.527 df3633fa-2a03-4636-a6e4-ebba2b4dc8db
+INFO  [21:08:44.291] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:44.952] [bbotk] Result of batch 3:
+INFO  [21:08:44.955] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:44.955] [bbotk]                 0.1            0.4166667 482.9753        0      0
+INFO  [21:08:44.955] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:44.955] [bbotk]             0.505 25c461f6-4d7a-4513-ba76-b1ca45df3dc3
+INFO  [21:08:44.957] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:45.625] [bbotk] Result of batch 4:
+INFO  [21:08:45.628] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:45.628] [bbotk]          0.09444444                 0.75 112.1054        0      0
+INFO  [21:08:45.628] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:45.628] [bbotk]             0.513 39336090-57cd-4937-ab0d-59ec80f40e26
+INFO  [21:08:45.630] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:46.315] [bbotk] Result of batch 5:
+INFO  [21:08:46.318] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:46.318] [bbotk]          0.08333333            0.9166667 10.81856        0      0
+INFO  [21:08:46.318] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:46.318] [bbotk]             0.527 4a4fa5fa-4caf-4349-88a2-224a68d7af47
+INFO  [21:08:46.321] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:46.994] [bbotk] Result of batch 6:
+INFO  [21:08:46.996] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:46.996] [bbotk]          0.08888889            0.9166667 10.74189        0      0
+INFO  [21:08:46.996] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:46.996] [bbotk]             0.514 109108b4-faf7-4fde-9486-349ca3feadf3
+INFO  [21:08:46.999] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:47.675] [bbotk] Result of batch 7:
+INFO  [21:08:47.678] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:47.678] [bbotk]          0.07777778            0.5833333 201.8513        0      0
+INFO  [21:08:47.678] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:47.678] [bbotk]             0.521 663cc9cf-6819-4195-a2ad-f29b295ef0c2
+INFO  [21:08:47.680] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:48.434] [bbotk] Result of batch 8:
+INFO  [21:08:48.437] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:48.437] [bbotk]          0.07222222            0.3333333 531.5255        0      0
+INFO  [21:08:48.437] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:48.437] [bbotk]             0.597 1985eec6-7daf-4ab5-8b24-9ccd0286fd54
+INFO  [21:08:48.439] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:49.094] [bbotk] Result of batch 9:
+INFO  [21:08:49.097] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:49.097] [bbotk]          0.06111111            0.9166667 11.17823        0      0
+INFO  [21:08:49.097] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:49.097] [bbotk]             0.497 54870aca-88b5-43a8-a402-03f423c46c62
+INFO  [21:08:49.099] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:49.802] [bbotk] Result of batch 10:
+INFO  [21:08:49.805] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:49.805] [bbotk]          0.08888889                 0.25  538.991        0      0
+INFO  [21:08:49.805] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:49.805] [bbotk]             0.544 d075b0e7-29b3-4b4a-812b-8eb51f35c0fd
+INFO  [21:08:49.815] [bbotk] Finished optimizing after 10 evaluation(s)
+INFO  [21:08:49.817] [bbotk] Result:
+INFO  [21:08:49.819] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain regr.mse
+INFO  [21:08:49.819] [bbotk]          0.08888889            0.9166667          &lt;list[5]&gt; &lt;list[2]&gt; 10.74189
+INFO  [21:08:49.980] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
+INFO  [21:08:49.984] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:50.682] [bbotk] Result of batch 1:
+INFO  [21:08:50.684] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:50.684] [bbotk]          0.08888889            0.5833333  12.6173        0      0
+INFO  [21:08:50.684] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:50.684] [bbotk]             0.539 a5432507-452c-4702-965e-f92386c71b50
+INFO  [21:08:50.687] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:51.373] [bbotk] Result of batch 2:
+INFO  [21:08:51.376] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:51.376] [bbotk]                 0.1            0.5833333  12.5155        0      0
+INFO  [21:08:51.376] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:51.376] [bbotk]             0.529 b473ca4e-1928-404b-b365-f12a67e62b0c
+INFO  [21:08:51.378] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:52.050] [bbotk] Result of batch 3:
+INFO  [21:08:52.054] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
+INFO  [21:08:52.054] [bbotk]          0.08333333                 0.75 0.9870004        0      0
+INFO  [21:08:52.054] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:52.054] [bbotk]             0.498 8783c4c4-ede7-4127-9615-af43d9741cfa
+INFO  [21:08:52.057] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:52.734] [bbotk] Result of batch 4:
+INFO  [21:08:52.737] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:52.737] [bbotk]          0.07222222                  0.5 17.75887        0      0
+INFO  [21:08:52.737] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:52.737] [bbotk]             0.499 5774c3b7-9d6b-4008-9333-92de446f2b12
+INFO  [21:08:52.739] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:53.432] [bbotk] Result of batch 5:
+INFO  [21:08:53.435] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:53.435] [bbotk]          0.08333333            0.5833333  12.6722        0      0
+INFO  [21:08:53.435] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:53.435] [bbotk]             0.516 a8dcb5d1-0a90-46ca-8927-62c36f90a4ea
+INFO  [21:08:53.437] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:54.134] [bbotk] Result of batch 6:
+INFO  [21:08:54.136] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:54.136] [bbotk]          0.07222222            0.5833333 12.78818        0      0
+INFO  [21:08:54.136] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:54.136] [bbotk]             0.537 de954132-37ce-48f5-a7e2-8f803f91607a
+INFO  [21:08:54.139] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:54.800] [bbotk] Result of batch 7:
+INFO  [21:08:54.803] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:54.803] [bbotk]          0.07777778                  0.5 17.69921        0      0
+INFO  [21:08:54.803] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:54.803] [bbotk]             0.502 3fd71d9a-6c83-4d0d-8bf5-c6f9659c6410
+INFO  [21:08:54.806] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:55.488] [bbotk] Result of batch 8:
+INFO  [21:08:55.491] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
+INFO  [21:08:55.491] [bbotk]          0.07777778            0.9166667 0.9880384        0      0
+INFO  [21:08:55.491] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:55.491] [bbotk]             0.504 3bfefed4-e451-40f5-85ea-3d5d9670c491
+INFO  [21:08:55.493] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:56.176] [bbotk] Result of batch 9:
+INFO  [21:08:56.179] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:56.179] [bbotk]          0.07777778            0.4166667 22.43294        0      0
+INFO  [21:08:56.179] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:56.179] [bbotk]             0.523 22c4f0d2-abe4-40ec-b37f-5568dc64d948
+INFO  [21:08:56.181] [bbotk] Evaluating 1 configuration(s)
+INFO  [21:08:56.856] [bbotk] Result of batch 10:
+INFO  [21:08:56.859] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [21:08:56.859] [bbotk]          0.07222222            0.3333333 27.31378        0      0
+INFO  [21:08:56.859] [bbotk]  runtime_learners                                uhash
+INFO  [21:08:56.859] [bbotk]             0.521 50bcfb91-396c-4825-83d5-26b5cb5270cb
+INFO  [21:08:56.868] [bbotk] Finished optimizing after 10 evaluation(s)
+INFO  [21:08:56.869] [bbotk] Result:
+INFO  [21:08:56.871] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain  regr.mse
+INFO  [21:08:56.871] [bbotk]          0.08333333                 0.75          &lt;list[5]&gt; &lt;list[2]&gt; 0.9870004
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1843,7 +1854,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </section>
 </section>
 <section id="References">
-<h2>References<a class="headerlink" href="#References" title="Permalink to this heading">#</a></h2>
+<h2>References<a class="headerlink" href="#References" title="Permalink to this headline">#</a></h2>
 <p>Becker, M., Binder, M., Bischl, B., Lang, M., Pfisterer, F., Reich, N.G., Richter, J., Schratz, P., Sonabend, R. (2020), mlr3 book, available at <a class="reference external" href="https://mlr3book.mlr-org.com">https://mlr3book.mlr-org.com</a>.</p>
 <p>Binder, M., Pfisterer, F., Lang, M., Schneider, L., Kotthof, L., and Bischl, B. (2021), mlr3pipelines - flexible machine learning pipelines in R, Journal of Machine Learning Research, 22(184): 1-7, <a class="reference external" href="https://jmlr.org/papers/v22/21-0281.html">https://jmlr.org/papers/v22/21-0281.html</a>.</p>
 <p>Lang, M., Binder, M., Richter, J., Schratz, P., Pfisterer, F., Coors, S., Au, Q., Casalicchio, G., Kotthoff, L., Bischl, B. (2019), mlr3: A modern object-oriented machine learing framework in R. Journal of Open Source Software, <a class="reference external" href="https://doi.org/10.21105/joss.01903">doi:10.21105/joss.01903</a>.</p>
@@ -1863,11 +1874,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="py_double_ml_multiway_cluster.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="py_double_ml_cate.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Python: Cluster Robust Double Machine Learning</p>
+          <p class="prev-next-title">Python: Conditional Average Treatment Effects (CATEs)</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="double_ml_bonus_data.html" title="next page">
@@ -1900,7 +1911,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.0.0.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
 </p>
   </div>
   

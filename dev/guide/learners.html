@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>6. Learners, hyperparameters and hyperparameter tuning &#8212; DoubleML  documentation</title>
 <script>
@@ -31,15 +31,16 @@
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-dropdown.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
 
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
@@ -54,7 +55,7 @@
     <link rel="next" title="7. Variance estimation and confidence intervals for a causal parameter of interest" href="se_confint.html" />
     <link rel="prev" title="5. Double machine learning algorithms" href="algorithms.html" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="docsearch:language" content="en">
+<meta name="docsearch:language" content="None">
   </head>
   
   
@@ -350,7 +351,7 @@
               <article class="bd-article" role="main">
                 
   <section id="learners-hyperparameters-and-hyperparameter-tuning">
-<span id="learners"></span><h1><span class="section-number">6. </span>Learners, hyperparameters and hyperparameter tuning<a class="headerlink" href="#learners-hyperparameters-and-hyperparameter-tuning" title="Permalink to this heading">#</a></h1>
+<span id="learners"></span><h1><span class="section-number">6. </span>Learners, hyperparameters and hyperparameter tuning<a class="headerlink" href="#learners-hyperparameters-and-hyperparameter-tuning" title="Permalink to this headline">#</a></h1>
 <p>The estimation of a double/debiased machine learning model involves the estimation of several nuisance function with
 machine learning estimators.
 Such learners are implemented in various Python and R packages.
@@ -359,9 +360,9 @@ The implementation of <a class="reference internal" href="../index.html#doubleml
 The interfaces to specify the learners, set hyperparameters and tune hyperparameters are described in the following
 separately for <a class="reference internal" href="#learners-python"><span class="std std-ref">Python</span></a> and <a class="reference internal" href="#learners-r"><span class="std std-ref">R</span></a>.</p>
 <section id="python-learners-and-hyperparameters">
-<span id="learners-python"></span><h2><span class="section-number">6.1. </span>Python: Learners and hyperparameters<a class="headerlink" href="#python-learners-and-hyperparameters" title="Permalink to this heading">#</a></h2>
+<span id="learners-python"></span><h2><span class="section-number">6.1. </span>Python: Learners and hyperparameters<a class="headerlink" href="#python-learners-and-hyperparameters" title="Permalink to this headline">#</a></h2>
 <section id="minimum-requirements-for-learners">
-<h3><span class="section-number">6.1.1. </span>Minimum requirements for learners<a class="headerlink" href="#minimum-requirements-for-learners" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">6.1.1. </span>Minimum requirements for learners<a class="headerlink" href="#minimum-requirements-for-learners" title="Permalink to this headline">#</a></h3>
 <p>The minimum requirement for a learner to be used for nuisance models in the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
 package is</p>
 <blockquote>
@@ -380,13 +381,43 @@ method for a learner in order to be used for nuisance models of <a class="refere
 <p>Most learners from <a class="reference external" href="https://scikit-learn.org/">scikit-learn</a> satisfy all these minimum requirements.</p>
 </section>
 <section id="specifying-learners-and-set-hyperparameters">
-<h3><span class="section-number">6.1.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#specifying-learners-and-set-hyperparameters" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">6.1.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#specifying-learners-and-set-hyperparameters" title="Permalink to this headline">#</a></h3>
 <p>The learners are set during initialization of the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> model classes
 <a class="reference internal" href="../api/generated/doubleml.DoubleMLPLR.html#doubleml.DoubleMLPLR" title="doubleml.DoubleMLPLR"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLPLR</span></code></a>, <a class="reference internal" href="../api/generated/doubleml.DoubleMLPLIV.html#doubleml.DoubleMLPLIV" title="doubleml.DoubleMLPLIV"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLPLIV</span></code></a>,
 <a class="reference internal" href="../api/generated/doubleml.DoubleMLIRM.html#doubleml.DoubleMLIRM" title="doubleml.DoubleMLIRM"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLIRM</span></code></a> and <a class="reference internal" href="../api/generated/doubleml.DoubleMLIIVM.html#doubleml.DoubleMLIIVM" title="doubleml.DoubleMLIIVM"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLIIVM</span></code></a>.
 Lets simulate some data and consider the partially linear regression model.
 We need to specify learners for the nuisance functions <span class="math notranslate nohighlight">\(g_0(X) = E[Y|X]\)</span> and <span class="math notranslate nohighlight">\(m_0(X) = E[D|X]\)</span>,
 for example <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.RandomForestRegressor</span></code></a>.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="4c04fa8e-2ff8-4939-9dde-86787dc3ffde" name="c8debbee-b25b-4dca-8664-4dcf4e54513d" type="radio">
+</input><label class="tabbed-label" for="4c04fa8e-2ff8-4939-9dde-86787dc3ffde">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [2]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
+
+<span class="gp">In [3]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+
+<span class="gp">In [4]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+
+<span class="gp">In [5]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+
+<span class="gp">In [6]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+
+<span class="gp">In [7]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+
+<span class="gp">In [8]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="gp">In [9]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+
+<span class="gp">In [10]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
+<span class="gh">Out[10]: </span>
+<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.503261  0.045934  10.956262  6.200798e-28  0.413232  0.593289</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p>Without further specification of the hyperparameters, default values are used. To set hyperparameters:</p>
 <blockquote>
 <div><ul class="simple">
@@ -395,6 +426,37 @@ for example <a class="reference external" href="https://scikit-learn.org/stable/
 <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params(learner,</span> <span class="pre">treat_var,</span> <span class="pre">params)</span></code></p></li>
 </ul>
 </div></blockquote>
+<div class="tabbed-set docutils">
+<input checked="checked" id="74c6621b-782f-4ed8-acc1-d8be27c392f2" name="32132014-5143-4521-a673-30f246928cb7" type="radio">
+</input><label class="tabbed-label" for="74c6621b-782f-4ed8-acc1-d8be27c392f2">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+
+<span class="gp">In [12]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+<span class="gp">   ....: </span>                              <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+<span class="gp">   ....: </span>                              <span class="n">RandomForestRegressor</span><span class="p">())</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [13]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="go">       coef   std err         t         P&gt;|t|    2.5 %    97.5 %</span>
+<span class="go">d  0.535718  0.047077  11.37972  5.276885e-30  0.44345  0.627987</span>
+
+<span class="gp">In [14]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+
+<span class="gp">In [15]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+<span class="gp">   ....: </span>                              <span class="n">RandomForestRegressor</span><span class="p">(),</span>
+<span class="gp">   ....: </span>                              <span class="n">RandomForestRegressor</span><span class="p">())</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [16]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_l&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">});</span>
+
+<span class="gp">In [17]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="go">       coef   std err         t         P&gt;|t|    2.5 %    97.5 %</span>
+<span class="go">d  0.535718  0.047077  11.37972  5.276885e-30  0.44345  0.627987</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p>Setting treatment-variable-specific or fold-specific hyperparameters:</p>
 <blockquote>
 <div><ul class="simple">
@@ -408,23 +470,129 @@ length <code class="docutils literal notranslate"><span class="pre">n_rep</span>
 </div></blockquote>
 </section>
 <section id="hyperparameter-tuning">
-<h3><span class="section-number">6.1.3. </span>Hyperparameter tuning<a class="headerlink" href="#hyperparameter-tuning" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">6.1.3. </span>Hyperparameter tuning<a class="headerlink" href="#hyperparameter-tuning" title="Permalink to this headline">#</a></h3>
 <p>Parameter tuning of learners for the nuisance functions of <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models can be done via
 the <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method.
 To illustrate the parameter tuning, we generate data from a sparse partially linear regression model.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="aec3ea4a-1ba5-43f0-a32d-c2463d018f81" name="cb88d47a-44aa-4be9-8bd9-02488d4d5f97" type="radio">
+</input><label class="tabbed-label" for="aec3ea4a-1ba5-43f0-a32d-c2463d018f81">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [19]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [20]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+
+<span class="gp">In [21]: </span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="gp">In [22]: </span><span class="n">n_vars</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="gp">In [23]: </span><span class="n">theta</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="gp">In [24]: </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">))</span>
+
+<span class="gp">In [25]: </span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+
+<span class="gp">In [26]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+
+<span class="gp">In [27]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p>The hyperparameter-tuning is performed using either an exhaustive search over specified parameter values
 implemented in <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> or via a randomized search implemented in
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.RandomizedSearchCV</span></code></a>.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="a81493b7-c96a-4023-99d1-8d5221618cb4" name="c7f0fbdf-aa84-41e6-b54c-5580f9f2eb2a" type="radio">
+</input><label class="tabbed-label" for="a81493b7-c96a-4023-99d1-8d5221618cb4">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [28]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [29]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Lasso</span>
+
+<span class="gp">In [30]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+
+<span class="gp">In [31]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+
+<span class="gp">In [32]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+
+<span class="gp">In [33]: </span><span class="n">par_grids</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)},</span>
+<span class="gp">   ....: </span>             <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)}}</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [34]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">par_grids</span><span class="p">,</span> <span class="n">search_mode</span><span class="o">=</span><span class="s1">&#39;grid_search&#39;</span><span class="p">);</span>
+
+<span class="gp">In [35]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+<span class="go">{&#39;ml_l&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.45000000000000007}, {&#39;alpha&#39;: 0.45000000000000007}, {&#39;alpha&#39;: 0.45000000000000007}, {&#39;alpha&#39;: 0.45000000000000007}, {&#39;alpha&#39;: 0.45000000000000007}]]}, &#39;ml_m&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.15000000000000002}, {&#39;alpha&#39;: 0.15000000000000002}, {&#39;alpha&#39;: 0.15000000000000002}, {&#39;alpha&#39;: 0.15000000000000002}, {&#39;alpha&#39;: 0.15000000000000002}]]}}</span>
+
+<span class="gp">In [36]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="go">       coef   std err          t  P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  3.031134  0.071777  42.229759    0.0  2.890454  3.171815</span>
+
+<span class="gp">In [37]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+
+<span class="gp">In [38]: </span><span class="n">par_grids</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)},</span>
+<span class="gp">   ....: </span>             <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)}}</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [39]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">par_grids</span><span class="p">,</span> <span class="n">search_mode</span><span class="o">=</span><span class="s1">&#39;randomized_search&#39;</span><span class="p">,</span> <span class="n">n_iter_randomized_search</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+
+<span class="gp">In [40]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+<span class="go">{&#39;ml_l&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.4000000000000001}, {&#39;alpha&#39;: 0.4000000000000001}, {&#39;alpha&#39;: 0.4000000000000001}, {&#39;alpha&#39;: 0.4000000000000001}, {&#39;alpha&#39;: 0.4000000000000001}]]}, &#39;ml_m&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.09000000000000001}, {&#39;alpha&#39;: 0.09000000000000001}, {&#39;alpha&#39;: 0.09000000000000001}, {&#39;alpha&#39;: 0.09000000000000001}, {&#39;alpha&#39;: 0.09000000000000001}]]}}</span>
+
+<span class="gp">In [41]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="go">      coef   std err          t          P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  2.96582  0.086679  34.216207  1.388216e-256  2.795932  3.135707</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p>Hyperparameter tuning can also be done with more sophisticated methods, like for example an iterative fitting along
 a regularization path implemented in <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html#sklearn.linear_model.LassoCV" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.LassoCV</span></code></a>.
 In this case the tuning should be done externally and the parameters can then be set via the
 <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="e1537202-0e98-4c1d-9fda-ab61bd8ae41a" name="7b617991-6af5-454b-a88b-6caed0ec7bbc" type="radio">
+</input><label class="tabbed-label" for="e1537202-0e98-4c1d-9fda-ab61bd8ae41a">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [42]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [43]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span>
+
+<span class="gp">In [44]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+
+<span class="gp">In [45]: </span><span class="n">ml_l_tune</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dml_data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+<span class="gp">In [46]: </span><span class="n">ml_m_tune</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dml_data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
+
+<span class="gp">In [47]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+
+<span class="gp">In [48]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+
+<span class="gp">In [49]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+
+<span class="gp">In [50]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_l&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">ml_l_tune</span><span class="o">.</span><span class="n">alpha_</span><span class="p">});</span>
+
+<span class="gp">In [51]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_m&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">ml_m_tune</span><span class="o">.</span><span class="n">alpha_</span><span class="p">});</span>
+
+<span class="gp">In [52]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+<span class="go">{&#39;ml_l&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.43119470700551277}, {&#39;alpha&#39;: 0.43119470700551277}, {&#39;alpha&#39;: 0.43119470700551277}, {&#39;alpha&#39;: 0.43119470700551277}, {&#39;alpha&#39;: 0.43119470700551277}]]}, &#39;ml_m&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}]]}}</span>
+
+<span class="gp">In [53]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="go">       coef   std err          t  P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  3.048723  0.075869  40.183855    0.0  2.900021  3.197424</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="r-learners-and-hyperparameters">
-<span id="learners-r"></span><h2><span class="section-number">6.2. </span>R: Learners and hyperparameters<a class="headerlink" href="#r-learners-and-hyperparameters" title="Permalink to this heading">#</a></h2>
+<span id="learners-r"></span><h2><span class="section-number">6.2. </span>R: Learners and hyperparameters<a class="headerlink" href="#r-learners-and-hyperparameters" title="Permalink to this headline">#</a></h2>
 <section id="id2">
-<h3><span class="section-number">6.2.1. </span>Minimum requirements for learners<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">6.2.1. </span>Minimum requirements for learners<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
 <p>The minimum requirement for a learner to be used for nuisance models in the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> package is</p>
 <blockquote>
 <div><ul class="simple">
@@ -451,7 +619,7 @@ instantiation using the <code class="docutils literal notranslate"><span class="
 <a class="reference external" href="https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html">website of the mlr3extralearners package</a>.</p>
 </section>
 <section id="id9">
-<h3><span class="section-number">6.2.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">6.2.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#id9" title="Permalink to this headline">#</a></h3>
 <p>The learners are set during initialization of the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> model classes
 <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLR.html">DoubleML::DoubleMLPLR</a>,
 <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLIV.html">DoubleML::DoubleMLPLIV</a> ,
@@ -462,6 +630,45 @@ We need to specify learners for the nuisance functions <span class="math notrans
 for example <a class="reference external" href="https://mlr3learners.mlr-org.com/reference/mlr_learners_regr.ranger.html">LearnerRegrRanger</a>
 (<code class="docutils literal notranslate"><span class="pre">lrn(&quot;regr.ranger&quot;)</span></code>) for regression with random forests based on the  <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a>
 package for R.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="d1f0e95c-7f5c-4074-a41c-d3e58e925b14" name="051d8ffe-f2b5-42ca-bd98-73aca3c936e3" type="radio">
+</input><label class="tabbed-label" for="d1f0e95c-7f5c-4074-a41c-d3e58e925b14">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="c1"># set up a mlr3 learner</span>
+<span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">return_type</span><span class="o">=</span><span class="s">&#39;data.table&#39;</span><span class="p">)</span>
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d   0.57505    0.04458    12.9   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <p>Without further specification of the hyperparameters, default values are used. To set hyperparameters:</p>
 <blockquote>
 <div><ul class="simple">
@@ -470,6 +677,52 @@ package for R.</p>
 <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params(learner,</span> <span class="pre">treat_var,</span> <span class="pre">params,</span> <span class="pre">set_fold_specific)</span></code>.</p></li>
 </ul>
 </div></blockquote>
+<div class="tabbed-set docutils">
+<input checked="checked" id="703f7c0a-d133-4dc3-8778-b5bf4ac438a5" name="383c817b-5659-4992-b973-bfdef5b1d707" type="radio">
+</input><label class="tabbed-label" for="703f7c0a-d133-4dc3-8778-b5bf4ac438a5">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="o">=</span><span class="m">10</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)</span>
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;num.trees&quot;</span><span class="o">=</span><span class="m">10</span><span class="p">))</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d   0.58765    0.04532   12.97   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d   0.58765    0.04532   12.97   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <p>Setting treatment-variable-specific or fold-specific hyperparameters:</p>
 <blockquote>
 <div><ul class="simple">
@@ -489,10 +742,166 @@ parameter passing is only supported, if all parameters are set fold-specific.</p
 fields <code class="docutils literal notranslate"><span class="pre">$learner</span></code> and <code class="docutils literal notranslate"><span class="pre">$params</span></code>.</p></li>
 </ul>
 </div></blockquote>
+<div class="tabbed-set docutils">
+<input checked="checked" id="6d323b92-5c16-40ad-aff9-15b42ba6d84c" name="2722d1c7-0ab3-4f10-b4af-86e9a7a7f3c6" type="radio">
+</input><label class="tabbed-label" for="6d323b92-5c16-40ad-aff9-15b42ba6d84c">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)</span>
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+
+<span class="n">n_rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="o">=</span><span class="n">n_rep</span><span class="p">,</span><span class="w"> </span><span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">)</span>
+
+<span class="c1"># Set globally</span>
+<span class="n">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;num.trees&quot;</span><span class="o">=</span><span class="m">10</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span><span class="s">&quot;ml_m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">learner</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">params</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>$ml_l
+&lt;LearnerRegrRanger:regr.ranger&gt;
+* Model: -
+* Parameters: num.threads=1
+* Packages: mlr3, mlr3learners, ranger
+* Predict Types:  [response], se
+* Feature Types: logical, integer, numeric, character, factor, ordered
+* Properties: hotstart_backward, importance, oob_error, weights
+
+$ml_m
+&lt;LearnerRegrRanger:regr.ranger&gt;
+* Model: -
+* Parameters: num.threads=1
+* Packages: mlr3, mlr3learners, ranger
+* Predict Types:  [response], se
+* Feature Types: logical, integer, numeric, character, factor, ordered
+* Properties: hotstart_backward, importance, oob_error, weights
+</pre></div>
+</div>
+<div class="output text_html"><dl>
+	<dt>$ml_l</dt>
+		<dd><strong>$d</strong> = <strong>$num.trees</strong> = 10</dd>
+	<dt>$ml_m</dt>
+		<dd><strong>$d</strong> = <strong>$num.trees</strong> = 10</dd>
+</dl>
+</div><div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d    0.5249     0.0459   11.43   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <p>The following example illustrates how to set parameters for each fold.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="d3fa7437-0eba-4fe6-9d24-289901496f95" name="f8d21419-f535-4f91-8e2f-5e247f02d483" type="radio">
+</input><label class="tabbed-label" for="d3fa7437-0eba-4fe6-9d24-289901496f95">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="o">=</span><span class="n">n_rep</span><span class="p">,</span><span class="w"> </span><span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">)</span>
+
+<span class="c1"># Set values for each fold</span>
+<span class="n">params_exact</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">params</span><span class="p">),</span><span class="w"> </span><span class="n">n_folds</span><span class="p">)),</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="o">=</span><span class="n">params_exact</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">set_fold_specific</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">set_ml_nuisance_params</span><span class="p">(</span><span class="s">&quot;ml_m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="o">=</span><span class="n">params_exact</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">set_fold_specific</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">learner</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">params</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>$ml_l
+&lt;LearnerRegrRanger:regr.ranger&gt;
+* Model: -
+* Parameters: num.threads=1
+* Packages: mlr3, mlr3learners, ranger
+* Predict Types:  [response], se
+* Feature Types: logical, integer, numeric, character, factor, ordered
+* Properties: hotstart_backward, importance, oob_error, weights
+
+$ml_m
+&lt;LearnerRegrRanger:regr.ranger&gt;
+* Model: -
+* Parameters: num.threads=1
+* Packages: mlr3, mlr3learners, ranger
+* Predict Types:  [response], se
+* Feature Types: logical, integer, numeric, character, factor, ordered
+* Properties: hotstart_backward, importance, oob_error, weights
+</pre></div>
+</div>
+<div class="output text_html"><dl>
+	<dt>$ml_l</dt>
+		<dd><strong>$d</strong> = <ol>
+	<li><ol>
+	<li><strong>$num.trees</strong> = 10</li>
+	<li><strong>$num.trees</strong> = 10</li>
+	<li><strong>$num.trees</strong> = 10</li>
+</ol>
+</li>
+	<li><ol>
+	<li><strong>$num.trees</strong> = 10</li>
+	<li><strong>$num.trees</strong> = 10</li>
+	<li><strong>$num.trees</strong> = 10</li>
+</ol>
+</li>
+</ol>
+</dd>
+	<dt>$ml_m</dt>
+		<dd><strong>$d</strong> = <ol>
+	<li><ol>
+	<li><strong>$num.trees</strong> = 10</li>
+	<li><strong>$num.trees</strong> = 10</li>
+	<li><strong>$num.trees</strong> = 10</li>
+</ol>
+</li>
+	<li><ol>
+	<li><strong>$num.trees</strong> = 10</li>
+	<li><strong>$num.trees</strong> = 10</li>
+	<li><strong>$num.trees</strong> = 10</li>
+</ol>
+</li>
+</ol>
+</dd>
+</dl>
+</div><div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d   0.49098    0.04415   11.12   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="using-pipelines-to-construct-learners">
-<h3><span class="section-number">6.2.3. </span>Using pipelines to construct learners<a class="headerlink" href="#using-pipelines-to-construct-learners" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">6.2.3. </span>Using pipelines to construct learners<a class="headerlink" href="#using-pipelines-to-construct-learners" title="Permalink to this headline">#</a></h3>
 <p>Users can also specify learners that have been constructed from a pipeline using the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a>
 package. In general, pipelines can be used to perform data preprocessing, feature selection, combine learners and even
 to perform hyperparameter tuning. In the following, we provide two examples on how to construct a single learner and how
@@ -500,14 +909,161 @@ to stack different learners via a pipeline. For a more detailed introduction to 
 we refer to the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter in the mlr3book</a>. Moreover, a
 notebook on how to use <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> in combination with <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
 is available in the example gallery.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="a93c2165-7e56-49ab-a48e-d14b53554fc1" name="8a824746-a982-4428-8e7d-06b95571e5f4" type="radio">
+</input><label class="tabbed-label" for="a93c2165-7e56-49ab-a48e-d14b53554fc1">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">mlr3pipelines</span><span class="p">)</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="c1"># Define random forest learner in a pipeline</span>
+<span class="n">single_learner_pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">))</span>
+
+<span class="c1"># Use pipeline to create a new instance of a learner</span>
+<span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">single_learner_pipeline</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">single_learner_pipeline</span><span class="p">)</span>
+
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+
+<span class="n">n_rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="o">=</span><span class="n">n_rep</span><span class="p">,</span><span class="w"> </span><span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">learner</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="c1"># Define ensemble learner in a pipeline</span>
+<span class="n">ensemble_learner_pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gunion</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
+<span class="w">        </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;lambda.min&quot;</span><span class="p">)),</span>
+<span class="w">        </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)),</span>
+<span class="w">        </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.rpart&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.01</span><span class="p">))))</span><span class="w"> </span><span class="o">%&gt;&gt;%</span>
+<span class="w">    </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;regravg&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">)</span>
+
+<span class="c1"># Use pipeline to create a new instance of a learner</span>
+<span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">ensemble_learner_pipeline</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">ensemble_learner_pipeline</span><span class="p">)</span>
+
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+
+<span class="n">n_rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="o">=</span><span class="n">n_rep</span><span class="p">,</span><span class="w"> </span><span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">learner</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>$ml_l
+&lt;GraphLearner:regr.ranger&gt;
+* Model: -
+* Parameters: regr.ranger.num.threads=1, regr.ranger.num.trees=10
+* Packages: mlr3, mlr3pipelines, mlr3learners, ranger
+* Predict Types:  [response], se, distr
+* Feature Types: logical, integer, numeric, character, factor, ordered,
+  POSIXct
+* Properties: featureless, hotstart_backward, hotstart_forward,
+  importance, loglik, missings, oob_error, selected_features, weights
+
+$ml_m
+&lt;GraphLearner:regr.ranger&gt;
+* Model: -
+* Parameters: regr.ranger.num.threads=1, regr.ranger.num.trees=10
+* Packages: mlr3, mlr3pipelines, mlr3learners, ranger
+* Predict Types:  [response], se, distr
+* Feature Types: logical, integer, numeric, character, factor, ordered,
+  POSIXct
+* Properties: featureless, hotstart_backward, hotstart_forward,
+  importance, loglik, missings, oob_error, selected_features, weights
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d    0.5249     0.0459   11.43   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>$ml_l
+&lt;GraphLearner:regr.cv_glmnet.regr.ranger.regr.rpart.regravg&gt;
+* Model: -
+* Parameters: regr.cv_glmnet.family=gaussian,
+  regr.cv_glmnet.s=lambda.min, regr.ranger.num.threads=1,
+  regr.rpart.xval=0, regr.rpart.cp=0.01, regravg.weights=1
+* Packages: mlr3, mlr3pipelines, mlr3learners, glmnet, ranger, rpart
+* Predict Types:  [response], se, distr
+* Feature Types: logical, integer, numeric, character, factor, ordered,
+  POSIXct
+* Properties: featureless, hotstart_backward, hotstart_forward,
+  importance, loglik, missings, oob_error, selected_features, weights
+
+$ml_m
+&lt;GraphLearner:regr.cv_glmnet.regr.ranger.regr.rpart.regravg&gt;
+* Model: -
+* Parameters: regr.cv_glmnet.family=gaussian,
+  regr.cv_glmnet.s=lambda.min, regr.ranger.num.threads=1,
+  regr.rpart.xval=0, regr.rpart.cp=0.01, regravg.weights=1
+* Packages: mlr3, mlr3pipelines, mlr3learners, glmnet, ranger, rpart
+* Predict Types:  [response], se, distr
+* Feature Types: logical, integer, numeric, character, factor, ordered,
+  POSIXct
+* Properties: featureless, hotstart_backward, hotstart_forward,
+  importance, loglik, missings, oob_error, selected_features, weights
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d   0.55173    0.04631   11.91   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="id16">
-<h3><span class="section-number">6.2.4. </span>Hyperparameter tuning<a class="headerlink" href="#id16" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">6.2.4. </span>Hyperparameter tuning<a class="headerlink" href="#id16" title="Permalink to this headline">#</a></h3>
 <p>Parameter tuning of learners for the nuisance functions of <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models can be done via the <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method.
 The <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method passes various options and parameters to the tuning interface provided by the
 <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a> package. The <a class="reference external" href="https://mlr3book.mlr-org.com/">mlr3 book</a> provides a
 <a class="reference external" href="https://mlr3book.mlr-org.com/optimization.html">step-by-step introduction to parameter tuning</a>.</p>
 <p>To illustrate the parameter tuning, we generate data from a sparse partially linear regression model.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="76c18cad-8b9f-43c7-8cc3-582526ba3cc3" name="51333c61-d158-48cc-9891-38c121026229" type="radio">
+</input><label class="tabbed-label" for="76c18cad-8b9f-43c7-8cc3-582526ba3cc3">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">n_obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
+<span class="n">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
+<span class="n">theta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">matrix</span><span class="p">(</span><span class="n">stats</span><span class="o">::</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n_vars</span><span class="p">),</span><span class="w"> </span><span class="n">nrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_obs</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_vars</span><span class="p">)</span>
+<span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">drop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">]</span><span class="w"> </span><span class="o">%*%</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stats</span><span class="o">::</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+<span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">theta</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">drop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">]</span><span class="w"> </span><span class="o">%*%</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">)</span><span class="w">  </span><span class="o">+</span><span class="w"> </span><span class="n">stats</span><span class="o">::</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+<span class="n">dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</div>
+</div>
 <p>The hyperparameter-tuning is performed according to options passed through a named list <code class="docutils literal notranslate"><span class="pre">tune_settings</span></code>.
 The entries in the list specify options during parameter tuning with <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a>:</p>
 <blockquote>
@@ -543,26 +1099,336 @@ which are later used in the fitting stage for all folds.</p>
 <p>Alternatively, setting the option <code class="docutils literal notranslate"><span class="pre">tune_on_folds=TRUE</span></code> would assign the tuning resampling scheme <code class="docutils literal notranslate"><span class="pre">rsmp_tune</span></code> to each fold.
 For example, if we set <code class="docutils literal notranslate"><span class="pre">n_folds=2</span></code> at initialization of the <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> object and use a 5-fold cross-validated error
 for tuning, each of the two folds would be split up into 5 subfolds and the error would be evaluated on these subfolds.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="05e9e87d-a845-4da2-b324-ceb615d37583" name="ed39ca87-f0a2-4d5f-8193-bc28c4c76735" type="radio">
+</input><label class="tabbed-label" for="05e9e87d-a845-4da2-b324-ceb615d37583">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3tuning</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">paradox</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;bbotk&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.glmnet&quot;</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.glmnet&quot;</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
+
+<span class="n">par_grids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ParamSet</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
+<span class="w">                                  </span><span class="n">ParamDbl</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="s">&quot;lambda&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.05</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">))),</span>
+<span class="w">                 </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">ParamSet</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
+<span class="w">                                  </span><span class="n">ParamDbl</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="s">&quot;lambda&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.05</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">))))</span>
+
+<span class="n">tune_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">terminator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">trm</span><span class="p">(</span><span class="s">&quot;evals&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n_evals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">algorithm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">tnr</span><span class="p">(</span><span class="s">&quot;grid_search&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">rsmp_tune</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rsmp</span><span class="p">(</span><span class="s">&quot;cv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">measure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">),</span>
+<span class="w">                                     </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">)))</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">tune</span><span class="p">(</span><span class="n">param_set</span><span class="o">=</span><span class="n">par_grids</span><span class="p">,</span><span class="w"> </span><span class="n">tune_settings</span><span class="o">=</span><span class="n">tune_settings</span><span class="p">,</span><span class="w"> </span><span class="n">tune_on_fold</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">params</span>
+
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><dl>
+	<dt>$ml_l</dt>
+		<dd><strong>$d</strong> = <ol>
+	<li><ol>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.1</dd>
+</dl>
+</li>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.0777777777777778</dd>
+</dl>
+</li>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.1</dd>
+</dl>
+</li>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.1</dd>
+</dl>
+</li>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.1</dd>
+</dl>
+</li>
+</ol>
+</li>
+</ol>
+</dd>
+	<dt>$ml_m</dt>
+		<dd><strong>$d</strong> = <ol>
+	<li><ol>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.1</dd>
+</dl>
+</li>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.1</dd>
+</dl>
+</li>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.1</dd>
+</dl>
+</li>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.1</dd>
+</dl>
+</li>
+	<li><dl>
+	<dt>$family</dt>
+		<dd>'gaussian'</dd>
+	<dt>$lambda</dt>
+		<dd>0.1</dd>
+</dl>
+</li>
+</ol>
+</li>
+</ol>
+</dd>
+</dl>
+</div><div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d    3.0425     0.1424   21.37   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <p>Hyperparameter tuning can also be done with more sophisticated methods, for example by using built-in tuning
 paths of learners. For example, the learner <a class="reference external" href="https://mlr3learners.mlr-org.com/reference/mlr_learners_regr.cv_glmnet.html">regr.cv_glmnet</a>
 performs an internal cross-validated choice of the parameter <code class="docutils literal notranslate"><span class="pre">lambda</span></code>.
 Alternatively, the powerful functionalities of the <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a> package can be used for
 external parameter tuning of the nuisance parts. The optimally chosen parameters can then be passed to the
 <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models using the <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="f60c969d-c780-45df-85bd-bf459e82bd9f" name="fc721c00-4ab7-412b-b21d-4c96ce8a2967" type="radio">
+</input><label class="tabbed-label" for="f60c969d-c780-45df-85bd-bf459e82bd9f">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3tuning</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;bbotk&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="o">=</span><span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="o">=</span><span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
+
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d   3.08848    0.07366   41.93   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <p>The following code chunk illustrates another example for global parameter tuning with random forests
 as provided by the  <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a> package. In this example, we use random search to find optimal
 parameters <code class="docutils literal notranslate"><span class="pre">mtry</span></code> and <code class="docutils literal notranslate"><span class="pre">max.depth</span></code> of a random forest. Evaluation is based on 3-fold cross-validation.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="c975904f-1403-455a-91da-24c480b0776a" name="320995df-582d-48be-a241-26916eb43c38" type="radio">
+</input><label class="tabbed-label" for="c975904f-1403-455a-91da-24c480b0776a">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3tuning</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">paradox</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;bbotk&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="c1"># set up a mlr3 learner</span>
+<span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
+
+<span class="c1"># set up a list of parameter grids</span>
+<span class="n">param_grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ParamSet</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
+<span class="w">                                  </span><span class="n">ParamInt</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="s">&quot;mtry&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">),</span>
+<span class="w">                                  </span><span class="n">ParamInt</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="s">&quot;max.depth&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">))),</span>
+<span class="w">                  </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ParamSet</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
+<span class="w">                                  </span><span class="n">ParamInt</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="s">&quot;mtry&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">),</span>
+<span class="w">                                  </span><span class="n">ParamInt</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="s">&quot;max.depth&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">))))</span>
+<span class="n">tune_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">terminator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mlr3tuning</span><span class="o">::</span><span class="nf">trm</span><span class="p">(</span><span class="s">&quot;evals&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n_evals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">algorithm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">tnr</span><span class="p">(</span><span class="s">&quot;random_search&quot;</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">rsmp_tune</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rsmp</span><span class="p">(</span><span class="s">&quot;cv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">measure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">),</span>
+<span class="w">                                     </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">)))</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">tune</span><span class="p">(</span><span class="n">param_set</span><span class="o">=</span><span class="n">param_grid</span><span class="p">,</span><span class="w"> </span><span class="n">tune_settings</span><span class="o">=</span><span class="n">tune_settings</span><span class="p">,</span><span class="w"> </span><span class="n">tune_on_folds</span><span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">params</span>
+
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><dl>
+	<dt>$ml_l</dt>
+		<dd><strong>$d</strong> = <dl>
+	<dt>$num.threads</dt>
+		<dd>1</dd>
+	<dt>$mtry</dt>
+		<dd>10</dd>
+	<dt>$max.depth</dt>
+		<dd>5</dd>
+</dl>
+</dd>
+	<dt>$ml_m</dt>
+		<dd><strong>$d</strong> = <dl>
+	<dt>$num.threads</dt>
+		<dd>1</dd>
+	<dt>$mtry</dt>
+		<dd>17</dd>
+	<dt>$max.depth</dt>
+		<dd>3</dd>
+</dl>
+</dd>
+</dl>
+</div><div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d   0.55348    0.04559   12.14   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="hyperparameter-tuning-with-pipelines">
-<h3><span class="section-number">6.2.5. </span>Hyperparameter tuning with pipelines<a class="headerlink" href="#hyperparameter-tuning-with-pipelines" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">6.2.5. </span>Hyperparameter tuning with pipelines<a class="headerlink" href="#hyperparameter-tuning-with-pipelines" title="Permalink to this headline">#</a></h3>
 <p>As an alternative to the previously presented tuning approach, it is possible to base the parameter tuning on a pipeline
 as provided by the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> package. The basic idea of this approach is to
 define a learner via a pipeline and then perform the tuning via the <code class="docutils literal notranslate"><span class="pre">tune()</span></code>. We will shortly repeat the lasso example
 from above. In general, the pipeline-based approach can be used to find optimal values not only for the parameters of
 one or multiple learners, but also for other parameters, which are, for example, involved in the data preprocessing. We
 refer to more details provided in the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter in the mlr3book</a>.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="d6a22d02-d048-4676-bc56-ca761cb71556" name="d532da94-7f9b-48f7-a97e-d892dd2f90f6" type="radio">
+</input><label class="tabbed-label" for="d6a22d02-d048-4676-bc56-ca761cb71556">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3tuning</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3pipelines</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;bbotk&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="c1"># Define learner in a pipeline</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<span class="n">lasso_pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.glmnet&quot;</span><span class="p">))</span>
+<span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">lasso_pipe</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">lasso_pipe</span><span class="p">)</span>
+
+<span class="c1"># Instantiate a DoubleML object</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
+
+<span class="c1"># Parameter grid for lambda</span>
+<span class="n">par_grids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ps</span><span class="p">(</span><span class="n">regr.glmnet.lambda</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">p_dbl</span><span class="p">(</span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.05</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">))</span>
+
+<span class="n">tune_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">terminator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">trm</span><span class="p">(</span><span class="s">&quot;evals&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n_evals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">),</span>
+<span class="w">                     </span><span class="n">algorithm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">tnr</span><span class="p">(</span><span class="s">&quot;grid_search&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">),</span>
+<span class="w">                     </span><span class="n">rsmp_tune</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rsmp</span><span class="p">(</span><span class="s">&quot;cv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">),</span>
+<span class="w">                     </span><span class="n">measure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_g&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">),</span>
+<span class="w">                                    </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">)))</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">tune</span><span class="p">(</span><span class="n">param_set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_g&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">par_grids</span><span class="p">,</span>
+<span class="w">                                  </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">par_grids</span><span class="p">),</span>
+<span class="w">                                  </span><span class="n">tune_settings</span><span class="o">=</span><span class="n">tune_settings</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">tune_on_fold</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+  Estimate. Std. Error t value Pr(&gt;|t|)    
+d    3.0425     0.1424   21.37   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <section id="references">
-<h4><span class="section-number">6.2.5.1. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h4>
+<h4><span class="section-number">6.2.5.1. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h4>
 <ul class="simple">
 <li><p>Lang, M., Binder, M., Richter, J., Schratz, P., Pfisterer, F., Coors, S., Au, Q., Casalicchio, G., Kotthoff, L., Bischl, B. (2019), mlr3: A modern object-oriented machine learing framework in R. Journal of Open Source Software, <a class="reference external" href="https://doi.org/10.21105/joss.01903">doi:10.21105/joss.01903</a>.</p></li>
 <li><p>Becker, M., Binder, M., Bischl, B., Lang, M., Pfisterer, F., Reich, N.G., Richter, J., Schratz, P., Sonabend, R. (2020), mlr3 book, available at <a class="reference external" href="https://mlr3book.mlr-org.com">https://mlr3book.mlr-org.com</a>.</p></li>
@@ -617,7 +1483,7 @@ refer to more details provided in the <a class="reference external" href="https:
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.0.0.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
 </p>
   </div>
   

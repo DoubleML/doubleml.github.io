@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>8. Confidence bands and multiplier bootstrap for valid simultaneous inference &#8212; DoubleML  documentation</title>
 <script>
@@ -31,15 +31,16 @@
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-dropdown.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
 
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
@@ -54,7 +55,7 @@
     <link rel="next" title="9. Sample-splitting, cross-fitting and repeated cross-fitting" href="resampling.html" />
     <link rel="prev" title="7. Variance estimation and confidence intervals for a causal parameter of interest" href="se_confint.html" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="docsearch:language" content="en">
+<meta name="docsearch:language" content="None">
   </head>
   
   
@@ -299,7 +300,7 @@
               <article class="bd-article" role="main">
                 
   <section id="confidence-bands-and-multiplier-bootstrap-for-valid-simultaneous-inference">
-<span id="sim-inf"></span><h1><span class="section-number">8. </span>Confidence bands and multiplier bootstrap for valid simultaneous inference<a class="headerlink" href="#confidence-bands-and-multiplier-bootstrap-for-valid-simultaneous-inference" title="Permalink to this heading">#</a></h1>
+<span id="sim-inf"></span><h1><span class="section-number">8. </span>Confidence bands and multiplier bootstrap for valid simultaneous inference<a class="headerlink" href="#confidence-bands-and-multiplier-bootstrap-for-valid-simultaneous-inference" title="Permalink to this headline">#</a></h1>
 <p><a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> provides methods to perform valid simultaneous inference for multiple treatment variables.
 As an example, consider a PLR with <span class="math notranslate nohighlight">\(p_1\)</span> causal parameters of interest <span class="math notranslate nohighlight">\(\theta_{0,1}, \ldots, \theta_{0,p_1}\)</span> associated with
 treatment variables <span class="math notranslate nohighlight">\(D_1, \ldots, D_{p_1}\)</span>. Inference on multiple target coefficients can be performed by iteratively applying the DML inference procedure over the target variables of
@@ -318,7 +319,7 @@ Second, the relationship between the treatment variable <span class="math notran
 <p>For further details, we refer to Belloni et al. (2018). Simultaneous inference can be based on a multiplier bootstrap procedure introduced in Chernozhukov et al. (2013, 2014).
 Alternatively, traditional correction approaches, for example the Bonferroni correction, can be used to adjust p-values.</p>
 <section id="multiplier-bootstrap-and-joint-confidence-intervals">
-<h2><span class="section-number">8.1. </span>Multiplier bootstrap and joint confidence intervals<a class="headerlink" href="#multiplier-bootstrap-and-joint-confidence-intervals" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">8.1. </span>Multiplier bootstrap and joint confidence intervals<a class="headerlink" href="#multiplier-bootstrap-and-joint-confidence-intervals" title="Permalink to this headline">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">bootstrap()</span></code> method provides an implementation of a multiplier bootstrap for double machine learning models.
 For <span class="math notranslate nohighlight">\(b=1, \ldots, B\)</span> weights <span class="math notranslate nohighlight">\(\xi_{i, b}\)</span> are generated according to a normal (Gaussian) bootstrap, wild
 bootstrap or exponential bootstrap.
@@ -343,9 +344,176 @@ when calling the method <code class="docutils literal notranslate"><span class="
 the method <code class="docutils literal notranslate"><span class="pre">p_adjust</span></code>. <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>  performs a version of the Romano-Wolf stepdown adjustment,
 which is based on the multiplier bootstrap, by default. Alternatively, <code class="docutils literal notranslate"><span class="pre">p_adjust</span></code> allows users to apply traditional corrections
 via the option <code class="docutils literal notranslate"><span class="pre">method</span></code>.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="d7027fb1-e431-484a-abe5-e19c2491e35f" name="b1b3b7c2-9c9c-4986-9deb-e6e2e5597fa6" type="radio">
+</input><label class="tabbed-label" for="d7027fb1-e431-484a-abe5-e19c2491e35f">
+Python</label><div class="tabbed-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [2]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [3]: </span><span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">clone</span>
+
+<span class="gp">In [4]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span>
+
+<span class="go"># Simulate data</span>
+<span class="gp">In [5]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="gp">In [7]: </span><span class="n">n_vars</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="gp">In [8]: </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">))</span>
+
+<span class="gp">In [9]: </span><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])</span>
+
+<span class="gp">In [10]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+
+<span class="gp">In [11]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">:],</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+
+<span class="gp">In [12]: </span><span class="n">learner</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span>
+
+<span class="gp">In [13]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<span class="gp">In [14]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<span class="gp">In [15]: </span><span class="n">dml_plr</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+
+<span class="gp">In [16]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="go">        2.5 %    97.5 %</span>
+<span class="go">d1   2.813342  3.055680</span>
+<span class="go">d2   2.815224  3.083258</span>
+<span class="go">d3   2.860663  3.109069</span>
+<span class="go">d4  -0.141546  0.091391</span>
+<span class="go">d5  -0.060845  0.176929</span>
+<span class="go">d6  -0.158697  0.078474</span>
+<span class="go">d7  -0.172022  0.062964</span>
+<span class="go">d8  -0.067721  0.174499</span>
+<span class="go">d9  -0.092365  0.139491</span>
+<span class="go">d10 -0.110717  0.138698</span>
+
+<span class="gp">In [17]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr</span><span class="o">.</span><span class="n">p_adjust</span><span class="p">())</span>
+<span class="go">         coef   pval</span>
+<span class="go">d1   2.934511  0.000</span>
+<span class="go">d2   2.949241  0.000</span>
+<span class="go">d3   2.984866  0.000</span>
+<span class="go">d4  -0.025077  0.850</span>
+<span class="go">d5   0.058042  0.492</span>
+<span class="go">d6  -0.040112  0.850</span>
+<span class="go">d7  -0.054529  0.850</span>
+<span class="go">d8   0.053389  0.514</span>
+<span class="go">d9   0.023563  0.802</span>
+<span class="go">d10  0.013990  0.850</span>
+
+<span class="gp">In [18]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr</span><span class="o">.</span><span class="n">p_adjust</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;bonferroni&#39;</span><span class="p">))</span>
+<span class="go">         coef  pval</span>
+<span class="go">d1   2.934511   0.0</span>
+<span class="go">d2   2.949241   0.0</span>
+<span class="go">d3   2.984866   0.0</span>
+<span class="go">d4  -0.025077   1.0</span>
+<span class="go">d5   0.058042   1.0</span>
+<span class="go">d6  -0.040112   1.0</span>
+<span class="go">d7  -0.054529   1.0</span>
+<span class="go">d8   0.053389   1.0</span>
+<span class="go">d9   0.023563   1.0</span>
+<span class="go">d10  0.013990   1.0</span>
+</pre></div>
+</div>
+</div>
+<input id="6d2f9cc4-dd20-4187-801a-3516ee8c3502" name="b1b3b7c2-9c9c-4986-9deb-e6e2e5597fa6" type="radio">
+</input><label class="tabbed-label" for="6d2f9cc4-dd20-4187-801a-3516ee8c3502">
+R</label><div class="tabbed-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">n_obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">500</span>
+<span class="n">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+<span class="n">theta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">)</span>
+<span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">matrix</span><span class="p">(</span><span class="n">stats</span><span class="o">::</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n_vars</span><span class="p">),</span><span class="w"> </span><span class="n">nrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_obs</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_vars</span><span class="p">)</span>
+<span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">drop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">]</span><span class="w"> </span><span class="o">%*%</span><span class="w"> </span><span class="n">theta</span><span class="w">  </span><span class="o">+</span><span class="w"> </span><span class="n">stats</span><span class="o">::</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+<span class="n">dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="w"> </span><span class="m">11</span><span class="o">:</span><span class="n">n_vars</span><span class="p">],</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">])</span>
+
+<span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="o">=</span><span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">dml_plr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
+
+<span class="n">dml_plr</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">dml_plr</span><span class="o">$</span><span class="nf">bootstrap</span><span class="p">()</span>
+<span class="n">dml_plr</span><span class="o">$</span><span class="nf">confint</span><span class="p">(</span><span class="n">joint</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="n">dml_plr</span><span class="o">$</span><span class="nf">p_adjust</span><span class="p">()</span>
+<span class="n">dml_plr</span><span class="o">$</span><span class="nf">p_adjust</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&quot;bonferroni&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="dataframe">
+<caption>A matrix: 10 × 2 of type dbl</caption>
+<thead>
+	<tr><th></th><th scope=col>2.5 %</th><th scope=col>97.5 %</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>d1</th><td> 2.89027368</td><td>3.14532650</td></tr>
+	<tr><th scope=row>d2</th><td> 2.90794478</td><td>3.14368145</td></tr>
+	<tr><th scope=row>d3</th><td> 2.87430335</td><td>3.12752825</td></tr>
+	<tr><th scope=row>d4</th><td>-0.14790924</td><td>0.07828372</td></tr>
+	<tr><th scope=row>d5</th><td>-0.09779675</td><td>0.16803512</td></tr>
+	<tr><th scope=row>d6</th><td>-0.12105472</td><td>0.12539340</td></tr>
+	<tr><th scope=row>d7</th><td>-0.16536299</td><td>0.09310496</td></tr>
+	<tr><th scope=row>d8</th><td>-0.10127930</td><td>0.14200098</td></tr>
+	<tr><th scope=row>d9</th><td>-0.13868238</td><td>0.09980311</td></tr>
+	<tr><th scope=row>d10</th><td>-0.04444978</td><td>0.19680840</td></tr>
+</tbody>
+</table>
+</div><div class="output text_html"><table class="dataframe">
+<caption>A matrix: 10 × 2 of type dbl</caption>
+<thead>
+	<tr><th></th><th scope=col>Estimate.</th><th scope=col>pval</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>d1</th><td> 3.017800092</td><td>0.000</td></tr>
+	<tr><th scope=row>d2</th><td> 3.025813114</td><td>0.000</td></tr>
+	<tr><th scope=row>d3</th><td> 3.000915799</td><td>0.000</td></tr>
+	<tr><th scope=row>d4</th><td>-0.034812763</td><td>0.938</td></tr>
+	<tr><th scope=row>d5</th><td> 0.035119185</td><td>0.938</td></tr>
+	<tr><th scope=row>d6</th><td> 0.002169338</td><td>0.958</td></tr>
+	<tr><th scope=row>d7</th><td>-0.036129015</td><td>0.938</td></tr>
+	<tr><th scope=row>d8</th><td> 0.020360838</td><td>0.954</td></tr>
+	<tr><th scope=row>d9</th><td>-0.019439633</td><td>0.954</td></tr>
+	<tr><th scope=row>d10</th><td> 0.076179312</td><td>0.428</td></tr>
+</tbody>
+</table>
+</div><div class="output text_html"><table class="dataframe">
+<caption>A matrix: 10 × 2 of type dbl</caption>
+<thead>
+	<tr><th></th><th scope=col>Estimate.</th><th scope=col>pval</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>d1</th><td> 3.017800092</td><td>0.0000000</td></tr>
+	<tr><th scope=row>d2</th><td> 3.025813114</td><td>0.0000000</td></tr>
+	<tr><th scope=row>d3</th><td> 3.000915799</td><td>0.0000000</td></tr>
+	<tr><th scope=row>d4</th><td>-0.034812763</td><td>1.0000000</td></tr>
+	<tr><th scope=row>d5</th><td> 0.035119185</td><td>1.0000000</td></tr>
+	<tr><th scope=row>d6</th><td> 0.002169338</td><td>1.0000000</td></tr>
+	<tr><th scope=row>d7</th><td>-0.036129015</td><td>1.0000000</td></tr>
+	<tr><th scope=row>d8</th><td> 0.020360838</td><td>1.0000000</td></tr>
+	<tr><th scope=row>d9</th><td>-0.019439633</td><td>1.0000000</td></tr>
+	<tr><th scope=row>d10</th><td> 0.076179312</td><td>0.8116912</td></tr>
+</tbody>
+</table>
+</div></div>
+</div>
+</div>
+</div>
 </section>
 <section id="references">
-<h2><span class="section-number">8.2. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">8.2. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p>Belloni, A., Chernozhukov, V., Chetverikov, D., Wei, Y. (2018), Uniformly valid post-regularization confidence regions for many functional parameters in z-estimation framework. The Annals of Statistics, 46 (6B): 3643-75,  <a class="reference external" href="https://dx.doi.org/10.1214%2F17-AOS1671">doi: 10.1214/17-AOS1671</a>.</p></li>
 <li><p>Chernozhukov, V., Chetverikov, D., Kato, K. (2013). Gaussian approximations and multiplier bootstrap for maxima of sums of high-dimensional random vectors. The Annals of Statistics 41 (6): 2786-2819, <a class="reference external" href="https://dx.doi.org/10.1214/13-AOS1161">doi: 10.1214/13-AOS1161</a>.</p></li>
@@ -399,7 +567,7 @@ via the option <code class="docutils literal notranslate"><span class="pre">meth
   
   <div class="footer-item">
     <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.0.0.<br>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
 </p>
   </div>
   
