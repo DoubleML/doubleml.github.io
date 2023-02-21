@@ -340,12 +340,8 @@ We use score functions <span class="math notranslate nohighlight">\(\psi(W; \the
 and that obey the <strong>Neyman orthogonality condition</strong></p>
 <div class="math notranslate nohighlight">
 \[\partial_{\eta} \mathbb{E}[ \psi(W; \theta_0, \eta)] \bigg|_{\eta=\eta_0} = 0.\]</div>
-<p>An integral component for the object-oriented (OOP) implementation of
-<code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>,
-<code class="docutils literal notranslate"><span class="pre">DoubleMLPLIV</span></code>,
-<code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code>,
-and <code class="docutils literal notranslate"><span class="pre">DoubleMLIIVM</span></code>
-is the linearity of the score function in the parameter <span class="math notranslate nohighlight">\(\theta\)</span></p>
+<p>The score functions of many double machine learning models (PLR, PLIV, IRM, IIVM) are linear in the parameter
+<span class="math notranslate nohighlight">\(\theta\)</span>, i.e.,</p>
 <div class="math notranslate nohighlight">
 \[\psi(W; \theta, \eta) = \psi_a(W; \eta) \theta + \psi_b(W; \eta).\]</div>
 <p>Hence the estimator can be written as</p>
@@ -356,14 +352,20 @@ general way.
 The methods and algorithms to estimate the causal parameters, to estimate their standard errors, to perform a multiplier
 bootstrap, to obtain confidence intervals and many more are implemented in the abstract base class <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>.
 The object-oriented architecture therefore allows for easy extension to new model classes for double machine learning.
-This is doable with very minor effort whenever the linearity of the score function is satisfied.</p>
+This is doable with very minor effort.</p>
+<p>If the linearity of the score function is not satisfied, the computations are more involved.
+In the Python package <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>, the functionality around the score functions is implemented in mixin classes called
+<code class="docutils literal notranslate"><span class="pre">LinearScoreMixin</span></code> and <code class="docutils literal notranslate"><span class="pre">NonLinearScoreMixin</span></code>.
+The R package currently only comes with an implementation for linear score functions.
+In case of a non-linear score function, the parameter estimate <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span> is obtained via numerical root
+search of the empirical analog of the moment condition <span class="math notranslate nohighlight">\(\mathbb{E}[ \psi(W; \theta_0, \eta_0)] = 0\)</span>.</p>
 <section id="implementation-of-the-score-function-and-the-estimate-of-the-causal-parameter">
 <h2><span class="section-number">4.1. </span>Implementation of the score function and the estimate of the causal parameter<a class="headerlink" href="#implementation-of-the-score-function-and-the-estimate-of-the-causal-parameter" title="Permalink to this headline">#</a></h2>
 <p>As an example we consider a partially linear regression model (PLR)
 implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="982a09bd-7ae2-4e20-9cd0-fdcc8572111e" name="e9e2c7d0-2021-4aa9-b1a8-d87f4a36b081" type="radio">
-</input><label class="tabbed-label" for="982a09bd-7ae2-4e20-9cd0-fdcc8572111e">
+<input checked="checked" id="4c32da85-3a85-4914-ae0e-201ddf882809" name="1ec1e6d6-ea11-4eff-afdb-60f17c4481a7" type="radio">
+</input><label class="tabbed-label" for="4c32da85-3a85-4914-ae0e-201ddf882809">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -421,8 +423,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="79e5e604-4a0e-44d9-b6d1-f09b16db59a6" name="e9e2c7d0-2021-4aa9-b1a8-d87f4a36b081" type="radio">
-</input><label class="tabbed-label" for="79e5e604-4a0e-44d9-b6d1-f09b16db59a6">
+<input id="0eb4d05f-76a8-451e-ab4b-49f6f0ecfb3a" name="1ec1e6d6-ea11-4eff-afdb-60f17c4481a7" type="radio">
+</input><label class="tabbed-label" for="0eb4d05f-76a8-451e-ab4b-49f6f0ecfb3a">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -485,16 +487,16 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>The <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method of <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>
 stores the estimate <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span> in its <code class="docutils literal notranslate"><span class="pre">coef</span></code> attribute.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="a41fe456-7802-416f-9979-ad4f4518800c" name="86bc717e-f49f-478c-9126-00c03145f769" type="radio">
-</input><label class="tabbed-label" for="a41fe456-7802-416f-9979-ad4f4518800c">
+<input checked="checked" id="421034b0-76a7-45e5-8237-f2d4addbfc8a" name="495c83c0-a611-464f-b72f-7e0deb59edbc" type="radio">
+</input><label class="tabbed-label" for="421034b0-76a7-45e5-8237-f2d4addbfc8a">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">coef</span><span class="p">)</span>
 <span class="go">[0.48011605]</span>
 </pre></div>
 </div>
 </div>
-<input id="ed4441b9-3e50-4f44-9065-b952b885126e" name="86bc717e-f49f-478c-9126-00c03145f769" type="radio">
-</input><label class="tabbed-label" for="ed4441b9-3e50-4f44-9065-b952b885126e">
+<input id="4fae0d14-54a6-4d0e-8af3-fe9fb1b1665f" name="495c83c0-a611-464f-b72f-7e0deb59edbc" type="radio">
+</input><label class="tabbed-label" for="4fae0d14-54a6-4d0e-8af3-fe9fb1b1665f">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -512,11 +514,12 @@ R</label><div class="tabbed-content docutils">
 </div>
 </div>
 <p>The values of the score function components <span class="math notranslate nohighlight">\(\psi_a(W_i; \hat{\eta}_0)\)</span> and <span class="math notranslate nohighlight">\(\psi_b(W_i; \hat{\eta}_0)\)</span>
-are stored in the attributes <code class="docutils literal notranslate"><span class="pre">psi_a</span></code> and <code class="docutils literal notranslate"><span class="pre">psi_b</span></code>.
+are stored in the attributes <code class="docutils literal notranslate"><span class="pre">psi_elements['psi_a']</span></code> and <code class="docutils literal notranslate"><span class="pre">psi_elements['psi_b']</span></code> (Python package <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>)
+and <code class="docutils literal notranslate"><span class="pre">psi_a</span></code> and <code class="docutils literal notranslate"><span class="pre">psi_b</span></code> (R package <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>).
 In the attribute <code class="docutils literal notranslate"><span class="pre">psi</span></code> the values of the score function <span class="math notranslate nohighlight">\(\psi(W_i; \tilde{\theta}_0, \hat{\eta}_0)\)</span> are stored.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="d0b9f1ed-b485-465b-8537-0b690034a7d1" name="dc19d726-9949-45a6-8345-a7b5928023d0" type="radio">
-</input><label class="tabbed-label" for="d0b9f1ed-b485-465b-8537-0b690034a7d1">
+<input checked="checked" id="2542cc3b-5388-4da4-8d85-d8eeadf31a75" name="1020c0da-b005-4c52-92cf-7f89001a282b" type="radio">
+</input><label class="tabbed-label" for="2542cc3b-5388-4da4-8d85-d8eeadf31a75">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">psi</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
 <span class="go">[[[ 0.01791232]]</span>
@@ -531,8 +534,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="322686ac-9783-4ab7-83a8-281b1e62ce01" name="dc19d726-9949-45a6-8345-a7b5928023d0" type="radio">
-</input><label class="tabbed-label" for="322686ac-9783-4ab7-83a8-281b1e62ce01">
+<input id="dfa9af38-bef0-4e85-bbb5-b618bbcf92c1" name="1020c0da-b005-4c52-92cf-7f89001a282b" type="radio">
+</input><label class="tabbed-label" for="dfa9af38-bef0-4e85-bbb5-b618bbcf92c1">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -628,8 +631,8 @@ the two score components <span class="math notranslate nohighlight">\(\psi_a()\)
 \[\psi(W; \theta, \eta) = [Y - D \theta - g(X)] D\]</div>
 <p>can be obtained with</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="bf2f9936-c59e-4a9c-b109-0759d6f36de8" name="b4be61a3-97a3-49e8-b595-bcf7c529c625" type="radio">
-</input><label class="tabbed-label" for="bf2f9936-c59e-4a9c-b109-0759d6f36de8">
+<input checked="checked" id="b4834446-13d6-4c8e-9cf1-5e8eaffa225a" name="94221fda-5691-4869-8256-1006de85e0a8" type="radio">
+</input><label class="tabbed-label" for="b4834446-13d6-4c8e-9cf1-5e8eaffa225a">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -642,8 +645,8 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="06e7dcf0-ed22-41c5-b500-97cf7ba5f19b" name="b4be61a3-97a3-49e8-b595-bcf7c529c625" type="radio">
-</input><label class="tabbed-label" for="06e7dcf0-ed22-41c5-b500-97cf7ba5f19b">
+<input id="e4428943-ffc6-44b4-b2d9-be028412cff6" name="94221fda-5691-4869-8256-1006de85e0a8" type="radio">
+</input><label class="tabbed-label" for="e4428943-ffc6-44b4-b2d9-be028412cff6">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
