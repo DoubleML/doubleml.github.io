@@ -1,0 +1,1338 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Python: Impact of 401(k) on Financial Wealth (Quantile Effects) &#8212; DoubleML  documentation</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python: Potential Quantiles and Quantile Treatment Effects" href="py_double_ml_pq.html" />
+    <link rel="prev" title="Python: Conditional Average Treatment Effects (CATEs)" href="py_double_ml_cate.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="None">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">DoubleML  documentation</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  DoubleML
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../intro/install.html">
+  Install
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../intro/intro.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../guide/guide.html">
+  User guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../workflow/workflow.html">
+  Workflow
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../api/api.html">
+  Python API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://docs.doubleml.org/r/stable/">
+  R API
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="index.html">
+  Examples
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../literature/literature.html">
+  Literature
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../release/release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <span id="theme-switch" class="btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/DoubleML/doubleml-for-py" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="R_double_ml_pension.html">
+   R: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="r_double_ml_multiway_cluster.html">
+   R: Cluster Robust Double Machine Learning
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pension.html">
+   Python: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_multiway_cluster.html">
+   Python: Cluster Robust Double Machine Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_gate.html">
+   Python: Group Average Treatment Effects (GATEs)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cate.html">
+   Python: Conditional Average Treatment Effects (CATEs)
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Python: Impact of 401(k) on Financial Wealth (Quantile Effects)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pq.html">
+   Python: Potential Quantiles and Quantile Treatment Effects
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cvar.html">
+   Python: Coniditional Value at Risk of potential outcomes
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="R_double_ml_pipeline.html">
+   R: Ensemble Learners and More with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     mlr3pipelines
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_ml_bonus_data.html">
+   DML: Bonus Data
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Data">
+   Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Estimating-Potential-Quantiles-and-Quantile-Treatment-Effects">
+   Estimating Potential Quantiles and Quantile Treatment Effects
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Estimating-the-treatment-effect-on-the-Conditional-Value-a-Risk-(CVaR)">
+   Estimating the treatment effect on the Conditional Value a Risk (CVaR)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Estimating-local-quantile-treatment-effects-(LQTEs)">
+   Estimating local quantile treatment effects (LQTEs)
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+      <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/py_double_ml_pension_qte.ipynb">https://docs.doubleml.org/stable/examples/py_double_ml_pension_qte.ipynb</a>.
+
+    </ul>
+    </div><section id="Python:-Impact-of-401(k)-on-Financial-Wealth-(Quantile-Effects)">
+<h1>Python: Impact of 401(k) on Financial Wealth (Quantile Effects)<a class="headerlink" href="#Python:-Impact-of-401(k)-on-Financial-Wealth-(Quantile-Effects)" title="Permalink to this headline">#</a></h1>
+<p>In this real-data example, we illustrate how the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package can be used to estimate the effect of 401(k) eligibility and participation on accumulated assets. The 401(k) data set has been analyzed in several studies, among others <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>, see <a class="reference external" href="https://arxiv.org/abs/1912.12945">Kallus et al. (2019)</a> for quantile effects.</p>
+<p><strong>Remark:</strong> This notebook focuses on the evaluation of the treatment effect at different quantiles. For a basic introduction to the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package and a detailed example of the average treatment effect estimation for the 401(k) data set, we refer to the notebook <a class="reference external" href="https://docs.doubleml.org/stable/examples/py_double_ml_pension.html">Python: Impact of 401(k) on Financial Wealth</a>. The Data sections of both notebooks coincide.</p>
+<p>401(k) plans are pension accounts sponsored by employers. The key problem in determining the effect of participation in 401(k) plans on accumulated assets is saver heterogeneity coupled with the fact that the decision to enroll in a 401(k) is non-random. It is generally recognized that some people have a higher preference for saving than others. It also seems likely that those individuals with high unobserved preference for saving would be most likely to choose to participate in tax-advantaged
+retirement savings plans and would tend to have otherwise high amounts of accumulated assets. The presence of unobserved savings preferences with these properties then implies that conventional estimates that do not account for saver heterogeneity and endogeneity of participation will be biased upward, tending to overstate the savings effects of 401(k) participation.</p>
+<p>One can argue that eligibility for enrolling in a 401(k) plan in this data can be taken as exogenous after conditioning on a few observables of which the most important for their argument is income. The basic idea is that, at least around the time 401(k)’s initially became available, people were unlikely to be basing their employment decisions on whether an employer offered a 401(k) but would instead focus on income and other aspects of the job.</p>
+<section id="Data">
+<h2>Data<a class="headerlink" href="#Data" title="Permalink to this headline">#</a></h2>
+<p>The preprocessed data can be fetched by calling <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.datasets.fetch_401K.html#doubleml.datasets.fetch_401K">fetch_401K()</a>. Note that an internet connection is required for loading the data.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">fetch_401K</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">clone</span>
+
+<span class="kn">from</span> <span class="nn">lightgbm</span> <span class="kn">import</span> <span class="n">LGBMClassifier</span><span class="p">,</span> <span class="n">LGBMRegressor</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[68]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;whitegrid&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;axes.spines.top&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                            <span class="s1">&#39;axes.spines.bottom&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                            <span class="s1">&#39;axes.spines.left&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                            <span class="s1">&#39;axes.spines.right&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[69]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">fetch_401K</span><span class="p">(</span><span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nifa</th>
+      <th>net_tfa</th>
+      <th>tw</th>
+      <th>age</th>
+      <th>inc</th>
+      <th>fsize</th>
+      <th>educ</th>
+      <th>db</th>
+      <th>marr</th>
+      <th>twoearn</th>
+      <th>e401</th>
+      <th>p401</th>
+      <th>pira</th>
+      <th>hown</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>9.915000e+03</td>
+      <td>9.915000e+03</td>
+      <td>9.915000e+03</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+      <td>9915.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>1.392864e+04</td>
+      <td>1.805153e+04</td>
+      <td>6.381685e+04</td>
+      <td>41.060212</td>
+      <td>37200.621094</td>
+      <td>2.865860</td>
+      <td>13.206253</td>
+      <td>0.271004</td>
+      <td>0.604841</td>
+      <td>0.380837</td>
+      <td>0.371357</td>
+      <td>0.261624</td>
+      <td>0.242158</td>
+      <td>0.635199</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>5.490488e+04</td>
+      <td>6.352250e+04</td>
+      <td>1.115297e+05</td>
+      <td>10.344505</td>
+      <td>24774.289062</td>
+      <td>1.538937</td>
+      <td>2.810382</td>
+      <td>0.444500</td>
+      <td>0.488909</td>
+      <td>0.485617</td>
+      <td>0.483192</td>
+      <td>0.439541</td>
+      <td>0.428411</td>
+      <td>0.481399</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.000000e+00</td>
+      <td>-5.023020e+05</td>
+      <td>-5.023020e+05</td>
+      <td>25.000000</td>
+      <td>-2652.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>2.000000e+02</td>
+      <td>-5.000000e+02</td>
+      <td>3.291500e+03</td>
+      <td>32.000000</td>
+      <td>19413.000000</td>
+      <td>2.000000</td>
+      <td>12.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>1.635000e+03</td>
+      <td>1.499000e+03</td>
+      <td>2.510000e+04</td>
+      <td>40.000000</td>
+      <td>31476.000000</td>
+      <td>3.000000</td>
+      <td>12.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>8.765500e+03</td>
+      <td>1.652450e+04</td>
+      <td>8.148750e+04</td>
+      <td>48.000000</td>
+      <td>48583.500000</td>
+      <td>4.000000</td>
+      <td>16.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.430298e+06</td>
+      <td>1.536798e+06</td>
+      <td>2.029910e+06</td>
+      <td>64.000000</td>
+      <td>242124.000000</td>
+      <td>13.000000</td>
+      <td>18.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>The data consist of 9,915 observations at the household level drawn from the 1991 Survey of Income and Program Participation (SIPP). All the variables are referred to 1990. We use net financial assets (<em>net_tfa</em>) as the outcome variable, <span class="math notranslate nohighlight">\(Y\)</span>, in our analysis. The net financial assets are computed as the sum of IRA balances, 401(k) balances, checking accounts, saving bonds, other interest-earning accounts, other interest-earning assets, stocks, and mutual funds less non mortgage debts.</p>
+<p>Among the <span class="math notranslate nohighlight">\(9915\)</span> individuals, <span class="math notranslate nohighlight">\(3682\)</span> are eligible to participate in the program. The variable <em>e401</em> indicates eligibility and <em>p401</em> indicates participation, respectively.</p>
+<p>At first consider eligibility as the treatment and define the following data.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[71]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up basic model: Specify variables for data-backend</span>
+<span class="n">features_base</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;inc&#39;</span><span class="p">,</span> <span class="s1">&#39;educ&#39;</span><span class="p">,</span> <span class="s1">&#39;fsize&#39;</span><span class="p">,</span> <span class="s1">&#39;marr&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;twoearn&#39;</span><span class="p">,</span> <span class="s1">&#39;db&#39;</span><span class="p">,</span> <span class="s1">&#39;pira&#39;</span><span class="p">,</span> <span class="s1">&#39;hown&#39;</span><span class="p">]</span>
+
+
+<span class="c1"># Initialize DoubleMLData (data-backend of DoubleML)</span>
+<span class="n">data_dml_base</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span>
+                                 <span class="n">y_col</span><span class="o">=</span><span class="s1">&#39;net_tfa&#39;</span><span class="p">,</span>
+                                 <span class="n">d_cols</span><span class="o">=</span><span class="s1">&#39;e401&#39;</span><span class="p">,</span>
+                                 <span class="n">x_cols</span><span class="o">=</span><span class="n">features_base</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Estimating-Potential-Quantiles-and-Quantile-Treatment-Effects">
+<h2>Estimating Potential Quantiles and Quantile Treatment Effects<a class="headerlink" href="#Estimating-Potential-Quantiles-and-Quantile-Treatment-Effects" title="Permalink to this headline">#</a></h2>
+<p>We will use the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package to estimate quantile treatment effects of 401(k) eligibility, i.e. <code class="docutils literal notranslate"><span class="pre">e401</span></code>. As it is more interesting to take a look at a range of quantiles instead of a single one, we will first define a discretisized grid of quanitles <code class="docutils literal notranslate"><span class="pre">tau_vec</span></code>, which will range from the 10%-quantile to the 90%-quantile. Further, we need a machine learning algorithm to estimate the nuisance elements of our model. In this example, we will use
+a basic <code class="docutils literal notranslate"><span class="pre">LGBMClassifier</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[72]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tau_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.95</span><span class="p">,</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">n_folds</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="c1"># Learners</span>
+<span class="n">class_learner</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">reg_learner</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Next, we will apply create an <code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> object for each quantile to fit a quantile model. Here, we have to specifiy, whether we would like to estimate a potential quantile for the treatment group <code class="docutils literal notranslate"><span class="pre">treatment=1</span></code> or control <code class="docutils literal notranslate"><span class="pre">treatment=0</span></code>. Further basic options are trimming and normalization of the propensity scores (<code class="docutils literal notranslate"><span class="pre">trimming_rule=&quot;truncate&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">trimming_threshold=0.01</span></code> and <code class="docutils literal notranslate"><span class="pre">normalize_ipw=True</span></code>).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[73]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PQ_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">PQ_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+<span class="n">ci_PQ_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">ci_PQ_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx_tau</span><span class="p">,</span> <span class="n">tau</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Quantile: </span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">dml_PQ_0</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPQ</span><span class="p">(</span><span class="n">data_dml_base</span><span class="p">,</span>
+                              <span class="n">ml_g</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">class_learner</span><span class="p">),</span>
+                              <span class="n">ml_m</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">class_learner</span><span class="p">),</span>
+                              <span class="n">score</span><span class="o">=</span><span class="s2">&quot;PQ&quot;</span><span class="p">,</span>
+                              <span class="n">treatment</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                              <span class="n">quantile</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span>
+                              <span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span>
+                              <span class="n">normalize_ipw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">trimming_rule</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span><span class="p">,</span>
+                              <span class="n">trimming_threshold</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+    <span class="n">dml_PQ_1</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPQ</span><span class="p">(</span><span class="n">data_dml_base</span><span class="p">,</span>
+                              <span class="n">ml_g</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">class_learner</span><span class="p">),</span>
+                              <span class="n">ml_m</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">class_learner</span><span class="p">),</span>
+                              <span class="n">score</span><span class="o">=</span><span class="s2">&quot;PQ&quot;</span><span class="p">,</span>
+                              <span class="n">treatment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="n">quantile</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span>
+                              <span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span>
+                              <span class="n">normalize_ipw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">trimming_rule</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span><span class="p">,</span>
+                              <span class="n">trimming_threshold</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+
+    <span class="n">dml_PQ_0</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">dml_PQ_1</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="n">PQ_0</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_PQ_0</span><span class="o">.</span><span class="n">coef</span>
+    <span class="n">PQ_1</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_PQ_1</span><span class="o">.</span><span class="n">coef</span>
+
+    <span class="n">ci_PQ_0</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dml_PQ_0</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">ci_PQ_1</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dml_PQ_1</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Quantile: 0.1
+Quantile: 0.15000000000000002
+Quantile: 0.20000000000000004
+Quantile: 0.25000000000000006
+Quantile: 0.30000000000000004
+Quantile: 0.3500000000000001
+Quantile: 0.40000000000000013
+Quantile: 0.45000000000000007
+Quantile: 0.5000000000000001
+Quantile: 0.5500000000000002
+Quantile: 0.6000000000000002
+Quantile: 0.6500000000000001
+Quantile: 0.7000000000000002
+Quantile: 0.7500000000000002
+Quantile: 0.8000000000000002
+Quantile: 0.8500000000000002
+Quantile: 0.9000000000000002
+</pre></div></div>
+</div>
+<p>Additionally, each <code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> object has a (hopefully) helpful summary, which indicates also the evaluation of the nuisance elements with cross-validated estimation. See e.g. `dml_PQ_1’</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[74]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_PQ_1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLPQ Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: net_tfa
+Treatment variable(s): [&#39;e401&#39;]
+Covariates: [&#39;age&#39;, &#39;inc&#39;, &#39;educ&#39;, &#39;fsize&#39;, &#39;marr&#39;, &#39;twoearn&#39;, &#39;db&#39;, &#39;pira&#39;, &#39;hown&#39;]
+Instrument variable(s): None
+No. Observations: 9915
+
+------------------ Score &amp; algorithm ------------------
+Score function: PQ
+DML algorithm: dml2
+
+------------------ Machine learner   ------------------
+Learner ml_g: LGBMClassifier(learning_rate=0.05, n_estimators=300, num_leaves=10)
+Learner ml_m: LGBMClassifier(learning_rate=0.05, n_estimators=300, num_leaves=10)
+Out-of-sample Performance:
+Learner ml_g RMSE: [[0.31579719]]
+Learner ml_m RMSE: [[0.4455688]]
+
+------------------ Resampling        ------------------
+No. folds: 5
+No. repeated sample splits: 1
+Apply cross-fitting: True
+
+------------------ Fit summary       ------------------
+         coef      std err          t          P&gt;|t|         2.5 %  \
+e401  62149.0  1805.993239  34.412643  1.631489e-259  58609.318296
+
+            97.5 %
+e401  65688.681704
+</pre></div></div>
+</div>
+<p>Finally, let us take a look at the estimated potential quantiles</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[75]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_pq</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span>
+           <span class="s2">&quot;DML Y(0)&quot;</span><span class="p">:</span> <span class="n">PQ_0</span><span class="p">,</span> <span class="s2">&quot;DML Y(1)&quot;</span><span class="p">:</span> <span class="n">PQ_1</span><span class="p">,</span>
+           <span class="s2">&quot;DML Y(0) lower&quot;</span><span class="p">:</span> <span class="n">ci_PQ_0</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;DML Y(0) upper&quot;</span><span class="p">:</span> <span class="n">ci_PQ_0</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+           <span class="s2">&quot;DML Y(1) lower&quot;</span><span class="p">:</span> <span class="n">ci_PQ_1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;DML Y(1) upper&quot;</span><span class="p">:</span> <span class="n">ci_PQ_1</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]}</span>
+<span class="n">df_pq</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_pq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_pq</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+    Quantile      DML Y(0)  DML Y(1)  DML Y(0) lower  DML Y(0) upper  \
+0       0.10 -5.300000e+03   -3800.0    -5685.619589    -4914.380411
+1       0.15 -3.200000e+03   -2000.0    -3427.163051    -2972.836949
+2       0.20 -1.935000e+03    -800.0    -2100.476986    -1769.523014
+3       0.25 -9.940000e+02     -50.0    -1134.689368     -853.310632
+4       0.30 -3.510000e+02     230.0     -487.073444     -214.926556
+5       0.35 -9.725833e-13     835.0     -136.838650      136.838650
+6       0.40  7.777951e-13    1516.0     -142.195369      142.195369
+7       0.45  1.450000e+02    3220.0        2.319849      287.680151
+8       0.50  5.000000e+02    4636.0      354.648469      645.351531
+9       0.55  1.208000e+03    6400.0     1047.994202     1368.005798
+10      0.60  2.318000e+03    9300.0     2104.075903     2531.924097
+11      0.65  4.010000e+03   13499.0     3630.462883     4389.537117
+12      0.70  6.499000e+03   17500.0     5805.227055     7192.772945
+13      0.75  1.060000e+04   24499.0     9614.444901    11585.555099
+14      0.80  1.620900e+04   33910.0    14704.642484    17713.357516
+15      0.85  2.585000e+04   44250.0    23570.486590    28129.513410
+16      0.90  4.154900e+04   62149.0    38069.466231    45028.533769
+
+    DML Y(1) lower  DML Y(1) upper
+0     -4470.453171    -3129.546829
+1     -2366.600658    -1633.399342
+2     -1251.563752     -348.436248
+3      -495.476535      395.476535
+4      -271.095598      731.095598
+5       314.948301     1355.051699
+6       925.280572     2106.719428
+7      2467.835060     3972.164940
+8      3878.363076     5393.636924
+9      5555.120836     7244.879164
+10     8195.358561    10404.641439
+11    11886.072731    15111.927269
+12    15941.484129    19058.515871
+13    22156.490958    26841.509042
+14    30951.789837    36868.210163
+15    41412.685552    47087.314448
+16    58609.318296    65688.681704
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[76]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span> <span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span> <span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;DML Y(0)&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated Quantile Y(0)&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span> <span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;DML Y(0) lower&#39;</span><span class="p">],</span> <span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;DML Y(0) upper&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Confidence Interval&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;DML Y(1)&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated Quantile Y(1)&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span> <span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;DML Y(1) lower&#39;</span><span class="p">],</span> <span class="n">df_pq</span><span class="p">[</span><span class="s1">&#39;DML Y(1) upper&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Confidence Interval&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Potential Quantiles&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">supxlabel</span><span class="p">(</span><span class="s1">&#39;Quantile&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">supylabel</span><span class="p">(</span><span class="s1">&#39;Potential Quantile and 95%-CI&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_pension_qte_19_0.png" src="../_images/examples_py_double_ml_pension_qte_19_0.png" />
+</div>
+</div>
+<p>As we are interested in the QTE, we can use the <code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> object, which internally fits two <code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> objects for the treatment and control group. The main advantage is to apply this to a list of quantiles and construct uniformly valid confidence intervals for the range of treatment effects.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[77]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+<span class="n">cores_used</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_cores</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of Cores used: </span><span class="si">{</span><span class="n">cores_used</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">dml_QTE</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLQTE</span><span class="p">(</span><span class="n">data_dml_base</span><span class="p">,</span>
+                           <span class="n">ml_g</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">class_learner</span><span class="p">),</span>
+                           <span class="n">ml_m</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">class_learner</span><span class="p">),</span>
+                           <span class="n">quantiles</span><span class="o">=</span><span class="n">tau_vec</span><span class="p">,</span>
+                           <span class="n">score</span><span class="o">=</span><span class="s1">&#39;PQ&#39;</span><span class="p">,</span>
+                           <span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span>
+                           <span class="n">normalize_ipw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">trimming_rule</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span><span class="p">,</span>
+                           <span class="n">trimming_threshold</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+<span class="n">dml_QTE</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_jobs_models</span><span class="o">=</span><span class="n">cores_used</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_QTE</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Number of Cores used: 5
+================== DoubleMLQTE Object ==================
+
+------------------ Fit summary       ------------------
+         coef      std err          t         P&gt;|t|         2.5 %  \
+0.10   1210.0   486.438569   2.487467  1.286563e-02    256.597923
+0.15   1230.0   263.748513   4.663533  3.108257e-06    713.062414
+0.20   1211.0   251.948868   4.806531  1.535718e-06    717.189293
+0.25   1000.0   244.841847   4.084269  4.421576e-05    520.118799
+0.30    622.0   255.252133   2.436806  1.481761e-02    121.715013
+0.35   1031.0   274.813682   3.751633  1.756867e-04    492.375081
+0.40   2006.0   320.163566   6.265547  3.715180e-10   1378.490941
+0.45   3329.0   427.336461   7.790115  6.694845e-15   2491.435927
+0.50   4601.0   448.109454  10.267581  9.864741e-25   3722.721609
+0.55   6000.0   588.816752  10.189927  2.199282e-24   4845.940373
+0.60   7040.0   605.739720  11.622153  3.180176e-31   5852.771965
+0.65   9223.0   804.541821  11.463668  2.008266e-30   7646.127006
+0.70  10928.0   859.705581  12.711328  5.115792e-37   9243.008023
+0.75  12410.0  1018.114834  12.189195  3.549109e-34  10414.531594
+0.80  16590.0  1589.396531  10.437924  1.664103e-25  13474.840041
+0.85  19382.0  1622.701413  11.944280  6.955005e-33  16201.563673
+0.90  21550.0  2279.055439   9.455672  3.209546e-21  17083.133421
+
+            97.5 %
+0.10   2163.402077
+0.15   1746.937586
+0.20   1704.810707
+0.25   1479.881201
+0.30   1122.284987
+0.35   1569.624919
+0.40   2633.509059
+0.45   4166.564073
+0.50   5479.278391
+0.55   7154.059627
+0.60   8227.228035
+0.65  10799.872994
+0.70  12612.991977
+0.75  14405.468406
+0.80  19705.159959
+0.85  22562.436327
+0.90  26016.866579
+</pre></div></div>
+</div>
+<p>For uniformly valid confidence intervals, we still need to apply a bootstrap first. Let’s take a quick look at the QTEs combinded with a confidence interval.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[78]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_QTE</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">ci_QTE</span> <span class="o">=</span> <span class="n">dml_QTE</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">data_qte</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span> <span class="s2">&quot;DML QTE&quot;</span><span class="p">:</span> <span class="n">dml_QTE</span><span class="o">.</span><span class="n">coef</span><span class="p">,</span>
+            <span class="s2">&quot;DML QTE lower&quot;</span><span class="p">:</span> <span class="n">ci_QTE</span><span class="p">[</span><span class="s2">&quot;2.5 %&quot;</span><span class="p">],</span> <span class="s2">&quot;DML QTE upper&quot;</span><span class="p">:</span> <span class="n">ci_QTE</span><span class="p">[</span><span class="s2">&quot;97.5 %&quot;</span><span class="p">]}</span>
+<span class="n">df_qte</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_qte</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_qte</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+      Quantile  DML QTE  DML QTE lower  DML QTE upper
+0.10      0.10   1210.0    -163.857765    2583.857765
+0.15      0.15   1230.0     485.090025    1974.909975
+0.20      0.20   1211.0     499.415988    1922.584012
+0.25      0.25   1000.0     308.488485    1691.511515
+0.30      0.30    622.0     -98.913485    1342.913485
+0.35      0.35   1031.0     254.838457    1807.161543
+0.40      0.40   2006.0    1101.755910    2910.244090
+0.45      0.45   3329.0    2122.065451    4535.934549
+0.50      0.50   4601.0    3335.395889    5866.604111
+0.55      0.55   6000.0    4336.993575    7663.006425
+0.60      0.60   7040.0    5329.197711    8750.802289
+0.65      0.65   9223.0    6950.717130   11495.282870
+0.70      0.70  10928.0    8499.917066   13356.082934
+0.75      0.75  12410.0    9534.518782   15285.481218
+0.80      0.80  16590.0   12101.036945   21078.963055
+0.85      0.85  19382.0   14798.973331   23965.026669
+0.90      0.90  21550.0   15113.220088   27986.779912
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[79]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_qte</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df_qte</span><span class="p">[</span><span class="s1">&#39;DML QTE&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated QTE&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">df_qte</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span> <span class="n">df_qte</span><span class="p">[</span><span class="s1">&#39;DML QTE lower&#39;</span><span class="p">],</span> <span class="n">df_qte</span><span class="p">[</span><span class="s1">&#39;DML QTE upper&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Confidence Interval&#39;</span><span class="p">)</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Quantile Treatment Effects&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Quantile&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;QTE and 95%-CI&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_pension_qte_24_0.png" src="../_images/examples_py_double_ml_pension_qte_24_0.png" />
+</div>
+</div>
+</section>
+<section id="Estimating-the-treatment-effect-on-the-Conditional-Value-a-Risk-(CVaR)">
+<h2>Estimating the treatment effect on the Conditional Value a Risk (CVaR)<a class="headerlink" href="#Estimating-the-treatment-effect-on-the-Conditional-Value-a-Risk-(CVaR)" title="Permalink to this headline">#</a></h2>
+<p>Similar to the evaluation of the estimation of quantile treatment effects (QTEs), we can estimate the conditional value at risk (<a class="reference external" href="https://de.wikipedia.org/wiki/Conditional_Value_at_Risk">CVaR</a>) for given quantiles. Here, we will only focus on treatment effect estimation, but the DoubleML package also allows for estimation of potential CVaRs.</p>
+<p>The estimation of treatment effects can be easily done by adjusting the score in the <code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> object to <code class="docutils literal notranslate"><span class="pre">score=&quot;CVaR&quot;</span></code>, as the estimation is based on the same nuisance elements as QTEs.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">dml_CVAR</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLQTE</span><span class="p">(</span><span class="n">data_dml_base</span><span class="p">,</span>
+                           <span class="n">ml_g</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">reg_learner</span><span class="p">),</span>
+                           <span class="n">ml_m</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">class_learner</span><span class="p">),</span>
+                           <span class="n">quantiles</span><span class="o">=</span><span class="n">tau_vec</span><span class="p">,</span>
+                           <span class="n">score</span><span class="o">=</span><span class="s2">&quot;CVaR&quot;</span><span class="p">,</span>
+                           <span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span>
+                           <span class="n">normalize_ipw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">trimming_rule</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span><span class="p">,</span>
+                           <span class="n">trimming_threshold</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+<span class="n">dml_CVAR</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_jobs_models</span><span class="o">=</span><span class="n">cores_used</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_CVAR</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLQTE Object ==================
+
+------------------ Fit summary       ------------------
+              coef       std err          t         P&gt;|t|         2.5 %  \
+0.10   9073.195547   1298.264884   6.988709  2.774271e-12   6528.643133
+0.15  10126.150334   1371.682269   7.382286  1.555949e-13   7437.702489
+0.20  14587.388871   1485.887345   9.817291  9.485812e-23  11675.103189
+0.25  16910.113415   1582.022969  10.688918  1.147015e-26  13809.405374
+0.30  14744.693690   1676.606759   8.794366  1.438578e-18  11458.604825
+0.35  16241.221419   1812.325090   8.961539  3.201788e-19  12689.129514
+0.40  18666.064161   1970.604016   9.472255  2.738659e-21  14803.751261
+0.45  12861.546294   2086.920645   6.162930  7.141098e-10   8771.256992
+0.50  13642.272662   2295.693316   5.942550  2.806218e-09   9142.796444
+0.55  14772.077161   2543.121399   5.808640  6.298228e-09   9787.650810
+0.60  15556.468919   2849.994851   5.458420  4.803902e-08   9970.581655
+0.65  16597.988780   3234.712082   5.131211  2.878847e-07  10258.069600
+0.70  17576.743247   3745.384777   4.692907  2.693497e-06  10235.923977
+0.75  18789.942489   4437.655422   4.234205  2.293617e-05  10092.297687
+0.80  19794.747646   5476.213026   3.614678  3.007210e-04   9061.567343
+0.85  19824.888804   7155.563528   2.770556  5.596069e-03   5800.242000
+0.90  20055.810363  10406.538013   1.927232  5.395076e-02   -340.629346
+
+            97.5 %
+0.10  11617.747961
+0.15  12814.598178
+0.20  17499.674552
+0.25  20010.821457
+0.30  18030.782555
+0.35  19793.313324
+0.40  22528.377060
+0.45  16951.835596
+0.50  18141.748880
+0.55  19756.503511
+0.60  21142.356183
+0.65  22937.907961
+0.70  24917.562518
+0.75  27487.587292
+0.80  30527.927950
+0.85  33849.535609
+0.90  40452.250073
+</pre></div></div>
+</div>
+<p>Estimation of the corresponding (uniformly) valid confidence intervals can be done analogously to the quantile treatment effects.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[81]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_CVAR</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">ci_CVAR</span> <span class="o">=</span> <span class="n">dml_CVAR</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">data_cvar</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span> <span class="s2">&quot;DML CVAR&quot;</span><span class="p">:</span> <span class="n">dml_CVAR</span><span class="o">.</span><span class="n">coef</span><span class="p">,</span>
+            <span class="s2">&quot;DML CVAR lower&quot;</span><span class="p">:</span> <span class="n">ci_CVAR</span><span class="p">[</span><span class="s2">&quot;2.5 %&quot;</span><span class="p">],</span> <span class="s2">&quot;DML CVAR upper&quot;</span><span class="p">:</span> <span class="n">ci_CVAR</span><span class="p">[</span><span class="s2">&quot;97.5 %&quot;</span><span class="p">]}</span>
+<span class="n">df_cvar</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_cvar</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_cvar</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+      Quantile      DML CVAR  DML CVAR lower  DML CVAR upper
+0.10      0.10   9073.195547     6266.876549    11879.514545
+0.15      0.15  10126.150334     7161.132903    13091.167765
+0.20      0.20  14587.388871    11375.506659    17799.271083
+0.25      0.25  16910.113415    13490.425208    20329.801623
+0.30      0.30  14744.693690    11120.553916    18368.833464
+0.35      0.35  16241.221419    12323.713986    20158.728852
+0.40      0.40  18666.064161    14406.422266    22925.706056
+0.45      0.45  12861.546294     8350.475304    17372.617283
+0.50      0.50  13642.272662     8679.920335    18604.624988
+0.55      0.55  14772.077161     9274.886266    20269.268055
+0.60      0.60  15556.468919     9395.942823    21716.995015
+0.65      0.65  16597.988780     9605.860992    23590.116569
+0.70      0.70  17576.743247     9480.749443    25672.737052
+0.75      0.75  18789.942489     9197.541990    28382.342989
+0.80      0.80  19794.747646     7957.409328    31632.085965
+0.85      0.85  19824.888804     4357.479860    35292.297749
+0.90      0.90  20055.810363    -2438.879049    42550.499776
+</pre></div></div>
+</div>
+<p>Finally, let us take a look at the estimated treatment effects on the CVaR.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[82]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_cvar</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df_cvar</span><span class="p">[</span><span class="s1">&#39;DML CVAR&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated CVaR Effect&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">df_cvar</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span> <span class="n">df_cvar</span><span class="p">[</span><span class="s1">&#39;DML CVAR lower&#39;</span><span class="p">],</span> <span class="n">df_cvar</span><span class="p">[</span><span class="s1">&#39;DML CVAR upper&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Confidence Interval&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Conditional Value at Risk&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Quantile&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;CVaR Effect and 95%-CI&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_pension_qte_30_0.png" src="../_images/examples_py_double_ml_pension_qte_30_0.png" />
+</div>
+</div>
+</section>
+<section id="Estimating-local-quantile-treatment-effects-(LQTEs)">
+<h2>Estimating local quantile treatment effects (LQTEs)<a class="headerlink" href="#Estimating-local-quantile-treatment-effects-(LQTEs)" title="Permalink to this headline">#</a></h2>
+<p>If we have an <code class="docutils literal notranslate"><span class="pre">IIVM</span></code> model with a given instrumental variable, we are still able to identify the local quantile treatment effect (LQTE), the quantile treatment effect on compliers. For the 401(k) pension data we can use <code class="docutils literal notranslate"><span class="pre">e401</span></code> as an instrument for participation <code class="docutils literal notranslate"><span class="pre">p401</span></code>. To fit an <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> model with an instrument, we have to change the data backend and specify the instrument.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[83]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize DoubleMLData with an instrument</span>
+
+<span class="c1"># Basic model</span>
+<span class="n">data_dml_base_iv</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span>
+                                    <span class="n">y_col</span><span class="o">=</span><span class="s1">&#39;net_tfa&#39;</span><span class="p">,</span>
+                                    <span class="n">d_cols</span><span class="o">=</span><span class="s1">&#39;p401&#39;</span><span class="p">,</span>
+                                    <span class="n">z_cols</span><span class="o">=</span><span class="s1">&#39;e401&#39;</span><span class="p">,</span>
+                                    <span class="n">x_cols</span><span class="o">=</span><span class="n">features_base</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">data_dml_base_iv</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLData Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: net_tfa
+Treatment variable(s): [&#39;p401&#39;]
+Covariates: [&#39;age&#39;, &#39;inc&#39;, &#39;educ&#39;, &#39;fsize&#39;, &#39;marr&#39;, &#39;twoearn&#39;, &#39;db&#39;, &#39;pira&#39;, &#39;hown&#39;]
+Instrument variable(s): [&#39;e401&#39;]
+No. Observations: 9915
+
+------------------ DataFrame info    ------------------
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Int64Index: 9915 entries, 0 to 9914
+Columns: 14 entries, nifa to hown
+dtypes: float32(4), int8(10)
+memory usage: 329.2 KB
+
+</pre></div></div>
+</div>
+<p>The estimation of local treatment effects can be easily done by adjusting the score in the <code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> object to <code class="docutils literal notranslate"><span class="pre">score=&quot;LPQ&quot;</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[84]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">dml_LQTE</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLQTE</span><span class="p">(</span><span class="n">data_dml_base_iv</span><span class="p">,</span>
+                           <span class="n">ml_g</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">class_learner</span><span class="p">),</span>
+                           <span class="n">ml_m</span><span class="o">=</span><span class="n">clone</span><span class="p">(</span><span class="n">class_learner</span><span class="p">),</span>
+                           <span class="n">quantiles</span><span class="o">=</span><span class="n">tau_vec</span><span class="p">,</span>
+                           <span class="n">score</span><span class="o">=</span><span class="s2">&quot;LPQ&quot;</span><span class="p">,</span>
+                           <span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span>
+                           <span class="n">normalize_ipw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">trimming_rule</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span><span class="p">,</span>
+                           <span class="n">trimming_threshold</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+<span class="n">dml_LQTE</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_jobs_models</span><span class="o">=</span><span class="n">cores_used</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_LQTE</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLQTE Object ==================
+
+------------------ Fit summary       ------------------
+         coef      std err          t         P&gt;|t|         2.5 %  \
+0.10   2610.0   487.701966   5.351629  8.716595e-08   1654.121711
+0.15   1773.0   357.148790   4.964318  6.894307e-07   1073.001234
+0.20   1398.0   386.526532   3.616828  2.982353e-04    640.421919
+0.25   1435.0   384.956574   3.727693  1.932404e-04    680.498979
+0.30   1400.0   436.977295   3.203828  1.356136e-03    543.540240
+0.35   2500.0   486.877153   5.134765  2.824961e-07   1545.738315
+0.40   3985.0   596.725087   6.678117  2.420316e-11   2815.440320
+0.45   5175.0   739.897240   6.994214  2.667492e-12   3724.828058
+0.50   7239.0   775.751013   9.331602  1.042822e-20   5718.555954
+0.55   9500.0  1109.023955   8.566091  1.070574e-17   7326.352990
+0.60  11750.0  1295.711518   9.068377  1.208034e-19   9210.452091
+0.65  14625.0  1443.080854  10.134567  3.880880e-24  11796.613498
+0.70  16984.0  1576.564577  10.772791  4.627588e-27  13893.990210
+0.75  19758.0  2865.426736   6.895308  5.374821e-12  14141.866798
+0.80  23856.0  2281.099670  10.458114  1.345065e-25  19385.126802
+0.85  27751.0  3151.771741   8.804889  1.309823e-18  21573.640900
+0.90  30645.0  4634.200110   6.612792  3.771390e-11  21562.134687
+
+            97.5 %
+0.10   3565.878289
+0.15   2472.998766
+0.20   2155.578081
+0.25   2189.501021
+0.30   2256.459760
+0.35   3454.261685
+0.40   5154.559680
+0.45   6625.171942
+0.50   8759.444046
+0.55  11673.647010
+0.60  14289.547909
+0.65  17453.386502
+0.70  20074.009790
+0.75  25374.133202
+0.80  28326.873198
+0.85  33928.359100
+0.90  39727.865313
+</pre></div></div>
+</div>
+<p>Estimation of the corresponding (uniformly) valid confidence intervals can be done analogously to the quantile treatment effects.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[85]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_LQTE</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">ci_LQTE</span> <span class="o">=</span> <span class="n">dml_LQTE</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">data_lqte</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span> <span class="s2">&quot;DML LQTE&quot;</span><span class="p">:</span> <span class="n">dml_LQTE</span><span class="o">.</span><span class="n">coef</span><span class="p">,</span>
+            <span class="s2">&quot;DML LQTE lower&quot;</span><span class="p">:</span> <span class="n">ci_LQTE</span><span class="p">[</span><span class="s2">&quot;2.5 %&quot;</span><span class="p">],</span> <span class="s2">&quot;DML LQTE upper&quot;</span><span class="p">:</span> <span class="n">ci_LQTE</span><span class="p">[</span><span class="s2">&quot;97.5 %&quot;</span><span class="p">]}</span>
+<span class="n">df_lqte</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_lqte</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_lqte</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+      Quantile  DML LQTE  DML LQTE lower  DML LQTE upper
+0.10      0.10    2610.0     1255.980026     3964.019974
+0.15      0.15    1773.0      781.438289     2764.561711
+0.20      0.20    1398.0      324.876083     2471.123917
+0.25      0.25    1435.0      366.234798     2503.765202
+0.30      0.30    1400.0      186.808284     2613.191716
+0.35      0.35    2500.0     1148.269977     3851.730023
+0.40      0.40    3985.0     2328.296228     5641.703772
+0.45      0.45    5175.0     3120.803563     7229.196437
+0.50      0.50    7239.0     5085.261777     9392.738223
+0.55      0.55    9500.0     6420.987220    12579.012780
+0.60      0.60   11750.0     8152.681562    15347.318438
+0.65      0.65   14625.0    10618.536143    18631.463857
+0.70      0.70   16984.0    12606.941724    21361.058276
+0.75      0.75   19758.0    11802.639345    27713.360655
+0.80      0.80   23856.0    17522.922160    30189.077840
+0.85      0.85   27751.0    19000.652071    36501.347929
+0.90      0.90   30645.0    17778.946658    43511.053342
+</pre></div></div>
+</div>
+<p>Finally, let us take a look at the estimated local quantile treatment effects.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[86]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_lqte</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df_lqte</span><span class="p">[</span><span class="s1">&#39;DML LQTE&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated LQTE&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">df_lqte</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span> <span class="n">df_lqte</span><span class="p">[</span><span class="s1">&#39;DML LQTE lower&#39;</span><span class="p">],</span> <span class="n">df_lqte</span><span class="p">[</span><span class="s1">&#39;DML LQTE upper&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Confidence Interval&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Local Quantile Treatment Effect&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Quantile&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;LQTE and 95%-CI&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_pension_qte_38_0.png" src="../_images/examples_py_double_ml_pension_qte_38_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="py_double_ml_cate.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Python: Conditional Average Treatment Effects (CATEs)</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="py_double_ml_pq.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Python: Potential Quantiles and Quantile Treatment Effects</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2021, Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M..<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>
