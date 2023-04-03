@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DoubleML</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.2</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.3</span>
       </span>
     </div>
 
@@ -184,7 +184,7 @@ D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,
 <span><span class="co">## No. Observations: 5099</span></span></code></pre>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># matrix interface to DoubleMLData</span></span>
-<span><span class="va">dml_data_sim</span> <span class="op">=</span> <span class="fu"><a href="../reference/double_ml_data_from_matrix.html">double_ml_data_from_matrix</a></span><span class="op">(</span>X<span class="op">=</span><span class="va">X</span>, y<span class="op">=</span><span class="va">y</span>, d<span class="op">=</span><span class="va">d</span><span class="op">)</span></span>
+<span><span class="va">dml_data_sim</span> <span class="op">=</span> <span class="fu"><a href="../reference/double_ml_data_from_matrix.html">double_ml_data_from_matrix</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">X</span>, y <span class="op">=</span> <span class="va">y</span>, d <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span>
 <span><span class="va">dml_data_sim</span></span></code></pre></div>
 <pre><code><span><span class="co">## ================= DoubleMLData Object ==================</span></span>
 <span><span class="co">## </span></span>
@@ -206,12 +206,12 @@ D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,
 <span><span class="co"># surpress messages from mlr3 package during fitting</span></span>
 <span><span class="fu">lgr</span><span class="fu">::</span><span class="fu"><a href="https://s-fleck.github.io/lgr/reference/get_logger.html" class="external-link">get_logger</a></span><span class="op">(</span><span class="st">"mlr3"</span><span class="op">)</span><span class="op">$</span><span class="fu">set_threshold</span><span class="op">(</span><span class="st">"warn"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span>, num.trees<span class="op">=</span><span class="fl">500</span>, mtry<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">n_vars</span><span class="op">)</span><span class="op">)</span>, max.depth<span class="op">=</span><span class="fl">5</span>, min.node.size<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">ml_g_bonus</span> <span class="op">=</span> <span class="va">learner</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span>, num.trees <span class="op">=</span> <span class="fl">500</span>, max.depth <span class="op">=</span> <span class="fl">5</span>, min.node.size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">ml_l_bonus</span> <span class="op">=</span> <span class="va">learner</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">ml_m_bonus</span> <span class="op">=</span> <span class="va">learner</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">learner</span> <span class="op">=</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.glmnet"</span>, lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">n_vars</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">n_obs</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">ml_g_sim</span> <span class="op">=</span> <span class="va">learner</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">ml_l_sim</span> <span class="op">=</span> <span class="va">learner</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">ml_m_sim</span> <span class="op">=</span> <span class="va">learner</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -222,8 +222,8 @@ D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,
 <li>The number of folds used for cross-fitting <code>n_folds</code> (defaults to <code>n_folds = 5</code>) as well as</li>
 <li>the number of repetitions when applying repeated cross-fitting <code>n_rep</code> (defaults to <code>n_rep = 1</code>).</li>
 </ul>
-<p>Additionally, one can choose between the algorithms <code>"dml1"</code> and <code>"dml2"</code> via <code>dml_procedure</code> (defaults to <code>"dml2"</code>). Depending on the causal model, one can further choose between different Neyman-orthogonal score / moment functions. For the PLR model the default score is <code>"partialling out"</code>.</p>
-<p>The user guide provides details about the Sample-splitting, cross-fitting and repeated cross-fitting, the Double machine learning algorithms and the Score functions</p>
+<p>Additionally, one can choose between the algorithms <code>"dml1"</code> and <code>"dml2"</code> via <code>dml_procedure</code> (defaults to <code>"dml2"</code>). Depending on the causal model, one can further choose between different Neyman-orthogonal score / moment functions. For the PLR model the default score is <code>"partialling out"</code>, i.e., <span class="math display">\[\begin{align}\begin{aligned}\psi(W; \theta, \eta) &amp;:= [Y - \ell(X) - \theta (D - m(X))] [D - m(X)].\end{aligned}\end{align}\]</span></p>
+<p>Note that with this score, we do not estimate <span class="math inline">\(g_0(X)\)</span> directly, but the conditional expectation of <span class="math inline">\(Y\)</span> given <span class="math inline">\(X\)</span>, <span class="math inline">\(\ell_0(X) = E[Y|X]\)</span>. The user guide provides details about the Sample-splitting, cross-fitting and repeated cross-fitting, the Double machine learning algorithms and the Score functions</p>
 </div>
 <div class="section level2">
 <h2 id="estimate-doubledebiased-machine-learning-models">Estimate double/debiased machine learning models<a class="anchor" aria-label="anchor" href="#estimate-doubledebiased-machine-learning-models"></a>
@@ -231,11 +231,8 @@ D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,
 <p>We now initialize <code>DoubleMLPLR</code> objects for our examples using default parameters. The models are estimated by calling the <code>fit()</code> method and we can for example inspect the estimated treatment effect using the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> method. A more detailed result summary can be obtained via the <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method. Besides the <code>fit()</code> method <code>DoubleML</code> model classes also provide functionalities to perform statistical inference like <code>bootstrap()</code>, <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code> and <code>p_adjust()</code>, for details see the user guide Variance estimation, confidence intervals and boostrap standard errors.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3141</span><span class="op">)</span></span>
-<span><span class="va">obj_dml_plr_bonus</span> <span class="op">=</span> <span class="va"><a href="../reference/DoubleMLPLR.html">DoubleMLPLR</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dml_data_bonus</span>, ml_g<span class="op">=</span><span class="va">ml_g_bonus</span>, ml_m<span class="op">=</span><span class="va">ml_m_bonus</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: The argument ml_g was renamed to ml_l. Please adapt the argument name accordingly. ml_g is redirected to ml_l.</span></span>
-<span><span class="co">## The redirection will be removed in a future version.</span></span></code></pre>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">obj_dml_plr_bonus</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">obj_dml_plr_bonus</span> <span class="op">=</span> <span class="va"><a href="../reference/DoubleMLPLR.html">DoubleMLPLR</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dml_data_bonus</span>, ml_l <span class="op">=</span> <span class="va">ml_l_bonus</span>, ml_m <span class="op">=</span> <span class="va">ml_m_bonus</span><span class="op">)</span></span>
+<span><span class="va">obj_dml_plr_bonus</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">obj_dml_plr_bonus</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## ================= DoubleMLPLR Object ==================</span></span>
 <span><span class="co">## </span></span>
@@ -263,15 +260,12 @@ D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,
 <span><span class="co">## ------------------ Fit summary       ------------------</span></span>
 <span><span class="co">##  Estimates and significance testing of the effect of target variables</span></span>
 <span><span class="co">##    Estimate. Std. Error t value Pr(&gt;|t|)  </span></span>
-<span><span class="co">## tg  -0.07385    0.03528  -2.093   0.0364 *</span></span>
+<span><span class="co">## tg  -0.07561    0.03536  -2.139   0.0325 *</span></span>
 <span><span class="co">## ---</span></span>
 <span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">obj_dml_plr_sim</span> <span class="op">=</span> <span class="va"><a href="../reference/DoubleMLPLR.html">DoubleMLPLR</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dml_data_sim</span>, ml_g<span class="op">=</span><span class="va">ml_g_sim</span>, ml_m<span class="op">=</span><span class="va">ml_m_sim</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: The argument ml_g was renamed to ml_l. Please adapt the argument name accordingly. ml_g is redirected to ml_l.</span></span>
-<span><span class="co">## The redirection will be removed in a future version.</span></span></code></pre>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">obj_dml_plr_sim</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">obj_dml_plr_sim</span> <span class="op">=</span> <span class="va"><a href="../reference/DoubleMLPLR.html">DoubleMLPLR</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dml_data_sim</span>, ml_l <span class="op">=</span> <span class="va">ml_l_sim</span>, ml_m <span class="op">=</span> <span class="va">ml_m_sim</span><span class="op">)</span></span>
+<span><span class="va">obj_dml_plr_sim</span><span class="op">$</span><span class="fu">fit</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">obj_dml_plr_sim</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## ================= DoubleMLPLR Object ==================</span></span>
 <span><span class="co">## </span></span>
@@ -317,12 +311,12 @@ D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Philipp Bach, Victor Chernozhukov, Malte S. Kurz, Martin Spindler.</p>
+<p>Developed by Philipp Bach, Victor Chernozhukov, Malte S. Kurz, Martin Spindler, Klaassen Sven.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
