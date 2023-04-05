@@ -52,7 +52,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="4. Score functions" href="scores.html" />
+    <link rel="next" title="4. Heterogeneous treatment effects" href="heterogeneity.html" />
     <link rel="prev" title="2. The data-backend DoubleMLData" href="data_backend.html" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="docsearch:language" content="None">
@@ -217,28 +217,28 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="heterogeneity.html">
+   4.  Heterogeneous Treatment Effects
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="scores.html">
-   4.  Score functions
+   5.  Score functions
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="algorithms.html">
-   5.  Double machine learning algorithms
+   6.  Double machine learning algorithms
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="learners.html">
-   6.  Learners, hyperparameters and hyperparameter tuning
+   7.  Learners, hyperparameters and hyperparameter tuning
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="se_confint.html">
-   7.  Variance estimation and confidence intervals for a causal parameter of interest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sim_inf.html">
-   8.  Confidence bands and multiplier bootstrap for valid simultaneous inference
+   8.  Variance estimation and confidence intervals
   </a>
  </li>
  <li class="toctree-l1">
@@ -311,6 +311,7 @@
                 
   <section id="models">
 <span id="id1"></span><h1><span class="section-number">3. </span>Models<a class="headerlink" href="#models" title="Permalink to this headline">#</a></h1>
+<p>The <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> includes the following models.</p>
 <section id="partially-linear-regression-model-plr">
 <span id="plr-model"></span><h2><span class="section-number">3.1. </span>Partially linear regression model (PLR)<a class="headerlink" href="#partially-linear-regression-model-plr" title="Permalink to this headline">#</a></h2>
 <p><strong>Partially linear regression (PLR)</strong> models take the form</p>
@@ -341,8 +342,8 @@ and <span class="math notranslate nohighlight">\(\zeta\)</span> and <span class=
 <p><code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> implements PLR models.
 Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="2c083b38-8559-4c24-98f7-57f1e42280df" name="4eff7b83-a910-4cc4-99b2-85fd0d43717e" type="radio">
-</input><label class="tabbed-label" for="2c083b38-8559-4c24-98f7-57f1e42280df">
+<input checked="checked" id="86ace75b-e6ef-49b2-8d8d-96e931c03c31" name="3fa7b912-c97e-4de7-9390-51b6d409f502" type="radio">
+</input><label class="tabbed-label" for="86ace75b-e6ef-49b2-8d8d-96e931c03c31">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -385,6 +386,9 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">------------------ Machine learner   ------------------</span>
 <span class="go">Learner ml_l: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Learner ml_m: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
+<span class="go">Out-of-sample Performance:</span>
+<span class="go">Learner ml_l RMSE: [[1.18346131]]</span>
+<span class="go">Learner ml_m RMSE: [[1.0600811]]</span>
 
 <span class="go">------------------ Resampling        ------------------</span>
 <span class="go">No. folds: 5</span>
@@ -392,13 +396,13 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">Apply cross-fitting: True</span>
 
 <span class="go">------------------ Fit summary       ------------------</span>
-<span class="go">      coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.54137  0.042959  12.602064  2.056917e-36  0.457172  0.625568</span>
+<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.514216  0.044875  11.458956  2.120543e-30  0.426263  0.602168</span>
 </pre></div>
 </div>
 </div>
-<input id="1ddee2fc-d19d-4eaa-b292-fec0d336b054" name="4eff7b83-a910-4cc4-99b2-85fd0d43717e" type="radio">
-</input><label class="tabbed-label" for="1ddee2fc-d19d-4eaa-b292-fec0d336b054">
+<input id="35f28945-162a-4767-925a-3641d0241817" name="3fa7b912-c97e-4de7-9390-51b6d409f502" type="radio">
+</input><label class="tabbed-label" for="35f28945-162a-4767-925a-3641d0241817">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -408,13 +412,13 @@ R</label><div class="tabbed-content docutils">
 <span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
 <span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
 
-<span class="n">learner</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span> <span class="n">num.trees</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="n">mtry</span> <span class="o">=</span> <span class="m">20</span><span class="p">,</span> <span class="n">min.node.size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">max.depth</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
-<span class="n">ml_l</span> <span class="o">=</span> <span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
-<span class="n">ml_m</span> <span class="o">=</span> <span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">max.depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">1111</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="nf">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="m">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="m">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s">&#39;data.table&#39;</span><span class="p">)</span>
-<span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
-<span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">n_obs</span><span class="o">=</span><span class="m">500</span><span class="p">,</span><span class="w"> </span><span class="n">dim_x</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">return_type</span><span class="o">=</span><span class="s">&#39;data.table&#39;</span><span class="p">)</span>
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
 <span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="p">)</span>
 </pre></div>
@@ -460,7 +464,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="partially-linear-iv-regression-model-pliv">
-<h2><span class="section-number">3.2. </span>Partially linear IV regression model (PLIV)<a class="headerlink" href="#partially-linear-iv-regression-model-pliv" title="Permalink to this headline">#</a></h2>
+<span id="pliv-model"></span><h2><span class="section-number">3.2. </span>Partially linear IV regression model (PLIV)<a class="headerlink" href="#partially-linear-iv-regression-model-pliv" title="Permalink to this headline">#</a></h2>
 <p><strong>Partially linear IV regression (PLIV)</strong> models take the form</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}Y - D \theta_0 =  g_0(X) + \zeta, &amp; &amp;\mathbb{E}(\zeta | Z, X) = 0,\\Z = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0.\end{aligned}\end{align} \]</div>
@@ -499,8 +503,8 @@ denotes one or multiple instrumental variables. The high-dimensional vector
 <p><code class="docutils literal notranslate"><span class="pre">DoubleMLPLIV</span></code> implements PLIV models.
 Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="7aadba8c-75a0-4bbb-bb1c-ef93e59c147f" name="ebaadab0-0460-4208-9420-c14f79788b10" type="radio">
-</input><label class="tabbed-label" for="7aadba8c-75a0-4bbb-bb1c-ef93e59c147f">
+<input checked="checked" id="aef9152a-ed87-4f35-931a-12b2b2a64c3e" name="b395aacd-b982-458d-8edf-d7649c8ab0f9" type="radio">
+</input><label class="tabbed-label" for="aef9152a-ed87-4f35-931a-12b2b2a64c3e">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -546,6 +550,10 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">Learner ml_l: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Learner ml_m: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Learner ml_r: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
+<span class="go">Out-of-sample Performance:</span>
+<span class="go">Learner ml_l RMSE: [[1.48360748]]</span>
+<span class="go">Learner ml_m RMSE: [[0.53188141]]</span>
+<span class="go">Learner ml_r RMSE: [[1.25182935]]</span>
 
 <span class="go">------------------ Resampling        ------------------</span>
 <span class="go">No. folds: 5</span>
@@ -553,13 +561,13 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">Apply cross-fitting: True</span>
 
 <span class="go">------------------ Fit summary       ------------------</span>
-<span class="go">       coef   std err         t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.472449  0.091465  5.165344  2.399971e-07  0.293181  0.651717</span>
+<span class="go">       coef   std err       t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.481366  0.084939  5.6672  1.451500e-08  0.314888  0.647843</span>
 </pre></div>
 </div>
 </div>
-<input id="1526d6e3-d415-4f7e-a319-8d8e7d3791c1" name="ebaadab0-0460-4208-9420-c14f79788b10" type="radio">
-</input><label class="tabbed-label" for="1526d6e3-d415-4f7e-a319-8d8e7d3791c1">
+<input id="e23dbd58-81cc-4bf6-81be-3a49a01f78c9" name="b395aacd-b982-458d-8edf-d7649c8ab0f9" type="radio">
+</input><label class="tabbed-label" for="e23dbd58-81cc-4bf6-81be-3a49a01f78c9">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -568,14 +576,14 @@ R</label><div class="tabbed-content docutils">
 <span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
 
-<span class="n">learner</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span> <span class="n">num.trees</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="n">mtry</span> <span class="o">=</span> <span class="m">20</span><span class="p">,</span> <span class="n">min.node.size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">max.depth</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
-<span class="n">ml_l</span> <span class="o">=</span> <span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
-<span class="n">ml_m</span> <span class="o">=</span> <span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
-<span class="n">ml_r</span> <span class="o">=</span> <span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">max.depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">2222</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="nf">make_pliv_CHS2015</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="m">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="m">20</span><span class="p">,</span> <span class="n">dim_z</span><span class="o">=</span><span class="m">1</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.table&quot;</span><span class="p">)</span>
-<span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="n">d_col</span> <span class="o">=</span> <span class="s">&quot;d&quot;</span><span class="p">,</span> <span class="n">z_cols</span><span class="o">=</span> <span class="s">&quot;Z1&quot;</span><span class="p">)</span>
-<span class="n">dml_pliv_obj</span> <span class="o">=</span> <span class="n">DoubleMLPLIV</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">ml_r</span><span class="p">)</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">make_pliv_CHS2015</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">n_obs</span><span class="o">=</span><span class="m">500</span><span class="p">,</span><span class="w"> </span><span class="n">dim_x</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">dim_z</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.table&quot;</span><span class="p">)</span>
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">z_cols</span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Z1&quot;</span><span class="p">)</span>
+<span class="n">dml_pliv_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLIV</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">ml_r</span><span class="p">)</span>
 <span class="n">dml_pliv_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">dml_pliv_obj</span><span class="p">)</span>
 </pre></div>
@@ -656,8 +664,8 @@ Target parameters of interest in this model are the average treatment effect (AT
 <p><code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> implements IRM models.
 Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="4efda752-196c-41a1-9179-88488ad08df2" name="1bc4e56d-fb9c-40bc-836d-02b7ce360f95" type="radio">
-</input><label class="tabbed-label" for="4efda752-196c-41a1-9179-88488ad08df2">
+<input checked="checked" id="b174bd47-3c79-482c-94f2-985cd6d80cab" name="51f71158-0f5f-4331-aefd-a0335a777840" type="radio">
+</input><label class="tabbed-label" for="b174bd47-3c79-482c-94f2-985cd6d80cab">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [28]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -696,6 +704,10 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">------------------ Machine learner   ------------------</span>
 <span class="go">Learner ml_g: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Learner ml_m: RandomForestClassifier(max_depth=5, max_features=20, min_samples_leaf=2)</span>
+<span class="go">Out-of-sample Performance:</span>
+<span class="go">Learner ml_g0 RMSE: [[1.11796234]]</span>
+<span class="go">Learner ml_g1 RMSE: [[1.1085378]]</span>
+<span class="go">Learner ml_m RMSE: [[0.41907525]]</span>
 
 <span class="go">------------------ Resampling        ------------------</span>
 <span class="go">No. folds: 5</span>
@@ -703,13 +715,13 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">Apply cross-fitting: True</span>
 
 <span class="go">------------------ Fit summary       ------------------</span>
-<span class="go">       coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.667284  0.188651  3.537135  0.000404  0.297535  1.037034</span>
+<span class="go">      coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.59295  0.195608  3.031319  0.002435  0.209566  0.976335</span>
 </pre></div>
 </div>
 </div>
-<input id="42211196-ced2-4b0b-9d36-28de2907dc82" name="1bc4e56d-fb9c-40bc-836d-02b7ce360f95" type="radio">
-</input><label class="tabbed-label" for="42211196-ced2-4b0b-9d36-28de2907dc82">
+<input id="50f42349-cfa3-4259-8d26-d7e227316392" name="51f71158-0f5f-4331-aefd-a0335a777840" type="radio">
+</input><label class="tabbed-label" for="50f42349-cfa3-4259-8d26-d7e227316392">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -719,11 +731,11 @@ R</label><div class="tabbed-content docutils">
 <span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
 
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">3333</span><span class="p">)</span>
-<span class="n">ml_g</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span> <span class="n">num.trees</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="n">mtry</span> <span class="o">=</span> <span class="m">20</span><span class="p">,</span> <span class="n">min.node.size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">max.depth</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
-<span class="n">ml_m</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">,</span> <span class="n">num.trees</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="n">mtry</span> <span class="o">=</span> <span class="m">20</span><span class="p">,</span> <span class="n">min.node.size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">max.depth</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="nf">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="m">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="m">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.table&quot;</span><span class="p">)</span>
-<span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
-<span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">DoubleMLIRM</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">max.depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">max.depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">n_obs</span><span class="o">=</span><span class="m">500</span><span class="p">,</span><span class="w"> </span><span class="n">dim_x</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.table&quot;</span><span class="p">)</span>
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="n">dml_irm_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLIRM</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
 <span class="n">dml_irm_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">dml_irm_obj</span><span class="p">)</span>
 </pre></div>
@@ -769,7 +781,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="interactive-iv-model-iivm">
-<h2><span class="section-number">3.4. </span>Interactive IV model (IIVM)<a class="headerlink" href="#interactive-iv-model-iivm" title="Permalink to this headline">#</a></h2>
+<span id="iivm-model"></span><h2><span class="section-number">3.4. </span>Interactive IV model (IIVM)<a class="headerlink" href="#interactive-iv-model-iivm" title="Permalink to this headline">#</a></h2>
 <p><strong>Interactive IV regression (IIVM)</strong> models take the form</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}Y = \ell_0(D, X) + \zeta, &amp; &amp;\mathbb{E}(\zeta | Z, X) = 0,\\Z = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,\end{aligned}\end{align} \]</div>
@@ -814,8 +826,8 @@ Consider the functions <span class="math notranslate nohighlight">\(g_0\)</span>
 <p><code class="docutils literal notranslate"><span class="pre">DoubleMLIIVM</span></code> implements IIVM models.
 Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="4b3f8031-6d23-4467-a23c-991541589dc1" name="bd36234e-495b-4dcf-a481-b2b2f23c4f37" type="radio">
-</input><label class="tabbed-label" for="4b3f8031-6d23-4467-a23c-991541589dc1">
+<input checked="checked" id="c29c2e75-2909-4a90-b359-2219084defba" name="824fe1a1-85b7-44a2-a948-5387904f341d" type="radio">
+</input><label class="tabbed-label" for="c29c2e75-2909-4a90-b359-2219084defba">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [39]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -857,6 +869,12 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">Learner ml_g: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Learner ml_m: RandomForestClassifier(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Learner ml_r: RandomForestClassifier(max_depth=5, max_features=20, min_samples_leaf=2)</span>
+<span class="go">Out-of-sample Performance:</span>
+<span class="go">Learner ml_g0 RMSE: [[1.12169002]]</span>
+<span class="go">Learner ml_g1 RMSE: [[1.12649263]]</span>
+<span class="go">Learner ml_m RMSE: [[0.49825336]]</span>
+<span class="go">Learner ml_r0 RMSE: [[0.50420135]]</span>
+<span class="go">Learner ml_r1 RMSE: [[0.36566158]]</span>
 
 <span class="go">------------------ Resampling        ------------------</span>
 <span class="go">No. folds: 5</span>
@@ -864,13 +882,13 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">Apply cross-fitting: True</span>
 
 <span class="go">------------------ Fit summary       ------------------</span>
-<span class="go">       coef   std err         t    P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.488343  0.222121  2.198546  0.02791  0.052994  0.923692</span>
+<span class="go">       coef  std err         t     P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.449411  0.22444  2.002367  0.045245  0.009517  0.889305</span>
 </pre></div>
 </div>
 </div>
-<input id="3ceb5ee7-3f9f-4db8-b453-38bb921b4fc1" name="bd36234e-495b-4dcf-a481-b2b2f23c4f37" type="radio">
-</input><label class="tabbed-label" for="3ceb5ee7-3f9f-4db8-b453-38bb921b4fc1">
+<input id="46982150-650e-4488-90b6-f3fd48400cc8" name="824fe1a1-85b7-44a2-a948-5387904f341d" type="radio">
+</input><label class="tabbed-label" for="46982150-650e-4488-90b6-f3fd48400cc8">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -880,12 +898,12 @@ R</label><div class="tabbed-content docutils">
 <span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
 
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">4444</span><span class="p">)</span>
-<span class="n">ml_g</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span> <span class="n">num.trees</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="n">mtry</span> <span class="o">=</span> <span class="m">20</span><span class="p">,</span> <span class="n">min.node.size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">max.depth</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
-<span class="n">ml_m</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">,</span> <span class="n">num.trees</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="n">mtry</span> <span class="o">=</span> <span class="m">20</span><span class="p">,</span> <span class="n">min.node.size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">max.depth</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
-<span class="n">ml_r</span> <span class="o">=</span> <span class="n">ml_m</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
-<span class="n">data</span> <span class="o">=</span> <span class="nf">make_iivm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="m">1000</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="m">20</span><span class="p">,</span> <span class="n">alpha_x</span><span class="o">=</span><span class="m">1</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.table&quot;</span><span class="p">)</span>
-<span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">,</span> <span class="n">z_cols</span><span class="o">=</span><span class="s">&quot;z&quot;</span><span class="p">)</span>
-<span class="n">dml_iivm_obj</span> <span class="o">=</span> <span class="n">DoubleMLIIVM</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">ml_r</span><span class="p">)</span>
+<span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">max.depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">max.depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span>
+<span class="n">ml_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_m</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">make_iivm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">n_obs</span><span class="o">=</span><span class="m">1000</span><span class="p">,</span><span class="w"> </span><span class="n">dim_x</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">alpha_x</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.table&quot;</span><span class="p">)</span>
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">z_cols</span><span class="o">=</span><span class="s">&quot;z&quot;</span><span class="p">)</span>
+<span class="n">dml_iivm_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLIIVM</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">ml_r</span><span class="p">)</span>
 <span class="n">dml_iivm_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">dml_iivm_obj</span><span class="p">)</span>
 </pre></div>
@@ -948,10 +966,10 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
           <p class="prev-next-title"><span class="section-number">2. </span>The data-backend DoubleMLData</p>
       </div>
   </a>
-  <a class='right-next' id="next-link" href="scores.html" title="next page">
+  <a class='right-next' id="next-link" href="heterogeneity.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title"><span class="section-number">4. </span>Score functions</p>
+      <p class="prev-next-title"><span class="section-number">4. </span>Heterogeneous treatment effects</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>
@@ -972,7 +990,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
   
   <div class="footer-item">
     <p class="copyright">
-    &copy; Copyright 2021, Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M..<br>
+    &copy; Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..<br>
 </p>
   </div>
   

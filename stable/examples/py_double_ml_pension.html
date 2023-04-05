@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
@@ -223,6 +224,36 @@
    Python: Cluster Robust Double Machine Learning
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_gate.html">
+   Python: Group Average Treatment Effects (GATEs)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cate.html">
+   Python: Conditional Average Treatment Effects (CATEs)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pension_qte.html">
+   Python: Impact of 401(k) on Financial Wealth (Quantile Effects)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pq.html">
+   Python: Potential Quantiles and Quantile Treatment Effects
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cvar.html">
+   Python: Conditional Value at Risk of potential outcomes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_learner.html">
+   Python: Choice of learners
+  </a>
+ </li>
 </ul>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
@@ -343,264 +374,7 @@
               
               <article class="bd-article" role="main">
                 
-  
-<style>
-/* CSS for nbsphinx extension */
-
-/* remove conflicting styling from Sphinx themes */
-div.nbinput.container div.prompt *,
-div.nboutput.container div.prompt *,
-div.nbinput.container div.input_area pre,
-div.nboutput.container div.output_area pre,
-div.nbinput.container div.input_area .highlight,
-div.nboutput.container div.output_area .highlight {
-    border: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
-}
-
-div.nbinput.container > div[class*=highlight],
-div.nboutput.container > div[class*=highlight] {
-    margin: 0;
-}
-
-div.nbinput.container div.prompt *,
-div.nboutput.container div.prompt * {
-    background: none;
-}
-
-div.nboutput.container div.output_area .highlight,
-div.nboutput.container div.output_area pre {
-    background: unset;
-}
-
-div.nboutput.container div.output_area div.highlight {
-    color: unset;  /* override Pygments text color */
-}
-
-/* avoid gaps between output lines */
-div.nboutput.container div[class*=highlight] pre {
-    line-height: normal;
-}
-
-/* input/output containers */
-div.nbinput.container,
-div.nboutput.container {
-    display: -webkit-flex;
-    display: flex;
-    align-items: flex-start;
-    margin: 0;
-    width: 100%;
-}
-@media (max-width: 540px) {
-    div.nbinput.container,
-    div.nboutput.container {
-        flex-direction: column;
-    }
-}
-
-/* input container */
-div.nbinput.container {
-    padding-top: 5px;
-}
-
-/* last container */
-div.nblast.container {
-    padding-bottom: 5px;
-}
-
-/* input prompt */
-div.nbinput.container div.prompt pre {
-    color: #307FC1;
-}
-
-/* output prompt */
-div.nboutput.container div.prompt pre {
-    color: #BF5B3D;
-}
-
-/* all prompts */
-div.nbinput.container div.prompt,
-div.nboutput.container div.prompt {
-    width: 4.5ex;
-    padding-top: 5px;
-    position: relative;
-    user-select: none;
-}
-
-div.nbinput.container div.prompt > div,
-div.nboutput.container div.prompt > div {
-    position: absolute;
-    right: 0;
-    margin-right: 0.3ex;
-}
-
-@media (max-width: 540px) {
-    div.nbinput.container div.prompt,
-    div.nboutput.container div.prompt {
-        width: unset;
-        text-align: left;
-        padding: 0.4em;
-    }
-    div.nboutput.container div.prompt.empty {
-        padding: 0;
-    }
-
-    div.nbinput.container div.prompt > div,
-    div.nboutput.container div.prompt > div {
-        position: unset;
-    }
-}
-
-/* disable scrollbars and line breaks on prompts */
-div.nbinput.container div.prompt pre,
-div.nboutput.container div.prompt pre {
-    overflow: hidden;
-    white-space: pre;
-}
-
-/* input/output area */
-div.nbinput.container div.input_area,
-div.nboutput.container div.output_area {
-    -webkit-flex: 1;
-    flex: 1;
-    overflow: auto;
-}
-@media (max-width: 540px) {
-    div.nbinput.container div.input_area,
-    div.nboutput.container div.output_area {
-        width: 100%;
-    }
-}
-
-/* input area */
-div.nbinput.container div.input_area {
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    /*background: #f5f5f5;*/
-}
-
-/* override MathJax center alignment in output cells */
-div.nboutput.container div[class*=MathJax] {
-    text-align: left !important;
-}
-
-/* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput.container div.math p {
-    text-align: left;
-}
-
-/* standard error */
-div.nboutput.container div.output_area.stderr {
-    background: #fdd;
-}
-
-/* ANSI colors */
-.ansi-black-fg { color: #3E424D; }
-.ansi-black-bg { background-color: #3E424D; }
-.ansi-black-intense-fg { color: #282C36; }
-.ansi-black-intense-bg { background-color: #282C36; }
-.ansi-red-fg { color: #E75C58; }
-.ansi-red-bg { background-color: #E75C58; }
-.ansi-red-intense-fg { color: #B22B31; }
-.ansi-red-intense-bg { background-color: #B22B31; }
-.ansi-green-fg { color: #00A250; }
-.ansi-green-bg { background-color: #00A250; }
-.ansi-green-intense-fg { color: #007427; }
-.ansi-green-intense-bg { background-color: #007427; }
-.ansi-yellow-fg { color: #DDB62B; }
-.ansi-yellow-bg { background-color: #DDB62B; }
-.ansi-yellow-intense-fg { color: #B27D12; }
-.ansi-yellow-intense-bg { background-color: #B27D12; }
-.ansi-blue-fg { color: #208FFB; }
-.ansi-blue-bg { background-color: #208FFB; }
-.ansi-blue-intense-fg { color: #0065CA; }
-.ansi-blue-intense-bg { background-color: #0065CA; }
-.ansi-magenta-fg { color: #D160C4; }
-.ansi-magenta-bg { background-color: #D160C4; }
-.ansi-magenta-intense-fg { color: #A03196; }
-.ansi-magenta-intense-bg { background-color: #A03196; }
-.ansi-cyan-fg { color: #60C6C8; }
-.ansi-cyan-bg { background-color: #60C6C8; }
-.ansi-cyan-intense-fg { color: #258F8F; }
-.ansi-cyan-intense-bg { background-color: #258F8F; }
-.ansi-white-fg { color: #C5C1B4; }
-.ansi-white-bg { background-color: #C5C1B4; }
-.ansi-white-intense-fg { color: #A1A6B2; }
-.ansi-white-intense-bg { background-color: #A1A6B2; }
-
-.ansi-default-inverse-fg { color: #FFFFFF; }
-.ansi-default-inverse-bg { background-color: #000000; }
-
-.ansi-bold { font-weight: bold; }
-.ansi-underline { text-decoration: underline; }
-
-
-div.nbinput.container div.input_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight].math,
-div.nboutput.container div.output_area.rendered_html,
-div.nboutput.container div.output_area > div.output_javascript,
-div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 5px;
-    margin: 0;
-}
-
-/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
-div.nbinput.container div.input_area > div[class^='highlight'],
-div.nboutput.container div.output_area > div[class^='highlight']{
-    overflow-y: hidden;
-}
-
-/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt .copybtn {
-    display: none;
-}
-
-/* Some additional styling taken form the Jupyter notebook CSS */
-.jp-RenderedHTMLCommon table,
-div.rendered_html table {
-  border: none;
-  border-collapse: collapse;
-  border-spacing: 0;
-  color: black;
-  font-size: 12px;
-  table-layout: fixed;
-}
-.jp-RenderedHTMLCommon thead,
-div.rendered_html thead {
-  border-bottom: 1px solid black;
-  vertical-align: bottom;
-}
-.jp-RenderedHTMLCommon tr,
-.jp-RenderedHTMLCommon th,
-.jp-RenderedHTMLCommon td,
-div.rendered_html tr,
-div.rendered_html th,
-div.rendered_html td {
-  text-align: right;
-  vertical-align: middle;
-  padding: 0.5em 0.5em;
-  line-height: normal;
-  white-space: normal;
-  max-width: none;
-  border: none;
-}
-.jp-RenderedHTMLCommon th,
-div.rendered_html th {
-  font-weight: bold;
-}
-.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
-div.rendered_html tbody tr:nth-child(odd) {
-  background: #f5f5f5;
-}
-.jp-RenderedHTMLCommon tbody tr:hover,
-div.rendered_html tbody tr:hover {
-  background: rgba(66, 165, 245, 0.2);
-}
-</style>
-    <div class="admonition note">
+      <div class="admonition note">
     <p class="admonition-title">Note</p>
     <ul class="simple">
 
@@ -610,7 +384,7 @@ Download Jupyter notebook:
     </ul>
     </div><section id="Python:-Impact-of-401(k)-on-Financial-Wealth">
 <h1>Python: Impact of 401(k) on Financial Wealth<a class="headerlink" href="#Python:-Impact-of-401(k)-on-Financial-Wealth" title="Permalink to this headline">#</a></h1>
-<p>In this real-data example, we illustrate how the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package can be used to estimate the effect of 401(k) eligibility and participation on accumulated assets. The 401(k) data set has been analyzed in several studies, among others <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>.</p>
+<p>In this real-data example, we illustrate how the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package can be used to estimate the effect of 401(k) eligibility and participation on accumulated assets. The 401(k) data set has been analyzed in several studies, among others <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>.</p>
 <p>401(k) plans are pension accounts sponsored by employers. The key problem in determining the effect of participation in 401(k) plans on accumulated assets is saver heterogeneity coupled with the fact that the decision to enroll in a 401(k) is non-random. It is generally recognized that some people have a higher preference for saving than others. It also seems likely that those individuals with high unobserved preference for saving would be most likely to choose to participate in tax-advantaged
 retirement savings plans and would tend to have otherwise high amounts of accumulated assets. The presence of unobserved savings preferences with these properties then implies that conventional estimates that do not account for saver heterogeneity and endogeneity of participation will be biased upward, tending to overstate the savings effects of 401(k) participation.</p>
 <p>One can argue that eligibility for enrolling in a 401(k) plan in this data can be taken as exogenous after conditioning on a few observables of which the most important for their argument is income. The basic idea is that, at least around the time 401(k)’s initially became available, people were unlikely to be basing their employment decisions on whether an employer offered a 401(k) but would instead focus on income and other aspects of the job.</p>
@@ -1173,7 +947,7 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 </section>
 <section id="The-DoubleML-package">
 <h2>The <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> package<a class="headerlink" href="#The-DoubleML-package" title="Permalink to this headline">#</a></h2>
-<p>Let’s use the package <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> to estimate the average treatment effect of 401(k) eligibility, i.e. <code class="docutils literal notranslate"><span class="pre">e401</span></code>, and participation, i.e. <code class="docutils literal notranslate"><span class="pre">p401</span></code>, on net financial assets <code class="docutils literal notranslate"><span class="pre">net_tfa</span></code>.</p>
+<p>Let’s use the package <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> to estimate the average treatment effect of 401(k) eligibility, i.e. <code class="docutils literal notranslate"><span class="pre">e401</span></code>, and participation, i.e. <code class="docutils literal notranslate"><span class="pre">p401</span></code>, on net financial assets <code class="docutils literal notranslate"><span class="pre">net_tfa</span></code>.</p>
 </section>
 <section id="Estimating-the-Average-Treatment-Effect-of-401(k)-Eligibility-on-Net-Financial-Assets">
 <h2>Estimating the Average Treatment Effect of 401(k) Eligibility on Net Financial Assets<a class="headerlink" href="#Estimating-the-Average-Treatment-Effect-of-401(k)-Eligibility-on-Net-Financial-Assets" title="Permalink to this headline">#</a></h2>
@@ -1187,7 +961,7 @@ Y = D \alpha + f(X)'\beta+ \epsilon,
 <li><p>a flexible model specification, where <span class="math notranslate nohighlight">\(f(X)\)</span> includes the raw regressors <span class="math notranslate nohighlight">\(X\)</span> and the orthogonal polynomials of degree 2 for the variables family size education, age, and income.</p></li>
 </ul>
 <p>We will use the basic model specification whenever we use nonlinear methods, for example regression trees or random forests, and use the flexible model for linear methods such as the lasso. There are, of course, multiple ways how the model can be specified even more flexibly, for example including interactions of variable and higher order interaction. However, for the sake of simplicity we stick to the specification above. Users who are interested in varying the model can adapt the code below
-accordingly, for example to implement the orignal specification in <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>.</p>
+accordingly, for example to implement the orignal specification in <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>.</p>
 <p>In the first step, we report estimates of the average treatment effect (ATE) of 401(k) eligibility on net financial assets both in the partially linear regression (PLR) model and in the interactive regression model (IRM) allowing for heterogeneous treatment effects.</p>
 <section id="The-Data-Backend:-DoubleMLData">
 <h3>The Data Backend: <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code><a class="headerlink" href="#The-Data-Backend:-DoubleMLData" title="Permalink to this headline">#</a></h3>
@@ -1233,14 +1007,14 @@ No. Observations: 9915
 
 ------------------ DataFrame info    ------------------
 &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Int64Index: 9915 entries, 0 to 9914
+RangeIndex: 9915 entries, 0 to 9914
 Columns: 14 entries, nifa to hown
 dtypes: float64(4), int8(10)
-memory usage: 742.2 KB
+memory usage: 406.8 KB
 
 </pre></div></div>
 </div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
@@ -1254,12 +1028,11 @@ memory usage: 742.2 KB
 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">degree</span> <span class="ow">in</span> <span class="n">poly_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="n">poly</span> <span class="o">=</span> <span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">data_transf</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[[</span><span class="n">key</span><span class="p">]])</span>
-    <span class="n">x_cols</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">([</span><span class="n">key</span><span class="p">])</span>
+    <span class="n">x_cols</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">([</span><span class="n">key</span><span class="p">])</span>
     <span class="n">data_transf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_transf</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">x_cols</span><span class="p">)</span>
 
     <span class="n">features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">features</span><span class="p">,</span> <span class="n">data_transf</span><span class="p">),</span>
                           <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
 <span class="n">model_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()[[</span><span class="s1">&#39;net_tfa&#39;</span><span class="p">,</span> <span class="s1">&#39;e401&#39;</span><span class="p">]],</span> <span class="n">features</span><span class="o">.</span><span class="n">copy</span><span class="p">()),</span>
                         <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -1267,21 +1040,6 @@ memory usage: 742.2 KB
 <span class="n">data_dml_flex</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">model_data</span><span class="p">,</span> <span class="n">y_col</span><span class="o">=</span><span class="s1">&#39;net_tfa&#39;</span><span class="p">,</span> <span class="n">d_cols</span><span class="o">=</span><span class="s1">&#39;e401&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/sklearn/utils/deprecation.py:87: FutureWarning: Function get_feature_names is deprecated; get_feature_names is deprecated in 1.0 and will be removed in 1.2. Please use get_feature_names_out instead.
-  warnings.warn(msg, category=FutureWarning)
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/sklearn/utils/deprecation.py:87: FutureWarning: Function get_feature_names is deprecated; get_feature_names is deprecated in 1.0 and will be removed in 1.2. Please use get_feature_names_out instead.
-  warnings.warn(msg, category=FutureWarning)
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/sklearn/utils/deprecation.py:87: FutureWarning: Function get_feature_names is deprecated; get_feature_names is deprecated in 1.0 and will be removed in 1.2. Please use get_feature_names_out instead.
-  warnings.warn(msg, category=FutureWarning)
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/sklearn/utils/deprecation.py:87: FutureWarning: Function get_feature_names is deprecated; get_feature_names is deprecated in 1.0 and will be removed in 1.2. Please use get_feature_names_out instead.
-  warnings.warn(msg, category=FutureWarning)
-</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
@@ -1307,10 +1065,10 @@ No. Observations: 9915
 
 ------------------ DataFrame info    ------------------
 &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Int64Index: 9915 entries, 0 to 9914
+RangeIndex: 9915 entries, 0 to 9914
 Columns: 15 entries, net_tfa to fsize^2
 dtypes: float64(9), int8(6)
-memory usage: 1.1 MB
+memory usage: 755.4 KB
 
 </pre></div></div>
 </div>
@@ -1623,9 +1381,11 @@ memory usage: 1.1 MB
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1421: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
+/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
   warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1421: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
+/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
+  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
+/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
   warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
 </pre></div></div>
 </div>
@@ -2026,9 +1786,9 @@ memory usage: 1.1 MB
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1421: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
+/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
   warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1421: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
+/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
   warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
 </pre></div></div>
 </div>
@@ -2167,7 +1927,7 @@ memory usage: 1.1 MB
 <img alt="../_images/examples_py_double_ml_pension_55_0.png" src="../_images/examples_py_double_ml_pension_55_0.png" />
 </div>
 </div>
-<p>These estimates that flexibly account for confounding are substantially attenuated relative to the baseline estimate (<em>19559</em>) that does not account for confounding. They suggest much smaller causal effects of 401(k) eligiblity on financial asset holdings. The best model with lowest RMSE in both equations is the PLR model estimated via lasso. It gives the following estimate:</p>
+<p>These estimates that flexibly account for confounding are substantially attenuated relative to the baseline estimate (<em>19559</em>) that does not account for confounding. They suggest much smaller causal effects of 401(k) eligiblity on financial asset holdings.</p>
 </section>
 </section>
 <section id="Local-Average-Treatment-Effects-of-401(k)-Participation-on-Net-Financial-Assets">
@@ -2214,10 +1974,10 @@ No. Observations: 9915
 
 ------------------ DataFrame info    ------------------
 &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Int64Index: 9915 entries, 0 to 9914
+RangeIndex: 9915 entries, 0 to 9914
 Columns: 14 entries, nifa to hown
 dtypes: float64(4), int8(10)
-memory usage: 742.2 KB
+memory usage: 406.8 KB
 
 </pre></div></div>
 </div>
@@ -2254,10 +2014,10 @@ No. Observations: 9915
 
 ------------------ DataFrame info    ------------------
 &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Int64Index: 9915 entries, 0 to 9914
+RangeIndex: 9915 entries, 0 to 9914
 Columns: 16 entries, net_tfa to fsize^2
 dtypes: float64(9), int8(7)
-memory usage: 1.1 MB
+memory usage: 765.1 KB
 
 </pre></div></div>
 </div>
@@ -2532,9 +2292,11 @@ memory usage: 1.1 MB
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1421: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
+/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
   warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-/opt/hostedtoolcache/Python/3.8.14/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1421: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
+/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
+  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
+/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
   warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
 </pre></div></div>
 </div>
@@ -2886,7 +2648,7 @@ memory usage: 1.1 MB
 <p>We report results based on four ML methods for estimating the nuisance functions used in forming the orthogonal estimating equations. We find again that the estimates of the treatment effect are stable across ML methods. The estimates are highly significant, hence we would reject the hypothesis that 401(k) participation has no effect on financial wealth.</p>
 <hr class="docutils" />
 <p><strong>Acknowledgement</strong></p>
-<p>We would like to thank <a class="reference external" href="https://www.bwl.uni-hamburg.de/en/statistik/team/kueck.html">Jannis Kueck</a> for sharing <a class="reference external" href="https://www.kaggle.com/janniskueck/pm5-401k">the kaggle notebook</a>. The pension data set has been analyzed in several studies, among others <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>.</p>
+<p>We would like to thank <a class="reference external" href="https://www.bwl.uni-hamburg.de/en/statistik/team/kueck.html">Jannis Kueck</a> for sharing <a class="reference external" href="https://www.kaggle.com/janniskueck/pm5-401k">the kaggle notebook</a>. The pension data set has been analyzed in several studies, among others <a class="reference external" href="https://arxiv.org/abs/1608.00060">Chernozhukov et al. (2018)</a>.</p>
 </section>
 </section>
 
@@ -2929,7 +2691,7 @@ memory usage: 1.1 MB
   
   <div class="footer-item">
     <p class="copyright">
-    &copy; Copyright 2021, Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M..<br>
+    &copy; Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..<br>
 </p>
   </div>
   

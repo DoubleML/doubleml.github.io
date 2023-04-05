@@ -1,0 +1,942 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Python: Conditional Value at Risk of potential outcomes &#8212; DoubleML  documentation</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python: Choice of learners" href="py_double_ml_learner.html" />
+    <link rel="prev" title="Python: Potential Quantiles and Quantile Treatment Effects" href="py_double_ml_pq.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="None">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">DoubleML  documentation</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  DoubleML
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../intro/install.html">
+  Install
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../intro/intro.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../guide/guide.html">
+  User guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../workflow/workflow.html">
+  Workflow
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../api/api.html">
+  Python API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://docs.doubleml.org/r/stable/">
+  R API
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="index.html">
+  Examples
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../literature/literature.html">
+  Literature
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../release/release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <span id="theme-switch" class="btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/DoubleML/doubleml-for-py" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="R_double_ml_pension.html">
+   R: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="r_double_ml_multiway_cluster.html">
+   R: Cluster Robust Double Machine Learning
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pension.html">
+   Python: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_multiway_cluster.html">
+   Python: Cluster Robust Double Machine Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_gate.html">
+   Python: Group Average Treatment Effects (GATEs)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cate.html">
+   Python: Conditional Average Treatment Effects (CATEs)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pension_qte.html">
+   Python: Impact of 401(k) on Financial Wealth (Quantile Effects)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pq.html">
+   Python: Potential Quantiles and Quantile Treatment Effects
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Python: Conditional Value at Risk of potential outcomes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_learner.html">
+   Python: Choice of learners
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="R_double_ml_pipeline.html">
+   R: Ensemble Learners and More with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     mlr3pipelines
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_ml_bonus_data.html">
+   DML: Bonus Data
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Data">
+   Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Conditional-Value-at-Risk-(CVaR)">
+   Conditional Value at Risk (CVaR)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#CVaR-Treatment-Effects">
+   CVaR Treatment Effects
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+      <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/py_double_ml_cvar.ipynb">https://docs.doubleml.org/stable/examples/py_double_ml_cvar.ipynb</a>.
+
+    </ul>
+    </div><section id="Python:-Conditional-Value-at-Risk-of-potential-outcomes">
+<h1>Python: Conditional Value at Risk of potential outcomes<a class="headerlink" href="#Python:-Conditional-Value-at-Risk-of-potential-outcomes" title="Permalink to this headline">#</a></h1>
+<p>In this example, we illustrate how the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package can be used to estimate the conditional Value at Risk of potential outcomes. The estimation is based on <a class="reference external" href="https://arxiv.org/abs/1912.12945">Kallus et al. (2019)</a>.</p>
+<section id="Data">
+<h2>Data<a class="headerlink" href="#Data" title="Permalink to this headline">#</a></h2>
+<p>We define a data generating process to create synthetic data to compare the estimates to the true effect.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="kn">from</span> <span class="nn">lightgbm</span> <span class="kn">import</span> <span class="n">LGBMClassifier</span><span class="p">,</span> <span class="n">LGBMRegressor</span>
+</pre></div>
+</div>
+</div>
+<p>The data is generated as a location-scale model with</p>
+<div class="math notranslate nohighlight">
+\[Y_i = \text{loc}(D_i,X_i) + \text{scale}(D_i,X_i)\cdot\varepsilon_i,\]</div>
+<p>where <span class="math notranslate nohighlight">\(X_i\sim\mathcal{U}[-1,1]^{p}\)</span> and <span class="math notranslate nohighlight">\(\varepsilon_i \sim \mathcal{N}(0,1)\)</span>. Further, the location and scale are determined according to the following functions</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\text{loc}(d,x) &amp;:= 0.5d + 2dx_5 + 2\cdot 1\{x_2 &gt; 0.1\} - 1.7\cdot 1\{x_1x_3 &gt; 0\} - 3x_4 \\
+\text{scale}(d,x) &amp;:= \sqrt{0.5d + 0.3dx_1 + 2},
+\end{aligned}\end{split}\]</div>
+<p>and the treatment takes the following form</p>
+<div class="math notranslate nohighlight">
+\[D_i = 1_{\{(X_2 - X_4 + 1.5\cdot 1\{x_1 &gt; 0\} + \epsilon_i &gt; 0)\}}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\epsilon_i \sim \mathcal{N}(0,1)\)</span>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f_loc</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+  <span class="n">loc</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">D</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">D</span><span class="o">*</span><span class="n">X</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.7</span><span class="o">*</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">X</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">loc</span>
+
+<span class="k">def</span> <span class="nf">f_scale</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+  <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">D</span> <span class="o">+</span> <span class="mf">0.3</span><span class="o">*</span><span class="n">D</span><span class="o">*</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">scale</span>
+
+<span class="k">def</span> <span class="nf">dgp</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">p</span><span class="p">])</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="p">((</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span> <span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.5</span><span class="o">*</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">1.0</span>
+    <span class="n">epsilon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">f_loc</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="n">f_scale</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span><span class="o">*</span><span class="n">epsilon</span>
+
+    <span class="k">return</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">epsilon</span>
+</pre></div>
+</div>
+</div>
+<p>We can calculate the true conditional value at risk through simulations. Here, we will just approximate the true conditional value at risk for the potential outcomes for a range of quantiles.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tau_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.95</span><span class="p">,</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">n_true</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">10e+6</span><span class="p">)</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="n">X_true</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">epsilon_true</span> <span class="o">=</span> <span class="n">dgp</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_true</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">)</span>
+<span class="n">D1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_true</span><span class="p">)</span>
+<span class="n">D0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_true</span><span class="p">)</span>
+
+<span class="n">Y1</span> <span class="o">=</span> <span class="n">f_loc</span><span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="n">X_true</span><span class="p">)</span> <span class="o">+</span> <span class="n">f_scale</span><span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="n">X_true</span><span class="p">)</span><span class="o">*</span><span class="n">epsilon_true</span>
+<span class="n">Y0</span> <span class="o">=</span> <span class="n">f_loc</span><span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">X_true</span><span class="p">)</span> <span class="o">+</span> <span class="n">f_scale</span><span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">X_true</span><span class="p">)</span><span class="o">*</span><span class="n">epsilon_true</span>
+
+<span class="n">Y1_quant</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">Y1</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="n">tau_vec</span><span class="p">)</span>
+<span class="n">Y0_quant</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">Y0</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="n">tau_vec</span><span class="p">)</span>
+
+<span class="n">Y1_cvar</span> <span class="o">=</span> <span class="p">[</span><span class="n">Y1</span><span class="p">[</span><span class="n">Y1</span> <span class="o">&gt;=</span> <span class="n">quant</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">quant</span> <span class="ow">in</span> <span class="n">Y1_quant</span><span class="p">]</span>
+<span class="n">Y0_cvar</span> <span class="o">=</span> <span class="p">[</span><span class="n">Y0</span><span class="p">[</span><span class="n">Y0</span> <span class="o">&gt;=</span> <span class="n">quant</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">quant</span> <span class="ow">in</span> <span class="n">Y0_quant</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Conditional Value at Risk Y(0): </span><span class="si">{</span><span class="n">Y0_cvar</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Conditional Value at Risk Y(1): </span><span class="si">{</span><span class="n">Y1_cvar</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Conditional Value at Risk Y(0): [0.5464721902674523, 0.7558418421542786, 0.9568109127708179, 1.1533026789547542, 1.3480442380316071, 1.54300134403715, 1.7399790101790782, 1.9407906549937055, 2.147354180291852, 2.3618462669326434, 2.5870219544879713, 2.826362334705478, 3.0846894637160958, 3.3691221834089964, 3.6910425211992015, 4.071132843213817, 4.552655801951005]
+Conditional Value at Risk Y(1): [1.1116910986342647, 1.3462661419999322, 1.5710406113977469, 1.7906646913935447, 2.008305536315015, 2.2263613749390347, 2.4469874756982204, 2.6723438635169248, 2.9046273148191775, 3.1464979072898736, 3.4011711752888956, 3.672693830071768, 3.9669649543634553, 4.292708682184958, 4.663754887301303, 5.104909615902241, 5.669323104684439]
+</pre></div></div>
+</div>
+<p>Let us generate <span class="math notranslate nohighlight">\(n=5000\)</span> observations and convert them to a <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLData.html">DoubleMLData</a> object.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">dgp</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+<span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Conditional-Value-at-Risk-(CVaR)">
+<h2>Conditional Value at Risk (CVaR)<a class="headerlink" href="#Conditional-Value-at-Risk-(CVaR)" title="Permalink to this headline">#</a></h2>
+<p>Next, we can initialize our two machine learning algorithms to train the different nuisance elements (remark that in contrast to potential quantile estimation <code class="docutils literal notranslate"><span class="pre">ml_g</span></code> is a regressor). Then we can initialize the <code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR</span></code> objects and call <code class="docutils literal notranslate"><span class="pre">fit()</span></code> to estimate the relevant parameters. To obtain confidence intervals, we can use the <code class="docutils literal notranslate"><span class="pre">confint()</span></code> method.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">CVAR_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">CVAR_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+<span class="n">ci_CVAR_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">ci_CVAR_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx_tau</span><span class="p">,</span> <span class="n">tau</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Quantile: </span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">dml_CVAR_0</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLCVAR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+                                <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span>
+                                <span class="n">quantile</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span>
+                                <span class="n">treatment</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">dml_CVAR_1</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLCVAR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+                                <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span>
+                                <span class="n">quantile</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span>
+                                <span class="n">treatment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="n">dml_CVAR_0</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">dml_CVAR_1</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="n">ci_CVAR_0</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dml_CVAR_0</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">ci_CVAR_1</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dml_CVAR_1</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+    <span class="n">CVAR_0</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_CVAR_0</span><span class="o">.</span><span class="n">coef</span>
+    <span class="n">CVAR_1</span><span class="p">[</span><span class="n">idx_tau</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_CVAR_1</span><span class="o">.</span><span class="n">coef</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Quantile: 0.1
+Quantile: 0.15000000000000002
+Quantile: 0.20000000000000004
+Quantile: 0.25000000000000006
+Quantile: 0.30000000000000004
+Quantile: 0.3500000000000001
+Quantile: 0.40000000000000013
+Quantile: 0.45000000000000007
+Quantile: 0.5000000000000001
+Quantile: 0.5500000000000002
+Quantile: 0.6000000000000002
+Quantile: 0.6500000000000001
+Quantile: 0.7000000000000002
+Quantile: 0.7500000000000002
+Quantile: 0.8000000000000002
+Quantile: 0.8500000000000002
+Quantile: 0.9000000000000002
+</pre></div></div>
+</div>
+<p>Finally, let us take a look at the estimated values.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span> <span class="s2">&quot;CVaR Y(0)&quot;</span><span class="p">:</span> <span class="n">Y0_cvar</span><span class="p">,</span> <span class="s2">&quot;CVaR Y(1)&quot;</span><span class="p">:</span> <span class="n">Y1_cvar</span><span class="p">,</span>
+        <span class="s2">&quot;DML CVaR Y(0)&quot;</span><span class="p">:</span> <span class="n">CVAR_0</span><span class="p">,</span> <span class="s2">&quot;DML CVaR Y(1)&quot;</span><span class="p">:</span> <span class="n">CVAR_1</span><span class="p">,</span>
+        <span class="s2">&quot;DML CVaR Y(0) lower&quot;</span><span class="p">:</span> <span class="n">ci_CVAR_0</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;DML CVaR Y(0) upper&quot;</span><span class="p">:</span> <span class="n">ci_CVAR_0</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;DML CVaR Y(1) lower&quot;</span><span class="p">:</span> <span class="n">ci_CVAR_1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;DML CVaR Y(1) upper&quot;</span><span class="p">:</span> <span class="n">ci_CVAR_1</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+    Quantile  CVaR Y(0)  CVaR Y(1)  DML CVaR Y(0)  DML CVaR Y(1)  \
+0       0.10   0.546472   1.111691       0.360683       1.057962
+1       0.15   0.755842   1.346266       0.590911       1.273356
+2       0.20   0.956811   1.571041       0.829543       1.489699
+3       0.25   1.153303   1.790665       1.015038       1.697000
+4       0.30   1.348044   2.008306       1.203284       1.925736
+5       0.35   1.543001   2.226361       1.502494       2.144084
+6       0.40   1.739979   2.446987       1.678826       2.338775
+7       0.45   1.940791   2.672344       1.822482       2.559144
+8       0.50   2.147354   2.904627       2.153119       2.824701
+9       0.55   2.361846   3.146498       2.156969       3.041831
+10      0.60   2.587022   3.401171       2.495657       3.298120
+11      0.65   2.826362   3.672694       2.653846       3.582761
+12      0.70   3.084689   3.966965       2.847948       3.842405
+13      0.75   3.369122   4.292709       3.076347       4.163895
+14      0.80   3.691043   4.663755       3.523163       4.543075
+15      0.85   4.071133   5.104910       3.869020       4.913774
+16      0.90   4.552656   5.669323       4.372097       5.482038
+
+    DML CVaR Y(0) lower  DML CVaR Y(0) upper  DML CVaR Y(1) lower  \
+0              0.162710             0.558655             0.957745
+1              0.360801             0.821021             1.175284
+2              0.606342             1.052745             1.393604
+3              0.824889             1.205187             1.601061
+4              1.009428             1.397140             1.824750
+5              1.292028             1.712960             2.041147
+6              1.455078             1.902573             2.234534
+7              1.579238             2.065725             2.455107
+8              1.883914             2.422325             2.715407
+9              1.907491             2.406446             2.932027
+10             2.250210             2.741104             3.183526
+11             2.382872             2.924821             3.466440
+12             2.554076             3.141820             3.722848
+13             2.727976             3.424717             4.041284
+14             3.140833             3.905494             4.409746
+15             3.483717             4.254324             4.773177
+16             3.921372             4.822822             5.313209
+
+    DML CVaR Y(1) upper
+0              1.158178
+1              1.371429
+2              1.585793
+3              1.792939
+4              2.026723
+5              2.247020
+6              2.443016
+7              2.663182
+8              2.933996
+9              3.151636
+10             3.412714
+11             3.699082
+12             3.961962
+13             4.286507
+14             4.676405
+15             5.054370
+16             5.650867
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span> <span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">();</span> <span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR Y(0)&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated CVaR Y(0)&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CVaR Y(0)&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True CVaR Y(0)&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR Y(0) lower&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR Y(0) upper&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Confidence Interval&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR Y(1)&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated CVaR Y(1)&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CVaR Y(1)&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True CVaR Y(1)&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR Y(1) lower&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR Y(1) upper&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Confidence Interval&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Conditional Value at Risk&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">supxlabel</span><span class="p">(</span><span class="s1">&#39;Quantile&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">supylabel</span><span class="p">(</span><span class="s1">&#39;CVaR and 95%-CI&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_cvar_13_0.png" src="../_images/examples_py_double_ml_cvar_13_0.png" />
+</div>
+</div>
+</section>
+<section id="CVaR-Treatment-Effects">
+<h2>CVaR Treatment Effects<a class="headerlink" href="#CVaR-Treatment-Effects" title="Permalink to this headline">#</a></h2>
+<p>In most cases, we want to evaluate the treatment effect on the CVaR as the difference between potential CVaRs. To estimate the treatment effect, we can use the <code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> object and specify <code class="docutils literal notranslate"><span class="pre">CVaR</span></code> as the score.</p>
+<p>As for quantile treatment effects, different quantiles can be estimated in parallel with <code class="docutils literal notranslate"><span class="pre">n_jobs_models</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+<span class="n">cores_used</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_cores</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of Cores used: </span><span class="si">{</span><span class="n">cores_used</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">dml_CVAR</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLQTE</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+                           <span class="n">ml_g</span><span class="p">,</span>
+                           <span class="n">ml_m</span><span class="p">,</span>
+                           <span class="n">score</span><span class="o">=</span><span class="s1">&#39;CVaR&#39;</span><span class="p">,</span>
+                           <span class="n">quantiles</span><span class="o">=</span><span class="n">tau_vec</span><span class="p">,</span>
+                           <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">dml_CVAR</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_jobs_models</span><span class="o">=</span><span class="n">cores_used</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_CVAR</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Number of Cores used: 5
+================== DoubleMLQTE Object ==================
+
+------------------ Fit summary       ------------------
+          coef   std err         t         P&gt;|t|     2.5 %    97.5 %
+0.10  0.627564  0.103806  6.045553  1.488982e-09  0.424108  0.831019
+0.15  0.677980  0.102616  6.606954  3.923074e-11  0.476856  0.879103
+0.20  0.706645  0.100356  7.041387  1.903351e-12  0.509951  0.903339
+0.25  0.716793  0.102775  6.974414  3.071488e-12  0.515358  0.918227
+0.30  0.716762  0.107073  6.694154  2.169230e-11  0.506903  0.926621
+0.35  0.740869  0.112216  6.602168  4.051867e-11  0.520930  0.960808
+0.40  0.756969  0.114647  6.602628  4.039310e-11  0.532266  0.981672
+0.45  0.751710  0.117710  6.386102  1.701672e-10  0.521002  0.982417
+0.50  0.779682  0.122408  6.369556  1.895768e-10  0.539767  1.019596
+0.55  0.786744  0.130370  6.034690  1.592681e-09  0.531223  1.042265
+0.60  0.814351  0.138378  5.884996  3.980643e-09  0.543136  1.085566
+0.65  0.848868  0.144800  5.862359  4.563374e-09  0.565066  1.132671
+0.70  0.946968  0.154828  6.116274  9.578846e-10  0.643512  1.250425
+0.75  0.997621  0.164805  6.053331  1.418806e-09  0.674609  1.320633
+0.80  1.073520  0.190915  5.623024  1.876431e-08  0.699333  1.447706
+0.85  1.053558  0.236008  4.464076  8.041491e-06  0.590991  1.516125
+0.90  1.097468  0.338908  3.238251  1.202650e-03  0.433221  1.761714
+</pre></div></div>
+</div>
+<p>As for standard <code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR</span></code> objects, we can construct valid confidencebands with the <code class="docutils literal notranslate"><span class="pre">confint()</span></code> method. Additionally, it might be helpful to construct uniformly valid confidence regions via boostrap.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_CVAR</span> <span class="o">=</span> <span class="n">dml_CVAR</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">dml_CVAR</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">ci_joint_CVAR</span> <span class="o">=</span> <span class="n">dml_CVAR</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ci_joint_CVAR</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>2.5 %</th>
+      <th>97.5 %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.10</th>
+      <td>0.367571</td>
+      <td>0.887556</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.420967</td>
+      <td>0.934992</td>
+    </tr>
+    <tr>
+      <th>0.20</th>
+      <td>0.455293</td>
+      <td>0.957996</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.459383</td>
+      <td>0.974202</td>
+    </tr>
+    <tr>
+      <th>0.30</th>
+      <td>0.448587</td>
+      <td>0.984937</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.459812</td>
+      <td>1.021926</td>
+    </tr>
+    <tr>
+      <th>0.40</th>
+      <td>0.469825</td>
+      <td>1.044113</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.456892</td>
+      <td>1.046527</td>
+    </tr>
+    <tr>
+      <th>0.50</th>
+      <td>0.473099</td>
+      <td>1.086264</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.460218</td>
+      <td>1.113270</td>
+    </tr>
+    <tr>
+      <th>0.60</th>
+      <td>0.467770</td>
+      <td>1.160932</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.486202</td>
+      <td>1.211534</td>
+    </tr>
+    <tr>
+      <th>0.70</th>
+      <td>0.559186</td>
+      <td>1.334750</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.584849</td>
+      <td>1.410393</td>
+    </tr>
+    <tr>
+      <th>0.80</th>
+      <td>0.595353</td>
+      <td>1.551686</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.462451</td>
+      <td>1.644665</td>
+    </tr>
+    <tr>
+      <th>0.90</th>
+      <td>0.248638</td>
+      <td>1.946297</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Finally, we can compare the predicted treatment effect with the true treatment effect on the CVaR.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CVAR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y1_cvar</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y0_cvar</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span> <span class="s2">&quot;CVaR&quot;</span><span class="p">:</span> <span class="n">CVAR</span><span class="p">,</span> <span class="s2">&quot;DML CVaR&quot;</span><span class="p">:</span> <span class="n">dml_CVAR</span><span class="o">.</span><span class="n">coef</span><span class="p">,</span>
+        <span class="s2">&quot;DML CVaR pointwise lower&quot;</span><span class="p">:</span> <span class="n">ci_CVAR</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">],</span> <span class="s2">&quot;DML CVaR pointwise upper&quot;</span><span class="p">:</span> <span class="n">ci_CVAR</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">],</span>
+        <span class="s2">&quot;DML CVaR joint lower&quot;</span><span class="p">:</span> <span class="n">ci_joint_CVAR</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">],</span> <span class="s2">&quot;DML CVaR joint upper&quot;</span><span class="p">:</span> <span class="n">ci_joint_CVAR</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+      Quantile      CVaR  DML CVaR  DML CVaR pointwise lower  \
+0.10      0.10  0.565219  0.627564                  0.424108
+0.15      0.15  0.590424  0.677980                  0.476856
+0.20      0.20  0.614230  0.706645                  0.509951
+0.25      0.25  0.637362  0.716793                  0.515358
+0.30      0.30  0.660261  0.716762                  0.506903
+0.35      0.35  0.683360  0.740869                  0.520930
+0.40      0.40  0.707008  0.756969                  0.532266
+0.45      0.45  0.731553  0.751710                  0.521002
+0.50      0.50  0.757273  0.779682                  0.539767
+0.55      0.55  0.784652  0.786744                  0.531223
+0.60      0.60  0.814149  0.814351                  0.543136
+0.65      0.65  0.846331  0.848868                  0.565066
+0.70      0.70  0.882275  0.946968                  0.643512
+0.75      0.75  0.923586  0.997621                  0.674609
+0.80      0.80  0.972712  1.073520                  0.699333
+0.85      0.85  1.033777  1.053558                  0.590991
+0.90      0.90  1.116667  1.097468                  0.433221
+
+      DML CVaR pointwise upper  DML CVaR joint lower  DML CVaR joint upper
+0.10                  0.831019              0.367571              0.887556
+0.15                  0.879103              0.420967              0.934992
+0.20                  0.903339              0.455293              0.957996
+0.25                  0.918227              0.459383              0.974202
+0.30                  0.926621              0.448587              0.984937
+0.35                  0.960808              0.459812              1.021926
+0.40                  0.981672              0.469825              1.044113
+0.45                  0.982417              0.456892              1.046527
+0.50                  1.019596              0.473099              1.086264
+0.55                  1.042265              0.460218              1.113270
+0.60                  1.085566              0.467770              1.160932
+0.65                  1.132671              0.486202              1.211534
+0.70                  1.250425              0.559186              1.334750
+0.75                  1.320633              0.584849              1.410393
+0.80                  1.447706              0.595353              1.551686
+0.85                  1.516125              0.462451              1.644665
+0.90                  1.761714              0.248638              1.946297
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimated CVaR&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CVaR&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True CVaR&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR pointwise lower&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR pointwise upper&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Pointwise Confidence Interval&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Quantile&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR joint lower&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;DML CVaR joint upper&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Joint Confidence Interval&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Conditional Value at Risk&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Quantile&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;QTE and 95%-CI&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_cvar_20_0.png" src="../_images/examples_py_double_ml_cvar_20_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="py_double_ml_pq.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Python: Potential Quantiles and Quantile Treatment Effects</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="py_double_ml_learner.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Python: Choice of learners</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

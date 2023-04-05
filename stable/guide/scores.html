@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>4. Score functions &#8212; DoubleML  documentation</title>
+    <title>5. Score functions &#8212; DoubleML  documentation</title>
 <script>
   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
   document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
@@ -52,8 +52,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="5. Double machine learning algorithms" href="algorithms.html" />
-    <link rel="prev" title="3. Models" href="models.html" />
+    <link rel="next" title="6. Double machine learning algorithms" href="algorithms.html" />
+    <link rel="prev" title="4. Heterogeneous treatment effects" href="heterogeneity.html" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="docsearch:language" content="None">
   </head>
@@ -216,29 +216,29 @@
    3.  Models
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="heterogeneity.html">
+   4.  Heterogeneous Treatment Effects
+  </a>
+ </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   4.  Score functions
+   5.  Score functions
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="algorithms.html">
-   5.  Double machine learning algorithms
+   6.  Double machine learning algorithms
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="learners.html">
-   6.  Learners, hyperparameters and hyperparameter tuning
+   7.  Learners, hyperparameters and hyperparameter tuning
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="se_confint.html">
-   7.  Variance estimation and confidence intervals for a causal parameter of interest
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sim_inf.html">
-   8.  Confidence bands and multiplier bootstrap for valid simultaneous inference
+   8.  Variance estimation and confidence intervals
   </a>
  </li>
  <li class="toctree-l1">
@@ -272,39 +272,54 @@
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#implementation-of-the-score-function-and-the-estimate-of-the-causal-parameter">
-   4.1. Implementation of the score function and the estimate of the causal parameter
+   5.1. Implementation of the score function and the estimate of the causal parameter
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#implemented-neyman-orthogonal-score-functions">
-   4.2. Implemented Neyman orthogonal score functions
+   5.2. Implemented Neyman orthogonal score functions
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#partially-linear-regression-model-plr">
-     4.2.1. Partially linear regression model (PLR)
+     5.2.1. Partially linear regression model (PLR)
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#partially-linear-iv-regression-model-pliv">
-     4.2.2. Partially linear IV regression model (PLIV)
+     5.2.2. Partially linear IV regression model (PLIV)
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#interactive-regression-model-irm">
-     4.2.3. Interactive regression model (IRM)
+     5.2.3. Interactive regression model (IRM)
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#interactive-iv-model-iivm">
-     4.2.4. Interactive IV model (IIVM)
+     5.2.4. Interactive IV model (IIVM)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#potential-quantiles-pqs">
+     5.2.5. Potential quantiles (PQs)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#local-potential-quantiles-lpqs">
+     5.2.6. Local potential quantiles (LPQs)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#conditional-value-at-risk-cvar">
+     5.2.7. Conditional value at risk (CVaR)
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#specifying-alternative-score-functions-via-callables">
-   4.3. Specifying alternative score functions via callables
+   5.3. Specifying alternative score functions via callables
   </a>
  </li>
 </ul>
@@ -327,7 +342,7 @@
               <article class="bd-article" role="main">
                 
   <section id="score-functions">
-<span id="scores"></span><h1><span class="section-number">4. </span>Score functions<a class="headerlink" href="#score-functions" title="Permalink to this headline">#</a></h1>
+<span id="scores"></span><h1><span class="section-number">5. </span>Score functions<a class="headerlink" href="#score-functions" title="Permalink to this headline">#</a></h1>
 <p>We use method-of-moments estimators for the target parameter <span class="math notranslate nohighlight">\(\theta_0\)</span> based upon the empirical analog of the
 moment condition</p>
 <div class="math notranslate nohighlight">
@@ -340,12 +355,8 @@ We use score functions <span class="math notranslate nohighlight">\(\psi(W; \the
 and that obey the <strong>Neyman orthogonality condition</strong></p>
 <div class="math notranslate nohighlight">
 \[\partial_{\eta} \mathbb{E}[ \psi(W; \theta_0, \eta)] \bigg|_{\eta=\eta_0} = 0.\]</div>
-<p>An integral component for the object-oriented (OOP) implementation of
-<code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>,
-<code class="docutils literal notranslate"><span class="pre">DoubleMLPLIV</span></code>,
-<code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code>,
-and <code class="docutils literal notranslate"><span class="pre">DoubleMLIIVM</span></code>
-is the linearity of the score function in the parameter <span class="math notranslate nohighlight">\(\theta\)</span></p>
+<p>The score functions of many double machine learning models (PLR, PLIV, IRM, IIVM) are linear in the parameter
+<span class="math notranslate nohighlight">\(\theta\)</span>, i.e.,</p>
 <div class="math notranslate nohighlight">
 \[\psi(W; \theta, \eta) = \psi_a(W; \eta) \theta + \psi_b(W; \eta).\]</div>
 <p>Hence the estimator can be written as</p>
@@ -356,14 +367,20 @@ general way.
 The methods and algorithms to estimate the causal parameters, to estimate their standard errors, to perform a multiplier
 bootstrap, to obtain confidence intervals and many more are implemented in the abstract base class <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>.
 The object-oriented architecture therefore allows for easy extension to new model classes for double machine learning.
-This is doable with very minor effort whenever the linearity of the score function is satisfied.</p>
+This is doable with very minor effort.</p>
+<p>If the linearity of the score function is not satisfied, the computations are more involved.
+In the Python package <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>, the functionality around the score functions is implemented in mixin classes called
+<code class="docutils literal notranslate"><span class="pre">LinearScoreMixin</span></code> and <code class="docutils literal notranslate"><span class="pre">NonLinearScoreMixin</span></code>.
+The R package currently only comes with an implementation for linear score functions.
+In case of a non-linear score function, the parameter estimate <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span> is obtained via numerical root
+search of the empirical analog of the moment condition <span class="math notranslate nohighlight">\(\mathbb{E}[ \psi(W; \theta_0, \eta_0)] = 0\)</span>.</p>
 <section id="implementation-of-the-score-function-and-the-estimate-of-the-causal-parameter">
-<h2><span class="section-number">4.1. </span>Implementation of the score function and the estimate of the causal parameter<a class="headerlink" href="#implementation-of-the-score-function-and-the-estimate-of-the-causal-parameter" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">5.1. </span>Implementation of the score function and the estimate of the causal parameter<a class="headerlink" href="#implementation-of-the-score-function-and-the-estimate-of-the-causal-parameter" title="Permalink to this headline">#</a></h2>
 <p>As an example we consider a partially linear regression model (PLR)
 implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="5734d220-ac8e-4575-aa9e-90b0cd28c1ad" name="3eb8a1d2-d761-4e0f-93d1-7f16619ba55f" type="radio">
-</input><label class="tabbed-label" for="5734d220-ac8e-4575-aa9e-90b0cd28c1ad">
+<input checked="checked" id="7fc4b7b0-b837-49a7-8b20-86342d822df3" name="382a8bd3-9db6-4b58-abb0-41608faa3647" type="radio">
+</input><label class="tabbed-label" for="7fc4b7b0-b837-49a7-8b20-86342d822df3">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
@@ -406,6 +423,9 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">------------------ Machine learner   ------------------</span>
 <span class="go">Learner ml_l: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Learner ml_m: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
+<span class="go">Out-of-sample Performance:</span>
+<span class="go">Learner ml_l RMSE: [[1.12638786]]</span>
+<span class="go">Learner ml_m RMSE: [[1.03968828]]</span>
 
 <span class="go">------------------ Resampling        ------------------</span>
 <span class="go">No. folds: 5</span>
@@ -414,12 +434,12 @@ Python</label><div class="tabbed-content docutils">
 
 <span class="go">------------------ Fit summary       ------------------</span>
 <span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.462834  0.041047  11.275605  1.731842e-29  0.382383  0.543285</span>
+<span class="go">d  0.480252  0.040533  11.848422  2.192817e-32  0.400808  0.559695</span>
 </pre></div>
 </div>
 </div>
-<input id="33ccc47d-fc6d-4052-9a18-fb4317d26ff6" name="3eb8a1d2-d761-4e0f-93d1-7f16619ba55f" type="radio">
-</input><label class="tabbed-label" for="33ccc47d-fc6d-4052-9a18-fb4317d26ff6">
+<input id="7291f846-4d7b-4d2d-9498-5c2d36ebe6cb" name="382a8bd3-9db6-4b58-abb0-41608faa3647" type="radio">
+</input><label class="tabbed-label" for="7291f846-4d7b-4d2d-9498-5c2d36ebe6cb">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -429,13 +449,13 @@ R</label><div class="tabbed-content docutils">
 <span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
 <span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
 
-<span class="n">learner</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span> <span class="n">num.trees</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="n">mtry</span> <span class="o">=</span> <span class="m">20</span><span class="p">,</span> <span class="n">min.node.size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">max.depth</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
-<span class="n">ml_l</span> <span class="o">=</span> <span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
-<span class="n">ml_m</span> <span class="o">=</span> <span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">num.trees</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">max.depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">)</span>
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="nf">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s">&#39;data.table&#39;</span><span class="p">)</span>
-<span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
-<span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">return_type</span><span class="o">=</span><span class="s">&#39;data.table&#39;</span><span class="p">)</span>
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="n">dml_plr_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">)</span>
 <span class="n">dml_plr_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="p">)</span>
 </pre></div>
@@ -482,16 +502,16 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>The <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method of <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>
 stores the estimate <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span> in its <code class="docutils literal notranslate"><span class="pre">coef</span></code> attribute.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="98b8a6fa-0763-4e0d-afe2-b699389aa809" name="ae78ee06-5d8d-4d49-bea5-7aa250e83317" type="radio">
-</input><label class="tabbed-label" for="98b8a6fa-0763-4e0d-afe2-b699389aa809">
+<input checked="checked" id="845f5bcc-0982-48bc-a211-ca24a627e072" name="c0ebf15b-22a8-42c8-b896-23fad19e9425" type="radio">
+</input><label class="tabbed-label" for="845f5bcc-0982-48bc-a211-ca24a627e072">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">coef</span><span class="p">)</span>
-<span class="go">[0.46283393]</span>
+<span class="go">[0.48025158]</span>
 </pre></div>
 </div>
 </div>
-<input id="2a7465cf-ed0a-4f4e-b883-5d72190eb2e4" name="ae78ee06-5d8d-4d49-bea5-7aa250e83317" type="radio">
-</input><label class="tabbed-label" for="2a7465cf-ed0a-4f4e-b883-5d72190eb2e4">
+<input id="db50c4fe-85ba-4b7e-bd0a-b908a9171a63" name="c0ebf15b-22a8-42c8-b896-23fad19e9425" type="radio">
+</input><label class="tabbed-label" for="db50c4fe-85ba-4b7e-bd0a-b908a9171a63">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -509,31 +529,32 @@ R</label><div class="tabbed-content docutils">
 </div>
 </div>
 <p>The values of the score function components <span class="math notranslate nohighlight">\(\psi_a(W_i; \hat{\eta}_0)\)</span> and <span class="math notranslate nohighlight">\(\psi_b(W_i; \hat{\eta}_0)\)</span>
-are stored in the attributes <code class="docutils literal notranslate"><span class="pre">psi_a</span></code> and <code class="docutils literal notranslate"><span class="pre">psi_b</span></code>.
+are stored in the attributes <code class="docutils literal notranslate"><span class="pre">psi_elements['psi_a']</span></code> and <code class="docutils literal notranslate"><span class="pre">psi_elements['psi_b']</span></code> (Python package <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>)
+and <code class="docutils literal notranslate"><span class="pre">psi_a</span></code> and <code class="docutils literal notranslate"><span class="pre">psi_b</span></code> (R package <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>).
 In the attribute <code class="docutils literal notranslate"><span class="pre">psi</span></code> the values of the score function <span class="math notranslate nohighlight">\(\psi(W_i; \tilde{\theta}_0, \hat{\eta}_0)\)</span> are stored.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="691a4765-971f-49ba-aa76-059ac249e418" name="264362ba-3c85-4e9d-96b2-5dbdb0b0c6d6" type="radio">
-</input><label class="tabbed-label" for="691a4765-971f-49ba-aa76-059ac249e418">
+<input checked="checked" id="80c01da2-7e63-46d2-b319-32a3f1925916" name="c5b8d20c-af02-43d9-8d20-e30bf62e9740" type="radio">
+</input><label class="tabbed-label" for="80c01da2-7e63-46d2-b319-32a3f1925916">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">psi</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
-<span class="go">[[[-0.15351459]]</span>
+<span class="go">[[[ 0.01128689]]</span>
 
-<span class="go"> [[ 0.02031318]]</span>
+<span class="go"> [[-0.0036984 ]]</span>
 
-<span class="go"> [[ 0.00576115]]</span>
+<span class="go"> [[ 0.00136267]]</span>
 
-<span class="go"> [[ 0.08091435]]</span>
+<span class="go"> [[-0.11932146]]</span>
 
-<span class="go"> [[-0.23145105]]]</span>
+<span class="go"> [[-0.29951284]]]</span>
 </pre></div>
 </div>
 </div>
-<input id="c503f318-2c03-499a-b58d-b55300878da8" name="264362ba-3c85-4e9d-96b2-5dbdb0b0c6d6" type="radio">
-</input><label class="tabbed-label" for="c503f318-2c03-499a-b58d-b55300878da8">
+<input id="67faad63-347b-4830-bfc6-bfa2c4edbebc" name="c5b8d20c-af02-43d9-8d20-e30bf62e9740" type="radio">
+</input><label class="tabbed-label" for="67faad63-347b-4830-bfc6-bfa2c4edbebc">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">psi</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span> <span class="p">,</span><span class="m">1</span><span class="p">])</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">psi</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="m">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -547,9 +568,9 @@ R</label><div class="tabbed-content docutils">
 </div>
 </section>
 <section id="implemented-neyman-orthogonal-score-functions">
-<h2><span class="section-number">4.2. </span>Implemented Neyman orthogonal score functions<a class="headerlink" href="#implemented-neyman-orthogonal-score-functions" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">5.2. </span>Implemented Neyman orthogonal score functions<a class="headerlink" href="#implemented-neyman-orthogonal-score-functions" title="Permalink to this headline">#</a></h2>
 <section id="partially-linear-regression-model-plr">
-<span id="plr-score"></span><h3><span class="section-number">4.2.1. </span>Partially linear regression model (PLR)<a class="headerlink" href="#partially-linear-regression-model-plr" title="Permalink to this headline">#</a></h3>
+<span id="plr-score"></span><h3><span class="section-number">5.2.1. </span>Partially linear regression model (PLR)<a class="headerlink" href="#partially-linear-regression-model-plr" title="Permalink to this headline">#</a></h3>
 <p>For the PLR model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> one can choose between
 <code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='IV-type'</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> implements the score function:</p>
@@ -566,7 +587,7 @@ R</label><div class="tabbed-content docutils">
 \[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  - D (D - m(X)),\\\psi_b(W; \eta) &amp;= (Y - g(X)) (D - m(X)).\end{aligned}\end{align} \]</div>
 </section>
 <section id="partially-linear-iv-regression-model-pliv">
-<h3><span class="section-number">4.2.2. </span>Partially linear IV regression model (PLIV)<a class="headerlink" href="#partially-linear-iv-regression-model-pliv" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">5.2.2. </span>Partially linear IV regression model (PLIV)<a class="headerlink" href="#partially-linear-iv-regression-model-pliv" title="Permalink to this headline">#</a></h3>
 <p>For the PLIV model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLIV</span></code> one can choose between
 <code class="docutils literal notranslate"><span class="pre">score='IV-type'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> implements the score function:</p>
@@ -583,7 +604,7 @@ R</label><div class="tabbed-content docutils">
 \[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  - D (Z - m(X)),\\\psi_b(W; \eta) &amp;= (Y - g(X)) (Z - m(X)).\end{aligned}\end{align} \]</div>
 </section>
 <section id="interactive-regression-model-irm">
-<h3><span class="section-number">4.2.3. </span>Interactive regression model (IRM)<a class="headerlink" href="#interactive-regression-model-irm" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">5.2.3. </span>Interactive regression model (IRM)<a class="headerlink" href="#interactive-regression-model-irm" title="Permalink to this headline">#</a></h3>
 <p>For the IRM model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> one can choose between
 <code class="docutils literal notranslate"><span class="pre">score='ATE'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='ATTE'</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='ATE'</span></code> implements the score function:</p>
@@ -600,7 +621,7 @@ R</label><div class="tabbed-content docutils">
 \[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  - \frac{D}{p},\\\psi_b(W; \eta) &amp;= \frac{D (Y - g(0,X))}{p} - \frac{m(X) (1 - D) (Y - g(0,X))}{p(1 - m(X))}.\end{aligned}\end{align} \]</div>
 </section>
 <section id="interactive-iv-model-iivm">
-<h3><span class="section-number">4.2.4. </span>Interactive IV model (IIVM)<a class="headerlink" href="#interactive-iv-model-iivm" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">5.2.4. </span>Interactive IV model (IIVM)<a class="headerlink" href="#interactive-iv-model-iivm" title="Permalink to this headline">#</a></h3>
 <p>For the IIVM model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLIIVM</span></code>
 we employ for <code class="docutils literal notranslate"><span class="pre">score='LATE'</span></code> the score function:</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='LATE'</span></code> implements the score function:</p>
@@ -611,9 +632,48 @@ we employ for <code class="docutils literal notranslate"><span class="pre">score
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  - \bigg(r(1,X) - r(0,X) + \frac{Z (D - r(1,X))}{m(X)} - \frac{(1 - Z)(D - r(0,X))}{1 - m(x)} \bigg),\\\psi_b(W; \eta) &amp;= g(1,X) - g(0,X) + \frac{Z (Y - g(1,X))}{m(X)} - \frac{(1 - Z)(Y - g(0,X))}{1 - m(x)}.\end{aligned}\end{align} \]</div>
 </section>
+<section id="potential-quantiles-pqs">
+<h3><span class="section-number">5.2.5. </span>Potential quantiles (PQs)<a class="headerlink" href="#potential-quantiles-pqs" title="Permalink to this headline">#</a></h3>
+<p>For <code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> the only valid option is <code class="docutils literal notranslate"><span class="pre">score='PQ'</span></code>. For <code class="docutils literal notranslate"><span class="pre">treatment=d</span></code> with <span class="math notranslate nohighlight">\(d\in\{0,1\}\)</span> and
+a quantile <span class="math notranslate nohighlight">\(\tau\in (0,1)\)</span> this implements the nonlinear score function:</p>
+<div class="math notranslate nohighlight">
+\[\psi(W; \theta, \eta) := g_{d}(X, \tilde{\theta}) + \frac{1\{D=d\}}{m(X)}(1\{Y\le \theta\} - g_d(X, \tilde{\theta})) - \tau\]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta=(g_d,m)\)</span> with true values</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}g_{d,0}(X, \theta_0) &amp;= \mathbb{E}[1\{Y\le \theta_0\}|X, D=d]\\m_0(X) &amp;= P(D=d|X).\end{aligned}\end{align} \]</div>
+<p>Remark that <span class="math notranslate nohighlight">\(g_{d,0}(X,\theta_0)\)</span> depends on the target parameter <span class="math notranslate nohighlight">\(\theta_0\)</span>, such that
+the score is estimated with a preliminary estimate <span class="math notranslate nohighlight">\(\tilde{\theta}\)</span>. For further details, see Kallus et al., (2019).</p>
+</section>
+<section id="local-potential-quantiles-lpqs">
+<h3><span class="section-number">5.2.6. </span>Local potential quantiles (LPQs)<a class="headerlink" href="#local-potential-quantiles-lpqs" title="Permalink to this headline">#</a></h3>
+<p>For <code class="docutils literal notranslate"><span class="pre">DoubleMLLPQ</span></code> the only valid option is <code class="docutils literal notranslate"><span class="pre">score='LPQ'</span></code>. For <code class="docutils literal notranslate"><span class="pre">treatment=d</span></code> with <span class="math notranslate nohighlight">\(d\in\{0,1\}\)</span>, instrument <span class="math notranslate nohighlight">\(Z\)</span> and
+a quantile <span class="math notranslate nohighlight">\(\tau\in (0,1)\)</span> this implements the nonlinear score function:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi(W; \theta, \eta) :=&amp; \Big(g_{d, Z=1}(X, \tilde{\theta}) - g_{d, Z=0}(X, \tilde{\theta}) + \frac{Z}{m(X)}(1\{D=d\} \cdot 1\{Y\le \theta\} - g_{d, Z=1}(X, \tilde{\theta}))\\&amp;\quad - \frac{1-Z}{1-m(X)}(1\{D=d\} \cdot 1\{Y\le \theta\} - g_{d, Z=0}(X, \tilde{\theta}))\Big) \cdot \frac{2d -1}{\gamma} - \tau\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta=(g_{d,Z=1}, g_{d,Z=0}, m, \gamma)\)</span> with true values</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}g_{d,Z=z,0}(X, \theta_0) &amp;= \mathbb{E}[1\{D=d\} \cdot 1\{Y\le \theta_0\}|X, Z=z],\quad z\in\{0,1\}\\m_{Z=z,0}(X) &amp;= P(D=d|X, Z=z),\quad z\in\{0,1\}\\m_0(X) &amp;= P(Z=1|X)\\\gamma_0 &amp;= \mathbb{E}[P(D=d|X, Z=1) - P(D=d|X, Z=0)].\end{aligned}\end{align} \]</div>
+<p>Further, the compliance probability <span class="math notranslate nohighlight">\(\gamma_0\)</span> is estimated with the two additional nuisance components</p>
+<div class="math notranslate nohighlight">
+\[m_{Z=z,0}(X) = P(D=d|X, Z=z),\quad z\in\{0,1\}.\]</div>
+<p>Remark that <span class="math notranslate nohighlight">\(g_{d,Z=z,0}(X, \theta_0)\)</span> depends on the target parameter <span class="math notranslate nohighlight">\(\theta_0\)</span>, such that
+the score is estimated with a preliminary estimate <span class="math notranslate nohighlight">\(\tilde{\theta}\)</span>. For further details, see Kallus et al., (2019).</p>
+</section>
+<section id="conditional-value-at-risk-cvar">
+<h3><span class="section-number">5.2.7. </span>Conditional value at risk (CVaR)<a class="headerlink" href="#conditional-value-at-risk-cvar" title="Permalink to this headline">#</a></h3>
+<p>For <code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR</span></code> the only valid option is <code class="docutils literal notranslate"><span class="pre">score='CVAR'</span></code>. For <code class="docutils literal notranslate"><span class="pre">treatment=d</span></code> with <span class="math notranslate nohighlight">\(d\in\{0,1\}\)</span> and
+a quantile <span class="math notranslate nohighlight">\(\tau\in (0,1)\)</span> this implements the score function:</p>
+<div class="math notranslate nohighlight">
+\[\psi(W; \theta, \eta) := g_{d}(X, \gamma) + \frac{1\{D=d\}}{m(X)}(\max(\gamma, (1 - \tau)^{-1}(Y - \tau \gamma))  - g_d(X, \gamma)) - \theta\]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta=(g_d,m,\gamma)\)</span> with true values</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}g_{d,0}(X, \gamma_0) &amp;= \mathbb{E}[\max(\gamma_0, (1 - \tau)^{-1}(Y - \tau \gamma_0))|X, D=d]\\m_0(X) &amp;= P(D=d|X)\end{aligned}\end{align} \]</div>
+<p>and <span class="math notranslate nohighlight">\(\gamma_0\)</span> being the potential quantile of <span class="math notranslate nohighlight">\(Y(d)\)</span>. As for potential quantiles, the estimate <span class="math notranslate nohighlight">\(g_d\)</span> is constructed via
+a preliminary estimate of <span class="math notranslate nohighlight">\(\gamma_0\)</span>. For further details, see Kallus et al., (2019).</p>
+</section>
 </section>
 <section id="specifying-alternative-score-functions-via-callables">
-<h2><span class="section-number">4.3. </span>Specifying alternative score functions via callables<a class="headerlink" href="#specifying-alternative-score-functions-via-callables" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">5.3. </span>Specifying alternative score functions via callables<a class="headerlink" href="#specifying-alternative-score-functions-via-callables" title="Permalink to this headline">#</a></h2>
 <p>Via callables user-written score functions can be used.
 This functionality is at the moment only implemented for specific model classes in Python.
 For the PLR model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> an alternative score function can be
@@ -625,8 +685,8 @@ the two score components <span class="math notranslate nohighlight">\(\psi_a()\)
 \[\psi(W; \theta, \eta) = [Y - D \theta - g(X)] D\]</div>
 <p>can be obtained with</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="fe3969b5-a039-40c2-a5b4-2124f8e09290" name="119ee010-36a0-4a09-825d-4d511dde05da" type="radio">
-</input><label class="tabbed-label" for="fe3969b5-a039-40c2-a5b4-2124f8e09290">
+<input checked="checked" id="ee7aad7d-96d2-4779-a590-9fa92f4831aa" name="e3a326ee-788e-4d29-9a94-b2bbaf80a166" type="radio">
+</input><label class="tabbed-label" for="ee7aad7d-96d2-4779-a590-9fa92f4831aa">
 Python</label><div class="tabbed-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -639,17 +699,17 @@ Python</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="22a8a400-b05a-4b1e-b1b6-e94839eff048" name="119ee010-36a0-4a09-825d-4d511dde05da" type="radio">
-</input><label class="tabbed-label" for="22a8a400-b05a-4b1e-b1b6-e94839eff048">
+<input id="77d87174-2af9-47e8-8e08-ba46079e5089" name="e3a326ee-788e-4d29-9a94-b2bbaf80a166" type="radio">
+</input><label class="tabbed-label" for="77d87174-2af9-47e8-8e08-ba46079e5089">
 R</label><div class="tabbed-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">non_orth_score</span> <span class="o">=</span> <span class="nf">function</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">l_hat</span><span class="p">,</span> <span class="n">m_hat</span><span class="p">,</span> <span class="n">g_hat</span><span class="p">,</span> <span class="n">smpls</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">u_hat</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">g_hat</span>
-    <span class="n">psi_a</span> <span class="o">=</span> <span class="m">-1</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">d</span>
-    <span class="n">psi_b</span> <span class="o">=</span> <span class="n">d</span><span class="o">*</span><span class="n">u_hat</span>
-    <span class="n">psis</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">psi_a</span> <span class="o">=</span> <span class="n">psi_a</span><span class="p">,</span> <span class="n">psi_b</span> <span class="o">=</span> <span class="n">psi_b</span><span class="p">)</span>
-    <span class="nf">return</span><span class="p">(</span><span class="n">psis</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">non_orth_score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">l_hat</span><span class="p">,</span><span class="w"> </span><span class="n">m_hat</span><span class="p">,</span><span class="w"> </span><span class="n">g_hat</span><span class="p">,</span><span class="w"> </span><span class="n">smpls</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">u_hat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">g_hat</span>
+<span class="w">    </span><span class="n">psi_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-1</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">d</span>
+<span class="w">    </span><span class="n">psi_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="o">*</span><span class="n">u_hat</span>
+<span class="w">    </span><span class="n">psis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">psi_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">psi_a</span><span class="p">,</span><span class="w"> </span><span class="n">psi_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">psi_b</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">return</span><span class="p">(</span><span class="n">psis</span><span class="p">)</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -675,17 +735,17 @@ Note that this estimate will in general be prone to a regularization bias, see a
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="models.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="heterogeneity.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title"><span class="section-number">3. </span>Models</p>
+          <p class="prev-next-title"><span class="section-number">4. </span>Heterogeneous treatment effects</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="algorithms.html" title="next page">
   <div class="prev-next-info">
       <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title"><span class="section-number">5. </span>Double machine learning algorithms</p>
+      <p class="prev-next-title"><span class="section-number">6. </span>Double machine learning algorithms</p>
   </div>
   <i class="fas fa-angle-right"></i>
   </a>
@@ -706,7 +766,7 @@ Note that this estimate will in general be prone to a regularization bias, see a
   
   <div class="footer-item">
     <p class="copyright">
-    &copy; Copyright 2021, Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M..<br>
+    &copy; Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..<br>
 </p>
   </div>
   

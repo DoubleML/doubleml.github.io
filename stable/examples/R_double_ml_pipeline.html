@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
@@ -53,7 +54,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="DML: Bonus Data" href="double_ml_bonus_data.html" />
-    <link rel="prev" title="Python: Cluster Robust Double Machine Learning" href="py_double_ml_multiway_cluster.html" />
+    <link rel="prev" title="Python: Choice of learners" href="py_double_ml_learner.html" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="docsearch:language" content="None">
   </head>
@@ -223,6 +224,36 @@
    Python: Cluster Robust Double Machine Learning
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_gate.html">
+   Python: Group Average Treatment Effects (GATEs)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cate.html">
+   Python: Conditional Average Treatment Effects (CATEs)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pension_qte.html">
+   Python: Impact of 401(k) on Financial Wealth (Quantile Effects)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pq.html">
+   Python: Potential Quantiles and Quantile Treatment Effects
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cvar.html">
+   Python: Conditional Value at Risk of potential outcomes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_learner.html">
+   Python: Choice of learners
+  </a>
+ </li>
 </ul>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
@@ -358,264 +389,7 @@
               
               <article class="bd-article" role="main">
                 
-  
-<style>
-/* CSS for nbsphinx extension */
-
-/* remove conflicting styling from Sphinx themes */
-div.nbinput.container div.prompt *,
-div.nboutput.container div.prompt *,
-div.nbinput.container div.input_area pre,
-div.nboutput.container div.output_area pre,
-div.nbinput.container div.input_area .highlight,
-div.nboutput.container div.output_area .highlight {
-    border: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
-}
-
-div.nbinput.container > div[class*=highlight],
-div.nboutput.container > div[class*=highlight] {
-    margin: 0;
-}
-
-div.nbinput.container div.prompt *,
-div.nboutput.container div.prompt * {
-    background: none;
-}
-
-div.nboutput.container div.output_area .highlight,
-div.nboutput.container div.output_area pre {
-    background: unset;
-}
-
-div.nboutput.container div.output_area div.highlight {
-    color: unset;  /* override Pygments text color */
-}
-
-/* avoid gaps between output lines */
-div.nboutput.container div[class*=highlight] pre {
-    line-height: normal;
-}
-
-/* input/output containers */
-div.nbinput.container,
-div.nboutput.container {
-    display: -webkit-flex;
-    display: flex;
-    align-items: flex-start;
-    margin: 0;
-    width: 100%;
-}
-@media (max-width: 540px) {
-    div.nbinput.container,
-    div.nboutput.container {
-        flex-direction: column;
-    }
-}
-
-/* input container */
-div.nbinput.container {
-    padding-top: 5px;
-}
-
-/* last container */
-div.nblast.container {
-    padding-bottom: 5px;
-}
-
-/* input prompt */
-div.nbinput.container div.prompt pre {
-    color: #307FC1;
-}
-
-/* output prompt */
-div.nboutput.container div.prompt pre {
-    color: #BF5B3D;
-}
-
-/* all prompts */
-div.nbinput.container div.prompt,
-div.nboutput.container div.prompt {
-    width: 4.5ex;
-    padding-top: 5px;
-    position: relative;
-    user-select: none;
-}
-
-div.nbinput.container div.prompt > div,
-div.nboutput.container div.prompt > div {
-    position: absolute;
-    right: 0;
-    margin-right: 0.3ex;
-}
-
-@media (max-width: 540px) {
-    div.nbinput.container div.prompt,
-    div.nboutput.container div.prompt {
-        width: unset;
-        text-align: left;
-        padding: 0.4em;
-    }
-    div.nboutput.container div.prompt.empty {
-        padding: 0;
-    }
-
-    div.nbinput.container div.prompt > div,
-    div.nboutput.container div.prompt > div {
-        position: unset;
-    }
-}
-
-/* disable scrollbars and line breaks on prompts */
-div.nbinput.container div.prompt pre,
-div.nboutput.container div.prompt pre {
-    overflow: hidden;
-    white-space: pre;
-}
-
-/* input/output area */
-div.nbinput.container div.input_area,
-div.nboutput.container div.output_area {
-    -webkit-flex: 1;
-    flex: 1;
-    overflow: auto;
-}
-@media (max-width: 540px) {
-    div.nbinput.container div.input_area,
-    div.nboutput.container div.output_area {
-        width: 100%;
-    }
-}
-
-/* input area */
-div.nbinput.container div.input_area {
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    /*background: #f5f5f5;*/
-}
-
-/* override MathJax center alignment in output cells */
-div.nboutput.container div[class*=MathJax] {
-    text-align: left !important;
-}
-
-/* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput.container div.math p {
-    text-align: left;
-}
-
-/* standard error */
-div.nboutput.container div.output_area.stderr {
-    background: #fdd;
-}
-
-/* ANSI colors */
-.ansi-black-fg { color: #3E424D; }
-.ansi-black-bg { background-color: #3E424D; }
-.ansi-black-intense-fg { color: #282C36; }
-.ansi-black-intense-bg { background-color: #282C36; }
-.ansi-red-fg { color: #E75C58; }
-.ansi-red-bg { background-color: #E75C58; }
-.ansi-red-intense-fg { color: #B22B31; }
-.ansi-red-intense-bg { background-color: #B22B31; }
-.ansi-green-fg { color: #00A250; }
-.ansi-green-bg { background-color: #00A250; }
-.ansi-green-intense-fg { color: #007427; }
-.ansi-green-intense-bg { background-color: #007427; }
-.ansi-yellow-fg { color: #DDB62B; }
-.ansi-yellow-bg { background-color: #DDB62B; }
-.ansi-yellow-intense-fg { color: #B27D12; }
-.ansi-yellow-intense-bg { background-color: #B27D12; }
-.ansi-blue-fg { color: #208FFB; }
-.ansi-blue-bg { background-color: #208FFB; }
-.ansi-blue-intense-fg { color: #0065CA; }
-.ansi-blue-intense-bg { background-color: #0065CA; }
-.ansi-magenta-fg { color: #D160C4; }
-.ansi-magenta-bg { background-color: #D160C4; }
-.ansi-magenta-intense-fg { color: #A03196; }
-.ansi-magenta-intense-bg { background-color: #A03196; }
-.ansi-cyan-fg { color: #60C6C8; }
-.ansi-cyan-bg { background-color: #60C6C8; }
-.ansi-cyan-intense-fg { color: #258F8F; }
-.ansi-cyan-intense-bg { background-color: #258F8F; }
-.ansi-white-fg { color: #C5C1B4; }
-.ansi-white-bg { background-color: #C5C1B4; }
-.ansi-white-intense-fg { color: #A1A6B2; }
-.ansi-white-intense-bg { background-color: #A1A6B2; }
-
-.ansi-default-inverse-fg { color: #FFFFFF; }
-.ansi-default-inverse-bg { background-color: #000000; }
-
-.ansi-bold { font-weight: bold; }
-.ansi-underline { text-decoration: underline; }
-
-
-div.nbinput.container div.input_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight].math,
-div.nboutput.container div.output_area.rendered_html,
-div.nboutput.container div.output_area > div.output_javascript,
-div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 5px;
-    margin: 0;
-}
-
-/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
-div.nbinput.container div.input_area > div[class^='highlight'],
-div.nboutput.container div.output_area > div[class^='highlight']{
-    overflow-y: hidden;
-}
-
-/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt .copybtn {
-    display: none;
-}
-
-/* Some additional styling taken form the Jupyter notebook CSS */
-.jp-RenderedHTMLCommon table,
-div.rendered_html table {
-  border: none;
-  border-collapse: collapse;
-  border-spacing: 0;
-  color: black;
-  font-size: 12px;
-  table-layout: fixed;
-}
-.jp-RenderedHTMLCommon thead,
-div.rendered_html thead {
-  border-bottom: 1px solid black;
-  vertical-align: bottom;
-}
-.jp-RenderedHTMLCommon tr,
-.jp-RenderedHTMLCommon th,
-.jp-RenderedHTMLCommon td,
-div.rendered_html tr,
-div.rendered_html th,
-div.rendered_html td {
-  text-align: right;
-  vertical-align: middle;
-  padding: 0.5em 0.5em;
-  line-height: normal;
-  white-space: normal;
-  max-width: none;
-  border: none;
-}
-.jp-RenderedHTMLCommon th,
-div.rendered_html th {
-  font-weight: bold;
-}
-.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
-div.rendered_html tbody tr:nth-child(odd) {
-  background: #f5f5f5;
-}
-.jp-RenderedHTMLCommon tbody tr:hover,
-div.rendered_html tbody tr:hover {
-  background: rgba(66, 165, 245, 0.2);
-}
-</style>
-    <div class="admonition note">
+      <div class="admonition note">
     <p class="admonition-title">Note</p>
     <ul class="simple">
 
@@ -625,9 +399,9 @@ Download Jupyter notebook:
     </ul>
     </div><section id="R:-Ensemble-Learners-and-More-with-mlr3pipelines">
 <h1>R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code><a class="headerlink" href="#R:-Ensemble-Learners-and-More-with-mlr3pipelines" title="Permalink to this headline">#</a></h1>
-<p>This notebook illustrates how to exploit the powerful tools provided by the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> package (Binder et al. 2021). For example, <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> can be used in combination with <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> for feature engineering, combination of learners (ensemble learners, stacking), subsampling and hyperparameter tuning. The underlying idea of
+<p>This notebook illustrates how to exploit the powerful tools provided by the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> package (Binder et al. 2021). For example, <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> can be used in combination with <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> for feature engineering, combination of learners (ensemble learners, stacking), subsampling and hyperparameter tuning. The underlying idea of
 <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> is to define a pipeline that incorporates a user’s desired operations. As a result, the pipeline returns an object of class <a class="reference external" href="https://mlr3.mlr-org.com/reference/Learner.html">Learner</a> which can easily be passed to <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>. For an introduction to <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a>, we refer to the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter</a> in the
-<a class="reference external" href="https://mlr3book.mlr-org.com">mlr3book</a> (Becker et al. 2020) and to the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">package website</a>.</p>
+<a class="reference external" href="https://mlr3book.mlr-org.com">mlr3book</a> (Becker et al. 2020) and to the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">package website</a>.</p>
 <p>We intend to illustrate the major idea of how to use <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> in combination with <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> in very simple examples. We use pipelines that are identical or very similar to the ones in the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter</a> in the <a class="reference external" href="https://mlr3book.mlr-org.com">mlr3book</a>. Hence, we do not claim that the proposed learners are optimal in terms of their performance.</p>
 <p>We start with the simple simulated data example and the <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/fetch_bonus.html">Bonus data set</a> from the <a class="reference external" href="https://docs.doubleml.org/dev/intro/intro.html">Getting Started Section in the DoubleML user guide</a>.</p>
 <div class="nbinput docutils container">
@@ -638,17 +412,17 @@ Download Jupyter notebook:
 
 <span class="c1"># Simulate data</span>
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
-<span class="n">n_obs</span> <span class="o">=</span> <span class="m">500</span>
-<span class="n">n_vars</span> <span class="o">=</span> <span class="m">100</span>
-<span class="n">theta</span> <span class="o">=</span> <span class="m">3</span>
-<span class="n">X</span> <span class="o">=</span> <span class="nf">matrix</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="o">*</span><span class="n">n_vars</span><span class="p">),</span> <span class="n">nrow</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="n">n_vars</span><span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">X</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span><span class="o">%*%</span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">)</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">theta</span><span class="o">*</span><span class="n">d</span> <span class="o">+</span> <span class="n">X</span><span class="p">[,</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span><span class="o">%*%</span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">)</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+<span class="n">n_obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">500</span>
+<span class="n">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+<span class="n">theta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">matrix</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="o">*</span><span class="n">n_vars</span><span class="p">),</span><span class="w"> </span><span class="n">nrow</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="o">=</span><span class="n">n_vars</span><span class="p">)</span>
+<span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span><span class="o">%*%</span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+<span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">theta</span><span class="o">*</span><span class="n">d</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span><span class="o">%*%</span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
 
 
 <span class="c1"># Specify the data and variables for the causal model</span>
 <span class="c1"># matrix interface to DoubleMLData</span>
-<span class="n">dml_data_sim</span> <span class="o">=</span> <span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="n">dml_data_sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
 <span class="n">dml_data_sim</span>
 </pre></div>
 </div>
@@ -675,18 +449,18 @@ No. Observations: 500
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load bonus data</span>
-<span class="n">df_bonus</span> <span class="o">=</span> <span class="nf">fetch_bonus</span><span class="p">(</span><span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.table&quot;</span><span class="p">)</span>
+<span class="n">df_bonus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">fetch_bonus</span><span class="p">(</span><span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.table&quot;</span><span class="p">)</span>
 <span class="nf">head</span><span class="p">(</span><span class="n">df_bonus</span><span class="p">)</span>
 
 <span class="c1"># Specify the data and variables for the causal model</span>
-<span class="n">x_vars</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;female&quot;</span><span class="p">,</span> <span class="s">&quot;black&quot;</span><span class="p">,</span> <span class="s">&quot;othrace&quot;</span><span class="p">,</span> <span class="s">&quot;dep1&quot;</span><span class="p">,</span> <span class="s">&quot;dep2&quot;</span><span class="p">,</span>
-           <span class="s">&quot;q2&quot;</span><span class="p">,</span> <span class="s">&quot;q3&quot;</span><span class="p">,</span> <span class="s">&quot;q4&quot;</span><span class="p">,</span> <span class="s">&quot;q5&quot;</span><span class="p">,</span> <span class="s">&quot;q6&quot;</span><span class="p">,</span> <span class="s">&quot;agelt35&quot;</span><span class="p">,</span> <span class="s">&quot;agegt54&quot;</span><span class="p">,</span>
-           <span class="s">&quot;durable&quot;</span><span class="p">,</span> <span class="s">&quot;lusd&quot;</span><span class="p">,</span> <span class="s">&quot;husd&quot;</span><span class="p">)</span>
-<span class="n">dim_x</span> <span class="o">=</span> <span class="nf">length</span><span class="p">(</span><span class="n">x_vars</span><span class="p">)</span>
-<span class="n">dml_data_bonus</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">df_bonus</span><span class="p">,</span>
-                             <span class="n">y_col</span> <span class="o">=</span> <span class="s">&quot;inuidur1&quot;</span><span class="p">,</span>
-                             <span class="n">d_cols</span> <span class="o">=</span> <span class="s">&quot;tg&quot;</span><span class="p">,</span>
-                             <span class="n">x_cols</span> <span class="o">=</span> <span class="n">x_vars</span><span class="p">)</span>
+<span class="n">x_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;female&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;othrace&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dep1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dep2&quot;</span><span class="p">,</span>
+<span class="w">           </span><span class="s">&quot;q2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;q3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;q4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;q5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;q6&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;agelt35&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;agegt54&quot;</span><span class="p">,</span>
+<span class="w">           </span><span class="s">&quot;durable&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;lusd&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;husd&quot;</span><span class="p">)</span>
+<span class="n">dim_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">x_vars</span><span class="p">)</span>
+<span class="n">dml_data_bonus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">df_bonus</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">y_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;inuidur1&quot;</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">d_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;tg&quot;</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">x_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x_vars</span><span class="p">)</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -731,7 +505,7 @@ No. Observations: 5099
 <p>Moreover, it’s possible to create a learner based on a pipeline. For example, we could think of <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html#pipe-model-ensembles">ensemble learners</a> which combine several estimators.</p>
 <section id="Using-learners-from-mlr3,-mlr3learners-and-mlr3extralearners">
 <h2>Using learners from <code class="docutils literal notranslate"><span class="pre">mlr3</span></code>, <code class="docutils literal notranslate"><span class="pre">mlr3learners</span></code> and <code class="docutils literal notranslate"><span class="pre">mlr3extralearners</span></code><a class="headerlink" href="#Using-learners-from-mlr3,-mlr3learners-and-mlr3extralearners" title="Permalink to this headline">#</a></h2>
-<p>Let’s begin with a “standard” example on how to use any of the learners provided by <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> (Lang et al. 2020), <a class="reference external" href="https://mlr3learners.mlr-org.com/">mlr3learners</a> (Lang et al. 2021) and <a class="reference external" href="https://mlr3extralearners.mlr-org.com/">mlr3extralearners</a> (Sonabend and Schratz 2021) in <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>: We create an object of the class <a class="reference external" href="https://mlr3.mlr-org.com/reference/Learner.html">Learner</a> which
+<p>Let’s begin with a “standard” example on how to use any of the learners provided by <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> (Lang et al. 2020), <a class="reference external" href="https://mlr3learners.mlr-org.com/">mlr3learners</a> (Lang et al. 2021) and <a class="reference external" href="https://mlr3extralearners.mlr-org.com/">mlr3extralearners</a> (Sonabend and Schratz 2021) in <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>: We create an object of the class <a class="reference external" href="https://mlr3.mlr-org.com/reference/Learner.html">Learner</a> which
 <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> internally uses for model training and generation of predictions.</p>
 <p>In the simulated example, we will use a lasso estimator for the continuous treatment variable, which is based on the <a class="reference external" href="https://glmnet.stanford.edu/index.html">glmnet package</a>. For the binary treatment variable in the Bonus data example, we use a random forest classifier as provided by <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a>.</p>
 <div class="nbinput docutils container">
@@ -744,9 +518,9 @@ No. Observations: 5099
 <span class="c1"># suppress messages during fitting</span>
 <span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
 
-<span class="n">learner_lasso</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
-<span class="n">ml_l_lasso</span> <span class="o">=</span> <span class="n">learner_lasso</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
-<span class="n">ml_m_lasso</span> <span class="o">=</span> <span class="n">learner_lasso</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">learner_lasso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="o">=</span><span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
+<span class="n">ml_l_lasso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner_lasso</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m_lasso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner_lasso</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">ml_l_lasso</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -767,18 +541,18 @@ No. Observations: 5099
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Random forest learner for nuisance part ml_l</span>
-<span class="n">learner_forest_regr</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span>
-                          <span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span> <span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
-                          <span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> <span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<span class="n">learner_forest_regr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
+<span class="w">                          </span><span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
 
 <span class="c1"># Random forest learner for nuisance part ml_m (binary outcome)</span>
-<span class="n">learner_forest_classif</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">,</span>
-                             <span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span>
-                             <span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
-                             <span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> <span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<span class="n">learner_forest_classif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
+<span class="w">                             </span><span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
 
-<span class="n">ml_l_forest</span> <span class="o">=</span> <span class="n">learner_forest_regr</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
-<span class="n">ml_m_forest</span> <span class="o">=</span> <span class="n">learner_forest_classif</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_l_forest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner_forest_regr</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+<span class="n">ml_m_forest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">learner_forest_classif</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">ml_l_forest</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -800,9 +574,9 @@ No. Observations: 5099
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_sim</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
-                                  <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso</span><span class="p">,</span>
-                                  <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_lasso</span><span class="p">)</span>
+<span class="n">obj_dml_plr_sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_lasso</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_sim</span><span class="p">)</span>
 </pre></div>
@@ -851,9 +625,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_bonus</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                    <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_forest</span><span class="p">,</span>
-                                    <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_forest</span><span class="p">)</span>
+<span class="n">obj_dml_plr_bonus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_forest</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_forest</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus</span><span class="p">)</span>
 </pre></div>
@@ -908,9 +682,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lasso learner</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">mlr3pipelines</span><span class="p">)</span>
-<span class="n">pipe_lasso</span> <span class="o">=</span> <span class="nf">po</span><span class="p">(</span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">),</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
-<span class="n">ml_l_lasso_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_lasso</span><span class="p">)</span>
-<span class="n">ml_m_lasso_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_lasso</span><span class="p">)</span>
+<span class="n">pipe_lasso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;lambda.min&quot;</span><span class="p">)</span>
+<span class="n">ml_l_lasso_pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_lasso</span><span class="p">)</span>
+<span class="n">ml_m_lasso_pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_lasso</span><span class="p">)</span>
 
 <span class="c1"># Class of the lasso learner</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">ml_l_lasso_pipe</span><span class="p">)</span>
@@ -933,18 +707,18 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Random forest learner for nuisance part ml_l</span>
-<span class="n">pipe_forest_regr</span> <span class="o">=</span> <span class="nf">po</span><span class="p">(</span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">),</span>
-                      <span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span> <span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
-                      <span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> <span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<span class="n">pipe_forest_regr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span><span class="w"> </span><span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
+<span class="w">                      </span><span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
 
 <span class="c1"># Random forest learner for nuisance part ml_m (binary outcome)</span>
-<span class="n">pipe_forest_classif</span> <span class="o">=</span> <span class="nf">po</span><span class="p">(</span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">),</span>
-                             <span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span>
-                             <span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
-                             <span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> <span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<span class="n">pipe_forest_classif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">),</span>
+<span class="w">                             </span><span class="n">num.trees</span><span class="o">=</span><span class="m">500</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">mtry</span><span class="o">=</span><span class="nf">floor</span><span class="p">(</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">dim_x</span><span class="p">)),</span>
+<span class="w">                             </span><span class="n">max.depth</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">min.node.size</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
 
-<span class="n">ml_l_forest_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_forest_regr</span><span class="p">)</span>
-<span class="n">ml_m_forest_pipe</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_forest_classif</span><span class="p">)</span>
+<span class="n">ml_l_forest_pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_forest_regr</span><span class="p">)</span>
+<span class="n">ml_m_forest_pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">pipe_forest_classif</span><span class="p">)</span>
 
 <span class="c1"># Class of the random forest learners</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">ml_l_forest_pipe</span><span class="p">)</span>
@@ -980,9 +754,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_sim_pipe</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
-                                       <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso_pipe</span><span class="p">,</span>
-                                       <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_lasso_pipe</span><span class="p">)</span>
+<span class="n">obj_dml_plr_sim_pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
+<span class="w">                                       </span><span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso_pipe</span><span class="p">,</span>
+<span class="w">                                       </span><span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_lasso_pipe</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim_pipe</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_sim_pipe</span><span class="p">)</span>
 </pre></div>
@@ -1031,9 +805,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_bonus_pipe</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                    <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_forest_pipe</span><span class="p">,</span>
-                                    <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_forest_pipe</span><span class="p">)</span>
+<span class="n">obj_dml_plr_bonus_pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_forest_pipe</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m_forest_pipe</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe</span><span class="p">)</span>
 </pre></div>
@@ -1087,12 +861,12 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># For regression (nuisance parts with continuous outcome)</span>
-<span class="n">graph_ensemble_regr</span> <span class="o">=</span> <span class="nf">gunion</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;lambda.min&quot;</span><span class="p">)),</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)),</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.rpart&quot;</span><span class="p">,</span> <span class="n">cp</span> <span class="o">=</span> <span class="m">0.01</span><span class="p">))</span>
-  <span class="p">))</span> <span class="o">%&gt;&gt;%</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;regravg&quot;</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+<span class="n">graph_ensemble_regr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gunion</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
+<span class="w">    </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.cv_glmnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;lambda.min&quot;</span><span class="p">)),</span>
+<span class="w">    </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)),</span>
+<span class="w">    </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.rpart&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.01</span><span class="p">))</span>
+<span class="w">  </span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;&gt;%</span>
+<span class="w">    </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;regravg&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">)</span>
 
 <span class="c1"># Class of &#39; graph_ensemble_regr&#39;</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">graph_ensemble_regr</span><span class="p">)</span>
@@ -1131,12 +905,12 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># For classification (nuisance part ml_m in the Bonus example)</span>
-<span class="n">graph_ensemble_classif</span> <span class="o">=</span> <span class="nf">gunion</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.cv_glmnet&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;lambda.min&quot;</span><span class="p">)),</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">)),</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.rpart&quot;</span><span class="p">,</span> <span class="n">cp</span> <span class="o">=</span> <span class="m">0.01</span><span class="p">))</span>
-  <span class="p">))</span> <span class="o">%&gt;&gt;%</span>
-    <span class="nf">po</span><span class="p">(</span><span class="s">&quot;classifavg&quot;</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+<span class="n">graph_ensemble_classif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gunion</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span>
+<span class="w">    </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.cv_glmnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;lambda.min&quot;</span><span class="p">)),</span>
+<span class="w">    </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">)),</span>
+<span class="w">    </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.rpart&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.01</span><span class="p">))</span>
+<span class="w">  </span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;&gt;%</span>
+<span class="w">    </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;classifavg&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">)</span>
 
 <span class="c1"># Class of &#39;graph_ensemble_classif&#39;</span>
 <span class="nf">class</span><span class="p">(</span><span class="n">graph_ensemble_classif</span><span class="p">)</span>
@@ -1175,8 +949,8 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">ensemble_pipe_regr</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">graph_ensemble_regr</span><span class="p">)</span>
-<span class="n">ensemble_pipe_classif</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">graph_ensemble_classif</span><span class="p">)</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">ensemble_pipe_regr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">graph_ensemble_regr</span><span class="p">)</span>
+<span class="n">ensemble_pipe_classif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">graph_ensemble_classif</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1187,9 +961,9 @@ we average the predictions. Thereby we will use the pipe operator <code class="d
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initiate new DoubleML object and estimate with graph learner</span>
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_sim_pipe_ensemble</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
-                                                <span class="n">ml_l</span> <span class="o">=</span> <span class="n">ensemble_pipe_regr</span><span class="p">,</span>
-                                                <span class="n">ml_m</span> <span class="o">=</span> <span class="n">ensemble_pipe_regr</span><span class="p">)</span>
+<span class="n">obj_dml_plr_sim_pipe_ensemble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
+<span class="w">                                                </span><span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ensemble_pipe_regr</span><span class="p">,</span>
+<span class="w">                                                </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ensemble_pipe_regr</span><span class="p">)</span>
 <span class="n">obj_dml_plr_sim_pipe_ensemble</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_sim_pipe_ensemble</span><span class="p">)</span>
 </pre></div>
@@ -1238,9 +1012,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_bonus_pipe_ensemble</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                    <span class="n">ml_l</span> <span class="o">=</span> <span class="n">ensemble_pipe_regr</span><span class="p">,</span>
-                                    <span class="n">ml_m</span> <span class="o">=</span> <span class="n">ensemble_pipe_classif</span><span class="p">)</span>
+<span class="n">obj_dml_plr_bonus_pipe_ensemble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ensemble_pipe_regr</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ensemble_pipe_classif</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe_ensemble</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe_ensemble</span><span class="p">)</span>
 </pre></div>
@@ -1289,9 +1063,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">lrn</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.rpart&quot;</span><span class="p">)</span>
-<span class="n">lrn_0</span> <span class="o">=</span> <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner_cv&quot;</span><span class="p">,</span> <span class="n">lrn</span><span class="o">$</span><span class="nf">clone</span><span class="p">())</span>
-<span class="n">lrn_0</span><span class="o">$</span><span class="n">id</span> <span class="o">=</span> <span class="s">&quot;rpart_cv&quot;</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">lrn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.rpart&quot;</span><span class="p">)</span>
+<span class="n">lrn_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner_cv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">lrn</span><span class="o">$</span><span class="nf">clone</span><span class="p">())</span>
+<span class="n">lrn_0</span><span class="o">$</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rpart_cv&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -1300,7 +1074,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pass original features to final estimation step</span>
-<span class="n">level_0</span> <span class="o">=</span> <span class="nf">gunion</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">lrn_0</span><span class="p">,</span> <span class="nf">po</span><span class="p">(</span><span class="s">&quot;nop&quot;</span><span class="p">)))</span>
+<span class="n">level_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gunion</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">lrn_0</span><span class="p">,</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;nop&quot;</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -1308,7 +1082,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">combined</span> <span class="o">=</span> <span class="n">level_0</span> <span class="o">%&gt;&gt;%</span> <span class="nf">po</span><span class="p">(</span><span class="s">&quot;featureunion&quot;</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">combined</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">level_0</span><span class="w"> </span><span class="o">%&gt;&gt;%</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;featureunion&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1316,8 +1090,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">stack</span> <span class="o">=</span> <span class="n">combined</span> <span class="o">%&gt;&gt;%</span> <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span> <span class="n">lrn</span><span class="o">$</span><span class="nf">clone</span><span class="p">())</span>
-<span class="n">stack</span><span class="o">$</span><span class="nf">plot</span><span class="p">(</span><span class="n">html</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">combined</span><span class="w"> </span><span class="o">%&gt;&gt;%</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">lrn</span><span class="o">$</span><span class="nf">clone</span><span class="p">())</span>
+<span class="n">stack</span><span class="o">$</span><span class="nf">plot</span><span class="p">(</span><span class="n">html</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1333,12 +1107,12 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a stacked learner and pass it to a DoubleML object</span>
-<span class="n">stacklrn</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
+<span class="n">stacklrn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
 
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_bonus_pipe</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                         <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_forest</span><span class="p">,</span>
-                                         <span class="n">ml_m</span><span class="o">=</span><span class="n">stacklrn</span><span class="p">)</span>
+<span class="n">obj_dml_plr_bonus_pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_forest</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">ml_m</span><span class="o">=</span><span class="n">stacklrn</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe</span><span class="p">)</span>
 </pre></div>
@@ -1394,10 +1168,10 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mutate</span> <span class="o">=</span> <span class="nf">po</span><span class="p">(</span><span class="s">&quot;mutate&quot;</span><span class="p">)</span>
-<span class="n">filter</span> <span class="o">=</span> <span class="nf">po</span><span class="p">(</span><span class="s">&quot;filter&quot;</span><span class="p">,</span>
-    <span class="n">filter</span> <span class="o">=</span> <span class="n">mlr3filters</span><span class="o">::</span><span class="nf">flt</span><span class="p">(</span><span class="s">&quot;variance&quot;</span><span class="p">),</span>
-    <span class="n">param_vals</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">filter.frac</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">))</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mutate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;mutate&quot;</span><span class="p">)</span>
+<span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;filter&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mlr3filters</span><span class="o">::</span><span class="nf">flt</span><span class="p">(</span><span class="s">&quot;variance&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">param_vals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">filter.frac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1406,10 +1180,10 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">mutate</span> <span class="o">%&gt;&gt;%</span>
-  <span class="n">filter</span> <span class="o">%&gt;&gt;%</span>
-  <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span>
-    <span class="n">learner</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.rpart&quot;</span><span class="p">))</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mutate</span><span class="w"> </span><span class="o">%&gt;&gt;%</span>
+<span class="w">  </span><span class="n">filter</span><span class="w"> </span><span class="o">%&gt;&gt;%</span>
+<span class="w">  </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.rpart&quot;</span><span class="p">))</span>
 
 <span class="nf">class</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
@@ -1446,7 +1220,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">glrn</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">glrn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1493,9 +1267,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_bonus_pipe2</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                          <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso</span><span class="p">,</span>
-                                          <span class="n">ml_m</span><span class="o">=</span><span class="n">glrn</span><span class="p">)</span>
+<span class="n">obj_dml_plr_bonus_pipe2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">ml_m</span><span class="o">=</span><span class="n">glrn</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe2</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe2</span><span class="p">)</span>
 </pre></div>
@@ -1544,7 +1318,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">glrn</span><span class="o">$</span><span class="n">param_set</span><span class="o">$</span><span class="n">values</span><span class="o">$</span><span class="n">variance.filter.frac</span> <span class="o">=</span> <span class="m">0.25</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">glrn</span><span class="o">$</span><span class="n">param_set</span><span class="o">$</span><span class="n">values</span><span class="o">$</span><span class="n">variance.filter.frac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.25</span>
 </pre></div>
 </div>
 </div>
@@ -1553,9 +1327,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </pre></div>
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_bonus_pipe3</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
-                                          <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso</span><span class="p">,</span>
-                                          <span class="n">ml_m</span><span class="o">=</span><span class="n">glrn</span><span class="p">)</span>
+<span class="n">obj_dml_plr_bonus_pipe3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_bonus</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l_lasso</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">ml_m</span><span class="o">=</span><span class="n">glrn</span><span class="p">)</span>
 <span class="n">obj_dml_plr_bonus_pipe3</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
 <span class="nf">print</span><span class="p">(</span><span class="n">obj_dml_plr_bonus_pipe3</span><span class="p">)</span>
 </pre></div>
@@ -1608,11 +1382,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
-<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">lasso_pipe</span> <span class="o">=</span> <span class="n">mutate</span> <span class="o">%&gt;&gt;%</span>
-  <span class="n">filter</span> <span class="o">%&gt;&gt;%</span>
-  <span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span>
-    <span class="n">learner</span> <span class="o">=</span> <span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.glmnet&quot;</span><span class="p">))</span>
-<span class="n">glrn_lasso</span> <span class="o">=</span> <span class="nf">as_learner</span><span class="p">(</span><span class="n">lasso_pipe</span><span class="p">)</span>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">lasso_pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mutate</span><span class="w"> </span><span class="o">%&gt;&gt;%</span>
+<span class="w">  </span><span class="n">filter</span><span class="w"> </span><span class="o">%&gt;&gt;%</span>
+<span class="w">  </span><span class="nf">po</span><span class="p">(</span><span class="s">&quot;learner&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.glmnet&quot;</span><span class="p">))</span>
+<span class="n">glrn_lasso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">lasso_pipe</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1623,8 +1397,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameter grid for lambda and for optimal variance filter fraction</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">paradox</span><span class="p">)</span>
-<span class="n">par_grids</span> <span class="o">=</span> <span class="nf">ps</span><span class="p">(</span><span class="n">regr.glmnet.lambda</span> <span class="o">=</span> <span class="nf">p_dbl</span><span class="p">(</span><span class="n">lower</span> <span class="o">=</span> <span class="m">0.05</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">),</span>
-               <span class="n">variance.filter.frac</span> <span class="o">=</span> <span class="nf">p_dbl</span><span class="p">(</span><span class="n">lower</span> <span class="o">=</span> <span class="m">0.25</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="m">1</span><span class="p">))</span>
+<span class="n">par_grids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ps</span><span class="p">(</span><span class="n">regr.glmnet.lambda</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">p_dbl</span><span class="p">(</span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.05</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">),</span>
+<span class="w">               </span><span class="n">variance.filter.frac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">p_dbl</span><span class="p">(</span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.25</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1634,11 +1408,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Specify further tune settings</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">mlr3tuning</span><span class="p">)</span>
-<span class="n">tune_settings</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">terminator</span> <span class="o">=</span> <span class="nf">trm</span><span class="p">(</span><span class="s">&quot;evals&quot;</span><span class="p">,</span> <span class="n">n_evals</span> <span class="o">=</span> <span class="m">10</span><span class="p">),</span>
-                      <span class="n">algorithm</span> <span class="o">=</span> <span class="nf">tnr</span><span class="p">(</span><span class="s">&quot;grid_search&quot;</span><span class="p">,</span> <span class="n">resolution</span> <span class="o">=</span> <span class="m">10</span><span class="p">),</span>
-                      <span class="n">rsmp_tune</span> <span class="o">=</span> <span class="nf">rsmp</span><span class="p">(</span><span class="s">&quot;cv&quot;</span><span class="p">,</span> <span class="n">folds</span> <span class="o">=</span> <span class="m">5</span><span class="p">),</span>
-                      <span class="n">measure</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span> <span class="o">=</span> <span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">),</span>
-                                     <span class="s">&quot;ml_m&quot;</span> <span class="o">=</span> <span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">)))</span>
+<span class="n">tune_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">terminator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">trm</span><span class="p">(</span><span class="s">&quot;evals&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n_evals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">algorithm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">tnr</span><span class="p">(</span><span class="s">&quot;grid_search&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">rsmp_tune</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rsmp</span><span class="p">(</span><span class="s">&quot;cv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">measure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">),</span>
+<span class="w">                                     </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -1648,12 +1422,12 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initiate new DoubleML object and execute tuning with graph learner</span>
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">obj_dml_plr_sim_pipe_tune</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
-                                            <span class="n">ml_l</span><span class="o">=</span><span class="n">glrn_lasso</span><span class="p">,</span>
-                                            <span class="n">ml_m</span><span class="o">=</span><span class="n">glrn_lasso</span><span class="p">)</span>
-<span class="n">obj_dml_plr_sim_pipe_tune</span><span class="o">$</span><span class="nf">tune</span><span class="p">(</span><span class="n">param_set</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span> <span class="o">=</span> <span class="n">par_grids</span><span class="p">,</span>
-                                                <span class="s">&quot;ml_m&quot;</span> <span class="o">=</span> <span class="n">par_grids</span><span class="p">),</span>
-                               <span class="n">tune_settings</span><span class="o">=</span><span class="n">tune_settings</span><span class="p">)</span>
+<span class="n">obj_dml_plr_sim_pipe_tune</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data_sim</span><span class="p">,</span>
+<span class="w">                                            </span><span class="n">ml_l</span><span class="o">=</span><span class="n">glrn_lasso</span><span class="p">,</span>
+<span class="w">                                            </span><span class="n">ml_m</span><span class="o">=</span><span class="n">glrn_lasso</span><span class="p">)</span>
+<span class="n">obj_dml_plr_sim_pipe_tune</span><span class="o">$</span><span class="nf">tune</span><span class="p">(</span><span class="n">param_set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">par_grids</span><span class="p">,</span>
+<span class="w">                                                </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">par_grids</span><span class="p">),</span>
+<span class="w">                               </span><span class="n">tune_settings</span><span class="o">=</span><span class="n">tune_settings</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1662,136 +1436,136 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-INFO  [13:50:13.703] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
-INFO  [13:50:13.740] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:14.435] [bbotk] Result of batch 1:
-INFO  [13:50:14.438] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:14.438] [bbotk]          0.07222222            0.6666667 107.2925        0      0
-INFO  [13:50:14.438] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:14.438] [bbotk]             0.523 6724b1ab-fc60-45ad-8829-c155df4a613f
-INFO  [13:50:14.441] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:15.193] [bbotk] Result of batch 2:
-INFO  [13:50:15.195] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:15.195] [bbotk]                 0.1            0.6666667 106.2652        0      0
-INFO  [13:50:15.195] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:15.195] [bbotk]             0.592 de21459e-4a5d-42e1-899a-c14a7561a2ba
-INFO  [13:50:15.198] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:15.858] [bbotk] Result of batch 3:
-INFO  [13:50:15.861] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:15.861] [bbotk]                 0.1            0.4166667 482.9753        0      0
-INFO  [13:50:15.861] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:15.861] [bbotk]             0.501 df00d74d-4625-47f0-a098-1dbc92a50505
-INFO  [13:50:15.864] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:16.568] [bbotk] Result of batch 4:
-INFO  [13:50:16.571] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:16.571] [bbotk]          0.09444444                 0.75 112.1054        0      0
-INFO  [13:50:16.571] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:16.571] [bbotk]             0.542 954fcc20-14d4-43be-89fa-09b3573c1798
-INFO  [13:50:16.573] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:17.275] [bbotk] Result of batch 5:
-INFO  [13:50:17.278] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:17.278] [bbotk]          0.08333333            0.9166667 10.81856        0      0
-INFO  [13:50:17.278] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:17.278] [bbotk]             0.539 616b11c4-3558-4b0b-9c3c-04aed631daec
-INFO  [13:50:17.280] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:17.969] [bbotk] Result of batch 6:
-INFO  [13:50:17.973] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:17.973] [bbotk]          0.08888889            0.9166667 10.74189        0      0
-INFO  [13:50:17.973] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:17.973] [bbotk]             0.506 8f7312a8-29da-4bac-87b5-7a345a3c94af
-INFO  [13:50:17.976] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:18.649] [bbotk] Result of batch 7:
-INFO  [13:50:18.652] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:18.652] [bbotk]          0.07777778            0.5833333 201.8513        0      0
-INFO  [13:50:18.652] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:18.652] [bbotk]             0.507 2e96af81-ab12-46e4-a451-c9a7c94d46c9
-INFO  [13:50:18.655] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:19.339] [bbotk] Result of batch 8:
-INFO  [13:50:19.342] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:19.342] [bbotk]          0.07222222            0.3333333 531.5255        0      0
-INFO  [13:50:19.342] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:19.342] [bbotk]             0.526 4e986422-8d3d-4c70-8145-1a0d31c8c7f1
-INFO  [13:50:19.345] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:20.054] [bbotk] Result of batch 9:
-INFO  [13:50:20.057] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:20.057] [bbotk]          0.06111111            0.9166667 11.17823        0      0
-INFO  [13:50:20.057] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:20.057] [bbotk]             0.549 167d9b7a-d373-46c1-9e70-64b33349949b
-INFO  [13:50:20.059] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:20.723] [bbotk] Result of batch 10:
-INFO  [13:50:20.726] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:20.726] [bbotk]          0.08888889                 0.25  538.991        0      0
-INFO  [13:50:20.726] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:20.726] [bbotk]             0.503 482688a9-63de-4d18-8578-d850ea92bb69
-INFO  [13:50:20.736] [bbotk] Finished optimizing after 10 evaluation(s)
-INFO  [13:50:20.737] [bbotk] Result:
-INFO  [13:50:20.739] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain regr.mse
-INFO  [13:50:20.739] [bbotk]          0.08888889            0.9166667          &lt;list[5]&gt; &lt;list[2]&gt; 10.74189
-INFO  [13:50:20.933] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
-INFO  [13:50:20.938] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:21.606] [bbotk] Result of batch 1:
-INFO  [13:50:21.609] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:21.609] [bbotk]          0.08888889            0.5833333  12.6173        0      0
-INFO  [13:50:21.609] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:21.609] [bbotk]              0.51 d7f2fd60-f8b4-41a0-b8af-c960427a7f5b
-INFO  [13:50:21.611] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:22.312] [bbotk] Result of batch 2:
-INFO  [13:50:22.315] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:22.315] [bbotk]                 0.1            0.5833333  12.5155        0      0
-INFO  [13:50:22.315] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:22.315] [bbotk]             0.536 84b9a36c-0504-438a-b907-ce51b35e2a5f
-INFO  [13:50:22.317] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:23.366] [bbotk] Result of batch 3:
-INFO  [13:50:23.369] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
-INFO  [13:50:23.369] [bbotk]          0.08333333                 0.75 0.9870004        0      0
-INFO  [13:50:23.369] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:23.369] [bbotk]             0.889 2c225c50-f9d8-471e-a37b-792694ec0f47
-INFO  [13:50:23.371] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:24.021] [bbotk] Result of batch 4:
-INFO  [13:50:24.024] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:24.024] [bbotk]          0.07222222                  0.5 17.75887        0      0
-INFO  [13:50:24.024] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:24.024] [bbotk]             0.494 1531c17b-b77b-4797-8ac6-24930b417a61
-INFO  [13:50:24.026] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:24.676] [bbotk] Result of batch 5:
-INFO  [13:50:24.679] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:24.679] [bbotk]          0.08333333            0.5833333  12.6722        0      0
-INFO  [13:50:24.679] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:24.679] [bbotk]             0.478 c926a1b1-a679-48b6-b9f3-a05b8d29d8c3
-INFO  [13:50:24.681] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:25.344] [bbotk] Result of batch 6:
-INFO  [13:50:25.347] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:25.347] [bbotk]          0.07222222            0.5833333 12.78818        0      0
-INFO  [13:50:25.347] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:25.347] [bbotk]             0.509 611bba00-6475-427c-a7be-91ffdd15769f
-INFO  [13:50:25.349] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:26.004] [bbotk] Result of batch 7:
-INFO  [13:50:26.007] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:26.007] [bbotk]          0.07777778                  0.5 17.69921        0      0
-INFO  [13:50:26.007] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:26.007] [bbotk]             0.501 b478fe57-08af-48d2-b6ef-6d3ecc3d705e
-INFO  [13:50:26.009] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:26.650] [bbotk] Result of batch 8:
-INFO  [13:50:26.653] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
-INFO  [13:50:26.653] [bbotk]          0.07777778            0.9166667 0.9880384        0      0
-INFO  [13:50:26.653] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:26.653] [bbotk]             0.487 31e75395-059a-4d94-ae8f-216453383073
-INFO  [13:50:26.655] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:27.308] [bbotk] Result of batch 9:
-INFO  [13:50:27.310] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:27.310] [bbotk]          0.07777778            0.4166667 22.43294        0      0
-INFO  [13:50:27.310] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:27.310] [bbotk]             0.481 9ecc6aeb-35d4-42cc-a6f3-6413f6aa94e9
-INFO  [13:50:27.313] [bbotk] Evaluating 1 configuration(s)
-INFO  [13:50:27.963] [bbotk] Result of batch 10:
-INFO  [13:50:27.966] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
-INFO  [13:50:27.966] [bbotk]          0.07222222            0.3333333 27.31378        0      0
-INFO  [13:50:27.966] [bbotk]  runtime_learners                                uhash
-INFO  [13:50:27.966] [bbotk]             0.493 b779a807-d7da-4084-a01c-aa3a4e8e230b
-INFO  [13:50:27.975] [bbotk] Finished optimizing after 10 evaluation(s)
-INFO  [13:50:27.976] [bbotk] Result:
-INFO  [13:50:27.978] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain  regr.mse
-INFO  [13:50:27.978] [bbotk]          0.08333333                 0.75          &lt;list[5]&gt; &lt;list[2]&gt; 0.9870004
+INFO  [12:32:37.150] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
+INFO  [12:32:37.208] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:38.260] [bbotk] Result of batch 1:
+INFO  [12:32:38.265] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:38.265] [bbotk]          0.07222222            0.6666667 107.2925        0      0
+INFO  [12:32:38.265] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:38.265] [bbotk]             0.777 3f6d8523-47cf-4512-a9f5-fdd918a8d044
+INFO  [12:32:38.269] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:39.289] [bbotk] Result of batch 2:
+INFO  [12:32:39.293] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:39.293] [bbotk]                 0.1            0.6666667 106.2652        0      0
+INFO  [12:32:39.293] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:39.293] [bbotk]             0.788 ab3ff1e1-fdb8-4327-9558-884dd0a48ec8
+INFO  [12:32:39.296] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:40.361] [bbotk] Result of batch 3:
+INFO  [12:32:40.367] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:40.367] [bbotk]                 0.1            0.4166667 482.9753        0      0
+INFO  [12:32:40.367] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:40.367] [bbotk]             0.777 c986baa3-af4b-4dc3-83b5-4bda06854455
+INFO  [12:32:40.372] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:41.396] [bbotk] Result of batch 4:
+INFO  [12:32:41.400] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:41.400] [bbotk]          0.09444444                 0.75 112.1054        0      0
+INFO  [12:32:41.400] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:41.400] [bbotk]             0.784 df545a47-0ee7-4918-a3c4-1a44e1508be4
+INFO  [12:32:41.403] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:42.424] [bbotk] Result of batch 5:
+INFO  [12:32:42.429] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:42.429] [bbotk]          0.08333333            0.9166667 10.81856        0      0
+INFO  [12:32:42.429] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:42.429] [bbotk]             0.782 52c65f21-0c4c-48db-8eb3-a5c1ecd715e0
+INFO  [12:32:42.432] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:43.489] [bbotk] Result of batch 6:
+INFO  [12:32:43.493] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:43.493] [bbotk]          0.08888889            0.9166667 10.74189        0      0
+INFO  [12:32:43.493] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:43.493] [bbotk]             0.819 59b638f0-e456-4b5b-bc43-abd1330905a5
+INFO  [12:32:43.496] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:44.506] [bbotk] Result of batch 7:
+INFO  [12:32:44.510] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:44.510] [bbotk]          0.07777778            0.5833333 201.8513        0      0
+INFO  [12:32:44.510] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:44.510] [bbotk]              0.77 45accc84-95d2-4e22-8767-e471b0b18769
+INFO  [12:32:44.513] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:45.539] [bbotk] Result of batch 8:
+INFO  [12:32:45.543] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:45.543] [bbotk]          0.07222222            0.3333333 531.5255        0      0
+INFO  [12:32:45.543] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:45.543] [bbotk]             0.778 fcc79885-3d6e-45da-a1d9-ac6dfad6a084
+INFO  [12:32:45.546] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:46.597] [bbotk] Result of batch 9:
+INFO  [12:32:46.601] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:46.601] [bbotk]          0.06111111            0.9166667 11.17823        0      0
+INFO  [12:32:46.601] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:46.601] [bbotk]             0.789 10745671-1201-4a5a-b1fc-3573d26d390a
+INFO  [12:32:46.604] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:47.620] [bbotk] Result of batch 10:
+INFO  [12:32:47.624] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:47.624] [bbotk]          0.08888889                 0.25  538.991        0      0
+INFO  [12:32:47.624] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:47.624] [bbotk]             0.779 c9b54e19-6abc-4536-8726-ec5736332916
+INFO  [12:32:47.638] [bbotk] Finished optimizing after 10 evaluation(s)
+INFO  [12:32:47.641] [bbotk] Result:
+INFO  [12:32:47.644] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain regr.mse
+INFO  [12:32:47.644] [bbotk]          0.08888889            0.9166667          &lt;list[5]&gt; &lt;list[2]&gt; 10.74189
+INFO  [12:32:47.914] [bbotk] Starting to optimize 2 parameter(s) with &#39;&lt;TunerGridSearch&gt;&#39; and &#39;&lt;TerminatorEvals&gt; [n_evals=10, k=0]&#39;
+INFO  [12:32:47.920] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:48.951] [bbotk] Result of batch 1:
+INFO  [12:32:48.955] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:48.955] [bbotk]          0.08888889            0.5833333  12.6173        0      0
+INFO  [12:32:48.955] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:48.955] [bbotk]             0.791 cc5604df-3eb4-4dab-af57-d49f8d1f8077
+INFO  [12:32:48.959] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:50.027] [bbotk] Result of batch 2:
+INFO  [12:32:50.032] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:50.032] [bbotk]                 0.1            0.5833333  12.5155        0      0
+INFO  [12:32:50.032] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:50.032] [bbotk]             0.803 a5230177-c2c6-4666-bc1b-1d0b123bf161
+INFO  [12:32:50.035] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:51.071] [bbotk] Result of batch 3:
+INFO  [12:32:51.077] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
+INFO  [12:32:51.077] [bbotk]          0.08333333                 0.75 0.9870004        0      0
+INFO  [12:32:51.077] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:51.077] [bbotk]             0.799 fefc6782-befa-4a6f-bb15-043df3f72899
+INFO  [12:32:51.080] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:52.140] [bbotk] Result of batch 4:
+INFO  [12:32:52.145] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:52.145] [bbotk]          0.07222222                  0.5 17.75887        0      0
+INFO  [12:32:52.145] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:52.145] [bbotk]             0.791 65fac9da-3ff6-49ef-a293-74f790f4eed6
+INFO  [12:32:52.149] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:53.187] [bbotk] Result of batch 5:
+INFO  [12:32:53.191] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:53.191] [bbotk]          0.08333333            0.5833333  12.6722        0      0
+INFO  [12:32:53.191] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:53.191] [bbotk]             0.796 6d15d5f5-e0a2-4589-8119-f463ddeee281
+INFO  [12:32:53.195] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:54.267] [bbotk] Result of batch 6:
+INFO  [12:32:54.271] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:54.271] [bbotk]          0.07222222            0.5833333 12.78818        0      0
+INFO  [12:32:54.271] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:54.271] [bbotk]               0.8 7a91dba6-9f02-484f-90b2-c3b5c55b4231
+INFO  [12:32:54.275] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:55.781] [bbotk] Result of batch 7:
+INFO  [12:32:55.786] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:55.786] [bbotk]          0.07777778                  0.5 17.69921        0      0
+INFO  [12:32:55.786] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:55.786] [bbotk]               0.8 4274e9ca-859a-43d4-933d-7a6a393a335a
+INFO  [12:32:55.790] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:56.797] [bbotk] Result of batch 8:
+INFO  [12:32:56.801] [bbotk]  regr.glmnet.lambda variance.filter.frac  regr.mse warnings errors
+INFO  [12:32:56.801] [bbotk]          0.07777778            0.9166667 0.9880384        0      0
+INFO  [12:32:56.801] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:56.801] [bbotk]             0.775 111bf7f7-9ca5-4374-96f3-fb67cfdf8711
+INFO  [12:32:56.805] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:57.799] [bbotk] Result of batch 9:
+INFO  [12:32:57.803] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:57.803] [bbotk]          0.07777778            0.4166667 22.43294        0      0
+INFO  [12:32:57.803] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:57.803] [bbotk]             0.763 66eeba05-3fdf-4515-883f-9d748837a16e
+INFO  [12:32:57.807] [bbotk] Evaluating 1 configuration(s)
+INFO  [12:32:58.791] [bbotk] Result of batch 10:
+INFO  [12:32:58.796] [bbotk]  regr.glmnet.lambda variance.filter.frac regr.mse warnings errors
+INFO  [12:32:58.796] [bbotk]          0.07222222            0.3333333 27.31378        0      0
+INFO  [12:32:58.796] [bbotk]  runtime_learners                                uhash
+INFO  [12:32:58.796] [bbotk]              0.74 4602c50b-591e-4e0c-b889-e8f684a6cb22
+INFO  [12:32:58.809] [bbotk] Finished optimizing after 10 evaluation(s)
+INFO  [12:32:58.811] [bbotk] Result:
+INFO  [12:32:58.814] [bbotk]  regr.glmnet.lambda variance.filter.frac learner_param_vals  x_domain  regr.mse
+INFO  [12:32:58.814] [bbotk]          0.08333333                 0.75          &lt;list[5]&gt; &lt;list[2]&gt; 0.9870004
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1864,11 +1638,11 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="py_double_ml_multiway_cluster.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="py_double_ml_learner.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Python: Cluster Robust Double Machine Learning</p>
+          <p class="prev-next-title">Python: Choice of learners</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="double_ml_bonus_data.html" title="next page">
@@ -1895,7 +1669,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
   
   <div class="footer-item">
     <p class="copyright">
-    &copy; Copyright 2021, Bach, P., Chernozhukov, V., Kurz, M. S., and Spindler, M..<br>
+    &copy; Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..<br>
 </p>
   </div>
   
