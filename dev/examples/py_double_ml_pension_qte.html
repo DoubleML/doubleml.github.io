@@ -54,7 +54,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Python: Potential Quantiles and Quantile Treatment Effects" href="py_double_ml_pq.html" />
-    <link rel="prev" title="Python: Conditional Average Treatment Effects (CATEs)" href="py_double_ml_cate.html" />
+    <link rel="prev" title="Python: Difference-in-Differences Pre-Testing" href="py_double_ml_did_pretest.html" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="docsearch:language" content="None">
   </head>
@@ -234,6 +234,16 @@
    Python: Conditional Average Treatment Effects (CATEs)
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_did.html">
+   Python: Difference-in-Differences
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_did_pretest.html">
+   Python: Difference-in-Differences Pre-Testing
+  </a>
+ </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Python: Impact of 401(k) on Financial Wealth (Quantile Effects)
@@ -353,7 +363,7 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 <h2>Data<a class="headerlink" href="#Data" title="Permalink to this headline">#</a></h2>
 <p>The preprocessed data can be fetched by calling <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.datasets.fetch_401K.html#doubleml.datasets.fetch_401K">fetch_401K()</a>. Note that an internet connection is required for loading the data.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -372,7 +382,7 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
@@ -381,7 +391,7 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[68]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
@@ -394,7 +404,7 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[69]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">fetch_401K</span><span class="p">(</span><span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
@@ -402,7 +412,7 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -410,7 +420,7 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -593,7 +603,7 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 <p>Among the <span class="math notranslate nohighlight">\(9915\)</span> individuals, <span class="math notranslate nohighlight">\(3682\)</span> are eligible to participate in the program. The variable <em>e401</em> indicates eligibility and <em>p401</em> indicates participation, respectively.</p>
 <p>At first consider eligibility as the treatment and define the following data.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[71]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up basic model: Specify variables for data-backend</span>
@@ -615,7 +625,7 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 <p>We will use the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package to estimate quantile treatment effects of 401(k) eligibility, i.e. <code class="docutils literal notranslate"><span class="pre">e401</span></code>. As it is more interesting to take a look at a range of quantiles instead of a single one, we will first define a discretisized grid of quanitles <code class="docutils literal notranslate"><span class="pre">tau_vec</span></code>, which will range from the 10%-quantile to the 90%-quantile. Further, we need a machine learning algorithm to estimate the nuisance elements of our model. In this example, we will use
 a basic <code class="docutils literal notranslate"><span class="pre">LGBMClassifier</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[72]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tau_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.95</span><span class="p">,</span><span class="mf">0.05</span><span class="p">)</span>
@@ -629,7 +639,7 @@ a basic <code class="docutils literal notranslate"><span class="pre">LGBMClassif
 </div>
 <p>Next, we will apply create an <code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> object for each quantile to fit a quantile model. Here, we have to specifiy, whether we would like to estimate a potential quantile for the treatment group <code class="docutils literal notranslate"><span class="pre">treatment=1</span></code> or control <code class="docutils literal notranslate"><span class="pre">treatment=0</span></code>. Further basic options are trimming and normalization of the propensity scores (<code class="docutils literal notranslate"><span class="pre">trimming_rule=&quot;truncate&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">trimming_threshold=0.01</span></code> and <code class="docutils literal notranslate"><span class="pre">normalize_ipw=True</span></code>).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[73]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PQ_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -698,7 +708,7 @@ Quantile: 0.9000000000000002
 </div>
 <p>Additionally, each <code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> object has a (hopefully) helpful summary, which indicates also the evaluation of the nuisance elements with cross-validated estimation. See e.g. `dml_PQ_1’</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[74]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_PQ_1</span><span class="p">)</span>
@@ -727,8 +737,8 @@ DML algorithm: dml2
 Learner ml_g: LGBMClassifier(learning_rate=0.05, n_estimators=300, num_leaves=10)
 Learner ml_m: LGBMClassifier(learning_rate=0.05, n_estimators=300, num_leaves=10)
 Out-of-sample Performance:
-Learner ml_g RMSE: [[0.31579719]]
-Learner ml_m RMSE: [[0.4455688]]
+Learner ml_g RMSE: [[0.31479572]]
+Learner ml_m RMSE: [[0.44474082]]
 
 ------------------ Resampling        ------------------
 No. folds: 5
@@ -736,16 +746,16 @@ No. repeated sample splits: 1
 Apply cross-fitting: True
 
 ------------------ Fit summary       ------------------
-         coef      std err          t          P&gt;|t|         2.5 %  \
-e401  62149.0  1805.993239  34.412643  1.631489e-259  58609.318296
+         coef      std err          t          P&gt;|t|         2.5 %
+e401  62699.0  1762.749995  35.568856  4.247271e-277  59244.073495  \
 
             97.5 %
-e401  65688.681704
+e401  66153.926505
 </pre></div></div>
 </div>
 <p>Finally, let us take a look at the estimated potential quantiles</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[75]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_pq</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span>
@@ -762,47 +772,47 @@ e401  65688.681704
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-    Quantile      DML Y(0)  DML Y(1)  DML Y(0) lower  DML Y(0) upper  \
-0       0.10 -5.300000e+03   -3800.0    -5685.619589    -4914.380411
-1       0.15 -3.200000e+03   -2000.0    -3427.163051    -2972.836949
-2       0.20 -1.935000e+03    -800.0    -2100.476986    -1769.523014
-3       0.25 -9.940000e+02     -50.0    -1134.689368     -853.310632
-4       0.30 -3.510000e+02     230.0     -487.073444     -214.926556
-5       0.35 -9.725833e-13     835.0     -136.838650      136.838650
-6       0.40  7.777951e-13    1516.0     -142.195369      142.195369
-7       0.45  1.450000e+02    3220.0        2.319849      287.680151
-8       0.50  5.000000e+02    4636.0      354.648469      645.351531
-9       0.55  1.208000e+03    6400.0     1047.994202     1368.005798
-10      0.60  2.318000e+03    9300.0     2104.075903     2531.924097
-11      0.65  4.010000e+03   13499.0     3630.462883     4389.537117
-12      0.70  6.499000e+03   17500.0     5805.227055     7192.772945
-13      0.75  1.060000e+04   24499.0     9614.444901    11585.555099
-14      0.80  1.620900e+04   33910.0    14704.642484    17713.357516
-15      0.85  2.585000e+04   44250.0    23570.486590    28129.513410
-16      0.90  4.154900e+04   62149.0    38069.466231    45028.533769
+    Quantile      DML Y(0)      DML Y(1)  DML Y(0) lower  DML Y(0) upper
+0       0.10 -5.200000e+03 -3.670000e+03    -5571.300941    -4828.699059  \
+1       0.15 -3.200000e+03 -1.940000e+03    -3427.728790    -2972.271210
+2       0.20 -1.900000e+03 -7.390000e+02    -2061.926252    -1738.073748
+3       0.25 -1.000000e+03 -1.179113e-12    -1143.693196     -856.306804
+4       0.30 -3.120000e+02  2.000000e+02     -447.254876     -176.745124
+5       0.35 -5.913167e-13  1.000000e+03     -139.334820      139.334820
+6       0.40  4.494469e-13  1.550000e+03     -144.877692      144.877692
+7       0.45  1.100000e+02  3.220000e+03      -40.938460      260.938460
+8       0.50  5.000000e+02  5.000000e+03      354.711542      645.288458
+9       0.55  1.200000e+03  6.975000e+03     1039.950434     1360.049566
+10      0.60  2.400000e+03  9.750000e+03     2177.360681     2622.639319
+11      0.65  4.050000e+03  1.309000e+04     3666.241599     4433.758401
+12      0.70  6.540000e+03  1.831000e+04     5841.752518     7238.247482
+13      0.75  1.080000e+04  2.364800e+04     9817.753061    11782.246939
+14      0.80  1.660000e+04  3.391000e+04    15078.466191    18121.533809
+15      0.85  2.600000e+04  4.500000e+04    23734.732063    28265.267937
+16      0.90  4.171000e+04  6.269900e+04    38199.318846    45220.681154
 
     DML Y(1) lower  DML Y(1) upper
-0     -4470.453171    -3129.546829
-1     -2366.600658    -1633.399342
-2     -1251.563752     -348.436248
-3      -495.476535      395.476535
-4      -271.095598      731.095598
-5       314.948301     1355.051699
-6       925.280572     2106.719428
-7      2467.835060     3972.164940
-8      3878.363076     5393.636924
-9      5555.120836     7244.879164
-10     8195.358561    10404.641439
-11    11886.072731    15111.927269
-12    15941.484129    19058.515871
-13    22156.490958    26841.509042
-14    30951.789837    36868.210163
-15    41412.685552    47087.314448
-16    58609.318296    65688.681704
+0     -4220.646366    -3119.353634
+1     -2378.236113    -1501.763887
+2     -1157.868263     -320.131737
+3      -453.581022      453.581022
+4      -248.295405      648.295405
+5       457.609710     1542.390290
+6       956.525225     2143.474775
+7      2553.377783     3886.622217
+8      4222.866280     5777.133720
+9      5865.677917     8084.322083
+10     8627.559836    10872.440164
+11    11408.361382    14771.638618
+12    16438.883924    20181.116076
+13    21803.343343    25492.656657
+14    31248.768146    36571.231854
+15    42173.441840    47826.558160
+16    59244.073495    66153.926505
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[76]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -834,7 +844,7 @@ e401  65688.681704
 </div>
 <p>As we are interested in the QTE, we can use the <code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> object, which internally fits two <code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> objects for the treatment and control group. The main advantage is to apply this to a list of quantiles and construct uniformly valid confidence intervals for the range of treatment effects.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[77]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
@@ -861,12 +871,12 @@ e401  65688.681704
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Number of Cores used: 5
+Number of Cores used: 1
 ================== DoubleMLQTE Object ==================
 
 ------------------ Fit summary       ------------------
-         coef      std err          t         P&gt;|t|         2.5 %  \
-0.10   1210.0   486.438569   2.487467  1.286563e-02    256.597923
+         coef      std err          t         P&gt;|t|         2.5 %
+0.10   1210.0   486.438569   2.487467  1.286563e-02    256.597923  \
 0.15   1230.0   263.748513   4.663533  3.108257e-06    713.062414
 0.20   1211.0   251.948868   4.806531  1.535718e-06    717.189293
 0.25   1000.0   244.841847   4.084269  4.421576e-05    520.118799
@@ -906,7 +916,7 @@ Number of Cores used: 5
 </div>
 <p>For uniformly valid confidence intervals, we still need to apply a bootstrap first. Let’s take a quick look at the QTEs combinded with a confidence interval.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[78]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_QTE</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
@@ -945,7 +955,7 @@ Number of Cores used: 5
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[79]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
@@ -977,7 +987,7 @@ Number of Cores used: 5
 <p>Similar to the evaluation of the estimation of quantile treatment effects (QTEs), we can estimate the conditional value at risk (<a class="reference external" href="https://de.wikipedia.org/wiki/Conditional_Value_at_Risk">CVaR</a>) for given quantiles. Here, we will only focus on treatment effect estimation, but the DoubleML package also allows for estimation of potential CVaRs.</p>
 <p>The estimation of treatment effects can be easily done by adjusting the score in the <code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> object to <code class="docutils literal notranslate"><span class="pre">score=&quot;CVaR&quot;</span></code>, as the estimation is based on the same nuisance elements as QTEs.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -1003,8 +1013,8 @@ Number of Cores used: 5
 ================== DoubleMLQTE Object ==================
 
 ------------------ Fit summary       ------------------
-              coef       std err          t         P&gt;|t|         2.5 %  \
-0.10   9073.195547   1298.264884   6.988709  2.774271e-12   6528.643133
+              coef       std err          t         P&gt;|t|         2.5 %
+0.10   9073.195547   1298.264884   6.988709  2.774271e-12   6528.643133  \
 0.15  10126.150334   1371.682269   7.382286  1.555949e-13   7437.702489
 0.20  14587.388871   1485.887345   9.817291  9.485812e-23  11675.103189
 0.25  16910.113415   1582.022969  10.688918  1.147015e-26  13809.405374
@@ -1044,7 +1054,7 @@ Number of Cores used: 5
 </div>
 <p>Estimation of the corresponding (uniformly) valid confidence intervals can be done analogously to the quantile treatment effects.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[81]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_CVAR</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
@@ -1084,7 +1094,7 @@ Number of Cores used: 5
 </div>
 <p>Finally, let us take a look at the estimated treatment effects on the CVaR.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[82]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
@@ -1113,7 +1123,7 @@ Number of Cores used: 5
 <h2>Estimating local quantile treatment effects (LQTEs)<a class="headerlink" href="#Estimating-local-quantile-treatment-effects-(LQTEs)" title="Permalink to this headline">#</a></h2>
 <p>If we have an <code class="docutils literal notranslate"><span class="pre">IIVM</span></code> model with a given instrumental variable, we are still able to identify the local quantile treatment effect (LQTE), the quantile treatment effect on compliers. For the 401(k) pension data we can use <code class="docutils literal notranslate"><span class="pre">e401</span></code> as an instrument for participation <code class="docutils literal notranslate"><span class="pre">p401</span></code>. To fit an <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> model with an instrument, we have to change the data backend and specify the instrument.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[83]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize DoubleMLData with an instrument</span>
@@ -1145,16 +1155,16 @@ No. Observations: 9915
 
 ------------------ DataFrame info    ------------------
 &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Int64Index: 9915 entries, 0 to 9914
+RangeIndex: 9915 entries, 0 to 9914
 Columns: 14 entries, nifa to hown
 dtypes: float32(4), int8(10)
-memory usage: 329.2 KB
+memory usage: 251.9 KB
 
 </pre></div></div>
 </div>
 <p>The estimation of local treatment effects can be easily done by adjusting the score in the <code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> object to <code class="docutils literal notranslate"><span class="pre">score=&quot;LPQ&quot;</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[84]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -1180,8 +1190,8 @@ memory usage: 329.2 KB
 ================== DoubleMLQTE Object ==================
 
 ------------------ Fit summary       ------------------
-         coef      std err          t         P&gt;|t|         2.5 %  \
-0.10   2610.0   487.701966   5.351629  8.716595e-08   1654.121711
+         coef      std err          t         P&gt;|t|         2.5 %
+0.10   2610.0   487.701966   5.351629  8.716595e-08   1654.121711  \
 0.15   1773.0   357.148790   4.964318  6.894307e-07   1073.001234
 0.20   1398.0   386.526532   3.616828  2.982353e-04    640.421919
 0.25   1435.0   384.956574   3.727693  1.932404e-04    680.498979
@@ -1195,7 +1205,7 @@ memory usage: 329.2 KB
 0.65  14625.0  1443.080854  10.134567  3.880880e-24  11796.613498
 0.70  16984.0  1576.564577  10.772791  4.627588e-27  13893.990210
 0.75  19758.0  2865.426736   6.895308  5.374821e-12  14141.866798
-0.80  23856.0  2281.099670  10.458114  1.345065e-25  19385.126802
+0.80  24005.0  2298.169596  10.445269  1.540179e-25  19500.670361
 0.85  27751.0  3151.771741   8.804889  1.309823e-18  21573.640900
 0.90  30645.0  4634.200110   6.612792  3.771390e-11  21562.134687
 
@@ -1214,14 +1224,14 @@ memory usage: 329.2 KB
 0.65  17453.386502
 0.70  20074.009790
 0.75  25374.133202
-0.80  28326.873198
+0.80  28509.329639
 0.85  33928.359100
 0.90  39727.865313
 </pre></div></div>
 </div>
 <p>Estimation of the corresponding (uniformly) valid confidence intervals can be done analogously to the quantile treatment effects.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[85]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_LQTE</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
@@ -1240,28 +1250,28 @@ memory usage: 329.2 KB
 <div class="output_area docutils container">
 <div class="highlight"><pre>
       Quantile  DML LQTE  DML LQTE lower  DML LQTE upper
-0.10      0.10    2610.0     1255.980026     3964.019974
-0.15      0.15    1773.0      781.438289     2764.561711
-0.20      0.20    1398.0      324.876083     2471.123917
-0.25      0.25    1435.0      366.234798     2503.765202
-0.30      0.30    1400.0      186.808284     2613.191716
-0.35      0.35    2500.0     1148.269977     3851.730023
-0.40      0.40    3985.0     2328.296228     5641.703772
-0.45      0.45    5175.0     3120.803563     7229.196437
-0.50      0.50    7239.0     5085.261777     9392.738223
-0.55      0.55    9500.0     6420.987220    12579.012780
-0.60      0.60   11750.0     8152.681562    15347.318438
-0.65      0.65   14625.0    10618.536143    18631.463857
-0.70      0.70   16984.0    12606.941724    21361.058276
-0.75      0.75   19758.0    11802.639345    27713.360655
-0.80      0.80   23856.0    17522.922160    30189.077840
-0.85      0.85   27751.0    19000.652071    36501.347929
-0.90      0.90   30645.0    17778.946658    43511.053342
+0.10      0.10    2610.0     1255.761419     3964.238581
+0.15      0.15    1773.0      781.278202     2764.721798
+0.20      0.20    1398.0      324.702827     2471.297173
+0.25      0.25    1435.0      366.062246     2503.937754
+0.30      0.30    1400.0      186.612415     2613.387585
+0.35      0.35    2500.0     1148.051740     3851.948260
+0.40      0.40    3985.0     2328.028753     5641.971247
+0.45      0.45    5175.0     3120.471914     7229.528086
+0.50      0.50    7239.0     5084.914056     9393.085944
+0.55      0.55    9500.0     6420.490114    12579.509886
+0.60      0.60   11750.0     8152.100775    15347.899225
+0.65      0.65   14625.0    10617.889300    18632.110700
+0.70      0.70   16984.0    12606.235049    21361.764951
+0.75      0.75   19758.0    11801.354953    27714.645047
+0.80      0.80   24005.0    17623.500342    30386.499658
+0.85      0.85   27751.0    18999.239329    36502.760671
+0.90      0.90   30645.0    17776.869436    43513.130564
 </pre></div></div>
 </div>
 <p>Finally, let us take a look at the estimated local quantile treatment effects.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[86]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
@@ -1296,11 +1306,11 @@ memory usage: 329.2 KB
               <footer class="bd-footer-article">
                   <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="py_double_ml_cate.html" title="previous page">
+  <a class='left-prev' id="prev-link" href="py_double_ml_did_pretest.html" title="previous page">
       <i class="fas fa-angle-left"></i>
       <div class="prev-next-info">
           <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title">Python: Conditional Average Treatment Effects (CATEs)</p>
+          <p class="prev-next-title">Python: Difference-in-Differences Pre-Testing</p>
       </div>
   </a>
   <a class='right-next' id="next-link" href="py_double_ml_pq.html" title="next page">

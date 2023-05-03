@@ -235,6 +235,16 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_did.html">
+   Python: Difference-in-Differences
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_did_pretest.html">
+   Python: Difference-in-Differences Pre-Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="py_double_ml_pension_qte.html">
    Python: Impact of 401(k) on Financial Wealth (Quantile Effects)
   </a>
@@ -376,7 +386,7 @@ Download Jupyter notebook:
 <h3>Data<a class="headerlink" href="#Data" title="Permalink to this headline">#</a></h3>
 <p>We define a data generating process to create synthetic data to compare the estimates to the true effect.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -402,7 +412,7 @@ Download Jupyter notebook:
 \[D_i = 1_{\{(X_2 - X_4 + 1.5\cdot 1\{x_1 &gt; 0\} + \epsilon_i &gt; 0)\}}\]</div>
 <p>with <span class="math notranslate nohighlight">\(\epsilon_i \sim \mathcal{N}(0,1)\)</span>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f_loc</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
@@ -426,7 +436,7 @@ Download Jupyter notebook:
 </div>
 <p>We can calculate the true potential quantile analytically or through simulations. Here, we will just approximate the true potential quantile for a range of quantiles.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tau_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.95</span><span class="p">,</span><span class="mf">0.05</span><span class="p">)</span>
@@ -452,17 +462,17 @@ Download Jupyter notebook:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Potential Quantile Y(0): [-3.33027627 -2.71481574 -2.21216174 -1.77332649 -1.37362591 -0.99966561
- -0.64265002 -0.29514075  0.04631682  0.38809478  0.73441299  1.09121969
-  1.46525208  1.86601598  2.3070236   2.81176863  3.43289944]
-Potential Quantile Y(1): [-3.23701655 -2.53903607 -1.97328008 -1.48163666 -1.0375834  -0.62169984
- -0.22627814  0.1573701   0.53730363  0.91665917  1.30219618  1.70034559
-  2.1176398   2.56680284  3.06349984  3.63548248  4.34881561]
+Potential Quantile Y(0): [-3.32705592 -2.71195998 -2.20984372 -1.77099463 -1.37153087 -0.998068
+ -0.64149314 -0.29493993  0.04807461  0.39010974  0.7364947   1.09305877
+  1.46735201  1.86748229  2.30728533  2.81166467  3.43253439]
+Potential Quantile Y(1): [-3.23435847 -2.53570135 -1.97179908 -1.48119142 -1.03561948 -0.61984102
+ -0.22397076  0.15987648  0.53891142  0.91827919  1.3029356   1.70054946
+  2.11768958  2.5679703   3.06498591  3.63749975  4.34831318]
 </pre></div></div>
 </div>
 <p>Let us generate <span class="math notranslate nohighlight">\(n=5000\)</span> observations and convert them to a <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLData.html">DoubleMLData</a> object.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">5000</span>
@@ -477,7 +487,7 @@ Potential Quantile Y(1): [-3.23701655 -2.53903607 -1.97328008 -1.48163666 -1.037
 <h3>Potential Quantile Estimation<a class="headerlink" href="#Potential-Quantile-Estimation" title="Permalink to this headline">#</a></h3>
 <p>Next, we can initialize our two machine learning algorithms to train the different nuisance elements. Then we can initialize the <code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> objects and call <code class="docutils literal notranslate"><span class="pre">fit()</span></code> to estimate the relevant parameters. To obtain confidence intervals, we can use the <code class="docutils literal notranslate"><span class="pre">confint()</span></code> method.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -539,7 +549,7 @@ Quantile: 0.9000000000000002
 </div>
 <p>Finally, let us take a look at the estimated quantiles.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span> <span class="s2">&quot;Y(0)&quot;</span><span class="p">:</span> <span class="n">Y0_quant</span><span class="p">,</span> <span class="s2">&quot;Y(1)&quot;</span><span class="p">:</span> <span class="n">Y1_quant</span><span class="p">,</span>
@@ -556,24 +566,24 @@ Quantile: 0.9000000000000002
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-    Quantile      Y(0)      Y(1)  DML Y(0)  DML Y(1)  DML Y(0) lower  \
-0       0.10 -3.330276 -3.237017 -3.408565 -3.128312       -3.813293
-1       0.15 -2.714816 -2.539036 -2.855780 -2.495752       -3.245512
-2       0.20 -2.212162 -1.973280 -2.345903 -1.978977       -2.638264
-3       0.25 -1.773326 -1.481637 -1.924002 -1.533900       -2.189737
-4       0.30 -1.373626 -1.037583 -1.482483 -1.148161       -1.683942
-5       0.35 -0.999666 -0.621700 -1.246879 -0.700102       -1.509196
-6       0.40 -0.642650 -0.226278 -0.932973 -0.291406       -1.244455
-7       0.45 -0.295141  0.157370 -0.665264  0.145245       -0.949456
-8       0.50  0.046317  0.537304 -0.077319  0.496551       -0.411582
-9       0.55  0.388095  0.916659  0.378834  0.760104        0.070020
-10      0.60  0.734413  1.302196  0.479928  1.216344        0.168614
-11      0.65  1.091220  1.700346  1.059384  1.655284        0.677614
-12      0.70  1.465252  2.117640  1.544097  2.036147        1.215342
-13      0.75  1.866016  2.566803  1.700015  2.493219        1.400823
-14      0.80  2.307024  3.063500  2.187690  2.988463        1.872768
-15      0.85  2.811769  3.635482  2.631333  3.542647        2.226524
-16      0.90  3.432899  4.348816  3.113207  4.243246        2.753523
+    Quantile      Y(0)      Y(1)  DML Y(0)  DML Y(1)  DML Y(0) lower
+0       0.10 -3.327056 -3.234358 -3.408565 -3.128312       -3.813293  \
+1       0.15 -2.711960 -2.535701 -2.855780 -2.495752       -3.245512
+2       0.20 -2.209844 -1.971799 -2.345903 -1.978977       -2.638264
+3       0.25 -1.770995 -1.481191 -1.924002 -1.533900       -2.189737
+4       0.30 -1.371531 -1.035619 -1.482483 -1.148161       -1.683942
+5       0.35 -0.998068 -0.619841 -1.246879 -0.700102       -1.509196
+6       0.40 -0.641493 -0.223971 -0.932973 -0.291406       -1.244455
+7       0.45 -0.294940  0.159876 -0.665264  0.145245       -0.949456
+8       0.50  0.048075  0.538911 -0.077319  0.496551       -0.411582
+9       0.55  0.390110  0.918279  0.378834  0.760104        0.070020
+10      0.60  0.736495  1.302936  0.479928  1.216344        0.168614
+11      0.65  1.093059  1.700549  1.059384  1.655284        0.677614
+12      0.70  1.467352  2.117690  1.544097  2.036147        1.215342
+13      0.75  1.867482  2.567970  1.700015  2.493219        1.400823
+14      0.80  2.307285  3.064986  2.187690  2.988463        1.872768
+15      0.85  2.811665  3.637500  2.631333  3.542647        2.226524
+16      0.90  3.432534  4.348313  3.113207  4.243246        2.753523
 
     DML Y(0) upper  DML Y(1) lower  DML Y(1) upper
 0        -3.003836       -3.448745       -2.807879
@@ -596,7 +606,7 @@ Quantile: 0.9000000000000002
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -635,7 +645,7 @@ Quantile: 0.9000000000000002
 <p>In most cases, we want to evaluate the quantile treatment effect as the difference between potential quantiles. Here, different quantiles can be estimated in parallel with <code class="docutils literal notranslate"><span class="pre">n_jobs_models</span></code>.</p>
 <p>To estimate the quantile treatment effect, we can use</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
@@ -657,7 +667,7 @@ Quantile: 0.9000000000000002
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Number of Cores used: 5
+Number of Cores used: 1
 ================== DoubleMLQTE Object ==================
 
 ------------------ Fit summary       ------------------
@@ -683,7 +693,7 @@ Number of Cores used: 5
 </div>
 <p>As for other <code class="docutils literal notranslate"><span class="pre">dml</span></code> objects, we can use <code class="docutils literal notranslate"><span class="pre">bootstrap()</span></code> and <code class="docutils literal notranslate"><span class="pre">confint()</span></code> methods to generate jointly valid confidence intervals.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_QTE</span> <span class="o">=</span> <span class="n">dml_QTE</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -695,7 +705,7 @@ Number of Cores used: 5
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -813,7 +823,7 @@ Number of Cores used: 5
 </div>
 <p>As before, let us take a look at the estimated effects and confidence intervals.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">QTE</span> <span class="o">=</span> <span class="n">Y1_quant</span> <span class="o">-</span> <span class="n">Y0_quant</span>
@@ -830,24 +840,24 @@ Number of Cores used: 5
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-      Quantile       QTE   DML QTE  DML QTE pointwise lower  \
-0.10      0.10  0.093260  0.267950                -0.186735
-0.15      0.15  0.175780  0.293218                -0.081100
-0.20      0.20  0.238882  0.388071                 0.059685
-0.25      0.25  0.291690  0.406285                 0.090255
-0.30      0.30  0.336043  0.466756                 0.169196
-0.35      0.35  0.377966  0.606129                 0.313535
-0.40      0.40  0.416372  0.708459                 0.398770
-0.45      0.45  0.452511  0.725166                 0.419371
-0.50      0.50  0.490987  0.509461                 0.186836
-0.55      0.55  0.528564  0.488811                 0.172793
-0.60      0.60  0.567783  0.542989                 0.225175
-0.65      0.65  0.609126  0.699035                 0.325056
-0.70      0.70  0.652388  0.516528                 0.133596
-0.75      0.75  0.700787  0.685107                 0.204794
-0.80      0.80  0.756476  0.893851                 0.457088
-0.85      0.85  0.823714  0.896023                 0.484640
-0.90      0.90  0.915916  1.229443                 0.880579
+      Quantile       QTE   DML QTE  DML QTE pointwise lower
+0.10      0.10  0.092697  0.267950                -0.186735  \
+0.15      0.15  0.176259  0.293218                -0.081100
+0.20      0.20  0.238045  0.388071                 0.059685
+0.25      0.25  0.289803  0.406285                 0.090255
+0.30      0.30  0.335911  0.466756                 0.169196
+0.35      0.35  0.378227  0.606129                 0.313535
+0.40      0.40  0.417522  0.708459                 0.398770
+0.45      0.45  0.454816  0.725166                 0.419371
+0.50      0.50  0.490837  0.509461                 0.186836
+0.55      0.55  0.528169  0.488811                 0.172793
+0.60      0.60  0.566441  0.542989                 0.225175
+0.65      0.65  0.607491  0.699035                 0.325056
+0.70      0.70  0.650338  0.516528                 0.133596
+0.75      0.75  0.700488  0.685107                 0.204794
+0.80      0.80  0.757701  0.893851                 0.457088
+0.85      0.85  0.825835  0.896023                 0.484640
+0.90      0.90  0.915779  1.229443                 0.880579
 
       DML QTE pointwise upper  DML QTE joint lower  DML QTE joint upper
 0.10                 0.722634            -0.399692             0.935591
@@ -870,7 +880,7 @@ Number of Cores used: 5
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
@@ -905,7 +915,7 @@ Number of Cores used: 5
 <h3>Data<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
 <p>We add a counfounder and an instrument to our data generating process.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -930,7 +940,7 @@ D_i &amp;=1\{0.5Z_i -0.3X_{i,1}+0.7X^{(conf)}_i + \eta_i &gt; 0\},
 \text{scale}(d,x, x^{(conf)}) &amp;:= \sqrt{0.5d + 3dx_1 + 0.4x^{(conf)} + 2}
 \end{aligned}\end{split}\]</div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f_loc</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">X_conf</span><span class="p">):</span>
@@ -961,7 +971,7 @@ D_i &amp;=1\{0.5Z_i -0.3X_{i,1}+0.7X^{(conf)}_i + \eta_i &gt; 0\},
 </div>
 <p>Next, we will just simulate the true quantile for a range of quantiles.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tau_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.95</span><span class="p">,</span><span class="mf">0.05</span><span class="p">)</span>
@@ -970,7 +980,7 @@ D_i &amp;=1\{0.5Z_i -0.3X_{i,1}+0.7X^{(conf)}_i + \eta_i &gt; 0\},
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">=</span><span class="mi">5</span>
@@ -999,7 +1009,7 @@ Compliance probability: 0.3245837
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Y0_quant</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">Y0</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="n">tau_vec</span><span class="p">)</span>
@@ -1025,7 +1035,7 @@ Local Potential Quantile Y(1): [-3.19031969 -2.53273833 -2.01574297 -1.57245066 
 </div>
 <p>Let us generate <span class="math notranslate nohighlight">\(n=10000\)</span> observations and convert them to a <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLData.html">DoubleMLData</a> object.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">10000</span>
@@ -1040,7 +1050,7 @@ Local Potential Quantile Y(1): [-3.19031969 -2.53273833 -2.01574297 -1.57245066 
 <h3>Local Potential Quantile Estimation<a class="headerlink" href="#Local-Potential-Quantile-Estimation" title="Permalink to this headline">#</a></h3>
 <p>Next, we can initialize our two machine learning algorithms to train the different nuisance elements. As above, we can initialize the <code class="docutils literal notranslate"><span class="pre">DoubleMLLPQ</span></code> objects and call <code class="docutils literal notranslate"><span class="pre">fit()</span></code> to estimate the relevant parameters. To obtain confidence intervals, we can use the <code class="docutils literal notranslate"><span class="pre">confint()</span></code> method.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -1108,7 +1118,7 @@ Quantile: 0.9000000000000002
 </div>
 <p>Finally, let us take a look at the estimated local quantiles.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span> <span class="s2">&quot;Y(0)&quot;</span><span class="p">:</span> <span class="n">Y0_quant</span><span class="p">,</span> <span class="s2">&quot;Y(1)&quot;</span><span class="p">:</span> <span class="n">Y1_quant</span><span class="p">,</span>
@@ -1125,8 +1135,8 @@ Quantile: 0.9000000000000002
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-    Quantile      Y(0)      Y(1)  DML Y(0)  DML Y(1)  DML Y(0) lower  \
-0       0.10 -4.075384 -3.190320 -4.231310 -3.306963       -4.976088
+    Quantile      Y(0)      Y(1)  DML Y(0)  DML Y(1)  DML Y(0) lower
+0       0.10 -4.075384 -3.190320 -4.231310 -3.306963       -4.976088  \
 1       0.15 -3.536067 -2.532738 -3.188223 -2.826492       -4.009122
 2       0.20 -3.108786 -2.015743 -2.641528 -1.935730       -3.164801
 3       0.25 -2.744026 -1.572451 -2.387426 -1.590813       -2.838114
@@ -1137,7 +1147,7 @@ Quantile: 0.9000000000000002
 8       0.50 -1.292997  0.188175 -1.144669  0.317487       -1.566024
 9       0.55 -1.029010  0.512149 -0.970065  0.516255       -1.441209
 10      0.60 -0.762284  0.840303 -0.649158  0.793570       -1.180951
-11      0.65 -0.489550  1.176554 -0.355209  1.556792       -0.919432
+11      0.65 -0.489550  1.176554 -0.352246  1.556792       -0.916984
 12      0.70 -0.204007  1.530940 -0.077883  1.742907       -0.742128
 13      0.75  0.100896  1.911030  0.354371  1.995248       -0.379614
 14      0.80  0.434535  2.331756  0.692725  2.562013        0.009986
@@ -1156,7 +1166,7 @@ Quantile: 0.9000000000000002
 8        -0.723314       -0.260360        0.895333
 9        -0.498921       -0.098319        1.130829
 10       -0.117366        0.070884        1.516256
-11        0.209014        0.793735        2.319850
+11        0.212491        0.793735        2.319850
 12        0.586362        0.973241        2.512572
 13        1.088357        1.168931        2.821566
 14        1.375465        1.685807        3.438219
@@ -1165,7 +1175,7 @@ Quantile: 0.9000000000000002
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -1204,7 +1214,7 @@ Quantile: 0.9000000000000002
 <p>As for quantile treatment effects, we often want to evaluate the (local) treatment effect. To estimate local quantile treatment effects, we can use the <code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> object and specify <code class="docutils literal notranslate"><span class="pre">LPQ</span></code> as the score.</p>
 <p>As for quantile treatment effects, different quantiles can be estimated in parallel with <code class="docutils literal notranslate"><span class="pre">n_jobs_models</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
@@ -1227,7 +1237,7 @@ Quantile: 0.9000000000000002
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Number of Cores used: 5
+Number of Cores used: 1
 ================== DoubleMLQTE Object ==================
 
 ------------------ Fit summary       ------------------
@@ -1240,7 +1250,7 @@ Number of Cores used: 5
 0.35  1.220772  0.297682  4.100923  4.115060e-05  0.637326  1.804219
 0.40  1.369796  0.292105  4.689392  2.740180e-06  0.797280  1.942312
 0.45  1.403425  0.287041  4.889293  1.011988e-06  0.840836  1.966015
-0.50  1.500517  0.283974  5.283994  1.263974e-07  0.943938  2.057095
+0.50  1.501403  0.284073  5.285276  1.255151e-07  0.944630  2.058175
 0.55  1.642016  0.304130  5.399056  6.699259e-08  1.045932  2.238101
 0.60  1.502995  0.350518  4.287926  1.803492e-05  0.815993  2.189998
 0.65  1.901148  0.335846  5.660776  1.506900e-08  1.242902  2.559394
@@ -1248,12 +1258,12 @@ Number of Cores used: 5
 0.75  1.844308  0.339570  5.431306  5.594316e-08  1.178763  2.509853
 0.80  1.916914  0.305775  6.269043  3.632747e-10  1.317607  2.516222
 0.85  2.087947  0.346206  6.030934  1.630150e-09  1.409395  2.766499
-0.90  2.250354  0.536746  4.192587  2.757917e-05  1.198351  3.302357
+0.90  2.278907  0.541010  4.212317  2.527644e-05  1.218546  3.339268
 </pre></div></div>
 </div>
 <p>As for other <code class="docutils literal notranslate"><span class="pre">dml</span></code> objects, we can use <code class="docutils literal notranslate"><span class="pre">bootstrap()</span></code> and <code class="docutils literal notranslate"><span class="pre">confint()</span></code> methods to generate jointly valid confidence intervals.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_LQTE</span> <span class="o">=</span> <span class="n">dml_LQTE</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1265,7 +1275,7 @@ Number of Cores used: 5
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1294,88 +1304,88 @@ Number of Cores used: 5
   <tbody>
     <tr>
       <th>0.10</th>
-      <td>-0.206614</td>
-      <td>2.413608</td>
+      <td>-0.208300</td>
+      <td>2.415294</td>
     </tr>
     <tr>
       <th>0.15</th>
-      <td>-0.617877</td>
-      <td>2.722881</td>
+      <td>-0.620026</td>
+      <td>2.725031</td>
     </tr>
     <tr>
       <th>0.20</th>
-      <td>-0.455120</td>
-      <td>1.870857</td>
+      <td>-0.456617</td>
+      <td>1.872354</td>
     </tr>
     <tr>
       <th>0.25</th>
-      <td>-0.277968</td>
-      <td>2.140926</td>
+      <td>-0.279524</td>
+      <td>2.142482</td>
     </tr>
     <tr>
       <th>0.30</th>
-      <td>0.258951</td>
-      <td>2.106746</td>
+      <td>0.257762</td>
+      <td>2.107935</td>
     </tr>
     <tr>
       <th>0.35</th>
-      <td>0.379038</td>
-      <td>2.062507</td>
+      <td>0.377955</td>
+      <td>2.063590</td>
     </tr>
     <tr>
       <th>0.40</th>
-      <td>0.543832</td>
-      <td>2.195761</td>
+      <td>0.542769</td>
+      <td>2.196824</td>
     </tr>
     <tr>
       <th>0.45</th>
-      <td>0.591782</td>
-      <td>2.215069</td>
+      <td>0.590738</td>
+      <td>2.216113</td>
     </tr>
     <tr>
       <th>0.50</th>
-      <td>0.697545</td>
-      <td>2.303489</td>
+      <td>0.697118</td>
+      <td>2.305687</td>
     </tr>
     <tr>
       <th>0.55</th>
-      <td>0.782050</td>
-      <td>2.501983</td>
+      <td>0.780943</td>
+      <td>2.503089</td>
     </tr>
     <tr>
       <th>0.60</th>
-      <td>0.511862</td>
-      <td>2.494129</td>
+      <td>0.510586</td>
+      <td>2.495405</td>
     </tr>
     <tr>
       <th>0.65</th>
-      <td>0.951502</td>
-      <td>2.850794</td>
+      <td>0.950280</td>
+      <td>2.852016</td>
     </tr>
     <tr>
       <th>0.70</th>
-      <td>0.889963</td>
-      <td>2.764798</td>
+      <td>0.888757</td>
+      <td>2.766005</td>
     </tr>
     <tr>
       <th>0.75</th>
-      <td>0.884132</td>
-      <td>2.804484</td>
+      <td>0.882896</td>
+      <td>2.805720</td>
     </tr>
     <tr>
       <th>0.80</th>
-      <td>1.052298</td>
-      <td>2.781530</td>
+      <td>1.051186</td>
+      <td>2.782643</td>
     </tr>
     <tr>
       <th>0.85</th>
-      <td>1.109005</td>
-      <td>3.066889</td>
+      <td>1.107746</td>
+      <td>3.068148</td>
     </tr>
     <tr>
       <th>0.90</th>
-      <td>0.732638</td>
-      <td>3.768071</td>
+      <td>0.747164</td>
+      <td>3.810650</td>
     </tr>
   </tbody>
 </table>
@@ -1383,7 +1393,7 @@ Number of Cores used: 5
 </div>
 <p>As before, let us take a look at the estimated effects and confidence intervals.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LQTE</span> <span class="o">=</span> <span class="n">Y1_quant</span> <span class="o">-</span> <span class="n">Y0_quant</span>
@@ -1400,8 +1410,8 @@ Number of Cores used: 5
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-      Quantile      LQTE  DML LQTE  DML LQTE pointwise lower  \
-0.10      0.10  0.885065  1.103497                  0.195396
+      Quantile      LQTE  DML LQTE  DML LQTE pointwise lower
+0.10      0.10  0.885065  1.103497                  0.195396  \
 0.15      0.15  1.003328  1.052502                 -0.105318
 0.20      0.20  1.093043  0.707868                 -0.098256
 0.25      0.25  1.171575  0.931479                  0.093153
@@ -1409,7 +1419,7 @@ Number of Cores used: 5
 0.35      0.35  1.305341  1.220772                  0.637326
 0.40      0.40  1.364800  1.369796                  0.797280
 0.45      0.45  1.424328  1.403425                  0.840836
-0.50      0.50  1.481172  1.500517                  0.943938
+0.50      0.50  1.481172  1.501403                  0.944630
 0.55      0.55  1.541159  1.642016                  1.045932
 0.60      0.60  1.602587  1.502995                  0.815993
 0.65      0.65  1.666104  1.901148                  1.242902
@@ -1417,30 +1427,30 @@ Number of Cores used: 5
 0.75      0.75  1.810134  1.844308                  1.178763
 0.80      0.80  1.897220  1.916914                  1.317607
 0.85      0.85  2.000017  2.087947                  1.409395
-0.90      0.90  2.137396  2.250354                  1.198351
+0.90      0.90  2.137396  2.278907                  1.218546
 
       DML LQTE pointwise upper  DML LQTE joint lower  DML LQTE joint upper
-0.10                  2.011598             -0.206614              2.413608
-0.15                  2.210323             -0.617877              2.722881
-0.20                  1.513992             -0.455120              1.870857
-0.25                  1.769805             -0.277968              2.140926
-0.30                  1.823247              0.258951              2.106746
-0.35                  1.804219              0.379038              2.062507
-0.40                  1.942312              0.543832              2.195761
-0.45                  1.966015              0.591782              2.215069
-0.50                  2.057095              0.697545              2.303489
-0.55                  2.238101              0.782050              2.501983
-0.60                  2.189998              0.511862              2.494129
-0.65                  2.559394              0.951502              2.850794
-0.70                  2.477150              0.889963              2.764798
-0.75                  2.509853              0.884132              2.804484
-0.80                  2.516222              1.052298              2.781530
-0.85                  2.766499              1.109005              3.066889
-0.90                  3.302357              0.732638              3.768071
+0.10                  2.011598             -0.208300              2.415294
+0.15                  2.210323             -0.620026              2.725031
+0.20                  1.513992             -0.456617              1.872354
+0.25                  1.769805             -0.279524              2.142482
+0.30                  1.823247              0.257762              2.107935
+0.35                  1.804219              0.377955              2.063590
+0.40                  1.942312              0.542769              2.196824
+0.45                  1.966015              0.590738              2.216113
+0.50                  2.058175              0.697118              2.305687
+0.55                  2.238101              0.780943              2.503089
+0.60                  2.189998              0.510586              2.495405
+0.65                  2.559394              0.950280              2.852016
+0.70                  2.477150              0.888757              2.766005
+0.75                  2.509853              0.882896              2.805720
+0.80                  2.516222              1.051186              2.782643
+0.85                  2.766499              1.107746              3.068148
+0.90                  3.339268              0.747164              3.810650
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
