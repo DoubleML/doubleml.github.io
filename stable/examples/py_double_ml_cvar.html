@@ -235,6 +235,16 @@
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_did.html">
+   Python: Difference-in-Differences
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_did_pretest.html">
+   Python: Difference-in-Differences Pre-Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="py_double_ml_pension_qte.html">
    Python: Impact of 401(k) on Financial Wealth (Quantile Effects)
   </a>
@@ -344,7 +354,7 @@ Download Jupyter notebook:
 <h2>Data<a class="headerlink" href="#Data" title="Permalink to this headline">#</a></h2>
 <p>We define a data generating process to create synthetic data to compare the estimates to the true effect.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -370,7 +380,7 @@ Download Jupyter notebook:
 \[D_i = 1_{\{(X_2 - X_4 + 1.5\cdot 1\{x_1 &gt; 0\} + \epsilon_i &gt; 0)\}}\]</div>
 <p>with <span class="math notranslate nohighlight">\(\epsilon_i \sim \mathcal{N}(0,1)\)</span>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f_loc</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
@@ -394,7 +404,7 @@ Download Jupyter notebook:
 </div>
 <p>We can calculate the true conditional value at risk through simulations. Here, we will just approximate the true conditional value at risk for the potential outcomes for a range of quantiles.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tau_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.95</span><span class="p">,</span><span class="mf">0.05</span><span class="p">)</span>
@@ -424,13 +434,13 @@ Download Jupyter notebook:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Conditional Value at Risk Y(0): [0.5464721902674523, 0.7558418421542786, 0.9568109127708179, 1.1533026789547542, 1.3480442380316071, 1.54300134403715, 1.7399790101790782, 1.9407906549937055, 2.147354180291852, 2.3618462669326434, 2.5870219544879713, 2.826362334705478, 3.0846894637160958, 3.3691221834089964, 3.6910425211992015, 4.071132843213817, 4.552655801951005]
-Conditional Value at Risk Y(1): [1.1116910986342647, 1.3462661419999322, 1.5710406113977469, 1.7906646913935447, 2.008305536315015, 2.2263613749390347, 2.4469874756982204, 2.6723438635169248, 2.9046273148191775, 3.1464979072898736, 3.4011711752888956, 3.672693830071768, 3.9669649543634553, 4.292708682184958, 4.663754887301303, 5.104909615902241, 5.669323104684439]
+Conditional Value at Risk Y(0): [0.5463302748318352, 0.7555935124193088, 0.9564818081006679, 1.152953261578174, 1.3475859441227702, 1.5424811604662956, 1.73946570933653, 1.940289744333854, 2.1468653403384583, 2.361368508595437, 2.586507993952013, 2.8258264408545437, 3.084071273939733, 3.3683101355079135, 3.690021661258282, 4.069855920789885, 4.551279630624794]
+Conditional Value at Risk Y(1): [1.111791714253764, 1.3462508808567577, 1.5709480792359514, 1.7906407760927567, 2.0083256920962955, 2.2264063190644037, 2.44706708008209, 2.672451172080943, 2.904846952049478, 3.146772548031351, 3.401393234667088, 3.6730514939358474, 3.967516943801802, 4.293396223113451, 4.664320037449978, 5.10522423537331, 5.668773141986508]
 </pre></div></div>
 </div>
 <p>Let us generate <span class="math notranslate nohighlight">\(n=5000\)</span> observations and convert them to a <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLData.html">DoubleMLData</a> object.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">5000</span>
@@ -445,7 +455,7 @@ Conditional Value at Risk Y(1): [1.1116910986342647, 1.3462661419999322, 1.57104
 <h2>Conditional Value at Risk (CVaR)<a class="headerlink" href="#Conditional-Value-at-Risk-(CVaR)" title="Permalink to this headline">#</a></h2>
 <p>Next, we can initialize our two machine learning algorithms to train the different nuisance elements (remark that in contrast to potential quantile estimation <code class="docutils literal notranslate"><span class="pre">ml_g</span></code> is a regressor). Then we can initialize the <code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR</span></code> objects and call <code class="docutils literal notranslate"><span class="pre">fit()</span></code> to estimate the relevant parameters. To obtain confidence intervals, we can use the <code class="docutils literal notranslate"><span class="pre">confint()</span></code> method.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -507,7 +517,7 @@ Quantile: 0.9000000000000002
 </div>
 <p>Finally, let us take a look at the estimated values.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Quantile&quot;</span><span class="p">:</span> <span class="n">tau_vec</span><span class="p">,</span> <span class="s2">&quot;CVaR Y(0)&quot;</span><span class="p">:</span> <span class="n">Y0_cvar</span><span class="p">,</span> <span class="s2">&quot;CVaR Y(1)&quot;</span><span class="p">:</span> <span class="n">Y1_cvar</span><span class="p">,</span>
@@ -524,27 +534,27 @@ Quantile: 0.9000000000000002
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-    Quantile  CVaR Y(0)  CVaR Y(1)  DML CVaR Y(0)  DML CVaR Y(1)  \
-0       0.10   0.546472   1.111691       0.360683       1.057962
-1       0.15   0.755842   1.346266       0.590911       1.273356
-2       0.20   0.956811   1.571041       0.829543       1.489699
-3       0.25   1.153303   1.790665       1.015038       1.697000
-4       0.30   1.348044   2.008306       1.203284       1.925736
-5       0.35   1.543001   2.226361       1.502494       2.144084
-6       0.40   1.739979   2.446987       1.678826       2.338775
-7       0.45   1.940791   2.672344       1.822482       2.559144
-8       0.50   2.147354   2.904627       2.153119       2.824701
-9       0.55   2.361846   3.146498       2.156969       3.041831
-10      0.60   2.587022   3.401171       2.495657       3.298120
-11      0.65   2.826362   3.672694       2.653846       3.582761
-12      0.70   3.084689   3.966965       2.847948       3.842405
-13      0.75   3.369122   4.292709       3.076347       4.163895
-14      0.80   3.691043   4.663755       3.523163       4.543075
-15      0.85   4.071133   5.104910       3.869020       4.913774
-16      0.90   4.552656   5.669323       4.372097       5.482038
+    Quantile  CVaR Y(0)  CVaR Y(1)  DML CVaR Y(0)  DML CVaR Y(1)
+0       0.10   0.546330   1.111792       0.360683       1.057962  \
+1       0.15   0.755594   1.346251       0.590911       1.273356
+2       0.20   0.956482   1.570948       0.829543       1.489699
+3       0.25   1.152953   1.790641       1.015038       1.697000
+4       0.30   1.347586   2.008326       1.203284       1.925736
+5       0.35   1.542481   2.226406       1.502494       2.144084
+6       0.40   1.739466   2.447067       1.678826       2.338775
+7       0.45   1.940290   2.672451       1.822482       2.559144
+8       0.50   2.146865   2.904847       2.153119       2.824701
+9       0.55   2.361369   3.146773       2.156969       3.041831
+10      0.60   2.586508   3.401393       2.495657       3.298120
+11      0.65   2.825826   3.673051       2.653846       3.582761
+12      0.70   3.084071   3.967517       2.847948       3.842405
+13      0.75   3.368310   4.293396       3.076347       4.163895
+14      0.80   3.690022   4.664320       3.523163       4.543075
+15      0.85   4.069856   5.105224       3.869020       4.913774
+16      0.90   4.551280   5.668773       4.372097       5.482038
 
-    DML CVaR Y(0) lower  DML CVaR Y(0) upper  DML CVaR Y(1) lower  \
-0              0.162710             0.558655             0.957745
+    DML CVaR Y(0) lower  DML CVaR Y(0) upper  DML CVaR Y(1) lower
+0              0.162710             0.558655             0.957745  \
 1              0.360801             0.821021             1.175284
 2              0.606342             1.052745             1.393604
 3              0.824889             1.205187             1.601061
@@ -583,7 +593,7 @@ Quantile: 0.9000000000000002
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -622,7 +632,7 @@ Quantile: 0.9000000000000002
 <p>In most cases, we want to evaluate the treatment effect on the CVaR as the difference between potential CVaRs. To estimate the treatment effect, we can use the <code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> object and specify <code class="docutils literal notranslate"><span class="pre">CVaR</span></code> as the score.</p>
 <p>As for quantile treatment effects, different quantiles can be estimated in parallel with <code class="docutils literal notranslate"><span class="pre">n_jobs_models</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_cores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
@@ -645,7 +655,7 @@ Quantile: 0.9000000000000002
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Number of Cores used: 5
+Number of Cores used: 1
 ================== DoubleMLQTE Object ==================
 
 ------------------ Fit summary       ------------------
@@ -671,7 +681,7 @@ Number of Cores used: 5
 </div>
 <p>As for standard <code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR</span></code> objects, we can construct valid confidencebands with the <code class="docutils literal notranslate"><span class="pre">confint()</span></code> method. Additionally, it might be helpful to construct uniformly valid confidence regions via boostrap.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_CVAR</span> <span class="o">=</span> <span class="n">dml_CVAR</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -683,7 +693,7 @@ Number of Cores used: 5
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -801,7 +811,7 @@ Number of Cores used: 5
 </div>
 <p>Finally, we can compare the predicted treatment effect with the true treatment effect on the CVaR.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CVAR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y1_cvar</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y0_cvar</span><span class="p">)</span>
@@ -818,24 +828,24 @@ Number of Cores used: 5
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-      Quantile      CVaR  DML CVaR  DML CVaR pointwise lower  \
-0.10      0.10  0.565219  0.627564                  0.424108
-0.15      0.15  0.590424  0.677980                  0.476856
-0.20      0.20  0.614230  0.706645                  0.509951
-0.25      0.25  0.637362  0.716793                  0.515358
-0.30      0.30  0.660261  0.716762                  0.506903
-0.35      0.35  0.683360  0.740869                  0.520930
-0.40      0.40  0.707008  0.756969                  0.532266
-0.45      0.45  0.731553  0.751710                  0.521002
-0.50      0.50  0.757273  0.779682                  0.539767
-0.55      0.55  0.784652  0.786744                  0.531223
-0.60      0.60  0.814149  0.814351                  0.543136
-0.65      0.65  0.846331  0.848868                  0.565066
-0.70      0.70  0.882275  0.946968                  0.643512
-0.75      0.75  0.923586  0.997621                  0.674609
-0.80      0.80  0.972712  1.073520                  0.699333
-0.85      0.85  1.033777  1.053558                  0.590991
-0.90      0.90  1.116667  1.097468                  0.433221
+      Quantile      CVaR  DML CVaR  DML CVaR pointwise lower
+0.10      0.10  0.565461  0.627564                  0.424108  \
+0.15      0.15  0.590657  0.677980                  0.476856
+0.20      0.20  0.614466  0.706645                  0.509951
+0.25      0.25  0.637688  0.716793                  0.515358
+0.30      0.30  0.660740  0.716762                  0.506903
+0.35      0.35  0.683925  0.740869                  0.520930
+0.40      0.40  0.707601  0.756969                  0.532266
+0.45      0.45  0.732161  0.751710                  0.521002
+0.50      0.50  0.757982  0.779682                  0.539767
+0.55      0.55  0.785404  0.786744                  0.531223
+0.60      0.60  0.814885  0.814351                  0.543136
+0.65      0.65  0.847225  0.848868                  0.565066
+0.70      0.70  0.883446  0.946968                  0.643512
+0.75      0.75  0.925086  0.997621                  0.674609
+0.80      0.80  0.974298  1.073520                  0.699333
+0.85      0.85  1.035368  1.053558                  0.590991
+0.90      0.90  1.117494  1.097468                  0.433221
 
       DML CVaR pointwise upper  DML CVaR joint lower  DML CVaR joint upper
 0.10                  0.831019              0.367571              0.887556
@@ -858,7 +868,7 @@ Number of Cores used: 5
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>

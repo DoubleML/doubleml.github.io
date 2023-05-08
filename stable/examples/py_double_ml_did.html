@@ -1,0 +1,976 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Python: Difference-in-Differences &#8212; DoubleML  documentation</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python: Difference-in-Differences Pre-Testing" href="py_double_ml_did_pretest.html" />
+    <link rel="prev" title="Python: Conditional Average Treatment Effects (CATEs)" href="py_double_ml_cate.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="None">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">DoubleML  documentation</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  DoubleML
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../intro/install.html">
+  Install
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../intro/intro.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../guide/guide.html">
+  User guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../workflow/workflow.html">
+  Workflow
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../api/api.html">
+  Python API
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference external nav-link" href="https://docs.doubleml.org/r/stable/">
+  R API
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="index.html">
+  Examples
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../literature/literature.html">
+  Literature
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../release/release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <span id="theme-switch" class="btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/DoubleML/doubleml-for-py" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="R_double_ml_pension.html">
+   R: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="r_double_ml_multiway_cluster.html">
+   R: Cluster Robust Double Machine Learning
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pension.html">
+   Python: Impact of 401(k) on Financial Wealth
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_multiway_cluster.html">
+   Python: Cluster Robust Double Machine Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_gate.html">
+   Python: Group Average Treatment Effects (GATEs)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cate.html">
+   Python: Conditional Average Treatment Effects (CATEs)
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Python: Difference-in-Differences
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_did_pretest.html">
+   Python: Difference-in-Differences Pre-Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pension_qte.html">
+   Python: Impact of 401(k) on Financial Wealth (Quantile Effects)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_pq.html">
+   Python: Potential Quantiles and Quantile Treatment Effects
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_cvar.html">
+   Python: Conditional Value at Risk of potential outcomes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="py_double_ml_learner.html">
+   Python: Choice of learners
+  </a>
+ </li>
+</ul>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="R_double_ml_pipeline.html">
+   R: Ensemble Learners and More with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     mlr3pipelines
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="double_ml_bonus_data.html">
+   DML: Bonus Data
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Panel-Data-(Repeated-Outcomes)">
+   Panel Data (Repeated Outcomes)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Data">
+     Data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ATTE-Estimation">
+     ATTE Estimation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#Coverage-Simulation">
+     Coverage Simulation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Repeated-Cross-Sectional-Data">
+   Repeated Cross-Sectional Data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     ATTE Estimation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     Coverage Simulation
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+      <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/py_double_ml_did.ipynb">https://docs.doubleml.org/stable/examples/py_double_ml_did.ipynb</a>.
+
+    </ul>
+    </div><section id="Python:-Difference-in-Differences">
+<h1>Python: Difference-in-Differences<a class="headerlink" href="#Python:-Difference-in-Differences" title="Permalink to this headline">#</a></h1>
+<p>In this example, we illustrate how the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package can be used to estimate the average treatment effect on the treated (ATT) under the conditional parallel trend assumption. The estimation is based on <a class="reference external" href="https://doi.org/10.1093/ectj/utaa001">Chang (2020)</a>, <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a> and <a class="reference external" href="https://arxiv.org/abs/1809.01643">Zimmert et al. (2018)</a>.</p>
+<p>In this example, we will adopt the notation of <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a>.</p>
+<p>In the whole example our treatment and time variable <span class="math notranslate nohighlight">\(t\in\{0,1\}\)</span> will be binary. Let <span class="math notranslate nohighlight">\(D_i\in\{0,1\}\)</span> denote the treatment status of unit <span class="math notranslate nohighlight">\(i\)</span> at time <span class="math notranslate nohighlight">\(t=1\)</span> (at time <span class="math notranslate nohighlight">\(t=0\)</span> all units are not treated) and let <span class="math notranslate nohighlight">\(Y_{it}\)</span> be the outcome of interest of unit <span class="math notranslate nohighlight">\(i\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>. Using the potential outcome notation, we can write <span class="math notranslate nohighlight">\(Y_{it}(d)\)</span> for the potential outcome of unit <span class="math notranslate nohighlight">\(i\)</span> at time <span class="math notranslate nohighlight">\(t\)</span> and treatment status <span class="math notranslate nohighlight">\(d\)</span>. Further, let
+<span class="math notranslate nohighlight">\(X_i\)</span> denote a vector of pre-treatment covariates. In these difference-in-differences settings <a class="reference external" href="https://doi.org/10.1111/0034-6527.00321">Abadie (2005)</a> showed that the ATTE</p>
+<div class="math notranslate nohighlight">
+\[\theta = \mathbb{E}[Y_{i1}(1)- Y_{i1}(0)|D_i=1]\]</div>
+<p>is identified when panel data are available or under stationarity assumptions for repeated cross-sections. Further, the basic assumptions are</p>
+<ul class="simple">
+<li><p><strong>Parallel Trends:</strong> We have <span class="math notranslate nohighlight">\(\mathbb{E}[Y_{i1}(0) - Y_{i0}(0)|X_i, D_i=1] = \mathbb{E}[Y_{i1}(0) - Y_{i0}(0)|X_i, D_i=0]\quad a.s.\)</span></p></li>
+<li><p><strong>Overlap:</strong> For some <span class="math notranslate nohighlight">\(\epsilon &gt; 0\)</span>, <span class="math notranslate nohighlight">\(P(D_i=1) &gt; \epsilon\)</span> and <span class="math notranslate nohighlight">\(P(D_i=1|X_i) \le 1-\epsilon\)</span> a.s.</p></li>
+</ul>
+<p>For a detailed explanation of the assumptions see e.g. <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a> or <a class="reference external" href="https://arxiv.org/abs/1809.01643">Zimmert et al. (2018)</a>.</p>
+<section id="Panel-Data-(Repeated-Outcomes)">
+<h2>Panel Data (Repeated Outcomes)<a class="headerlink" href="#Panel-Data-(Repeated-Outcomes)" title="Permalink to this headline">#</a></h2>
+<p>At first, we will consider two-period panel data, where we observe i.i.d. data <span class="math notranslate nohighlight">\(W_i = (Y_{i0}, Y_{i1}, D_i, X_i)\)</span>.</p>
+<section id="Data">
+<h3>Data<a class="headerlink" href="#Data" title="Permalink to this headline">#</a></h3>
+<p>We will use the implemented data generating process <code class="docutils literal notranslate"><span class="pre">make_did_SZ2020</span></code> to generate data according to the simulation in <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a> (Section 4.1).</p>
+<p>In this example, we will use <code class="docutils literal notranslate"><span class="pre">dgp_tpye=4</span></code>, which corresponds to the misspecified settings in <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a> (other data generating processes are also available via the <code class="docutils literal notranslate"><span class="pre">dgp_type</span></code> parameter). In all settings the true ATTE is zero.</p>
+<p>To specify a corresponding <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> object, we have to specify a single outcome <code class="docutils literal notranslate"><span class="pre">y</span></code>. For panel data, the outcome consists of the difference of</p>
+<div class="math notranslate nohighlight">
+\[\Delta Y_i = Y_{i1}- Y_{i0}.\]</div>
+<p>This difference will then be defined as outcome in our <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> object. The data generating process <code class="docutils literal notranslate"><span class="pre">make_did_SZ2020</span></code> already specifies the outcome <code class="docutils literal notranslate"><span class="pre">y</span></code> accordingly.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_did_SZ2020</span>
+<span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLData</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n_obs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">dgp_type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cross_sectional_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">)</span>
+<span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLData Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): [&#39;d&#39;]
+Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;]
+Instrument variable(s): None
+No. Observations: 1000
+
+------------------ DataFrame info    ------------------
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 1000 entries, 0 to 999
+Columns: 6 entries, X1 to d
+dtypes: float64(6)
+memory usage: 47.0 KB
+
+</pre></div></div>
+</div>
+</section>
+<section id="ATTE-Estimation">
+<h3>ATTE Estimation<a class="headerlink" href="#ATTE-Estimation" title="Permalink to this headline">#</a></h3>
+<p>To estimate the ATTE with panel data, we will use the <code class="docutils literal notranslate"><span class="pre">DoubleMLDID</span></code> class.</p>
+<p>As for all <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> classes, we have to specify learners, which have to be initialized first. Here, we will just rely on a tree based method.</p>
+<p>The learner <code class="docutils literal notranslate"><span class="pre">ml_g</span></code> is used to fit conditional expectations of the outcome <span class="math notranslate nohighlight">\(\mathbb{E}[\Delta Y_i|D_i=0, X_i]\)</span>, whereas the learner <code class="docutils literal notranslate"><span class="pre">ml_m</span></code> will be used to estimate the propensity score <span class="math notranslate nohighlight">\(P(D_i=1|X_i)\)</span>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">lightgbm</span> <span class="kn">import</span> <span class="n">LGBMClassifier</span><span class="p">,</span> <span class="n">LGBMRegressor</span>
+
+<span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLDID</span></code> class can be used as any other <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> class.</p>
+<p>The score is set to <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code>, since the we generated data where the treatment probability depends on the pretreatment covariates. Further, we will use <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code>, since normalization generally improved the results in our simulations (both <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code> are default values).</p>
+<p>After initialization, we have to call the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method to estimate the nuisance elements.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLDID</span>
+<span class="n">dml_did</span> <span class="o">=</span> <span class="n">DoubleMLDID</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span>
+                      <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g</span><span class="p">,</span>
+                      <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m</span><span class="p">,</span>
+                      <span class="n">score</span><span class="o">=</span><span class="s1">&#39;observational&#39;</span><span class="p">,</span>
+                      <span class="n">in_sample_normalization</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">dml_did</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_did</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDID Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): [&#39;d&#39;]
+Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;]
+Instrument variable(s): None
+No. Observations: 1000
+
+------------------ Score &amp; algorithm ------------------
+Score function: observational
+DML algorithm: dml2
+
+------------------ Machine learner   ------------------
+Learner ml_g: LGBMRegressor(n_estimators=30)
+Learner ml_m: LGBMClassifier(n_estimators=30)
+Out-of-sample Performance:
+Learner ml_g0 RMSE: [[11.43627032]]
+Learner ml_g1 RMSE: [[nan]]
+Learner ml_m RMSE: [[0.48873663]]
+
+------------------ Resampling        ------------------
+No. folds: 5
+No. repeated sample splits: 1
+Apply cross-fitting: True
+
+------------------ Fit summary       ------------------
+       coef   std err         t     P&gt;|t|     2.5 %    97.5 %
+d  1.386988  1.827375  0.759006  0.447849 -2.194601  4.968577
+</pre></div></div>
+</div>
+<p>As usual, confidence intervals at different levels can be obtained via</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.90</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>5.0 %</th>
+      <th>95.0 %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>d</th>
+      <td>-1.618776</td>
+      <td>4.392752</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Coverage-Simulation">
+<h3>Coverage Simulation<a class="headerlink" href="#Coverage-Simulation" title="Permalink to this headline">#</a></h3>
+<p>Here, we add a small coverage simulation to highlight the difference to the linear implementation of <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a>. We generate multiple datasets, estimate the ATTE and collect the results (this may take some time).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_rep</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">ATTE</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="n">ATTE_estimates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_rep</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">coverage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_rep</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">ci_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_rep</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i_rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rep</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i_rep</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_rep</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration: </span><span class="si">{</span><span class="n">i_rep</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">n_rep</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">dml_data</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">dgp_type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cross_sectional_data</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">dml_did</span> <span class="o">=</span> <span class="n">DoubleMLDID</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m</span><span class="p">,</span> <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">dml_did</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="n">ATTE_estimates</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">coef</span>
+    <span class="n">confint</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+    <span class="n">coverage</span> <span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">confint</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">ATTE</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ATTE</span> <span class="o">&lt;=</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ci_length</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Iteration: 0/200
+Iteration: 20/200
+Iteration: 40/200
+Iteration: 60/200
+Iteration: 80/200
+Iteration: 100/200
+Iteration: 120/200
+Iteration: 140/200
+Iteration: 160/200
+Iteration: 180/200
+</pre></div></div>
+</div>
+<p>Let us take a look at the corresponding coverage and the length of the confidence intervals.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Coverage: </span><span class="si">{</span><span class="n">coverage</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Average CI length: </span><span class="si">{</span><span class="n">ci_length</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Coverage: 0.925
+Average CI length: 5.32236455588136
+</pre></div></div>
+</div>
+<p>Here, we can observe that the coverage is still valid, since we did not rely on linear learners, so the setting is not misspecified in this example.</p>
+<p>If we know the conditional expectation is correctly specified (linear form), we can use this to obtain smaller confidence intervals but in many applications, we may want to safeguard against misspecification and use flexible models such as random forest or boosting.</p>
+<p>The distribution of the estimates takes the following form</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">df_pa</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">ATTE_estimates</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Estimate&#39;</span><span class="p">])</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">df_pa</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_did_15_0.png" src="../_images/examples_py_double_ml_did_15_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Repeated-Cross-Sectional-Data">
+<h2>Repeated Cross-Sectional Data<a class="headerlink" href="#Repeated-Cross-Sectional-Data" title="Permalink to this headline">#</a></h2>
+<p>For repeated cross-sectional data, we assume that we observe i.i.d. data <span class="math notranslate nohighlight">\(W_i = (Y_{i}, D_i, X_i, T_i)\)</span>.</p>
+<p>Here <span class="math notranslate nohighlight">\(Y_i = T_i Y_{i1} + (1-T_i)Y_{i0}\)</span> corresponds to the outcome of unit <span class="math notranslate nohighlight">\(i\)</span> which is observed at time <span class="math notranslate nohighlight">\(T_i\)</span>.</p>
+<section id="id1">
+<h3>Data<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
+<p>As for panel data, we will use the implemented data generating process <code class="docutils literal notranslate"><span class="pre">make_did_SZ2020</span></code> to generate data according to the simulation in <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a> (Section 4.2).</p>
+<p>In this example, we will use <code class="docutils literal notranslate"><span class="pre">dgp_tpye=4</span></code>, which corresponds to the misspecified settings in <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a> (other data generating processes are also available via the <code class="docutils literal notranslate"><span class="pre">dgp_type</span></code> parameter). In all settings the true ATTE is zero.</p>
+<p>In contrast to other <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> objects, we have to specify which column corresponds to our time variable <span class="math notranslate nohighlight">\(T\)</span>.</p>
+<p>The time variable can be simply set via the argument <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_did_SZ2020</span>
+<span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLData</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n_obs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">dgp_type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cross_sectional_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">)</span>
+<span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLData Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): [&#39;d&#39;]
+Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;]
+Instrument variable(s): None
+Time variable: t
+No. Observations: 1000
+
+------------------ DataFrame info    ------------------
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 1000 entries, 0 to 999
+Columns: 7 entries, X1 to t
+dtypes: float64(7)
+memory usage: 54.8 KB
+
+</pre></div></div>
+</div>
+</section>
+<section id="id2">
+<h3>ATTE Estimation<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
+<p>To estimate the ATTE with panel data, we will use the <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDCS</span></code> class.</p>
+<p>As for all <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> classes, we have to specify learners, which have to be initialized first. Here, we will just rely on a tree based method.</p>
+<p>The learner <code class="docutils literal notranslate"><span class="pre">ml_g</span></code> is used to fit conditional expectations of the outcome <span class="math notranslate nohighlight">\(\mathbb{E}[\Delta Y_i| D_i=d, T_i =t, X_i]\)</span> for all combinations of <span class="math notranslate nohighlight">\(d,t\in\{0,1\}\)</span>, whereas the learner <code class="docutils literal notranslate"><span class="pre">ml_m</span></code> will be used to estimate the propensity score <span class="math notranslate nohighlight">\(P(D_i=1|X_i)\)</span>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">lightgbm</span> <span class="kn">import</span> <span class="n">LGBMClassifier</span><span class="p">,</span> <span class="n">LGBMRegressor</span>
+
+<span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDCS</span></code> class can be used as any other <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> class.</p>
+<p>The score is set to <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code>, since the we generated data where the treatment probability depends on the pretreatment covariates. Further, we will use <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code>, since normalization generally improved the results in our simulations (both <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code> are default values).</p>
+<p>After initialization, we have to call the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method to estimate the nuisance elements.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">doubleml</span> <span class="kn">import</span> <span class="n">DoubleMLDIDCS</span>
+<span class="n">dml_did</span> <span class="o">=</span> <span class="n">DoubleMLDIDCS</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span>
+                        <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g</span><span class="p">,</span>
+                        <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m</span><span class="p">,</span>
+                        <span class="n">score</span><span class="o">=</span><span class="s1">&#39;observational&#39;</span><span class="p">,</span>
+                        <span class="n">in_sample_normalization</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">dml_did</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_did</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDIDCS Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): [&#39;d&#39;]
+Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;]
+Instrument variable(s): None
+Time variable: t
+No. Observations: 1000
+
+------------------ Score &amp; algorithm ------------------
+Score function: observational
+DML algorithm: dml2
+
+------------------ Machine learner   ------------------
+Learner ml_g: LGBMRegressor(n_estimators=30)
+Learner ml_m: LGBMClassifier(n_estimators=30)
+Out-of-sample Performance:
+Learner ml_g_d0_t0 RMSE: [[15.02897287]]
+Learner ml_g_d0_t1 RMSE: [[26.5602727]]
+Learner ml_g_d1_t0 RMSE: [[27.62403053]]
+Learner ml_g_d1_t1 RMSE: [[44.06834315]]
+Learner ml_m RMSE: [[0.47761563]]
+
+------------------ Resampling        ------------------
+No. folds: 5
+No. repeated sample splits: 1
+Apply cross-fitting: True
+
+------------------ Fit summary       ------------------
+       coef   std err         t     P&gt;|t|     2.5 %     97.5 %
+d  5.096741  5.225034  0.975447  0.329339 -5.144137  15.337619
+</pre></div></div>
+</div>
+<p>As usual, confidence intervals at different levels can be obtained via</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.90</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>5.0 %</th>
+      <th>95.0 %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>d</th>
+      <td>-3.497674</td>
+      <td>13.691157</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="id3">
+<h3>Coverage Simulation<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h3>
+<p>Again, we add a small coverage simulation to highlight the difference to the linear implementation of <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a>. We generate multiple datasets, estimate the ATTE and collect the results (this may take some time).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_rep</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">ATTE</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="n">ATTE_estimates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_rep</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">coverage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_rep</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">ci_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n_rep</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i_rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rep</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i_rep</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_rep</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration: </span><span class="si">{</span><span class="n">i_rep</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">n_rep</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">dml_data</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">dgp_type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cross_sectional_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">dml_did</span> <span class="o">=</span> <span class="n">DoubleMLDIDCS</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m</span><span class="p">,</span> <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">dml_did</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="n">ATTE_estimates</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">coef</span>
+    <span class="n">confint</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+    <span class="n">coverage</span> <span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">confint</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">ATTE</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ATTE</span> <span class="o">&lt;=</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ci_length</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Iteration: 0/200
+Iteration: 20/200
+Iteration: 40/200
+Iteration: 60/200
+Iteration: 80/200
+Iteration: 100/200
+Iteration: 120/200
+Iteration: 140/200
+Iteration: 160/200
+Iteration: 180/200
+</pre></div></div>
+</div>
+<p>Let us take a look at the corresponding coverage and the length of the confidence intervals.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Coverage: </span><span class="si">{</span><span class="n">coverage</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Average CI length: </span><span class="si">{</span><span class="n">ci_length</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Coverage: 0.94
+Average CI length: 23.34858240261807
+</pre></div></div>
+</div>
+<p>As for panel data the coverage is still valid, since we did not rely on linear learners, so the setting is not misspecified in this example.</p>
+<p>If we know the conditional expectation is correctly specified (linear form), we can use this to obtain smaller confidence intervals but in many applications, we may want to safeguard against misspecification and use flexible models such as random forest or boosting.</p>
+<p>The distribution of the estimates takes the following form</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">df_pa</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">ATTE_estimates</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Estimate&#39;</span><span class="p">])</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">df_pa</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_did_30_0.png" src="../_images/examples_py_double_ml_did_30_0.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="py_double_ml_cate.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Python: Conditional Average Treatment Effects (CATEs)</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="py_double_ml_did_pretest.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Python: Difference-in-Differences Pre-Testing</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>
