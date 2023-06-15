@@ -1,28 +1,33 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>7. Learners, hyperparameters and hyperparameter tuning &#8212; DoubleML  documentation</title>
-<script>
-  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
-</script>
-
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -31,48 +36,85 @@
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
+    <script src="../_static/design-tabs.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guide/learners';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="8. Variance estimation and confidence intervals" href="se_confint.html" />
     <link rel="prev" title="6. Double machine learning algorithms" href="algorithms.html" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="docsearch:language" content="None">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
   
   
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
-    <div class="bd-header-announcement container-fluid" id="banner">
-      
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    </div>
-
-    
-    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
-
-  <div id="navbar-start">
-    
-    
   
-
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
 
 <a class="navbar-brand logo" href="../index.html">
   
@@ -82,281 +124,404 @@
   
     <p class="title logo__title">DoubleML  documentation</p>
   
-</a>
+</a></div>
     
   </div>
-
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="fas fa-bars"></span>
-  </button>
-
   
-  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
-    <div id="navbar-center" class="mr-auto">
-      
-      <div class="navbar-center-item">
-        <ul id="navbar-main-elements" class="navbar-nav">
-    <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../index.html">
-  DoubleML
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../intro/install.html">
-  Install
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../intro/intro.html">
-  Getting started
- </a>
-</li>
-
-<li class="toctree-l1 current active nav-item">
- <a class="reference internal nav-link" href="guide.html">
-  User guide
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../workflow/workflow.html">
-  Workflow
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../api/api.html">
-  Python API
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference external nav-link" href="https://docs.doubleml.org/r/stable/">
-  R API
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../examples/index.html">
-  Examples
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../literature/literature.html">
-  Literature
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="../release/release.html">
-  Release notes
- </a>
-</li>
-
+  
+  <div class="col-lg-9 navbar-header-items">
     
-</ul>
-      </div>
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/install.html">
+                         Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/intro.html">
+                         Getting started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../workflow/workflow.html">
+                         Workflow
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="guide.html">
+                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../examples/index.html">
+                         Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/api.html">
+                         Python API
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+                         R API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../literature/literature.html">
+                         Literature
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../release/release.html">
+                         Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
       
     </div>
-
-    <div id="navbar-end">
+    
+    
+    <div class="navbar-header-items__end">
       
-      <div class="navbar-end-item">
-        <span id="theme-switch" class="btn btn-sm btn-outline-primary navbar-btn rounded-circle">
-    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
-    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
-    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
-</span>
-      </div>
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
       
-      <div class="navbar-end-item">
-        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
         <li class="nav-item">
-          <a class="nav-link" href="https://github.com/DoubleML/doubleml-for-py" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
             <label class="sr-only">GitHub</label></a>
         </li>
-      </ul>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/install.html">
+                         Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/intro.html">
+                         Getting started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../workflow/workflow.html">
+                         Workflow
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="guide.html">
+                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../examples/index.html">
+                         Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/api.html">
+                         Python API
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+                         R API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../literature/literature.html">
+                         Literature
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../release/release.html">
+                         Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p>
+
+<script type="text/javascript">
+    // Change the logo depending on the theme
+    var logo = document.querySelector('img.logo');
+    var observer = new MutationObserver(function(mutations) {
+        const dark = document.documentElement.dataset.theme == 'dark';
+        if (dark) {
+            logo.src = "../logo_dark.png";
+        } else {
+            logo.src = "../logo.png";
+        }
+    });
+    observer.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+</script></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basics.html">1.  The basics of double/debiased machine learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_backend.html">2.  The data-backend DoubleMLData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">3.  Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="heterogeneity.html">4.  Heterogeneous Treatment Effects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scores.html">5.  Score functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">6.  Double machine learning algorithms</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">7.  Learners, hyperparameters and hyperparameter tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="se_confint.html">8.  Variance estimation and confidence intervals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html">9.  Sample-splitting, cross-fitting and repeated cross-fitting</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
       </div>
       
-    </div>
-  </div>
-</div>
-    </nav>
-    
-
-    <div class="bd-container container-xl">
-      <div class="bd-container__inner row">
-          
-
-<!-- Only show if we have sidebars configured, else just a small margin  -->
-<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
-  <div class="sidebar-start-items"><p class="logo" style="text-align:center;"><a href="../index.html">
-    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
-</a></p><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-  <div class="bd-toc-item active">
-    <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="basics.html">
-   1.  The basics of double/debiased machine learning
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="data_backend.html">
-   2.  The data-backend DoubleMLData
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="models.html">
-   3.  Models
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="heterogeneity.html">
-   4.  Heterogeneous Treatment Effects
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="scores.html">
-   5.  Score functions
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="algorithms.html">
-   6.  Double machine learning algorithms
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   7.  Learners, hyperparameters and hyperparameter tuning
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="se_confint.html">
-   8.  Variance estimation and confidence intervals
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="resampling.html">
-   9.  Sample-splitting, cross-fitting and repeated cross-fitting
-  </a>
- </li>
-</ul>
-
-  </div>
-</nav>
-  </div>
-  <div class="sidebar-end-items">
-  </div>
-</div>
-
-
-          
-
-
-<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
-  
-    
-    <div class="toc-item">
-      
-<div class="tocsection onthispage mt-5 pt-1 pb-3">
-    <i class="fas fa-list"></i> On this page
-</div>
-
-<nav id="bd-toc-nav">
-    <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#python-learners-and-hyperparameters">
-   7.1. Python: Learners and hyperparameters
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#minimum-requirements-for-learners">
-     7.1.1. Minimum requirements for learners
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#specifying-learners-and-set-hyperparameters">
-     7.1.2. Specifying learners and set hyperparameters
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#hyperparameter-tuning">
-     7.1.3. Hyperparameter tuning
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#evaluate-learners">
-     7.1.4. Evaluate learners
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#r-learners-and-hyperparameters">
-   7.2. R: Learners and hyperparameters
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id2">
-     7.2.1. Minimum requirements for learners
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id9">
-     7.2.2. Specifying learners and set hyperparameters
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#using-pipelines-to-construct-learners">
-     7.2.3. Using pipelines to construct learners
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#id16">
-     7.2.4. Hyperparameter tuning
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#hyperparameter-tuning-with-pipelines">
-     7.2.5. Hyperparameter tuning with pipelines
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#references">
-       7.2.5.1. References
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
-</ul>
-
-</nav>
-    </div>
-    
-    <div class="toc-item">
-      
-    </div>
-    
-  
-</div>
-
-
-          
-          
-          <div class="bd-content col-12 col-md-9 col-xl-7">
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
               
-              <article class="bd-article" role="main">
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="guide.html" class="nav-link">User guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="section-number">7. </span>Learners, hyperparameters and hyperparameter tuning</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
                 
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section id="learners-hyperparameters-and-hyperparameter-tuning">
-<span id="learners"></span><h1><span class="section-number">7. </span>Learners, hyperparameters and hyperparameter tuning<a class="headerlink" href="#learners-hyperparameters-and-hyperparameter-tuning" title="Permalink to this headline">#</a></h1>
+<span id="learners"></span><h1><span class="section-number">7. </span>Learners, hyperparameters and hyperparameter tuning<a class="headerlink" href="#learners-hyperparameters-and-hyperparameter-tuning" title="Permalink to this heading">#</a></h1>
 <p>The estimation of a double/debiased machine learning model involves the estimation of several nuisance function with
 machine learning estimators.
 Such learners are implemented in various Python and R packages.
@@ -365,13 +530,12 @@ The implementation of <a class="reference internal" href="../index.html#doubleml
 The interfaces to specify the learners, set hyperparameters and tune hyperparameters are described in the following
 separately for <a class="reference internal" href="#learners-python"><span class="std std-ref">Python</span></a> and <a class="reference internal" href="#learners-r"><span class="std std-ref">R</span></a>.</p>
 <section id="python-learners-and-hyperparameters">
-<span id="learners-python"></span><h2><span class="section-number">7.1. </span>Python: Learners and hyperparameters<a class="headerlink" href="#python-learners-and-hyperparameters" title="Permalink to this headline">#</a></h2>
+<span id="learners-python"></span><h2><span class="section-number">7.1. </span>Python: Learners and hyperparameters<a class="headerlink" href="#python-learners-and-hyperparameters" title="Permalink to this heading">#</a></h2>
 <section id="minimum-requirements-for-learners">
-<h3><span class="section-number">7.1.1. </span>Minimum requirements for learners<a class="headerlink" href="#minimum-requirements-for-learners" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">7.1.1. </span>Minimum requirements for learners<a class="headerlink" href="#minimum-requirements-for-learners" title="Permalink to this heading">#</a></h3>
 <p>The minimum requirement for a learner to be used for nuisance models in the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
 package is</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>The implementation of a <code class="docutils literal notranslate"><span class="pre">fit()</span></code> and <code class="docutils literal notranslate"><span class="pre">predict()</span></code> method.
 Some models, like <a class="reference internal" href="../api/generated/doubleml.DoubleMLIRM.html#doubleml.DoubleMLIRM" title="doubleml.DoubleMLIRM"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLIRM</span></code></a> and <a class="reference internal" href="../api/generated/doubleml.DoubleMLIIVM.html#doubleml.DoubleMLIIVM" title="doubleml.DoubleMLIIVM"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLIIVM</span></code></a> require classifiers.</p></li>
 <li><p>In case of classifiers, the learner needs to come with a <code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code> instead of, or in addition to, a
@@ -382,21 +546,20 @@ see for example <a class="reference external" href="https://scikit-learn.org/sta
 <li><p>We further rely on the function <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.base.clone.html#sklearn.base.clone" title="(in scikit-learn v1.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.base.clone()</span></code></a> which adds the requirement of a <code class="docutils literal notranslate"><span class="pre">get_params()</span></code>
 method for a learner in order to be used for nuisance models of <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> model classes.</p></li>
 </ul>
-</div></blockquote>
 <p>Most learners from <a class="reference external" href="https://scikit-learn.org/">scikit-learn</a> satisfy all these minimum requirements.</p>
 </section>
 <section id="specifying-learners-and-set-hyperparameters">
-<h3><span class="section-number">7.1.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#specifying-learners-and-set-hyperparameters" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">7.1.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#specifying-learners-and-set-hyperparameters" title="Permalink to this heading">#</a></h3>
 <p>The learners are set during initialization of the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> model classes
 <a class="reference internal" href="../api/generated/doubleml.DoubleMLPLR.html#doubleml.DoubleMLPLR" title="doubleml.DoubleMLPLR"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLPLR</span></code></a>, <a class="reference internal" href="../api/generated/doubleml.DoubleMLPLIV.html#doubleml.DoubleMLPLIV" title="doubleml.DoubleMLPLIV"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLPLIV</span></code></a>,
 <a class="reference internal" href="../api/generated/doubleml.DoubleMLIRM.html#doubleml.DoubleMLIRM" title="doubleml.DoubleMLIRM"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLIRM</span></code></a> and <a class="reference internal" href="../api/generated/doubleml.DoubleMLIIVM.html#doubleml.DoubleMLIIVM" title="doubleml.DoubleMLIIVM"><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLIIVM</span></code></a>.
 Lets simulate some data and consider the partially linear regression model.
 We need to specify learners for the nuisance functions <span class="math notranslate nohighlight">\(g_0(X) = E[Y|X]\)</span> and <span class="math notranslate nohighlight">\(m_0(X) = E[D|X]\)</span>,
 for example <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.RandomForestRegressor</span></code></a>.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="5ae6bdd8-9dee-40f7-919b-5191bce66b87" name="84ef31a7-fe3f-437f-b81e-42fcaa6c6c8f" type="radio">
-</input><label class="tabbed-label" for="5ae6bdd8-9dee-40f7-919b-5191bce66b87">
-Python</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-0">
+Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
 <span class="gp">In [2]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
@@ -417,24 +580,22 @@ Python</label><div class="tabbed-content docutils">
 
 <span class="gp">In [10]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
 <span class="gh">Out[10]: </span>
-<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.506368  0.046011  11.005397  3.599252e-28  0.416188  0.596547</span>
+<span class="go">       coef   std err         t         P&gt;|t|    2.5 %    97.5 %</span>
+<span class="go">d  0.503124  0.045957  10.94771  6.814884e-28  0.41305  0.593198</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>Without further specification of the hyperparameters, default values are used. To set hyperparameters:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>We can also use pre-parametrized learners, like <code class="docutils literal notranslate"><span class="pre">RandomForestRegressor(n_estimators=10)</span></code>.</p></li>
 <li><p>Alternatively, hyperparameters can also be set after initialization via the method
 <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params(learner,</span> <span class="pre">treat_var,</span> <span class="pre">params)</span></code></p></li>
 </ul>
-</div></blockquote>
-<div class="tabbed-set docutils">
-<input checked="checked" id="6a90735e-3a44-4b3c-967e-366f3a4e7bee" name="3e00028a-91d2-459a-9680-2c843767a118" type="radio">
-</input><label class="tabbed-label" for="6a90735e-3a44-4b3c-967e-366f3a4e7bee">
-Python</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-1">
+Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
 
 <span class="gp">In [12]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
@@ -443,8 +604,8 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">   ....: </span>
 
 <span class="gp">In [13]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">      coef  std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.52259  0.04767  10.962742  5.772317e-28  0.429159  0.616021</span>
+<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.535138  0.047059  11.371665  5.787312e-30  0.442904  0.627372</span>
 
 <span class="gp">In [14]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
 
@@ -456,15 +617,14 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">In [16]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_l&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">});</span>
 
 <span class="gp">In [17]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">      coef  std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.52259  0.04767  10.962742  5.772317e-28  0.429159  0.616021</span>
+<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.535138  0.047059  11.371665  5.787312e-30  0.442904  0.627372</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>Setting treatment-variable-specific or fold-specific hyperparameters:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>In the multiple-treatment case, the method <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params(learner,</span> <span class="pre">treat_var,</span> <span class="pre">params)</span></code> can be used to set
 different hyperparameters for different treatment variables.</p></li>
 <li><p>The method <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params(learner,</span> <span class="pre">treat_var,</span> <span class="pre">params)</span></code> accepts dicts and lists for <code class="docutils literal notranslate"><span class="pre">params</span></code>.
@@ -472,17 +632,16 @@ A dict should be provided if for each fold the same hyperparameters should be us
 Fold-specific parameters are supported. To do so,  provide a nested list as <code class="docutils literal notranslate"><span class="pre">params</span></code>, where the outer list is of
 length <code class="docutils literal notranslate"><span class="pre">n_rep</span></code> and the inner list of length <code class="docutils literal notranslate"><span class="pre">n_folds</span></code>.</p></li>
 </ul>
-</div></blockquote>
 </section>
 <section id="hyperparameter-tuning">
-<h3><span class="section-number">7.1.3. </span>Hyperparameter tuning<a class="headerlink" href="#hyperparameter-tuning" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">7.1.3. </span>Hyperparameter tuning<a class="headerlink" href="#hyperparameter-tuning" title="Permalink to this heading">#</a></h3>
 <p>Parameter tuning of learners for the nuisance functions of <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models can be done via
 the <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method.
 To illustrate the parameter tuning, we generate data from a sparse partially linear regression model.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="a1a9145f-08f9-4f07-acdc-18ba70364303" name="b7b977aa-72a8-43ae-91fd-6d1f160124d0" type="radio">
-</input><label class="tabbed-label" for="a1a9145f-08f9-4f07-acdc-18ba70364303">
-Python</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-2">
+Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
 <span class="gp">In [19]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -509,10 +668,10 @@ Python</label><div class="tabbed-content docutils">
 <p>The hyperparameter-tuning is performed using either an exhaustive search over specified parameter values
 implemented in <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> or via a randomized search implemented in
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.RandomizedSearchCV</span></code></a>.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="5cface2b-2f4e-49d6-80c6-d02a667ba040" name="579b90ac-f62f-460f-bf75-81d127175776" type="radio">
-</input><label class="tabbed-label" for="5cface2b-2f4e-49d6-80c6-d02a667ba040">
-Python</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-3">
+Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [28]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
 <span class="gp">In [29]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Lasso</span>
@@ -558,10 +717,10 @@ Python</label><div class="tabbed-content docutils">
 a regularization path implemented in <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html#sklearn.linear_model.LassoCV" title="(in scikit-learn v1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.LassoCV</span></code></a>.
 In this case the tuning should be done externally and the parameters can then be set via the
 <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="d1a984e2-43a7-4e4c-8cb1-b16963d79324" name="adbb957d-6e98-42f1-9e9e-a9544a3e2056" type="radio">
-</input><label class="tabbed-label" for="d1a984e2-43a7-4e4c-8cb1-b16963d79324">
-Python</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-4">
+Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [42]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
 <span class="gp">In [43]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span>
@@ -583,7 +742,7 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">In [51]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_m&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">ml_m_tune</span><span class="o">.</span><span class="n">alpha_</span><span class="p">});</span>
 
 <span class="gp">In [52]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
-<span class="go">{&#39;ml_l&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.4311947070055128}, {&#39;alpha&#39;: 0.4311947070055128}, {&#39;alpha&#39;: 0.4311947070055128}, {&#39;alpha&#39;: 0.4311947070055128}, {&#39;alpha&#39;: 0.4311947070055128}]]}, &#39;ml_m&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}]]}}</span>
+<span class="go">{&#39;ml_l&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.43119470700551277}, {&#39;alpha&#39;: 0.43119470700551277}, {&#39;alpha&#39;: 0.43119470700551277}, {&#39;alpha&#39;: 0.43119470700551277}, {&#39;alpha&#39;: 0.43119470700551277}]]}, &#39;ml_m&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}, {&#39;alpha&#39;: 0.14281403493938027}]]}}</span>
 
 <span class="gp">In [53]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 <span class="go">       coef   std err          t  P&gt;|t|     2.5 %    97.5 %</span>
@@ -594,14 +753,14 @@ Python</label><div class="tabbed-content docutils">
 </div>
 </section>
 <section id="evaluate-learners">
-<h3><span class="section-number">7.1.4. </span>Evaluate learners<a class="headerlink" href="#evaluate-learners" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">7.1.4. </span>Evaluate learners<a class="headerlink" href="#evaluate-learners" title="Permalink to this heading">#</a></h3>
 <p>To compare different learners it is possible to evaluate the out-of-sample performance of each learner. The <code class="docutils literal notranslate"><span class="pre">summary</span></code>
 already shows the root mean squared error (RMSE) for each learner and each corresponding repetition of cross-fitting (<code class="docutils literal notranslate"><span class="pre">n_rep</span></code> argument).</p>
 <p>To illustrate the parameter tuning, we work with the following example.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="a50f0311-3970-4e16-8c46-86700593604b" name="cfb8eedb-544e-4141-910a-a800ca1289dd" type="radio">
-</input><label class="tabbed-label" for="a50f0311-3970-4e16-8c46-86700593604b">
-Python</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-5">
+Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [54]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
 <span class="gp">In [55]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
@@ -621,7 +780,7 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">In [62]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
 <span class="gp">In [63]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[63]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f4ec51759d0&gt;</span>
+<span class="gh">Out[63]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f606cd153a0&gt;</span>
 
 <span class="gp">In [64]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="p">)</span>
 <span class="go">================== DoubleMLPLR Object ==================</span>
@@ -641,8 +800,8 @@ Python</label><div class="tabbed-content docutils">
 <span class="go">Learner ml_l: RandomForestRegressor()</span>
 <span class="go">Learner ml_m: RandomForestRegressor()</span>
 <span class="go">Out-of-sample Performance:</span>
-<span class="go">Learner ml_l RMSE: [[1.17559653]]</span>
-<span class="go">Learner ml_m RMSE: [[1.03262702]]</span>
+<span class="go">Learner ml_l RMSE: [[1.17177259]]</span>
+<span class="go">Learner ml_m RMSE: [[1.03306865]]</span>
 
 <span class="go">------------------ Resampling        ------------------</span>
 <span class="go">No. folds: 5</span>
@@ -651,7 +810,7 @@ Python</label><div class="tabbed-content docutils">
 
 <span class="go">------------------ Fit summary       ------------------</span>
 <span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">d  0.506368  0.046011  11.005397  3.599252e-28  0.416188  0.596547</span>
+<span class="go">d  0.503261  0.045934  10.956262  6.200798e-28  0.413232  0.593289</span>
 </pre></div>
 </div>
 </div>
@@ -659,25 +818,25 @@ Python</label><div class="tabbed-content docutils">
 <p>The RMSEs of each learner are also stored in the <code class="docutils literal notranslate"><span class="pre">rmses</span></code> attribute.
 Further, the <code class="docutils literal notranslate"><span class="pre">evaluate_learners()</span></code> method allows to evalute customized evaluation metrics as e.g. the mean absolute error.
 The default option is still the RMSE for evaluation.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="08a544c6-7f56-40c1-8370-c108e2b6147d" name="9beba324-2476-4ad7-98b7-07a9605fc52f" type="radio">
-</input><label class="tabbed-label" for="08a544c6-7f56-40c1-8370-c108e2b6147d">
-Python</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-6">
+Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [65]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">rmses</span><span class="p">)</span>
-<span class="go">{&#39;ml_l&#39;: array([[1.17559653]]), &#39;ml_m&#39;: array([[1.03262702]])}</span>
+<span class="go">{&#39;ml_l&#39;: array([[1.17177259]]), &#39;ml_m&#39;: array([[1.03306865]])}</span>
 
 <span class="gp">In [66]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">())</span>
-<span class="go">{&#39;ml_l&#39;: array([[1.17559653]]), &#39;ml_m&#39;: array([[1.03262702]])}</span>
+<span class="go">{&#39;ml_l&#39;: array([[1.17177259]]), &#39;ml_m&#39;: array([[1.03306865]])}</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>To evaluate a customized metric one has to define a <code class="docutils literal notranslate"><span class="pre">callable</span></code>. For some models (e.g. the IRM model) it is important that
 the metric can handle <code class="docutils literal notranslate"><span class="pre">nan</span></code> values as not all target values are known.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="540d9771-3fbd-4fc1-ab0a-82d21d256a28" name="ad28a496-a260-4c6d-a8a8-43aff8e4d371" type="radio">
-</input><label class="tabbed-label" for="540d9771-3fbd-4fc1-ab0a-82d21d256a28">
-Python</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-7">
+Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [67]: </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
 
 <span class="gp">In [68]: </span><span class="k">def</span> <span class="nf">mae</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
@@ -686,7 +845,7 @@ Python</label><div class="tabbed-content docutils">
 <span class="gp">   ....: </span>
 
 <span class="gp">In [69]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">(</span><span class="n">learners</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ml_l&#39;</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">mae</span><span class="p">)</span>
-<span class="gh">Out[69]: </span><span class="go">{&#39;ml_l&#39;: array([[0.95690813]])}</span>
+<span class="gh">Out[69]: </span><span class="go">{&#39;ml_l&#39;: array([[0.95329868]])}</span>
 </pre></div>
 </div>
 </div>
@@ -695,12 +854,11 @@ Python</label><div class="tabbed-content docutils">
 </section>
 </section>
 <section id="r-learners-and-hyperparameters">
-<span id="learners-r"></span><h2><span class="section-number">7.2. </span>R: Learners and hyperparameters<a class="headerlink" href="#r-learners-and-hyperparameters" title="Permalink to this headline">#</a></h2>
+<span id="learners-r"></span><h2><span class="section-number">7.2. </span>R: Learners and hyperparameters<a class="headerlink" href="#r-learners-and-hyperparameters" title="Permalink to this heading">#</a></h2>
 <section id="id2">
-<h3><span class="section-number">7.2.1. </span>Minimum requirements for learners<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">7.2.1. </span>Minimum requirements for learners<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
 <p>The minimum requirement for a learner to be used for nuisance models in the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> package is</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>The implementation as a learner for regression or classification in the <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> package
 or its extension packages <a class="reference external" href="https://mlr3learners.mlr-org.com/">mlr3learners</a> and
 <a class="reference external" href="https://mlr3extralearners.mlr-org.com/">mlr3extralearners</a> . A guide on how to add a learner is provided in the
@@ -719,12 +877,11 @@ in cases with binary treatment variables.</p></li>
 <li><p>Hyperparameters of learners can either be set at instantiation in <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> or after
 instantiation using the <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p></li>
 </ul>
-</div></blockquote>
 <p>An interactive list of provided learners in the <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> and extension packages can be found on the
 <a class="reference external" href="https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html">website of the mlr3extralearners package</a>.</p>
 </section>
 <section id="id9">
-<h3><span class="section-number">7.2.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#id9" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">7.2.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
 <p>The learners are set during initialization of the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> model classes
 <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLR.html">DoubleML::DoubleMLPLR</a>,
 <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLIV.html">DoubleML::DoubleMLPLIV</a> ,
@@ -735,10 +892,10 @@ We need to specify learners for the nuisance functions <span class="math notrans
 for example <a class="reference external" href="https://mlr3learners.mlr-org.com/reference/mlr_learners_regr.ranger.html">LearnerRegrRanger</a>
 (<code class="docutils literal notranslate"><span class="pre">lrn(&quot;regr.ranger&quot;)</span></code>) for regression with random forests based on the  <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a>
 package for R.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="6b35d73c-aabb-4479-84f6-8865798d09b0" name="97664630-0210-46e2-b910-c4c427bd4b82" type="radio">
-</input><label class="tabbed-label" for="6b35d73c-aabb-4479-84f6-8865798d09b0">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-8">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
@@ -775,17 +932,15 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <p>Without further specification of the hyperparameters, default values are used. To set hyperparameters:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>We can also use pre-parametrized learners <code class="docutils literal notranslate"><span class="pre">lrn(&quot;regr.ranger&quot;,</span> <span class="pre">num.trees=10)</span></code>.</p></li>
 <li><p>Alternatively, hyperparameters can be set after initialization via the method
 <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params(learner,</span> <span class="pre">treat_var,</span> <span class="pre">params,</span> <span class="pre">set_fold_specific)</span></code>.</p></li>
 </ul>
-</div></blockquote>
-<div class="tabbed-set docutils">
-<input checked="checked" id="ba78c925-58b1-49a5-b01e-f70f16b0e372" name="3634f011-fee9-4cc2-a9a6-531ee2530121" type="radio">
-</input><label class="tabbed-label" for="ba78c925-58b1-49a5-b01e-f70f16b0e372">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-9" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-9">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
@@ -829,8 +984,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <p>Setting treatment-variable-specific or fold-specific hyperparameters:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>In the multiple-treatment case, the method <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params(learner,</span> <span class="pre">treat_var,</span> <span class="pre">params,</span> <span class="pre">set_fold_specific)</span></code>
 can be used to set different hyperparameters for different treatment variables.</p></li>
 <li><p>The method <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params(learner,</span> <span class="pre">treat_var,</span> <span class="pre">params,</span> <span class="pre">set_fold_specific)</span></code> accepts lists for <code class="docutils literal notranslate"><span class="pre">params</span></code>.
@@ -846,11 +1000,10 @@ parameter passing is only supported, if all parameters are set fold-specific.</p
 <li><p>External setting of parameters will override previously set parameters. To assert the choice of parameters, access the
 fields <code class="docutils literal notranslate"><span class="pre">$learner</span></code> and <code class="docutils literal notranslate"><span class="pre">$params</span></code>.</p></li>
 </ul>
-</div></blockquote>
-<div class="tabbed-set docutils">
-<input checked="checked" id="49f6d297-7685-4486-8d75-a7cb12ace642" name="f762a1a3-b7b3-4775-a1b3-53b9b9ba8ef5" type="radio">
-</input><label class="tabbed-label" for="49f6d297-7685-4486-8d75-a7cb12ace642">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-10" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-10">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
@@ -913,10 +1066,10 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <p>The following example illustrates how to set parameters for each fold.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="c588b1c7-727f-4377-aefc-36a46f2fea91" name="c6b7459c-1c1f-4495-8805-a262a028e49c" type="radio">
-</input><label class="tabbed-label" for="c588b1c7-727f-4377-aefc-36a46f2fea91">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-11" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-11">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">learner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">)</span>
@@ -1006,7 +1159,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="using-pipelines-to-construct-learners">
-<h3><span class="section-number">7.2.3. </span>Using pipelines to construct learners<a class="headerlink" href="#using-pipelines-to-construct-learners" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">7.2.3. </span>Using pipelines to construct learners<a class="headerlink" href="#using-pipelines-to-construct-learners" title="Permalink to this heading">#</a></h3>
 <p>Users can also specify learners that have been constructed from a pipeline using the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a>
 package. In general, pipelines can be used to perform data preprocessing, feature selection, combine learners and even
 to perform hyperparameter tuning. In the following, we provide two examples on how to construct a single learner and how
@@ -1014,10 +1167,10 @@ to stack different learners via a pipeline. For a more detailed introduction to 
 we refer to the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter in the mlr3book</a>. Moreover, a
 notebook on how to use <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> in combination with <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
 is available in the example gallery.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="821c7762-927c-49ca-ad1b-371ffbebfabf" name="88fe7a94-778f-4cbd-a38a-3f365dfecae3" type="radio">
-</input><label class="tabbed-label" for="821c7762-927c-49ca-ad1b-371ffbebfabf">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-12" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-12">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">mlr3pipelines</span><span class="p">)</span>
@@ -1137,16 +1290,16 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="id16">
-<h3><span class="section-number">7.2.4. </span>Hyperparameter tuning<a class="headerlink" href="#id16" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">7.2.4. </span>Hyperparameter tuning<a class="headerlink" href="#id16" title="Permalink to this heading">#</a></h3>
 <p>Parameter tuning of learners for the nuisance functions of <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models can be done via the <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method.
 The <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method passes various options and parameters to the tuning interface provided by the
 <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a> package. The <a class="reference external" href="https://mlr3book.mlr-org.com/">mlr3 book</a> provides a
 <a class="reference external" href="https://mlr3book.mlr-org.com/optimization.html">step-by-step introduction to parameter tuning</a>.</p>
 <p>To illustrate the parameter tuning, we generate data from a sparse partially linear regression model.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="fe0650e2-0871-45ba-b0cd-ed13bb2e477c" name="f0480201-f532-42e2-9871-d1a274b07356" type="radio">
-</input><label class="tabbed-label" for="fe0650e2-0871-45ba-b0cd-ed13bb2e477c">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-13" name="sd-tab-set-13" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-13">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
@@ -1171,8 +1324,7 @@ R</label><div class="tabbed-content docutils">
 </div>
 <p>The hyperparameter-tuning is performed according to options passed through a named list <code class="docutils literal notranslate"><span class="pre">tune_settings</span></code>.
 The entries in the list specify options during parameter tuning with <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a>:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">terminator</span></code> is a <a class="reference external" href="https://bbotk.mlr-org.com/reference/Terminator.html">Terminator object</a> passed to
 <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a> that manages the budget to solve the tuning problem.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">algorithm</span></code> is an object of class
@@ -1193,7 +1345,6 @@ objects of class <a class="reference external" href="https://mlr3.mlr-org.com/re
 If <code class="docutils literal notranslate"><span class="pre">measure</span></code> is not provided by the user, default measures are used, i.e., mean squared error for regression models
 and classification error for binary outcomes.</p></li>
 </ul>
-</div></blockquote>
 <p>In the following example, we tune the penalty parameter <span class="math notranslate nohighlight">\(\lambda\)</span> (<code class="docutils literal notranslate"><span class="pre">lambda</span></code>) for lasso with the R package
 <a class="reference external" href="https://glmnet.stanford.edu/">glmnet</a>. To tune the value of <code class="docutils literal notranslate"><span class="pre">lambda</span></code>, a grid search  is performed over a grid of values that range from 0.05
 to 0.1 at a resolution of 10. Using a resolution of 10 splits the grid of values in 10 equally spaced values ranging from a minimum of 0.05
@@ -1204,10 +1355,10 @@ which are later used in the fitting stage for all folds.</p>
 <p>Alternatively, setting the option <code class="docutils literal notranslate"><span class="pre">tune_on_folds=TRUE</span></code> would assign the tuning resampling scheme <code class="docutils literal notranslate"><span class="pre">rsmp_tune</span></code> to each fold.
 For example, if we set <code class="docutils literal notranslate"><span class="pre">n_folds=2</span></code> at initialization of the <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> object and use a 5-fold cross-validated error
 for tuning, each of the two folds would be split up into 5 subfolds and the error would be evaluated on these subfolds.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="3c860f64-9553-44e6-a4bb-ca02fffd5bee" name="d3b8b311-4aa3-4148-a05c-e34effd8a4d1" type="radio">
-</input><label class="tabbed-label" for="3c860f64-9553-44e6-a4bb-ca02fffd5bee">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-14" name="sd-tab-set-14" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-14">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
@@ -1348,10 +1499,10 @@ performs an internal cross-validated choice of the parameter <code class="docuti
 Alternatively, the powerful functionalities of the <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a> package can be used for
 external parameter tuning of the nuisance parts. The optimally chosen parameters can then be passed to the
 <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models using the <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="7afa77f0-4b42-4352-94b0-e731abe01c14" name="f7be8d1a-4e70-4d7a-8421-1358317c1a6d" type="radio">
-</input><label class="tabbed-label" for="7afa77f0-4b42-4352-94b0-e731abe01c14">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-15" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-15">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
@@ -1389,10 +1540,10 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>The following code chunk illustrates another example for global parameter tuning with random forests
 as provided by the  <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a> package. In this example, we use random search to find optimal
 parameters <code class="docutils literal notranslate"><span class="pre">mtry</span></code> and <code class="docutils literal notranslate"><span class="pre">max.depth</span></code> of a random forest. Evaluation is based on 3-fold cross-validation.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="00c2f0a1-a865-4456-9793-ce05a5d329a0" name="bf4c4da3-bd4c-418b-b1a1-fe3904f5f8d1" type="radio">
-</input><label class="tabbed-label" for="00c2f0a1-a865-4456-9793-ce05a5d329a0">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-16" name="sd-tab-set-16" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-16">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
@@ -1471,17 +1622,17 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="hyperparameter-tuning-with-pipelines">
-<h3><span class="section-number">7.2.5. </span>Hyperparameter tuning with pipelines<a class="headerlink" href="#hyperparameter-tuning-with-pipelines" title="Permalink to this headline">#</a></h3>
+<h3><span class="section-number">7.2.5. </span>Hyperparameter tuning with pipelines<a class="headerlink" href="#hyperparameter-tuning-with-pipelines" title="Permalink to this heading">#</a></h3>
 <p>As an alternative to the previously presented tuning approach, it is possible to base the parameter tuning on a pipeline
 as provided by the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> package. The basic idea of this approach is to
 define a learner via a pipeline and then perform the tuning via the <code class="docutils literal notranslate"><span class="pre">tune()</span></code>. We will shortly repeat the lasso example
 from above. In general, the pipeline-based approach can be used to find optimal values not only for the parameters of
 one or multiple learners, but also for other parameters, which are, for example, involved in the data preprocessing. We
 refer to more details provided in the <a class="reference external" href="https://mlr3book.mlr-org.com/pipelines.html">Pipelines Chapter in the mlr3book</a>.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="dce0f152-29aa-4d9d-aaca-06db6d3a4f5e" name="9c3b6ae5-9e1f-470b-8024-ba7779dcfa29" type="radio">
-</input><label class="tabbed-label" for="dce0f152-29aa-4d9d-aaca-06db6d3a4f5e">
-R</label><div class="tabbed-content docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-17" name="sd-tab-set-17" type="radio">
+</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-17">
+R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
@@ -1533,7 +1684,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 <section id="references">
-<h4><span class="section-number">7.2.5.1. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h4>
+<h4><span class="section-number">7.2.5.1. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h4>
 <ul class="simple">
 <li><p>Lang, M., Binder, M., Richter, J., Schratz, P., Pfisterer, F., Coors, S., Au, Q., Casalicchio, G., Kotthoff, L., Bischl, B. (2019), mlr3: A modern object-oriented machine learing framework in R. Journal of Open Source Software, <a class="reference external" href="https://doi.org/10.21105/joss.01903">doi:10.21105/joss.01903</a>.</p></li>
 <li><p>Becker, M., Binder, M., Bischl, B., Lang, M., Pfisterer, F., Reich, N.G., Richter, J., Schratz, P., Sonabend, R. (2020), mlr3 book, available at <a class="reference external" href="https://mlr3book.mlr-org.com">https://mlr3book.mlr-org.com</a>.</p></li>
@@ -1544,55 +1695,131 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </section>
 
 
-              </article>
+                </article>
               
-
               
-              <footer class="bd-footer-article">
-                  <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-  <a class='left-prev' id="prev-link" href="algorithms.html" title="previous page">
-      <i class="fas fa-angle-left"></i>
-      <div class="prev-next-info">
-          <p class="prev-next-subtitle">previous</p>
-          <p class="prev-next-title"><span class="section-number">6. </span>Double machine learning algorithms</p>
-      </div>
-  </a>
-  <a class='right-next' id="next-link" href="se_confint.html" title="next page">
-  <div class="prev-next-info">
-      <p class="prev-next-subtitle">next</p>
-      <p class="prev-next-title"><span class="section-number">8. </span>Variance estimation and confidence intervals</p>
-  </div>
-  <i class="fas fa-angle-right"></i>
-  </a>
-</div>
-              </footer>
               
-          </div>
-          
-      </div>
-    </div>
-
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
   
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="algorithms.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Double machine learning algorithms</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="se_confint.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">8. </span>Variance estimation and confidence intervals</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-learners-and-hyperparameters">7.1. Python: Learners and hyperparameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-requirements-for-learners">7.1.1. Minimum requirements for learners</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specifying-learners-and-set-hyperparameters">7.1.2. Specifying learners and set hyperparameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning">7.1.3. Hyperparameter tuning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-learners">7.1.4. Evaluate learners</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#r-learners-and-hyperparameters">7.2. R: Learners and hyperparameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">7.2.1. Minimum requirements for learners</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">7.2.2. Specifying learners and set hyperparameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pipelines-to-construct-learners">7.2.3. Using pipelines to construct learners</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">7.2.4. Hyperparameter tuning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning-with-pipelines">7.2.5. Hyperparameter tuning with pipelines</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#references">7.2.5.1. References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/guide/learners.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-<footer class="bd-footer"><div class="bd-footer__inner container">
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
   
-  <div class="footer-item">
-    <p class="copyright">
-    &copy; Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..<br>
-</p>
-  </div>
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
   
-  <div class="footer-item">
-    <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0.<br>
-</p>
-  </div>
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
   
 </div>
-</footer>
+
+  </footer>
   </body>
 </html>
