@@ -1,0 +1,971 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>10. Sensitivity analysis &#8212; DoubleML  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="../_static/design-tabs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guide/sensitivity';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples" href="../examples/index.html" />
+    <link rel="prev" title="9. Sample-splitting, cross-fitting and repeated cross-fitting" href="resampling.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">DoubleML  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/install.html">
+                         Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/intro.html">
+                         Getting started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../workflow/workflow.html">
+                         Workflow
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="guide.html">
+                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../examples/index.html">
+                         Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/api.html">
+                         Python API
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+                         R API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../literature/literature.html">
+                         Literature
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../release/release.html">
+                         Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/install.html">
+                         Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/intro.html">
+                         Getting started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../workflow/workflow.html">
+                         Workflow
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="guide.html">
+                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../examples/index.html">
+                         Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/api.html">
+                         Python API
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+                         R API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../literature/literature.html">
+                         Literature
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../release/release.html">
+                         Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p>
+
+<script type="text/javascript">
+    // Change the logo depending on the theme
+    var logo = document.querySelector('img.logo');
+    var observer = new MutationObserver(function(mutations) {
+        const dark = document.documentElement.dataset.theme == 'dark';
+        if (dark) {
+            logo.src = "../logo_dark.png";
+        } else {
+            logo.src = "../logo.png";
+        }
+    });
+    observer.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+</script></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basics.html">1. The basics of double/debiased machine learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_backend.html">2. The data-backend DoubleMLData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">3. Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="heterogeneity.html">4. Heterogeneous Treatment Effects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scores.html">5. Score functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">6. Double machine learning algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learners.html">7. Learners, hyperparameters and hyperparameter tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="se_confint.html">8. Variance estimation and confidence intervals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html">9. Sample-splitting, cross-fitting and repeated cross-fitting</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">10. Sensitivity Analysis</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="guide.html" class="nav-link">User guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="section-number">10. </span>Sensitivity analysis</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="sensitivity-analysis">
+<span id="sensitivity"></span><h1><span class="section-number">10. </span>Sensitivity analysis<a class="headerlink" href="#sensitivity-analysis" title="Permalink to this heading">#</a></h1>
+<p>The <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> package implements sensitivity analysis with respect to omitted variable bias
+based on <a class="reference external" href="https://www.nber.org/papers/w30302">Chernozhukov et al. (2022)</a>.</p>
+<section id="general-algorithm">
+<h2><span class="section-number">10.1. </span>General algorithm<a class="headerlink" href="#general-algorithm" title="Permalink to this heading">#</a></h2>
+<p>The section <a class="reference internal" href="#sensitivity-theory"><span class="std std-ref">Theory</span></a> contains a general summary and the relevant defintions, whereas <a class="reference internal" href="#sensitivity-implementation"><span class="std std-ref">Implementation</span></a> considers
+the general part of the implementation.</p>
+<section id="theory">
+<span id="sensitivity-theory"></span><h3><span class="section-number">10.1.1. </span>Theory<a class="headerlink" href="#theory" title="Permalink to this heading">#</a></h3>
+<p>Assume that we can write the model in the following representation</p>
+<div class="math notranslate nohighlight">
+\[\theta_0 = \mathbb{E}[m(W,g_0)],\]</div>
+<p>where usually <span class="math notranslate nohighlight">\(g_0(W) = \mathbb{E}[Y|X, D]\)</span> (currently, the sensitivity analysis is only available for linear models).
+As long as <span class="math notranslate nohighlight">\(\mathbb{E}[m(W,f)]\)</span> is a continuous linear functional of <span class="math notranslate nohighlight">\(f\)</span>, there exists a unique square
+integrable random variable <span class="math notranslate nohighlight">\(\alpha_0(W)\)</span>, called Riesz representer
+(see <a class="reference external" href="https://en.wikipedia.org/wiki/Riesz_representation_theorem">Riesz-Fréchet representation theorem</a>), such that</p>
+<div class="math notranslate nohighlight">
+\[\theta_0 = \mathbb{E}[g_0(W)\alpha_0(W)].\]</div>
+<p>The target parameter <span class="math notranslate nohighlight">\(\theta_0\)</span> has the following representation</p>
+<div class="math notranslate nohighlight">
+\[\theta_0 = \mathbb{E}[m(W,g_0) + (Y-g_0(W))\alpha_0(W)],\]</div>
+<p>which corresponds to a Neyman orthogonal score function (orthogonal with respect to nuisance elements <span class="math notranslate nohighlight">\((g, \alpha)\)</span>).
+To bound the omitted variable bias, the following further elements are needed.
+The variance of the outcome regression</p>
+<div class="math notranslate nohighlight">
+\[\sigma_0^2 := \mathbb{E}[(Y-g_0(W))^2]\]</div>
+<p>and the second moment of the Riesz representer</p>
+<div class="math notranslate nohighlight">
+\[\nu_0^2 := \mathbb{E}[\alpha_0(W)^2] =2\mathbb{E}[m(W,\alpha_0)] -  \mathbb{E}[\alpha_0(W)^2].\]</div>
+<p>Both representations are Neyman orthogonal with respect to <span class="math notranslate nohighlight">\(g\)</span> and <span class="math notranslate nohighlight">\(\alpha\)</span>, respectively.
+Further, define the corresponding score functions</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\psi_{\sigma^2}(W, \sigma^2, g) &amp;:= (Y-g_0(W))^2 - \sigma^2\\
+\psi_{\nu^2}(W, \nu^2, \alpha) &amp;:= 2m(W,\alpha) - \alpha(W)^2 - \nu^2.\end{split}\]</div>
+<p>Recall that the parameter <span class="math notranslate nohighlight">\(\theta_0\)</span> is identified via the moment condition</p>
+<div class="math notranslate nohighlight">
+\[\theta_0 = \mathbb{E}[m(W,g_0)].\]</div>
+<p>If <span class="math notranslate nohighlight">\(W=(Y, D, X)\)</span> does not include all confounding variables, the “true” target parameter <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span>
+would only be identified via the extendend (or “long”) form</p>
+<div class="math notranslate nohighlight">
+\[\tilde{\theta}_0 = \mathbb{E}[m(\tilde{W},\tilde{g}_0)],\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tilde{W}=(Y, D, X, A)\)</span> includes the unobserved counfounders <span class="math notranslate nohighlight">\(A\)</span>.
+In Theorem 2 of their paper <a class="reference external" href="https://www.nber.org/papers/w30302">Chernozhukov et al. (2022)</a> are able to bound the omitted variable bias</p>
+<div class="math notranslate nohighlight">
+\[|\tilde{\theta}_0 -\theta_0|^2 = \rho^2 B^2,\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[B^2 := \mathbb{E}\Big[\big(g(W) - \tilde{g}(\tilde{W})\big)^2\Big]\mathbb{E}\Big[\big(\alpha(W) - \tilde{\alpha}(\tilde{W})\big)^2\Big],\]</div>
+<p>denotes the product of additional variations in the outcome regression and Riesz representer generated by omitted confounders and</p>
+<div class="math notranslate nohighlight">
+\[\rho^2 := \textrm{Cor}^2\Big(g(W) - \tilde{g}(\tilde{W}),\alpha(W) - \tilde{\alpha}(\tilde{W})\Big),\]</div>
+<p>denotes the correlations between the deviations generated by omitted confounders. The choice <span class="math notranslate nohighlight">\(\rho=1\)</span> is conservative and
+accounts for adversarial confounding. Further, the bound can be expressed as</p>
+<div class="math notranslate nohighlight">
+\[B^2 := \sigma_0^2 \nu_0^2 C_Y^2 C_D^2,\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}C_Y^2 &amp;:= \frac{\mathbb{E}[(\tilde{g}(\tilde{W}) - g(W))^2]}{\mathbb{E}[(Y - g(W))^2]}\\C_D^2 &amp;:=\frac{1 - \frac{\mathbb{E}\big[\alpha(W)^2\big]}{\mathbb{E}\big[\tilde{\alpha}(\tilde{W})^2\big]}}{\frac{\mathbb{E}\big[\alpha(W)^2\big]}{\mathbb{E}\big[\tilde{\alpha}(\tilde{W})^2\big]}}.\end{aligned}\end{align} \]</div>
+<p>As <span class="math notranslate nohighlight">\(\sigma_0^2\)</span> and <span class="math notranslate nohighlight">\(\nu_0^2\)</span> do not depend on the unobserved confounders <span class="math notranslate nohighlight">\(A\)</span> they are identified. Further, the other parts have the following interpretations</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_y</span></code><span class="math notranslate nohighlight">\(:=\frac{\mathbb{E}[(\tilde{g}(\tilde{W}) - g(W))^2]}{\mathbb{E}[(Y - g(W))^2]}\)</span>  measures the proportion of residual variance in the outcome <span class="math notranslate nohighlight">\(Y\)</span> explained by the latent confounders <span class="math notranslate nohighlight">\(A\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_d</span></code><span class="math notranslate nohighlight">\(:=1 - \frac{\mathbb{E}\big[\alpha(W)^2\big]}{\mathbb{E}\big[\tilde{\alpha}(\tilde{W})^2\big]}\)</span> measures the proportion of residual variance in the Riesz representer <span class="math notranslate nohighlight">\(\tilde{\alpha}(\tilde{W})\)</span> generated by the latent confounders <span class="math notranslate nohighlight">\(A\)</span></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_y</span></code> has the interpretation as the <em>nonparametric partial</em> <span class="math notranslate nohighlight">\(R^2\)</span> <em>of</em> <span class="math notranslate nohighlight">\(A\)</span> <em>with</em> <span class="math notranslate nohighlight">\(Y\)</span> <em>given</em> <span class="math notranslate nohighlight">\((D,X)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{\textrm{Var}(\mathbb{E}[Y|D,X,A]) - \textrm{Var}(\mathbb{E}[Y|D,X])}{\textrm{Var}(Y)-\textrm{Var}(\mathbb{E}[Y|D,X])}\]</div>
+<ul class="simple">
+<li><p>For model-specific interpretations of <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> or <span class="math notranslate nohighlight">\(C_D^2\)</span>, see the corresponding chapters (e.g. <a class="reference internal" href="#sensitivity-plr"><span class="std std-ref">Partially linear regression model (PLR)</span></a>).</p></li>
+</ul>
+</div>
+<p>Consequently, for given values <code class="docutils literal notranslate"><span class="pre">cf_y</span></code> and <code class="docutils literal notranslate"><span class="pre">cf_d</span></code>, we can create lower and upper bounds for target parameter <span class="math notranslate nohighlight">\(\tilde{\theta}_0\)</span> of the form</p>
+<div class="math notranslate nohighlight">
+\[\theta_{\pm}:=\theta_0 \pm |\rho| \sigma_0 \nu_0 C_Y C_D\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\psi(W,\theta,\eta)\)</span> the (correctly scaled) score function for the target parameter <span class="math notranslate nohighlight">\(\theta_0\)</span>. Then</p>
+<div class="math notranslate nohighlight">
+\[\psi_{\pm}(W,\theta,\eta_\pm):= \psi(W,\theta,\eta) \pm \frac{|\rho| C_Y C_D}{2 \sigma \nu} \Big(\sigma^2 \psi_{\nu^2}(W, \nu^2, \alpha) + \nu^2 \psi_{\sigma^2}(W, \sigma^2, g)\Big)\]</div>
+<p>determines a orthongonal score function for <span class="math notranslate nohighlight">\(\theta_{\pm}\)</span>, with nuisance elements <span class="math notranslate nohighlight">\(\eta_\pm:=(g, \alpha, \sigma, \nu)\)</span>.
+The score can be used to calculate the standard deviations of <span class="math notranslate nohighlight">\(\theta_{\pm}\)</span> via</p>
+<div class="math notranslate nohighlight">
+\[\sigma^2_{\pm}= \mathbb{E}[\psi_{\pm}(W,\theta,\eta_\pm)^2]\]</div>
+<p>For more detail and interpretations see <a class="reference external" href="https://www.nber.org/papers/w30302">Chernozhukov et al. (2022)</a>.</p>
+</section>
+<section id="implementation">
+<span id="sensitivity-implementation"></span><h3><span class="section-number">10.1.2. </span>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">#</a></h3>
+<p>The <a class="reference internal" href="models.html#plr-model"><span class="std std-ref">Partially linear regression model (PLR)</span></a> will be used as an example</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-0">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [2]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [3]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
+
+<span class="gp">In [4]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+
+<span class="gp">In [5]: </span><span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">clone</span>
+
+<span class="gp">In [6]: </span><span class="n">learner</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="gp">In [7]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<span class="gp">In [8]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<span class="gp">In [9]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1111</span><span class="p">)</span>
+
+<span class="gp">In [10]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+
+<span class="gp">In [11]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="gp">In [12]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If the sensitivity analysis is implemented (see <a class="reference internal" href="#sensitivity-models"><span class="std std-ref">Model-specific implementations</span></a>), the corresponding sensitivity elements are estimated
+automatically by calling the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method. In most cases these elements are based on the following plug-in estimators</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat{\sigma}^2 &amp;:= \mathbb{E}_n[(Y-\hat{g}(W))^2]\\\hat{\nu}^2 &amp;:= \mathbb{E}_n[2m(W,\hat{\alpha}) -  \hat{\alpha}(W)^2]\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{g}(W)\)</span> and <span class="math notranslate nohighlight">\(\hat{\alpha}(W)\)</span> denote the cross-fitted predictions of the outcome regression and the Riesz
+representer (both are model specific, see <a class="reference internal" href="#sensitivity-models"><span class="std std-ref">Model-specific implementations</span></a>). Further, the corresponding scores are defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\psi_{\sigma^2}(W, \hat{\sigma}^2, g) &amp;:= (Y-\hat{g}(W))^2 - \hat{\sigma}^2\\
+\psi_{\nu^2}(W, \hat{\nu}^2, \alpha) &amp;:= 2m(W,\hat{\alpha}) - \hat{\alpha}(W)^2 - \hat{\nu}^2.\end{split}\]</div>
+<p>After the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> call, the sensitivity elements are stored in a dictionary and can be accessed via the <code class="docutils literal notranslate"><span class="pre">sensitivity_elements</span></code> property.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-1">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gh">Out[13]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f2ec6df9fa0&gt;</span>
+
+<span class="gp">In [14]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_elements</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gh">Out[14]: </span><span class="go">dict_keys([&#39;sigma2&#39;, &#39;nu2&#39;, &#39;psi_sigma2&#39;, &#39;psi_nu2&#39;])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each value is a <span class="math notranslate nohighlight">\(3\)</span>-dimensional array, with the variances being of form <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">n_rep,</span> <span class="pre">n_coefs)</span></code> and the scores of form <code class="docutils literal notranslate"><span class="pre">(n_obs,</span> <span class="pre">n_rep,</span> <span class="pre">n_coefs)</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">sensitivity_analysis()</span></code> method then computes the upper and lower bounds for the estimate, based on the sensitivity parameters
+<code class="docutils literal notranslate"><span class="pre">cf_y</span></code>, <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> and <code class="docutils literal notranslate"><span class="pre">rho</span></code> (default is <code class="docutils literal notranslate"><span class="pre">rho=1.0</span></code> to account for adversarial confounding). Additionally, one-sided confidence bounds are computed
+based on a supplied significance level (default <code class="docutils literal notranslate"><span class="pre">level=0.95</span></code>).
+The results are summarized as a formatted string in the <code class="docutils literal notranslate"><span class="pre">sensitivity_summary</span></code></p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-2">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_analysis</span><span class="p">(</span><span class="n">cf_y</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">cf_d</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="gh">Out[15]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f2ec6df9fa0&gt;</span>
+
+<span class="gp">In [16]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_summary</span><span class="p">)</span>
+<span class="go">================== Sensitivity Analysis ==================</span>
+
+<span class="go">------------------ Scenario          ------------------</span>
+<span class="go">Significance Level: level=0.95</span>
+<span class="go">Sensitivity parameters: cf_y=0.03; cf_d=0.03, rho=1.0</span>
+
+<span class="go">------------------ Bounds with CI    ------------------</span>
+<span class="go">   CI lower  theta lower     theta  theta upper  CI upper</span>
+<span class="go">d  0.408208     0.482057  0.512189     0.542321  0.616003</span>
+
+<span class="go">------------------ Robustness Values ------------------</span>
+<span class="go">   H_0     RV (%)    RVa (%)</span>
+<span class="go">d  0.0  40.079767  35.129439</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>or can be directly accessed via the <code class="docutils literal notranslate"><span class="pre">sensitivity_params</span></code> property.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-3">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [17]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_params</span>
+<span class="gh">Out[17]: </span>
+<span class="go">{&#39;theta&#39;: {&#39;lower&#39;: array([0.48205676]), &#39;upper&#39;: array([0.54232056])},</span>
+<span class="go"> &#39;se&#39;: {&#39;lower&#39;: array([0.04489672]), &#39;upper&#39;: array([0.04479596])},</span>
+<span class="go"> &#39;ci&#39;: {&#39;lower&#39;: array([0.40820823]), &#39;upper&#39;: array([0.61600335])},</span>
+<span class="go"> &#39;rv&#39;: array([0.40079767]),</span>
+<span class="go"> &#39;rva&#39;: array([0.35129439]),</span>
+<span class="go"> &#39;input&#39;: {&#39;cf_y&#39;: 0.03,</span>
+<span class="go">  &#39;cf_d&#39;: 0.03,</span>
+<span class="go">  &#39;rho&#39;: 1.0,</span>
+<span class="go">  &#39;level&#39;: 0.95,</span>
+<span class="go">  &#39;null_hypothesis&#39;: array([0.])}}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The bounds are saved as a nested dictionary, where the keys <code class="docutils literal notranslate"><span class="pre">'theta'</span></code>
+denote the bounds on the parameter <span class="math notranslate nohighlight">\(\hat{\theta}_{\pm}\)</span>, <code class="docutils literal notranslate"><span class="pre">'se'</span></code> denotes the corresponding standard error and <code class="docutils literal notranslate"><span class="pre">'ci'</span></code> denotes the lower and upper
+confidence bounds for <span class="math notranslate nohighlight">\(\hat{\theta}_{\pm}\)</span>. Each of the keys refers to a dictionary with keys <code class="docutils literal notranslate"><span class="pre">'lower'</span></code> and <code class="docutils literal notranslate"><span class="pre">'upper'</span></code>
+which refer to the lower or upper bound, e.g. <code class="docutils literal notranslate"><span class="pre">sensitivity_params['theta']['lower']</span></code> refers to the lower bound <span class="math notranslate nohighlight">\(\hat{\theta}_{-}\)</span> of the estimated cofficient .</p>
+<p>Further, the sensitivity analysis has an input parameter <code class="docutils literal notranslate"><span class="pre">theta</span></code> (with default <code class="docutils literal notranslate"><span class="pre">theta=0.0</span></code>), which refers to the null hypothesis used for each coefficient.
+This null hypothesis is used to calculate the robustness values as displayed in the <code class="docutils literal notranslate"><span class="pre">sensitivity_params</span></code>.</p>
+<p>The robustness value $RV$ is defined as the required confounding strength (<code class="docutils literal notranslate"><span class="pre">cf_y=rv</span></code> and <code class="docutils literal notranslate"><span class="pre">cf_d=rv</span></code>), such that the lower or upper bound of the causal parameter includes the null hypothesis.
+If the estimated parameter <span class="math notranslate nohighlight">\(\hat{\theta}\)</span> is larger than the null hypothesis the lower bound is used and vice versa.
+The robustness value $RVa$ defined analogous, but additionally incorporates statistical uncertainty (as it is based on the confidence intervals of the bounds).</p>
+<p>To obtain a more complete overview over the sensitivity one can call the <code class="docutils literal notranslate"><span class="pre">sensitivity_plot()</span></code> method. The methods creates a contour plot, which calculates estimate of the upper or lower bound for <span class="math notranslate nohighlight">\(\theta\)</span>
+(based on the null hypothesis) for each combination of <code class="docutils literal notranslate"><span class="pre">cf_y</span></code> and <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> in a grid of values.</p>
+<figure class="captioned-image align-default" id="id3">
+<img alt="Contour plot" src="../_images/sensitivity_example_nb.png" />
+<figcaption>
+<p><span class="caption-text">Contour plot example (see <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">Examples</span></a>)</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>By adjusting the parameter <code class="docutils literal notranslate"><span class="pre">value='ci'</span></code> in the <code class="docutils literal notranslate"><span class="pre">sensitivity_plot()</span></code> method the bounds are displayed for the corresponding confidence level.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">sensitivity_plot()</span></code> requires to call <code class="docutils literal notranslate"><span class="pre">sensitivity_analysis</span></code> first, since the choice of the bound (upper or lower) is based on
+the corresponding null hypothesis. Furhter, the parameters <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">level</span></code> are used. Both are constained in the <code class="docutils literal notranslate"><span class="pre">sensitivity_params</span></code> property.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">sensitivity_plot()</span></code> is created for the first treatment variable. This can be changed via the <code class="docutils literal notranslate"><span class="pre">idx_treatment</span></code> parameter.</p></li>
+<li><p>The robustness values are given via the intersection countour of the null hypothesis and the identity.</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="model-specific-implementations">
+<span id="sensitivity-models"></span><h2><span class="section-number">10.2. </span>Model-specific implementations<a class="headerlink" href="#model-specific-implementations" title="Permalink to this heading">#</a></h2>
+<p>This section contains the implementation details for each specific model and model specific interpretations.</p>
+<section id="partially-linear-regression-model-plr">
+<span id="sensitivity-plr"></span><h3><span class="section-number">10.2.1. </span>Partially linear regression model (PLR)<a class="headerlink" href="#partially-linear-regression-model-plr" title="Permalink to this heading">#</a></h3>
+<p>In the <a class="reference internal" href="models.html#plr-model"><span class="std std-ref">Partially linear regression model (PLR)</span></a> the confounding strength <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> can be further be simplified to match the explanation of <code class="docutils literal notranslate"><span class="pre">cf_y</span></code>.
+Given the that the Riesz representer takes the following form</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\alpha(W) = \frac{D-\mathbb{E}[D|X]}{\mathbb{E}[(D-\mathbb{E}[D|X]^2)]}\\\tilde{\alpha}(\tilde{W}) = \frac{D-\mathbb{E}[D|X,A]}{\mathbb{E}[(D-\mathbb{E}[D|X,A]^2)]}\end{aligned}\end{align} \]</div>
+<p>one can show that</p>
+<div class="math notranslate nohighlight">
+\[C_D^2 :=\frac{\frac{\mathbb{E}\big[\big(\mathbb{E}[D|X,A] - \mathbb{E}[D|X]\big)^2\big]}{\mathbb{E}\big[\big(D - \mathbb{E}[D|X]\big)^2\big]}}{1-\frac{\mathbb{E}\big[\big(\mathbb{E}[D|X,A] - \mathbb{E}[D|X]\big)^2\big]}{\mathbb{E}\big[\big(D - \mathbb{E}[D|X]\big)^2\big]}}.\]</div>
+<p>Therefore,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_y</span></code><span class="math notranslate nohighlight">\(:=\frac{\mathbb{E}[(\tilde{g}(\tilde{W}) - g(W))^2]}{\mathbb{E}[(Y - g(W))^2]}\)</span>  measures the proportion of residual variance in the outcome <span class="math notranslate nohighlight">\(Y\)</span> explained by the latent confounders <span class="math notranslate nohighlight">\(A\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_d</span></code><span class="math notranslate nohighlight">\(:=\frac{\mathbb{E}\big[\big(\mathbb{E}[D|X,A] - \mathbb{E}[D|X]\big)^2\big]}{\mathbb{E}\big[\big(D - \mathbb{E}[D|X]\big)^2\big]}\)</span> measures the proportion of residual variance in the treatment <span class="math notranslate nohighlight">\(D\)</span> explained by the latent confounders <span class="math notranslate nohighlight">\(A\)</span></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the <a class="reference internal" href="models.html#plr-model"><span class="std std-ref">Partially linear regression model (PLR)</span></a>, both <code class="docutils literal notranslate"><span class="pre">cf_y</span></code> and <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> can be interpreted as <em>nonparametric partial</em> <span class="math notranslate nohighlight">\(R^2\)</span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_y</span></code> has the interpretation as the <em>nonparametric partial</em> <span class="math notranslate nohighlight">\(R^2\)</span> <em>of</em> <span class="math notranslate nohighlight">\(A\)</span> <em>with</em> <span class="math notranslate nohighlight">\(Y\)</span> <em>given</em> <span class="math notranslate nohighlight">\((D,X)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{\textrm{Var}(\mathbb{E}[Y|D,X,A]) - \textrm{Var}(\mathbb{E}[Y|D,X])}{\textrm{Var}(Y)-\textrm{Var}(\mathbb{E}[Y|D,X])}\]</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_d</span></code> has the interpretation as the <em>nonparametric partial</em> <span class="math notranslate nohighlight">\(R^2\)</span> <em>of</em> <span class="math notranslate nohighlight">\(A\)</span> <em>with</em> <span class="math notranslate nohighlight">\(D\)</span> <em>given</em> <span class="math notranslate nohighlight">\(X\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{\textrm{Var}(\mathbb{E}[D|X,A]) - \textrm{Var}(\mathbb{E}[D|X])}{\textrm{Var}(D)-\textrm{Var}(\mathbb{E}[D|X])}\]</div>
+</div>
+<p>Using the partially linear regression model with <code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> the <code class="docutils literal notranslate"><span class="pre">nuisance_elements</span></code> are implemented in the following form</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat{\sigma}^2 &amp;:= \mathbb{E}_n\Big[\big(Y-\hat{l}(X) - \hat{\theta}(D-\hat{m}(X))\big)^2\Big]\\\hat{\nu}^2 &amp;:= \mathbb{E}_n[\hat{\alpha}(W)^2] = \frac{1}{\mathbb{E}_n\big[(D - \hat{m}(X))^2\big]}\end{aligned}\end{align} \]</div>
+<p>with scores</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_{\sigma^2}(W, \hat{\sigma}^2, g) &amp;:=  \big(Y-\hat{l}(X) - \hat{\theta}(D-\hat{m}(X))\big)^2 - \hat{\sigma}^2\\\psi_{\nu^2}(W, \hat{\nu}^2, \alpha) &amp;:= \hat{\nu}^2 - \big(D-\hat{m}(X)\big)^2\big(\hat{\nu}^2)^2.\end{aligned}\end{align} \]</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">score='IV-type'</span></code> the senstivity elements are instead set to</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\hat{\sigma}^2 &amp;:= \mathbb{E}_n\Big[\big(Y - \hat{\theta}D - \hat{g}(X)\big)^2\Big]\\\psi_{\sigma^2}(W, \hat{\sigma}^2, g) &amp;:=  \big(Y - \hat{\theta}D - \hat{g}(X)\big)^2 - \hat{\sigma}^2.\end{aligned}\end{align} \]</div>
+</section>
+<section id="interactive-regression-model-irm">
+<span id="sensitivity-irm"></span><h3><span class="section-number">10.2.2. </span>Interactive regression model (IRM)<a class="headerlink" href="#interactive-regression-model-irm" title="Permalink to this heading">#</a></h3>
+<p>In the <a class="reference internal" href="models.html#irm-model"><span class="std std-ref">Interactive regression model (IRM)</span></a> the target parameter can be written as</p>
+<div class="math notranslate nohighlight">
+\[\theta = \mathbb{E}[(g(1,X) - g(0,X))\omega(D,X)]\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega(D,X)\)</span> are weights (e.g. set to <span class="math notranslate nohighlight">\(1\)</span> for the ATE).
+This implies the following representations</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m(W,g) &amp;= \big(g(1,X) - g(0,X))\omega(D,X)\\\alpha(W) &amp;= \bigg(\frac{D}{m(X)} - \frac{1-D}{1-m(X)}\bigg)  \mathbb{E}[\omega(D,X)|X].\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the <a class="reference internal" href="models.html#irm-model"><span class="std std-ref">Interactive regression model (IRM)</span></a> with the ATE, it holds</p>
+<div class="math notranslate nohighlight">
+\[C_D^2= \frac{\mathbb{E}\Big[\big(P(D=1|X,A)(1-P(D=1|X,A))\big)^{-1}\Big]}{\mathbb{E}\Big[\big(P(D=1|X)(1-P(D=1|X))\big)^{-1}\Big]} - 1\]</div>
+<p>which is the <em>average gain in conditional precision to predict</em> <span class="math notranslate nohighlight">\(D\)</span> <em>by using</em> <span class="math notranslate nohighlight">\(A\)</span> <em>in addition to</em> <span class="math notranslate nohighlight">\(X\)</span>.
+This can be used to choose <code class="docutils literal notranslate"><span class="pre">cf_d</span></code><span class="math notranslate nohighlight">\(:=\frac{C_D^2}{1 + C_D^2}\)</span>.</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">nuisance_elements</span></code> are then computed with plug-in versions according to the general <a class="reference internal" href="#sensitivity-implementation"><span class="std std-ref">Implementation</span></a>.
+For <code class="docutils literal notranslate"><span class="pre">score='ATE'</span></code>, the weights are set to one</p>
+<div class="math notranslate nohighlight">
+\[\omega(D,X) = 1,\]</div>
+<p>wheras for <code class="docutils literal notranslate"><span class="pre">score='ATTE'</span></code></p>
+<div class="math notranslate nohighlight">
+\[\omega(D,X) = \frac{D}{\mathbb{E}[D]},\]</div>
+<p>such that</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{E}[\omega(D,X)|X] = \frac{m(X)}{\mathbb{E}[D]}.\]</div>
+</section>
+<section id="difference-in-differences-for-panel-data">
+<h3><span class="section-number">10.2.3. </span>Difference-in-Differences for Panel Data<a class="headerlink" href="#difference-in-differences-for-panel-data" title="Permalink to this heading">#</a></h3>
+<p>In the <a class="reference internal" href="models.html#did-pa-model"><span class="std std-ref">Panel data</span></a> with <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code> the score function implies the following representations</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m(W,g) &amp;= \big(g(1,X) - g(0,X))\frac{D}{\mathbb{E}[D]}\\\alpha(W) &amp;= \frac{D}{\mathbb{E}[D]} - \frac{\frac{m(X)(1-D)}{1-m(X)}}{\mathbb{E}\left[\frac{m(X)(1-D)}{1-m(X)}\right]}.\end{aligned}\end{align} \]</div>
+<p>If instead <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=False</span></code>, the Riesz representer changes to</p>
+<div class="math notranslate nohighlight">
+\[\alpha(W) = \frac{D}{\mathbb{E}[D]} - \frac{m(X)(1-D)}{\mathbb{E}[D](1-m(X))}.\]</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code> implies the score function implies the following representations</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m(W,g) &amp;= g(1,X) - g(0,X)\\\alpha(W) &amp;= \frac{D}{\mathbb{E}[D]} - \frac{1-D}{1-\mathbb{E}[D]}.\end{aligned}\end{align} \]</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">nuisance_elements</span></code> are then computed with plug-in versions according to the general <a class="reference internal" href="#sensitivity-implementation"><span class="std std-ref">Implementation</span></a>.</p>
+</section>
+<section id="difference-in-differences-for-repeated-cross-sections">
+<h3><span class="section-number">10.2.4. </span>Difference-in-Differences for repeated cross-sections<a class="headerlink" href="#difference-in-differences-for-repeated-cross-sections" title="Permalink to this heading">#</a></h3>
+<p>In the <a class="reference internal" href="models.html#did-cs-model"><span class="std std-ref">Repeated cross-sections</span></a> with <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code> the score function implies the following representations</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m(W,g) &amp;= \Big(\big(g(1,1,X) - g(1,0,X)\big) - \big(g(0,1,X) - g(0,0,X)\big)\Big) \frac{D}{\mathbb{E}[D]}\\\alpha(W) &amp;= \frac{DT}{\mathbb{E}[DT]} - \frac{D(1-T)}{\mathbb{E}[D(1-T)]}\\&amp;\quad - \frac{m(X)(1-D)T}{1-m(X)}\mathbb{E}\left[\frac{m(X)(1-D)T}{1-m(X)}\right]^{-1}\\&amp;\quad + \frac{m(X)(1-D)(1-T)}{1-m(X)}\mathbb{E}\left[\frac{m(X)(1-D)(1-T)}{1-m(X)}\right]^{-1}.\end{aligned}\end{align} \]</div>
+<p>If instead <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=False</span></code>, the Riesz representer (after simplifications) changes to</p>
+<div class="math notranslate nohighlight">
+\[\alpha(W) = \left(\frac{T}{\mathbb{E}[D]\mathbb{E}[T]} + \frac{1-T}{\mathbb{E}[D](1-\mathbb{E}[T])}\right)\left(D - (1-D)\frac{m(X)}{1-m(X)}\right).\]</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code> and <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code> implies the score function implies the following representations</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m(W,g) &amp;= \big(g(1,1,X) - g(1,0,X)\big) - \big(g(0,1,X) - g(0,0,X)\big)\\\alpha(W) &amp;= \frac{DT}{\mathbb{E}[DT]} - \frac{D(1-T)}{\mathbb{E}[D(1-T)]} - \frac{(1-D)T}{\mathbb{E}[(1-D)T]} + \frac{(1-D)(1-T)}{\mathbb{E}[(1-D)(1-T)]}.\end{aligned}\end{align} \]</div>
+<p>And again, if instead <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=False</span></code>, the Riesz representer (after simplifications) changes to</p>
+<div class="math notranslate nohighlight">
+\[\alpha(W) = \frac{DT}{\mathbb{E}[D]\mathbb{E}[T]} - \frac{D(1-T)}{\mathbb{E}[D](1-\mathbb{E}[T])} - \frac{(1-D)T}{(1-\mathbb{E}[D])\mathbb{E}[T]} + \frac{(1-D)(1-T)}{(1-\mathbb{E}[D])(1-\mathbb{E}[T])}.\]</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">nuisance_elements</span></code> are then computed with plug-in versions according to the general <a class="reference internal" href="#sensitivity-implementation"><span class="std std-ref">Implementation</span></a>.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="resampling.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>Sample-splitting, cross-fitting and repeated cross-fitting</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../examples/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Examples</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-algorithm">10.1. General algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theory">10.1.1. Theory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">10.1.2. Implementation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-specific-implementations">10.2. Model-specific implementations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#partially-linear-regression-model-plr">10.2.1. Partially linear regression model (PLR)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-regression-model-irm">10.2.2. Interactive regression model (IRM)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#difference-in-differences-for-panel-data">10.2.3. Difference-in-Differences for Panel Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#difference-in-differences-for-repeated-cross-sections">10.2.4. Difference-in-Differences for repeated cross-sections</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/guide/sensitivity.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -482,6 +482,8 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="doubleml.datasets.make_plr_turrell2018.html">doubleml.datasets.make_plr_turrell2018</a></li>
 <li class="toctree-l1"><a class="reference internal" href="doubleml.datasets.make_pliv_multiway_cluster_CKMS2021.html">doubleml.datasets.make_pliv_multiway_cluster_CKMS2021</a></li>
 <li class="toctree-l1"><a class="reference internal" href="doubleml.datasets.make_did_SZ2020.html">doubleml.datasets.make_did_SZ2020</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doubleml.datasets.make_confounded_plr_data.html">doubleml.datasets.make_confounded_plr_data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doubleml.datasets.make_confounded_irm_data.html">doubleml.datasets.make_confounded_irm_data</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="doubleml.double_ml_score_mixins.LinearScoreMixin.html">doubleml.double_ml_score_mixins.LinearScoreMixin</a></li>
@@ -623,6 +625,12 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 <tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.DoubleMLCVAR.p_adjust" title="doubleml.DoubleMLCVAR.p_adjust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_adjust</span></code></a>([method])</p></td>
 <td><p>Multiple testing adjustment for DoubleML models.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#doubleml.DoubleMLCVAR.sensitivity_analysis" title="doubleml.DoubleMLCVAR.sensitivity_analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_analysis</span></code></a>([cf_y, cf_d, rho, ...])</p></td>
+<td><p>Performs a sensitivity analysis to account for unobserved confounders.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.DoubleMLCVAR.sensitivity_plot" title="doubleml.DoubleMLCVAR.sensitivity_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_plot</span></code></a>([idx_treatment, value, ...])</p></td>
+<td><p>Contour plot of the sensivity with respect to latent/confounding variables.</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#doubleml.DoubleMLCVAR.set_ml_nuisance_params" title="doubleml.DoubleMLCVAR.set_ml_nuisance_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_ml_nuisance_params</span></code></a>(learner, treat_var, ...)</p></td>
 <td><p>Set hyperparameters for the nuisance models of DoubleML models.</p></td>
 </tr>
@@ -721,25 +729,34 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">se</span></code></p></td>
 <td><p>Standard errors for the causal parameter(s) after calling <a class="reference internal" href="#doubleml.DoubleMLCVAR.fit" title="doubleml.DoubleMLCVAR.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smpls</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_elements</span></code></p></td>
+<td><p>Values of the sensitivity components after calling <a class="reference internal" href="#doubleml.DoubleMLCVAR.fit" title="doubleml.DoubleMLCVAR.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>; If available (e.g., PLR, IRM) a dictionary with entries <code class="docutils literal notranslate"><span class="pre">sigma2</span></code>, <code class="docutils literal notranslate"><span class="pre">nu2</span></code>, <code class="docutils literal notranslate"><span class="pre">psi_sigma2</span></code> and <code class="docutils literal notranslate"><span class="pre">psi_nu2</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_params</span></code></p></td>
+<td><p>Values of the sensitivity parameters after calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">sesitivity_analysis()</span></code>; If available (e.g., PLR, IRM) a dictionary with entries <code class="docutils literal notranslate"><span class="pre">theta</span></code>, <code class="docutils literal notranslate"><span class="pre">se</span></code>, <code class="docutils literal notranslate"><span class="pre">ci</span></code>, <code class="docutils literal notranslate"><span class="pre">rv</span></code> and <code class="docutils literal notranslate"><span class="pre">rva</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_summary</span></code></p></td>
+<td><p>Returns a summary for the sensitivity analysis after calling <a class="reference internal" href="#doubleml.DoubleMLCVAR.sensitivity_analysis" title="doubleml.DoubleMLCVAR.sensitivity_analysis"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sensitivity_analysis()</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smpls</span></code></p></td>
 <td><p>The partition used for cross-fitting.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smpls_cluster</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smpls_cluster</span></code></p></td>
 <td><p>The partition of clusters used for cross-fitting.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></p></td>
 <td><p>A summary for the estimated causal effect after calling <a class="reference internal" href="#doubleml.DoubleMLCVAR.fit" title="doubleml.DoubleMLCVAR.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">t_stat</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">t_stat</span></code></p></td>
 <td><p>t-statistics for the causal parameter(s) after calling <a class="reference internal" href="#doubleml.DoubleMLCVAR.fit" title="doubleml.DoubleMLCVAR.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">treatment</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">treatment</span></code></p></td>
 <td><p>Treatment indicator for potential outcome.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimming_rule</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimming_rule</span></code></p></td>
 <td><p>Specifies the used trimming rule.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimming_threshold</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimming_threshold</span></code></p></td>
 <td><p>Specifies the used trimming threshold.</p></td>
 </tr>
 </tbody>
@@ -817,7 +834,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">0.95</sp
 where <code class="docutils literal notranslate"><span class="pre">n</span></code> specifies the number of observations. Remark that some models like IRM are
 not able to provide all values for <code class="docutils literal notranslate"><span class="pre">y_true</span></code> for all learners and might contain
 some <code class="docutils literal notranslate"><span class="pre">nan</span></code> values in the target vector.
-Default is the euclidean distance.</p></li>
+Default is the root-mean-square error.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -840,10 +857,13 @@ Default is the euclidean distance.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="n">mean_absolute_error</span><span class="p">)</span>
-<span class="go">{&#39;ml_g0&#39;: array([[1.13318973]]),</span>
-<span class="go"> &#39;ml_g1&#39;: array([[0.91659939]]),</span>
-<span class="go"> &#39;ml_m&#39;: array([[0.36350912]])}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mae</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">subset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_true</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">[</span><span class="n">subset</span><span class="p">],</span> <span class="n">y_pred</span><span class="p">[</span><span class="n">subset</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="n">mae</span><span class="p">)</span>
+<span class="go">{&#39;ml_g0&#39;: array([[0.85974356]]),</span>
+<span class="go"> &#39;ml_g1&#39;: array([[0.85280376]]),</span>
+<span class="go"> &#39;ml_m&#39;: array([[0.35365143]])}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -898,7 +918,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">False</s
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A str (<code class="docutils literal notranslate"><span class="pre">'romano-wolf''</span></code>, <code class="docutils literal notranslate"><span class="pre">'bonferroni'</span></code>, <code class="docutils literal notranslate"><span class="pre">'holm'</span></code>, etc) specifying the adjustment method.
 In addition to <code class="docutils literal notranslate"><span class="pre">'romano-wolf''</span></code>, all methods implemented in
-<code class="xref py py-func docutils literal notranslate"><span class="pre">statsmodels.stats.multitest.multipletests()</span></code> can be applied.
+<a class="reference external" href="https://www.statsmodels.org/stable/generated/statsmodels.stats.multitest.multipletests.html#statsmodels.stats.multitest.multipletests" title="(in statsmodels 0.14.0 v0.14.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">statsmodels.stats.multitest.multipletests()</span></code></a> can be applied.
 Default is <code class="docutils literal notranslate"><span class="pre">'romano-wolf'</span></code>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -906,6 +926,70 @@ Default is <code class="docutils literal notranslate"><span class="pre">'romano-
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="doubleml.DoubleMLCVAR.sensitivity_analysis">
+<span class="sig-prename descclassname"><span class="pre">DoubleMLCVAR.</span></span><span class="sig-name descname"><span class="pre">sensitivity_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cf_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cf_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_hypothesis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doubleml.DoubleMLCVAR.sensitivity_analysis" title="Permalink to this definition">#</a></dt>
+<dd><p>Performs a sensitivity analysis to account for unobserved confounders.</p>
+<p>The evaluated scenario is stored as a dictionary in the property <code class="docutils literal notranslate"><span class="pre">sensitivity_params</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cf_y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Percentage of the residual variation of the outcome explained by latent/confounding variables.
+Default is <code class="docutils literal notranslate"><span class="pre">0.03</span></code>.</p></li>
+<li><p><strong>cf_d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Percentage gains in the variation of the Riesz representer generated by latent/confounding variables.
+Default is <code class="docutils literal notranslate"><span class="pre">0.03</span></code>.</p></li>
+<li><p><strong>rho</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The correlation between the differences in short and long representations in the main regression and
+Riesz representer. Has to be in [-1,1]. The absolute value determines the adversarial strength of the
+confounding (maximizes at 1.0).
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The confidence level.
+Default is <code class="docutils literal notranslate"><span class="pre">0.95</span></code>.</p></li>
+<li><p><strong>null_hypothesis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><em>numpy.ndarray</em></a>) – Null hypothesis for the effect. Determines the robustness values.
+If it is a single float uses the same null hypothesis for all estimated parameters.
+Else the array has to be of shape (n_coefs,).
+Default is <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)">object</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="doubleml.DoubleMLCVAR.sensitivity_plot">
+<span class="sig-prename descclassname"><span class="pre">DoubleMLCVAR.</span></span><span class="sig-name descname"><span class="pre">sensitivity_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx_treatment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'theta'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_scenario</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.15,</span> <span class="pre">0.15)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doubleml.DoubleMLCVAR.sensitivity_plot" title="Permalink to this definition">#</a></dt>
+<dd><p>Contour plot of the sensivity with respect to latent/confounding variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idx_treatment</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Index of the treatment to perform the sensitivity analysis.
+Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Determines which contours to plot. Valid values are <code class="docutils literal notranslate"><span class="pre">'theta'</span></code> (refers to the bounds)
+and <code class="docutils literal notranslate"><span class="pre">'ci'</span></code> (refers to the bounds including statistical uncertainty).
+Default is <code class="docutils literal notranslate"><span class="pre">'theta'</span></code>.</p></li>
+<li><p><strong>include_scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Indicates whether to highlight the scenario from the call of <a class="reference internal" href="#doubleml.DoubleMLCVAR.sensitivity_analysis" title="doubleml.DoubleMLCVAR.sensitivity_analysis"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sensitivity_analysis()</span></code></a>.
+Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>fill</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Indicates whether to use a heatmap style or only contour lines.
+Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>grid_bounds</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a>) – Determines the evaluation bounds of the grid for <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> and <code class="docutils literal notranslate"><span class="pre">cf_y</span></code>. Has to contain two floats in [0, 1).
+Default is <code class="docutils literal notranslate"><span class="pre">(0.15,</span> <span class="pre">0.15)</span></code>.</p></li>
+<li><p><strong>grid_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Determines the number of evaluation points of the grid.
+Default is <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fig</strong> – Plotly figure of the sensitivity contours.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)">object</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1096,6 +1180,8 @@ Returned if <code class="docutils literal notranslate"><span class="pre">return_
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLCVAR.fit"><code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR.fit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLCVAR.get_params"><code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR.get_params()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLCVAR.p_adjust"><code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR.p_adjust()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLCVAR.sensitivity_analysis"><code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR.sensitivity_analysis()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLCVAR.sensitivity_plot"><code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR.sensitivity_plot()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLCVAR.set_ml_nuisance_params"><code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR.set_ml_nuisance_params()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLCVAR.set_sample_splitting"><code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR.set_sample_splitting()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLCVAR.tune"><code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR.tune()</span></code></a></li>
