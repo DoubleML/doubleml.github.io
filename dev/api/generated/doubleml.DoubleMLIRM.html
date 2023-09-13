@@ -642,22 +642,25 @@ Target parameters of interest in this model are the average treatment effect (AT
 <tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.p_adjust" title="doubleml.DoubleMLIRM.p_adjust"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p_adjust</span></code></a>([method])</p></td>
 <td><p>Multiple testing adjustment for DoubleML models.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.sensitivity_analysis" title="doubleml.DoubleMLIRM.sensitivity_analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_analysis</span></code></a>([cf_y, cf_d, rho, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.policy_tree" title="doubleml.DoubleMLIRM.policy_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">policy_tree</span></code></a>(features[, depth])</p></td>
+<td><p>Estimate a decision tree for optimal treatment policy by weighted classification.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.sensitivity_analysis" title="doubleml.DoubleMLIRM.sensitivity_analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_analysis</span></code></a>([cf_y, cf_d, rho, ...])</p></td>
 <td><p>Performs a sensitivity analysis to account for unobserved confounders.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.sensitivity_benchmark" title="doubleml.DoubleMLIRM.sensitivity_benchmark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_benchmark</span></code></a>(benchmarking_set)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.sensitivity_benchmark" title="doubleml.DoubleMLIRM.sensitivity_benchmark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_benchmark</span></code></a>(benchmarking_set)</p></td>
 <td><p>Computes a benchmark for a given set of features. Returns a DataFrame containing the corresponding values for cf_y, cf_d, rho and the change in estimates. :returns: <strong>benchmark_results</strong> -- Benchmark results. :rtype: <a href="#id1"><span class="problematic" id="id2">:lass:`pandas.DataFrame`</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.sensitivity_plot" title="doubleml.DoubleMLIRM.sensitivity_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_plot</span></code></a>([idx_treatment, value, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.sensitivity_plot" title="doubleml.DoubleMLIRM.sensitivity_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sensitivity_plot</span></code></a>([idx_treatment, value, ...])</p></td>
 <td><p>Contour plot of the sensivity with respect to latent/confounding variables.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.set_ml_nuisance_params" title="doubleml.DoubleMLIRM.set_ml_nuisance_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_ml_nuisance_params</span></code></a>(learner, treat_var, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.set_ml_nuisance_params" title="doubleml.DoubleMLIRM.set_ml_nuisance_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_ml_nuisance_params</span></code></a>(learner, treat_var, ...)</p></td>
 <td><p>Set hyperparameters for the nuisance models of DoubleML models.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.set_sample_splitting" title="doubleml.DoubleMLIRM.set_sample_splitting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_sample_splitting</span></code></a>(all_smpls)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.set_sample_splitting" title="doubleml.DoubleMLIRM.set_sample_splitting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_sample_splitting</span></code></a>(all_smpls)</p></td>
 <td><p>Set the sample splitting for DoubleML models.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.tune" title="doubleml.DoubleMLIRM.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>(param_grids[, tune_on_folds, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#doubleml.DoubleMLIRM.tune" title="doubleml.DoubleMLIRM.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>(param_grids[, tune_on_folds, ...])</p></td>
 <td><p>Hyperparameter-tuning for DoubleML models.</p></td>
 </tr>
 </tbody>
@@ -982,6 +985,32 @@ Default is <code class="docutils literal notranslate"><span class="pre">'romano-
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="doubleml.DoubleMLIRM.policy_tree">
+<span class="sig-prename descclassname"><span class="pre">DoubleMLIRM.</span></span><span class="sig-name descname"><span class="pre">policy_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tree_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doubleml.DoubleMLIRM.policy_tree" title="Permalink to this definition">#</a></dt>
+<dd><p>Estimate a decision tree for optimal treatment policy by weighted classification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The depth of the estimated decision tree.
+Has to be larger than 0. Deeper trees derive a more complex decision policy. Default is <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+<li><p><strong>features</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>) – The covariates on which the policy tree is learned.
+Has to be of shape <code class="docutils literal notranslate"><span class="pre">(n_obs,</span> <span class="pre">d)</span></code>, where <code class="docutils literal notranslate"><span class="pre">n_obs</span></code> is the number of observations
+and <code class="docutils literal notranslate"><span class="pre">d</span></code> is the number of covariates to be included.</p></li>
+<li><p><strong>**tree_params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Parameters that are forwarded to the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier" title="(in scikit-learn v1.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.tree.DecisionTreeClassifier</span></code></a>.
+Note that by default we perform minimal pruning by setting the <code class="docutils literal notranslate"><span class="pre">ccp_alpha</span> <span class="pre">=</span> <span class="pre">0.01</span></code> and
+<code class="docutils literal notranslate"><span class="pre">min_samples_leaf</span> <span class="pre">=</span> <span class="pre">8</span></code>. This can be adjusted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>model</strong> – Policy tree model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">doubleML.DoubleMLPolicyTree</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="doubleml.DoubleMLIRM.sensitivity_analysis">
 <span class="sig-prename descclassname"><span class="pre">DoubleMLIRM.</span></span><span class="sig-name descname"><span class="pre">sensitivity_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cf_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cf_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_hypothesis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doubleml.DoubleMLIRM.sensitivity_analysis" title="Permalink to this definition">#</a></dt>
 <dd><p>Performs a sensitivity analysis to account for unobserved confounders.</p>
@@ -1244,6 +1273,7 @@ Returned if <code class="docutils literal notranslate"><span class="pre">return_
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLIRM.gate"><code class="docutils literal notranslate"><span class="pre">DoubleMLIRM.gate()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLIRM.get_params"><code class="docutils literal notranslate"><span class="pre">DoubleMLIRM.get_params()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLIRM.p_adjust"><code class="docutils literal notranslate"><span class="pre">DoubleMLIRM.p_adjust()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLIRM.policy_tree"><code class="docutils literal notranslate"><span class="pre">DoubleMLIRM.policy_tree()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLIRM.sensitivity_analysis"><code class="docutils literal notranslate"><span class="pre">DoubleMLIRM.sensitivity_analysis()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLIRM.sensitivity_benchmark"><code class="docutils literal notranslate"><span class="pre">DoubleMLIRM.sensitivity_benchmark()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.DoubleMLIRM.sensitivity_plot"><code class="docutils literal notranslate"><span class="pre">DoubleMLIRM.sensitivity_plot()</span></code></a></li>

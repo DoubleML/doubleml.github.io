@@ -470,6 +470,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
@@ -620,326 +621,73 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+      nifa  net_tfa        tw  age      inc  fsize  educ  db  marr  twoearn  \
+0      0.0      0.0    4500.0   47   6765.0      2     8   0     0        0
+1   6215.0   1015.0   22390.0   36  28452.0      1    16   0     0        0
+2      0.0  -2000.0   -2000.0   37   3300.0      6    12   1     0        0
+3  15000.0  15000.0  155000.0   58  52590.0      2    16   0     1        1
+4      0.0      0.0   58000.0   32  21804.0      1    11   0     0        0
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>nifa</th>
-      <th>net_tfa</th>
-      <th>tw</th>
-      <th>age</th>
-      <th>inc</th>
-      <th>fsize</th>
-      <th>educ</th>
-      <th>db</th>
-      <th>marr</th>
-      <th>twoearn</th>
-      <th>e401</th>
-      <th>p401</th>
-      <th>pira</th>
-      <th>hown</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>4500.0</td>
-      <td>47</td>
-      <td>6765.0</td>
-      <td>2</td>
-      <td>8</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>6215.0</td>
-      <td>1015.0</td>
-      <td>22390.0</td>
-      <td>36</td>
-      <td>28452.0</td>
-      <td>1</td>
-      <td>16</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.0</td>
-      <td>-2000.0</td>
-      <td>-2000.0</td>
-      <td>37</td>
-      <td>3300.0</td>
-      <td>6</td>
-      <td>12</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>15000.0</td>
-      <td>15000.0</td>
-      <td>155000.0</td>
-      <td>58</td>
-      <td>52590.0</td>
-      <td>2</td>
-      <td>16</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>58000.0</td>
-      <td>32</td>
-      <td>21804.0</td>
-      <td>1</td>
-      <td>11</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+   e401  p401  pira  hown
+0     0     0     0     1
+1     0     0     0     1
+2     0     0     0     0
+3     0     0     0     1
+4     0     0     0     1
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+               nifa       net_tfa            tw          age            inc  \
+count  9.915000e+03  9.915000e+03  9.915000e+03  9915.000000    9915.000000
+mean   1.392864e+04  1.805153e+04  6.381685e+04    41.060212   37200.623197
+std    5.490488e+04  6.352250e+04  1.115297e+05    10.344505   24774.288006
+min    0.000000e+00 -5.023020e+05 -5.023020e+05    25.000000   -2652.000000
+25%    2.000000e+02 -5.000000e+02  3.291500e+03    32.000000   19413.000000
+50%    1.635000e+03  1.499000e+03  2.510000e+04    40.000000   31476.000000
+75%    8.765500e+03  1.652450e+04  8.148750e+04    48.000000   48583.500000
+max    1.430298e+06  1.536798e+06  2.029910e+06    64.000000  242124.000000
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
+             fsize         educ           db         marr      twoearn  \
+count  9915.000000  9915.000000  9915.000000  9915.000000  9915.000000
+mean      2.865860    13.206253     0.271004     0.604841     0.380837
+std       1.538937     2.810382     0.444500     0.488909     0.485617
+min       1.000000     1.000000     0.000000     0.000000     0.000000
+25%       2.000000    12.000000     0.000000     0.000000     0.000000
+50%       3.000000    12.000000     0.000000     1.000000     0.000000
+75%       4.000000    16.000000     1.000000     1.000000     1.000000
+max      13.000000    18.000000     1.000000     1.000000     1.000000
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>nifa</th>
-      <th>net_tfa</th>
-      <th>tw</th>
-      <th>age</th>
-      <th>inc</th>
-      <th>fsize</th>
-      <th>educ</th>
-      <th>db</th>
-      <th>marr</th>
-      <th>twoearn</th>
-      <th>e401</th>
-      <th>p401</th>
-      <th>pira</th>
-      <th>hown</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>count</th>
-      <td>9.915000e+03</td>
-      <td>9.915000e+03</td>
-      <td>9.915000e+03</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-    </tr>
-    <tr>
-      <th>mean</th>
-      <td>1.392864e+04</td>
-      <td>1.805153e+04</td>
-      <td>6.381685e+04</td>
-      <td>41.060212</td>
-      <td>37200.623197</td>
-      <td>2.865860</td>
-      <td>13.206253</td>
-      <td>0.271004</td>
-      <td>0.604841</td>
-      <td>0.380837</td>
-      <td>0.371357</td>
-      <td>0.261624</td>
-      <td>0.242158</td>
-      <td>0.635199</td>
-    </tr>
-    <tr>
-      <th>std</th>
-      <td>5.490488e+04</td>
-      <td>6.352250e+04</td>
-      <td>1.115297e+05</td>
-      <td>10.344505</td>
-      <td>24774.288006</td>
-      <td>1.538937</td>
-      <td>2.810382</td>
-      <td>0.444500</td>
-      <td>0.488909</td>
-      <td>0.485617</td>
-      <td>0.483192</td>
-      <td>0.439541</td>
-      <td>0.428411</td>
-      <td>0.481399</td>
-    </tr>
-    <tr>
-      <th>min</th>
-      <td>0.000000e+00</td>
-      <td>-5.023020e+05</td>
-      <td>-5.023020e+05</td>
-      <td>25.000000</td>
-      <td>-2652.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>25%</th>
-      <td>2.000000e+02</td>
-      <td>-5.000000e+02</td>
-      <td>3.291500e+03</td>
-      <td>32.000000</td>
-      <td>19413.000000</td>
-      <td>2.000000</td>
-      <td>12.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>50%</th>
-      <td>1.635000e+03</td>
-      <td>1.499000e+03</td>
-      <td>2.510000e+04</td>
-      <td>40.000000</td>
-      <td>31476.000000</td>
-      <td>3.000000</td>
-      <td>12.000000</td>
-      <td>0.000000</td>
-      <td>1.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>1.000000</td>
-    </tr>
-    <tr>
-      <th>75%</th>
-      <td>8.765500e+03</td>
-      <td>1.652450e+04</td>
-      <td>8.148750e+04</td>
-      <td>48.000000</td>
-      <td>48583.500000</td>
-      <td>4.000000</td>
-      <td>16.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>0.000000</td>
-      <td>1.000000</td>
-    </tr>
-    <tr>
-      <th>max</th>
-      <td>1.430298e+06</td>
-      <td>1.536798e+06</td>
-      <td>2.029910e+06</td>
-      <td>64.000000</td>
-      <td>242124.000000</td>
-      <td>13.000000</td>
-      <td>18.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+              e401         p401         pira         hown
+count  9915.000000  9915.000000  9915.000000  9915.000000
+mean      0.371357     0.261624     0.242158     0.635199
+std       0.483192     0.439541     0.428411     0.481399
+min       0.000000     0.000000     0.000000     0.000000
+25%       0.000000     0.000000     0.000000     0.000000
+50%       0.000000     0.000000     0.000000     1.000000
+75%       1.000000     1.000000     0.000000     1.000000
+max       1.000000     1.000000     1.000000     1.000000
+</pre></div></div>
 </div>
 <p>The data consist of 9,915 observations at the household level drawn from the 1991 Survey of Income and Program Participation (SIPP). All the variables are referred to 1990. We use net financial assets (<em>net_tfa</em>) as the outcome variable, <span class="math notranslate nohighlight">\(Y\)</span>, in our analysis. The net financial assets are computed as the sum of IRA balances, 401(k) balances, checking accounts, saving bonds, other interest-earning accounts, other interest-earning assets, stocks, and mutual funds less non mortgage debts.</p>
 <p>Among the <span class="math notranslate nohighlight">\(9915\)</span> individuals, <span class="math notranslate nohighlight">\(3682\)</span> are eligible to participate in the program. The variable <em>e401</em> indicates eligibility and <em>p401</em> indicates participation, respectively.</p>
@@ -989,20 +737,11 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/seaborn/axisgrid.py:118: UserWarning: The figure layout has changed to tight
-  self._figure.tight_layout(*args, **kwargs)
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_py_double_ml_pension_15_1.png" src="../_images/examples_py_double_ml_pension_15_1.png" />
+<img alt="../_images/examples_py_double_ml_pension_15_0.png" src="../_images/examples_py_double_ml_pension_15_0.png" />
 </div>
 </div>
 <p>As a first estimate, we calculate the unconditional average predictive effect (APE) of 401(k) eligibility on accumulated assets. This effect corresponds to the average treatment effect if 401(k) eligibility would be assigned to individuals in an entirely randomized way. The unconditional APE of e401 is about <span class="math notranslate nohighlight">\(19559\)</span>:</p>
@@ -1010,104 +749,40 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">[[</span><span class="s1">&#39;e401&#39;</span><span class="p">,</span> <span class="s1">&#39;net_tfa&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;e401&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[[</span><span class="s1">&#39;e401&#39;</span><span class="p">,</span> <span class="s1">&#39;net_tfa&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;e401&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">diff</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>net_tfa</th>
-    </tr>
-    <tr>
-      <th>e401</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>19559.34475</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+          net_tfa
+e401
+0             NaN
+1     19559.34475
+</pre></div></div>
 </div>
 <p>Among the <span class="math notranslate nohighlight">\(3682\)</span> individuals that are eligible, <span class="math notranslate nohighlight">\(2594\)</span> decided to participate in the program. The unconditional APE of p401 is about <span class="math notranslate nohighlight">\(27372\)</span>:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">[[</span><span class="s1">&#39;p401&#39;</span><span class="p">,</span> <span class="s1">&#39;net_tfa&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;p401&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[[</span><span class="s1">&#39;p401&#39;</span><span class="p">,</span> <span class="s1">&#39;net_tfa&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;p401&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">diff</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>net_tfa</th>
-    </tr>
-    <tr>
-      <th>p401</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>27371.583404</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+           net_tfa
+p401
+0              NaN
+1     27371.583404
+</pre></div></div>
 </div>
 <p>As discussed, these estimates are biased since they do not account for saver heterogeneity and endogeneity of participation.</p>
 </section>
@@ -1118,9 +793,11 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 <section id="Estimating-the-Average-Treatment-Effect-of-401(k)-Eligibility-on-Net-Financial-Assets">
 <h2>Estimating the Average Treatment Effect of 401(k) Eligibility on Net Financial Assets<a class="headerlink" href="#Estimating-the-Average-Treatment-Effect-of-401(k)-Eligibility-on-Net-Financial-Assets" title="Permalink to this heading">#</a></h2>
 <p>We first look at the treatment effect of <code class="docutils literal notranslate"><span class="pre">e401</span></code> on net total financial assets. We give estimates of the ATE in the linear model</p>
-<p><span class="math">\begin{equation*}
+<div class="math notranslate nohighlight">
+\[\begin{equation*}
 Y = D \alpha + f(X)'\beta+ \epsilon,
-\end{equation*}</span> where <span class="math notranslate nohighlight">\(f(X)\)</span> is a dictonary applied to the raw regressors. <span class="math notranslate nohighlight">\(X\)</span> contains variables on marital status, two-earner status, defined benefit pension status, IRA participation, home ownership, family size, education, age, and income.</p>
+\end{equation*}\]</div>
+<p>where <span class="math notranslate nohighlight">\(f(X)\)</span> is a dictonary applied to the raw regressors. <span class="math notranslate nohighlight">\(X\)</span> contains variables on marital status, two-earner status, defined benefit pension status, IRA participation, home ownership, family size, education, age, and income.</p>
 <p>In the following, we will consider two different models,</p>
 <ul class="simple">
 <li><p>a basic model specification that includes the raw regressors, i.e., <span class="math notranslate nohighlight">\(f(X) = X\)</span>, and</p></li>
@@ -1242,10 +919,11 @@ memory usage: 755.4 KB
 <section id="Partially-Linear-Regression-Model-(PLR)">
 <h3>Partially Linear Regression Model (PLR)<a class="headerlink" href="#Partially-Linear-Regression-Model-(PLR)" title="Permalink to this heading">#</a></h3>
 <p>We start using lasso to estimate the function <span class="math notranslate nohighlight">\(g_0\)</span> and <span class="math notranslate nohighlight">\(m_0\)</span> in the following PLR model:</p>
-<p><span class="math">\begin{eqnarray}
-& Y = D\theta_0 + g_0(X) + \zeta, &\quad E[\zeta \mid D,X]= 0,\\
-& D = m_0(X) +  V, &\quad E[V \mid X] = 0.
-\end{eqnarray}</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+&amp; Y = D\theta_0 + g_0(X) + \zeta, &amp;\quad E[\zeta \mid D,X]= 0,\\
+&amp; D = m_0(X) +  V, &amp;\quad E[V \mid X] = 0.
+\end{aligned}\end{split}\]</div>
 <p>To estimate the causal parameter <span class="math notranslate nohighlight">\(\theta_0\)</span> here, we use double machine learning with 3-fold cross-fitting.</p>
 <p>Estimation of the nuisance components <span class="math notranslate nohighlight">\(g_0\)</span> and <span class="math notranslate nohighlight">\(m_0\)</span>, is based on the lasso with cross-validated choice of the penalty term , <span class="math notranslate nohighlight">\(\lambda\)</span>, as provided by <a class="reference external" href="https://scikit-learn.org">scikit-learn</a>. We load the learner by initializing instances from the classes <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html">LassoCV</a> and
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html">LogisticRegressionCV</a>. Hyperparameters and options can be set during instantiation of the learner. Here we specify that the lasso should use that value of <span class="math notranslate nohighlight">\(\lambda\)</span> that minimizes the cross-validated mean squared error which is based on 5-fold cross validation.</p>
@@ -1269,54 +947,18 @@ memory usage: 755.4 KB
                                 <span class="n">n_folds</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
 
 <span class="n">dml_plr_lasso</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">dml_plr_lasso</span><span class="o">.</span><span class="n">summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_lasso</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>e401</th>
-      <td>5722.474846</td>
-      <td>1380.619177</td>
-      <td>4.144861</td>
-      <td>0.000034</td>
-      <td>3016.510982</td>
-      <td>8428.438709</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             coef      std err         t     P&gt;|t|        2.5 %       97.5 %
+e401  5722.474846  1380.619177  4.144861  0.000034  3016.510982  8428.438709
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
@@ -1333,54 +975,21 @@ memory usage: 755.4 KB
 <span class="n">dml_plr_lasso</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">lasso_summary</span> <span class="o">=</span> <span class="n">dml_plr_lasso</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">lasso_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lasso_summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+            coef      std err         t         P&gt;|t|        2.5 %  \
+e401  8974.79122  1324.323622  6.776887  1.227931e-11  6379.164617
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>e401</th>
-      <td>8974.79122</td>
-      <td>1324.323622</td>
-      <td>6.776887</td>
-      <td>1.227931e-11</td>
-      <td>6379.164617</td>
-      <td>11570.417822</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+e401  11570.417822
+</pre></div></div>
 </div>
 <p>Alternatively, we can repeat this procedure with other machine learning methods, for example a random forest learner as provided by the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html">RandomForestRegressor</a> and <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">RandomForestClassifier</a> class in <a class="reference external" href="https://scikit-learn.org">scikit-learn</a>.</p>
 <div class="nbinput docutils container">
@@ -1401,54 +1010,21 @@ memory usage: 755.4 KB
 <span class="n">dml_plr_forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">forest_summary</span> <span class="o">=</span> <span class="n">dml_plr_forest</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">forest_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">forest_summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             coef      std err         t         P&gt;|t|        2.5 %  \
+e401  8909.634078  1321.822289  6.740417  1.579322e-11  6318.909997
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>e401</th>
-      <td>8909.634078</td>
-      <td>1321.822289</td>
-      <td>6.740417</td>
-      <td>1.579322e-11</td>
-      <td>6318.909997</td>
-      <td>11500.358158</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+e401  11500.358158
+</pre></div></div>
 </div>
 <p>Now, let’s use a regression tree as provided in <a class="reference external" href="https://scikit-learn.org">scikit-learn</a>’s <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html">DecisionTreeRegressor</a> and <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">DecisionTreeClassifier</a>.</p>
 <div class="nbinput docutils container">
@@ -1469,54 +1045,21 @@ memory usage: 755.4 KB
 <span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">tree_summary</span> <span class="o">=</span> <span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">tree_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tree_summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+            coef      std err         t         P&gt;|t|        2.5 %  \
+e401  8260.06428  1348.624798  6.124805  9.079458e-10  5616.808246
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>e401</th>
-      <td>8260.06428</td>
-      <td>1348.624798</td>
-      <td>6.124805</td>
-      <td>9.079458e-10</td>
-      <td>5616.808246</td>
-      <td>10903.320314</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+e401  10903.320314
+</pre></div></div>
 </div>
 <p>We can also experiment with extreme gradient boosting as provided by <a class="reference external" href="https://xgboost.readthedocs.io/en/latest/">xgboost</a>.</p>
 <div class="nbinput docutils container">
@@ -1538,67 +1081,18 @@ memory usage: 755.4 KB
 <span class="n">dml_plr_boost</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">boost_summary</span> <span class="o">=</span> <span class="n">dml_plr_boost</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">boost_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">boost_summary</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
-  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-/opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
-  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-/opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
-  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>e401</th>
-      <td>8816.895718</td>
-      <td>1417.488973</td>
-      <td>6.220081</td>
-      <td>4.968994e-10</td>
-      <td>6038.668383</td>
-      <td>11595.123054</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             coef    std err         t         P&gt;|t|       2.5 %        97.5 %
+e401  8688.511293  1390.8893  6.246731  4.191320e-10  5962.41836  11414.604227
+</pre></div></div>
 </div>
 <p>Let’s sum up the results:</p>
 <div class="nbinput docutils container">
@@ -1607,66 +1101,21 @@ memory usage: 755.4 KB
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plr_summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">lasso_summary</span><span class="p">,</span> <span class="n">forest_summary</span><span class="p">,</span> <span class="n">tree_summary</span><span class="p">,</span> <span class="n">boost_summary</span><span class="p">))</span>
 <span class="n">plr_summary</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lasso&#39;</span><span class="p">,</span> <span class="s1">&#39;forest&#39;</span><span class="p">,</span> <span class="s1">&#39;tree&#39;</span><span class="p">,</span> <span class="s1">&#39;xgboost&#39;</span><span class="p">]</span>
-<span class="n">plr_summary</span><span class="p">[[</span><span class="s1">&#39;coef&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5 %&#39;</span><span class="p">,</span> <span class="s1">&#39;97.5 %&#39;</span><span class="p">]]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">plr_summary</span><span class="p">[[</span><span class="s1">&#39;coef&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5 %&#39;</span><span class="p">,</span> <span class="s1">&#39;97.5 %&#39;</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>lasso</th>
-      <td>8974.791220</td>
-      <td>6379.164617</td>
-      <td>11570.417822</td>
-    </tr>
-    <tr>
-      <th>forest</th>
-      <td>8909.634078</td>
-      <td>6318.909997</td>
-      <td>11500.358158</td>
-    </tr>
-    <tr>
-      <th>tree</th>
-      <td>8260.064280</td>
-      <td>5616.808246</td>
-      <td>10903.320314</td>
-    </tr>
-    <tr>
-      <th>xgboost</th>
-      <td>8816.895718</td>
-      <td>6038.668383</td>
-      <td>11595.123054</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+                coef        2.5 %        97.5 %
+lasso    8974.791220  6379.164617  11570.417822
+forest   8909.634078  6318.909997  11500.358158
+tree     8260.064280  5616.808246  10903.320314
+xgboost  8688.511293  5962.418360  11414.604227
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
@@ -1695,10 +1144,11 @@ memory usage: 755.4 KB
 <section id="Interactive-Regression-Model-(IRM)">
 <h3>Interactive Regression Model (IRM)<a class="headerlink" href="#Interactive-Regression-Model-(IRM)" title="Permalink to this heading">#</a></h3>
 <p>Next, we consider estimation of average treatment effects when treatment effects are fully heterogeneous:</p>
-<p><span class="math">\begin{eqnarray}
-& Y = g_0(D,X) + U, &\quad E[U\mid X,D] = 0,\\
-& D = m_0(X) + V, &\quad E[V\mid X] = 0.
-\end{eqnarray}</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+&amp; Y = g_0(D,X) + U, &amp;\quad E[U\mid X,D] = 0,\\
+&amp; D = m_0(X) + V, &amp;\quad E[V\mid X] = 0.
+\end{aligned}\end{split}\]</div>
 <p>To reduce the disproportionate impact of extreme propensity score weights in the interactive model we trim the propensity scores which are close to the bounds.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
@@ -1717,54 +1167,21 @@ memory usage: 755.4 KB
 <span class="n">dml_irm_lasso</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">lasso_summary</span> <span class="o">=</span> <span class="n">dml_irm_lasso</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">lasso_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lasso_summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+            coef      std err         t         P&gt;|t|        2.5 %  \
+e401  7918.27028  1206.438355  6.563344  5.261418e-11  5553.694555
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>e401</th>
-      <td>7918.27028</td>
-      <td>1206.438355</td>
-      <td>6.563344</td>
-      <td>5.261418e-11</td>
-      <td>5553.694555</td>
-      <td>10282.846006</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+e401  10282.846006
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
@@ -1792,54 +1209,21 @@ memory usage: 755.4 KB
 <span class="n">dml_irm_forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">forest_summary</span> <span class="o">=</span> <span class="n">dml_irm_forest</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">forest_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">forest_summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             coef      std err         t         P&gt;|t|        2.5 %  \
+e401  8020.190199  1140.240133  7.033773  2.010222e-12  5785.360605
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>e401</th>
-      <td>8020.190199</td>
-      <td>1140.240133</td>
-      <td>7.033773</td>
-      <td>2.010222e-12</td>
-      <td>5785.360605</td>
-      <td>10255.019793</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+e401  10255.019793
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
@@ -1867,54 +1251,21 @@ memory usage: 755.4 KB
 <span class="n">dml_irm_tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">tree_summary</span> <span class="o">=</span> <span class="n">dml_irm_tree</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">tree_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tree_summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             coef      std err         t         P&gt;|t|        2.5 %  \
+e401  8054.077008  1184.437455  6.799918  1.046791e-11  5732.622255
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>e401</th>
-      <td>8054.077008</td>
-      <td>1184.437455</td>
-      <td>6.799918</td>
-      <td>1.046791e-11</td>
-      <td>5732.622255</td>
-      <td>10375.531761</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+e401  10375.531761
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
@@ -1943,65 +1294,21 @@ memory usage: 755.4 KB
 <span class="n">dml_irm_boost</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">boost_summary</span> <span class="o">=</span> <span class="n">dml_irm_boost</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">boost_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">boost_summary</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
-  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-/opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
-  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             coef      std err         t         P&gt;|t|        2.5 %  \
+e401  8092.091951  1191.839718  6.789581  1.124599e-11  5756.129029
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>e401</th>
-      <td>8232.06866</td>
-      <td>1231.951289</td>
-      <td>6.682138</td>
-      <td>2.354809e-11</td>
-      <td>5817.488503</td>
-      <td>10646.648817</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+e401  10428.054873
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
@@ -2009,66 +1316,21 @@ memory usage: 755.4 KB
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">irm_summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">lasso_summary</span><span class="p">,</span> <span class="n">forest_summary</span><span class="p">,</span> <span class="n">tree_summary</span><span class="p">,</span> <span class="n">boost_summary</span><span class="p">))</span>
 <span class="n">irm_summary</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lasso&#39;</span><span class="p">,</span> <span class="s1">&#39;forest&#39;</span><span class="p">,</span> <span class="s1">&#39;tree&#39;</span><span class="p">,</span> <span class="s1">&#39;xgboost&#39;</span><span class="p">]</span>
-<span class="n">irm_summary</span><span class="p">[[</span><span class="s1">&#39;coef&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5 %&#39;</span><span class="p">,</span> <span class="s1">&#39;97.5 %&#39;</span><span class="p">]]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">irm_summary</span><span class="p">[[</span><span class="s1">&#39;coef&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5 %&#39;</span><span class="p">,</span> <span class="s1">&#39;97.5 %&#39;</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>lasso</th>
-      <td>7918.270280</td>
-      <td>5553.694555</td>
-      <td>10282.846006</td>
-    </tr>
-    <tr>
-      <th>forest</th>
-      <td>8020.190199</td>
-      <td>5785.360605</td>
-      <td>10255.019793</td>
-    </tr>
-    <tr>
-      <th>tree</th>
-      <td>8054.077008</td>
-      <td>5732.622255</td>
-      <td>10375.531761</td>
-    </tr>
-    <tr>
-      <th>xgboost</th>
-      <td>8232.068660</td>
-      <td>5817.488503</td>
-      <td>10646.648817</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+                coef        2.5 %        97.5 %
+lasso    7918.270280  5553.694555  10282.846006
+forest   8020.190199  5785.360605  10255.019793
+tree     8054.077008  5732.622255  10375.531761
+xgboost  8092.091951  5756.129029  10428.054873
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
@@ -2102,11 +1364,12 @@ memory usage: 755.4 KB
 <h3>Interactive IV Model (IIVM)<a class="headerlink" href="#Interactive-IV-Model-(IIVM)" title="Permalink to this heading">#</a></h3>
 <p>In the examples above, we estimated the average treatment effect of <em>eligibility</em> on financial asset holdings. Now, we consider estimation of local average treatment effects (LATE) of <em>participation</em> using eligibility as an instrument for the participation decision. Under appropriate assumptions, the LATE identifies the treatment effect for so-called compliers, i.e., individuals who would only participate if eligible and otherwise not participate in the program.</p>
 <p>As before, <span class="math notranslate nohighlight">\(Y\)</span> denotes the outcome <code class="docutils literal notranslate"><span class="pre">net_tfa</span></code>, and <span class="math notranslate nohighlight">\(X\)</span> is the vector of covariates. We use <code class="docutils literal notranslate"><span class="pre">e401</span></code> as a binary instrument for the treatment variable <code class="docutils literal notranslate"><span class="pre">p401</span></code>. Here the structural equation model is:</p>
-<p><span class="math">\begin{eqnarray}
-& Y = g_0(Z,X) + U, &\quad E[U\mid Z,X] = 0,\\
-& D = r_0(Z,X) + V, &\quad E[V\mid Z, X] = 0,\\
-& Z = m_0(X) + \zeta, &\quad E[\zeta \mid X] = 0.
-\end{eqnarray}</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+&amp; Y = g_0(Z,X) + U, &amp;\quad E[U\mid Z,X] = 0,\\
+&amp; D = r_0(Z,X) + V, &amp;\quad E[V\mid Z, X] = 0,\\
+&amp; Z = m_0(X) + \zeta, &amp;\quad E[\zeta \mid X] = 0.
+\end{aligned}\end{split}\]</div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
@@ -2207,54 +1470,21 @@ memory usage: 765.1 KB
 <span class="n">dml_iivm_lasso</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">lasso_summary</span> <span class="o">=</span> <span class="n">dml_iivm_lasso</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">lasso_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lasso_summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             coef      std err         t         P&gt;|t|       2.5 %  \
+p401  11489.25238  1747.417737  6.574989  4.865677e-11  8064.37655
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>p401</th>
-      <td>11489.25238</td>
-      <td>1747.417737</td>
-      <td>6.574989</td>
-      <td>4.865677e-11</td>
-      <td>8064.37655</td>
-      <td>14914.12821</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+           97.5 %
+p401  14914.12821
+</pre></div></div>
 </div>
 <p>Again, we repeat the procedure for the other machine learning methods:</p>
 <div class="nbinput docutils container">
@@ -2288,54 +1518,21 @@ memory usage: 765.1 KB
 <span class="n">dml_iivm_forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">forest_summary</span> <span class="o">=</span> <span class="n">dml_iivm_forest</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">forest_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">forest_summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             coef      std err         t         P&gt;|t|        2.5 %  \
+p401  11550.03435  1638.022642  7.051206  1.773742e-12  8339.568966
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>p401</th>
-      <td>11550.03435</td>
-      <td>1638.022642</td>
-      <td>7.051206</td>
-      <td>1.773742e-12</td>
-      <td>8339.568966</td>
-      <td>14760.499734</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+p401  14760.499734
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
@@ -2368,54 +1565,21 @@ memory usage: 765.1 KB
 <span class="n">dml_iivm_tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">tree_summary</span> <span class="o">=</span> <span class="n">dml_iivm_tree</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">tree_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tree_summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+              coef      std err         t         P&gt;|t|       2.5 %  \
+p401  11512.640404  1689.239802  6.815279  9.408106e-12  8201.79123
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>p401</th>
-      <td>11512.640404</td>
-      <td>1689.239802</td>
-      <td>6.815279</td>
-      <td>9.408106e-12</td>
-      <td>8201.79123</td>
-      <td>14823.489578</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+p401  14823.489578
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
@@ -2449,67 +1613,21 @@ memory usage: 765.1 KB
 <span class="n">dml_iivm_boost</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">boost_summary</span> <span class="o">=</span> <span class="n">dml_iivm_boost</span><span class="o">.</span><span class="n">summary</span>
 
-<span class="n">boost_summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">boost_summary</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
-  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-/opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
-  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-/opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/xgboost/sklearn.py:1395: UserWarning: `use_label_encoder` is deprecated in 1.7.0.
-  warnings.warn(&#34;`use_label_encoder` is deprecated in 1.7.0.&#34;)
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+              coef      std err         t         P&gt;|t|        2.5 %  \
+p401  12305.619781  1685.922466  7.299043  2.898227e-13  9001.272467
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>p401</th>
-      <td>12412.530104</td>
-      <td>1678.83551</td>
-      <td>7.393536</td>
-      <td>1.429752e-13</td>
-      <td>9122.072968</td>
-      <td>15702.987241</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+            97.5 %
+p401  15609.967095
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
@@ -2517,66 +1635,21 @@ memory usage: 765.1 KB
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iivm_summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">lasso_summary</span><span class="p">,</span> <span class="n">forest_summary</span><span class="p">,</span> <span class="n">tree_summary</span><span class="p">,</span> <span class="n">boost_summary</span><span class="p">))</span>
 <span class="n">iivm_summary</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lasso&#39;</span><span class="p">,</span> <span class="s1">&#39;forest&#39;</span><span class="p">,</span> <span class="s1">&#39;tree&#39;</span><span class="p">,</span> <span class="s1">&#39;xgboost&#39;</span><span class="p">]</span>
-<span class="n">iivm_summary</span><span class="p">[[</span><span class="s1">&#39;coef&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5 %&#39;</span><span class="p">,</span> <span class="s1">&#39;97.5 %&#39;</span><span class="p">]]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">iivm_summary</span><span class="p">[[</span><span class="s1">&#39;coef&#39;</span><span class="p">,</span> <span class="s1">&#39;2.5 %&#39;</span><span class="p">,</span> <span class="s1">&#39;97.5 %&#39;</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>lasso</th>
-      <td>11489.252380</td>
-      <td>8064.376550</td>
-      <td>14914.128210</td>
-    </tr>
-    <tr>
-      <th>forest</th>
-      <td>11550.034350</td>
-      <td>8339.568966</td>
-      <td>14760.499734</td>
-    </tr>
-    <tr>
-      <th>tree</th>
-      <td>11512.640404</td>
-      <td>8201.791230</td>
-      <td>14823.489578</td>
-    </tr>
-    <tr>
-      <th>xgboost</th>
-      <td>12412.530104</td>
-      <td>9122.072968</td>
-      <td>15702.987241</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+                 coef        2.5 %        97.5 %
+lasso    11489.252380  8064.376550  14914.128210
+forest   11550.034350  8339.568966  14760.499734
+tree     11512.640404  8201.791230  14823.489578
+xgboost  12305.619781  9001.272467  15609.967095
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
@@ -2620,167 +1693,45 @@ memory usage: 765.1 KB
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">plr_summary</span><span class="p">,</span> <span class="n">irm_summary</span><span class="p">,</span> <span class="n">iivm_summary</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="s1">&#39;ML&#39;</span><span class="p">})</span>
 <span class="n">df_summary</span><span class="p">[</span><span class="s1">&#39;Model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="s1">&#39;PLR&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="s1">&#39;IRM&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="s1">&#39;IIVM&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)))</span>
-<span class="n">df_summary</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;Model&#39;</span><span class="p">,</span> <span class="s1">&#39;ML&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_summary</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;Model&#39;</span><span class="p">,</span> <span class="s1">&#39;ML&#39;</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+                       coef      std err         t         P&gt;|t|        2.5 %  \
+Model ML
+PLR   lasso     8974.791220  1324.323622  6.776887  1.227931e-11  6379.164617
+      forest    8909.634078  1321.822289  6.740417  1.579322e-11  6318.909997
+      tree      8260.064280  1348.624798  6.124805  9.079458e-10  5616.808246
+      xgboost   8688.511293  1390.889300  6.246731  4.191320e-10  5962.418360
+IRM   lasso     7918.270280  1206.438355  6.563344  5.261418e-11  5553.694555
+      forest    8020.190199  1140.240133  7.033773  2.010222e-12  5785.360605
+      tree      8054.077008  1184.437455  6.799918  1.046791e-11  5732.622255
+      xgboost   8092.091951  1191.839718  6.789581  1.124599e-11  5756.129029
+IIVM  lasso    11489.252380  1747.417737  6.574989  4.865677e-11  8064.376550
+      forest   11550.034350  1638.022642  7.051206  1.773742e-12  8339.568966
+      tree     11512.640404  1689.239802  6.815279  9.408106e-12  8201.791230
+      xgboost  12305.619781  1685.922466  7.299043  2.898227e-13  9001.272467
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-    <tr>
-      <th>Model</th>
-      <th>ML</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th rowspan="4" valign="top">PLR</th>
-      <th>lasso</th>
-      <td>8974.791220</td>
-      <td>1324.323622</td>
-      <td>6.776887</td>
-      <td>1.227931e-11</td>
-      <td>6379.164617</td>
-      <td>11570.417822</td>
-    </tr>
-    <tr>
-      <th>forest</th>
-      <td>8909.634078</td>
-      <td>1321.822289</td>
-      <td>6.740417</td>
-      <td>1.579322e-11</td>
-      <td>6318.909997</td>
-      <td>11500.358158</td>
-    </tr>
-    <tr>
-      <th>tree</th>
-      <td>8260.064280</td>
-      <td>1348.624798</td>
-      <td>6.124805</td>
-      <td>9.079458e-10</td>
-      <td>5616.808246</td>
-      <td>10903.320314</td>
-    </tr>
-    <tr>
-      <th>xgboost</th>
-      <td>8816.895718</td>
-      <td>1417.488973</td>
-      <td>6.220081</td>
-      <td>4.968994e-10</td>
-      <td>6038.668383</td>
-      <td>11595.123054</td>
-    </tr>
-    <tr>
-      <th rowspan="4" valign="top">IRM</th>
-      <th>lasso</th>
-      <td>7918.270280</td>
-      <td>1206.438355</td>
-      <td>6.563344</td>
-      <td>5.261418e-11</td>
-      <td>5553.694555</td>
-      <td>10282.846006</td>
-    </tr>
-    <tr>
-      <th>forest</th>
-      <td>8020.190199</td>
-      <td>1140.240133</td>
-      <td>7.033773</td>
-      <td>2.010222e-12</td>
-      <td>5785.360605</td>
-      <td>10255.019793</td>
-    </tr>
-    <tr>
-      <th>tree</th>
-      <td>8054.077008</td>
-      <td>1184.437455</td>
-      <td>6.799918</td>
-      <td>1.046791e-11</td>
-      <td>5732.622255</td>
-      <td>10375.531761</td>
-    </tr>
-    <tr>
-      <th>xgboost</th>
-      <td>8232.068660</td>
-      <td>1231.951289</td>
-      <td>6.682138</td>
-      <td>2.354809e-11</td>
-      <td>5817.488503</td>
-      <td>10646.648817</td>
-    </tr>
-    <tr>
-      <th rowspan="4" valign="top">IIVM</th>
-      <th>lasso</th>
-      <td>11489.252380</td>
-      <td>1747.417737</td>
-      <td>6.574989</td>
-      <td>4.865677e-11</td>
-      <td>8064.376550</td>
-      <td>14914.128210</td>
-    </tr>
-    <tr>
-      <th>forest</th>
-      <td>11550.034350</td>
-      <td>1638.022642</td>
-      <td>7.051206</td>
-      <td>1.773742e-12</td>
-      <td>8339.568966</td>
-      <td>14760.499734</td>
-    </tr>
-    <tr>
-      <th>tree</th>
-      <td>11512.640404</td>
-      <td>1689.239802</td>
-      <td>6.815279</td>
-      <td>9.408106e-12</td>
-      <td>8201.791230</td>
-      <td>14823.489578</td>
-    </tr>
-    <tr>
-      <th>xgboost</th>
-      <td>12412.530104</td>
-      <td>1678.835510</td>
-      <td>7.393536</td>
-      <td>1.429752e-13</td>
-      <td>9122.072968</td>
-      <td>15702.987241</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+                     97.5 %
+Model ML
+PLR   lasso    11570.417822
+      forest   11500.358158
+      tree     10903.320314
+      xgboost  11414.604227
+IRM   lasso    10282.846006
+      forest   10255.019793
+      tree     10375.531761
+      xgboost  10428.054873
+IIVM  lasso    14914.128210
+      forest   14760.499734
+      tree     14823.489578
+      xgboost  15609.967095
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:

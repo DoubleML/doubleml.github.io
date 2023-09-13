@@ -470,6 +470,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
@@ -682,46 +683,18 @@ d  1.386988  1.827375  0.759006  0.447849 -2.194601  4.968577
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.90</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.90</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>5.0 %</th>
-      <th>95.0 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>d</th>
-      <td>-1.618776</td>
-      <td>4.392752</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+      5.0 %    95.0 %
+d -1.618776  4.392752
+</pre></div></div>
 </div>
 </section>
 <section id="Coverage-Simulation">
@@ -747,7 +720,7 @@ d  1.386988  1.827375  0.759006  0.447849 -2.194601  4.968577
     <span class="n">dml_did</span> <span class="o">=</span> <span class="n">DoubleMLDID</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m</span><span class="p">,</span> <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">dml_did</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
-    <span class="n">ATTE_estimates</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">coef</span>
+    <span class="n">ATTE_estimates</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">coef</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
     <span class="n">confint</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
     <span class="n">coverage</span> <span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">confint</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">ATTE</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ATTE</span> <span class="o">&lt;=</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">ci_length</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -948,46 +921,18 @@ d  5.096741  5.225034  0.975447  0.329339 -5.144137  15.337619
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.90</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.90</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>5.0 %</th>
-      <th>95.0 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>d</th>
-      <td>-3.497674</td>
-      <td>13.691157</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+      5.0 %     95.0 %
+d -3.497674  13.691157
+</pre></div></div>
 </div>
 </section>
 <section id="id3">
@@ -1013,7 +958,7 @@ d  5.096741  5.225034  0.975447  0.329339 -5.144137  15.337619
     <span class="n">dml_did</span> <span class="o">=</span> <span class="n">DoubleMLDIDCS</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m</span><span class="p">,</span> <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">dml_did</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
-    <span class="n">ATTE_estimates</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">coef</span>
+    <span class="n">ATTE_estimates</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">coef</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
     <span class="n">confint</span> <span class="o">=</span> <span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
     <span class="n">coverage</span> <span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">confint</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">ATTE</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ATTE</span> <span class="o">&lt;=</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">ci_length</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span> <span class="o">=</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">confint</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

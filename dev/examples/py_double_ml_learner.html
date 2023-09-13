@@ -470,6 +470,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
@@ -641,7 +642,7 @@ Download Jupyter notebook:
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Processing: 100.0 %
-Coverage: [0.935 0.645 0.975 0.94 ]
+Coverage: [0.935 0.65  0.975 0.95 ]
 </pre></div></div>
 </div>
 <p>Next, let us take a look at the corresponding results</p>
@@ -715,7 +716,7 @@ Coverage: [0.935 0.645 0.975 0.94 ]
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(array([0, 2], dtype=int64), array([193,   7], dtype=int64))
+(array([0, 2], dtype=int64), array([191,   9], dtype=int64))
 </pre></div></div>
 </div>
 <p>Most of the time, we will use linear learners for both nuisance elements. Sometimes the tree-based estimator is chosen for the propensity score <code class="docutils literal notranslate"><span class="pre">ml_m</span></code>. Let us compare which learners, how the estimated coefficients would have performed with the selected learners.</p>
@@ -766,16 +767,17 @@ Coverage of selected learners: 0.94
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;ml_g0&#39;: array([[1.02845984]]), &#39;ml_g1&#39;: array([[1.05923856]]), &#39;ml_m&#39;: array([[0.34926799]])}
-{&#39;ml_g0&#39;: array([[1.02845984]]), &#39;ml_g1&#39;: array([[1.05923856]]), &#39;ml_m&#39;: array([[0.34926799]])}
+{&#39;ml_g0&#39;: array([[1.02649578]]), &#39;ml_g1&#39;: array([[1.06046108]]), &#39;ml_m&#39;: array([[0.34943161]])}
+{&#39;ml_g0&#39;: array([[1.02649578]]), &#39;ml_g1&#39;: array([[1.06046108]]), &#39;ml_m&#39;: array([[0.34943161]])}
 </pre></div></div>
 </div>
 <p>To evaluate a self-defined metric, the user has to hand over a callable. In this example, we define the mean absolute deviation as an error metric.</p>
 <p>Remark that the metric should be able to handle <code class="docutils literal notranslate"><span class="pre">nan</span></code> values, since e.g. in the IRM model the learner <code class="docutils literal notranslate"><span class="pre">ml_g</span></code> is used to onto two different subsamples. As a result, we have two different nuisance components for</p>
-<p><span class="math">\begin{align*}
-g_0(x) &= \mathbb{E}[Y|X=x, D=0] \\
-g_1(x) &= \mathbb{E}[Y|X=x, D=1]
-\end{align*}</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+g_0(x) &amp;= \mathbb{E}[Y|X=x, D=0] \\
+g_1(x) &amp;= \mathbb{E}[Y|X=x, D=1]
+\end{aligned}\end{split}\]</div>
 <p>which are both fitted with the learner <code class="docutils literal notranslate"><span class="pre">ml_g</span></code>. Of course, we can only observe the target value for <span class="math notranslate nohighlight">\(g_0(x)\)</span> if <span class="math notranslate nohighlight">\(D=0\)</span> and vice versa, resulting in <code class="docutils literal notranslate"><span class="pre">nan</span></code> values for all other observations.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
@@ -797,9 +799,9 @@ g_1(x) &= \mathbb{E}[Y|X=x, D=1]
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;ml_g0&#39;: array([[0.82317736]]),
- &#39;ml_g1&#39;: array([[0.85260628]]),
- &#39;ml_m&#39;: array([[0.20117006]])}
+{&#39;ml_g0&#39;: array([[0.82261299]]),
+ &#39;ml_g1&#39;: array([[0.853177]]),
+ &#39;ml_m&#39;: array([[0.20148598]])}
 </pre></div></div>
 </div>
 <p>Another option is to access the out-of-sample predictions and target values for the nuisance elements via the <code class="docutils literal notranslate"><span class="pre">nuisance_targets</span></code> and <code class="docutils literal notranslate"><span class="pre">predictions</span></code> attributes.</p>
@@ -870,9 +872,9 @@ overview whether the nuisance function can be approximated sufficiently well.</p
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Time without parallelization of crossfitting: 5.9662 seconds
-Time with parallelization of crossfitting: 1.2453 seconds
-Speedup of factor 4.79
+Time without parallelization of crossfitting: 5.7683 seconds
+Time with parallelization of crossfitting: 1.1492 seconds
+Speedup of factor 5.02
 </pre></div></div>
 </div>
 <p>Other more helpful ways to improve computation time will largly depend on the implemented learner. Of course linear learners are quite fast, but if no functional form restrictions are known Boosting or Random Forest might be better default options to saveguard against wrong model assumptions. Especially Boosting performs very well as a default option for tabular data. As a general recommendation all popular Boosting frameworks (XGBoost, Lightgbm, Catboost, etc.) should improve computation time.
@@ -933,11 +935,11 @@ But this might vary heavily with the number of features in your dataset. Let us 
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Time without RandomForest (Scikit-Learn): 11.6175 seconds
-Time with XGBoost: 0.9423 seconds
-Speedup of factor 12.33
-Time with LightGBM: 1.0527 seconds
-Speedup of factor 11.04
+Time without RandomForest (Scikit-Learn): 11.7578 seconds
+Time with XGBoost: 0.7731 seconds
+Speedup of factor 15.21
+Time with LightGBM: 0.5987 seconds
+Speedup of factor 19.64
 </pre></div></div>
 </div>
 </section>
