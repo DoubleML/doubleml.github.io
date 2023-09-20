@@ -657,7 +657,7 @@ representer (both are model specific, see <a class="reference internal" href="#s
 </input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-1">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[13]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f347a94d8b0&gt;</span>
+<span class="gh">Out[13]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f895a1bcca0&gt;</span>
 
 <span class="gp">In [14]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_elements</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gh">Out[14]: </span><span class="go">dict_keys([&#39;sigma2&#39;, &#39;nu2&#39;, &#39;psi_sigma2&#39;, &#39;psi_nu2&#39;])</span>
@@ -675,7 +675,7 @@ The results are summarized as a formatted string in the <code class="docutils li
 </input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-2">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_analysis</span><span class="p">(</span><span class="n">cf_y</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">cf_d</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
-<span class="gh">Out[15]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f347a94d8b0&gt;</span>
+<span class="gh">Out[15]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f895a1bcca0&gt;</span>
 
 <span class="gp">In [16]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_summary</span><span class="p">)</span>
 <span class="go">================== Sensitivity Analysis ==================</span>
@@ -727,10 +727,10 @@ If the estimated parameter <span class="math notranslate nohighlight">\(\hat{\th
 The robustness value $RVa$ defined analogous, but additionally incorporates statistical uncertainty (as it is based on the confidence intervals of the bounds).</p>
 <p>To obtain a more complete overview over the sensitivity one can call the <code class="docutils literal notranslate"><span class="pre">sensitivity_plot()</span></code> method. The methods creates a contour plot, which calculates estimate of the upper or lower bound for <span class="math notranslate nohighlight">\(\theta\)</span>
 (based on the null hypothesis) for each combination of <code class="docutils literal notranslate"><span class="pre">cf_y</span></code> and <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> in a grid of values.</p>
-<figure class="captioned-image align-default" id="id3">
+<figure class="captioned-image align-default" id="id5">
 <img alt="Contour plot" src="../_images/sensitivity_example_nb.png" />
 <figcaption>
-<p><span class="caption-text">Contour plot example (see <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">Examples</span></a>)</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">Contour plot example (see <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">Examples</span></a>)</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>By adjusting the parameter <code class="docutils literal notranslate"><span class="pre">value='ci'</span></code> in the <code class="docutils literal notranslate"><span class="pre">sensitivity_plot()</span></code> method the bounds are displayed for the corresponding confidence level.</p>
@@ -738,11 +738,78 @@ The robustness value $RVa$ defined analogous, but additionally incorporates stat
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">sensitivity_plot()</span></code> requires to call <code class="docutils literal notranslate"><span class="pre">sensitivity_analysis</span></code> first, since the choice of the bound (upper or lower) is based on
-the corresponding null hypothesis. Furhter, the parameters <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">level</span></code> are used. Both are constained in the <code class="docutils literal notranslate"><span class="pre">sensitivity_params</span></code> property.</p></li>
+the corresponding null hypothesis. Further, the parameters <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">level</span></code> are used. Both are contained in the <code class="docutils literal notranslate"><span class="pre">sensitivity_params</span></code> property.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">sensitivity_plot()</span></code> is created for the first treatment variable. This can be changed via the <code class="docutils literal notranslate"><span class="pre">idx_treatment</span></code> parameter.</p></li>
 <li><p>The robustness values are given via the intersection countour of the null hypothesis and the identity.</p></li>
 </ul>
 </div>
+</section>
+<section id="benchmarking">
+<span id="sensitivity-benchmark"></span><h3><span class="section-number">10.1.3. </span>Benchmarking<a class="headerlink" href="#benchmarking" title="Permalink to this heading">#</a></h3>
+<p>The input parameters for the sensitivity analysis are quite hard to interpret (depending on the model). Consequently it is challenging to come up with reasonable bounds
+for the confounding strength <code class="docutils literal notranslate"><span class="pre">cf_y</span></code> and <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> (and <code class="docutils literal notranslate"><span class="pre">rho</span></code>). To get a grasp on the magnitude of the bounds a popular approach is to rely on observed confounders
+to obtain an informed guess on the strength of possibly unobserved confounders.</p>
+<p>The underlying principle is relatively simple. If we have an observed confounder <span class="math notranslate nohighlight">\(X_1\)</span>, we are able to emulate omitted confounding by purposely omitting
+<span class="math notranslate nohighlight">\(X_1\)</span> and refitting the whole model. This enables us to compare the “long” and “short” form with and without omitted confounding.
+Considering the <code class="docutils literal notranslate"><span class="pre">sensitivity_params</span></code> of both models one can estimate the corresponding strength of confounding <code class="docutils literal notranslate"><span class="pre">cf_y</span></code> and <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> (and <code class="docutils literal notranslate"><span class="pre">rho</span></code>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The benchmarking can also be done with a set of benchmarking variables (e.g. <span class="math notranslate nohighlight">\(X_1, X_2, X_3\)</span>), which tries to emulate the effect of multiple unobserved confounders.</p></li>
+<li><p>The approach is quite computationally demanding, as the short model that omits the benchmark variables has to be fitted.</p></li>
+</ul>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">sensitivity_benchmark()</span></code> method implements this approach.
+The method just requires a set of valid covariates, the <code class="docutils literal notranslate"><span class="pre">benchmarking_set</span></code>, to compute the benchmark. The benchmark variables have to be a subset of the covariates used in the main analysis.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-4">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_benchmark</span><span class="p">(</span><span class="n">benchmarking_set</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X1&quot;</span><span class="p">])</span>
+<span class="gh">Out[18]: </span>
+<span class="go">       cf_y      cf_d       rho  delta_theta</span>
+<span class="go">d  0.027799  0.453236  0.988998     0.091095</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The method returns a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>, containing the benchmarked values for <code class="docutils literal notranslate"><span class="pre">cf_y</span></code>, <code class="docutils literal notranslate"><span class="pre">cf_d</span></code>,  <code class="docutils literal notranslate"><span class="pre">rho</span></code> and the change in the estimates
+<code class="docutils literal notranslate"><span class="pre">delta_theta</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The benchmarking results should be used to get an idea of the magnitude/validity of proposed confounding strength of the omitted confounders. Whether these values are close to the real confounding, depends entirely on the
+setting and choice of the benchmarking variables. A good benchmarking set has a strong justification which refers to the omitted confounders.</p></li>
+<li><p>If the benchmarking variables are only weak confounders, the estimates of <code class="docutils literal notranslate"><span class="pre">rho</span></code> can be slightly unstable (due to small denominators).</p></li>
+</ul>
+</div>
+<p>The implementation is based on <a class="reference external" href="https://www.nber.org/papers/w30302">Chernozhukov et al. (2022)</a> Appendix D and corresponds to a generalization of
+the benchmarking process in the <a class="reference external" href="https://github.com/carloscinelli/sensemakr">Sensemakr package</a> for regression models to the use with double machine learning.
+For an introduction to Sensemakr see <a class="reference external" href="https://doi.org/10.1111/rssb.12348">Cinelli and Hazlett (2020)</a> and the <a class="reference external" href="https://cran.r-project.org/web/packages/sensemakr/vignettes/sensemakr.html">Sensemakr introduction</a>.</p>
+<p>The benchmarked estimates are the following:</p>
+<p>Let the subscript <span class="math notranslate nohighlight">\(short\)</span>, denote the “short” form of the model, where the benchmarking variables are omitted.</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\hat{\sigma}^2_{short}\)</span> denotes the variance of the outcome regression in the “short” form.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{\nu}^2_{short}\)</span> denotes the second moment of the Riesz representer in the “short” form.</p></li>
+</ul>
+<p>Both parameters are contained in the <code class="docutils literal notranslate"><span class="pre">sensitivity_params</span></code> of the “short” form.
+This enables the following estimation of the nonparametric <span class="math notranslate nohighlight">\(R^2\)</span>’s of the outcome regression</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\hat{R}^2:= 1 - \frac{\hat{\sigma}^2}{\textrm{Var}(Y)}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{R}^2_{short}:= 1 - \frac{\hat{\sigma}^2_{short}}{\textrm{Var}(Y)}\)</span></p></li>
+</ul>
+<p>and the correlation ratio of the estimated Riesz representations</p>
+<div class="math notranslate nohighlight">
+\[\hat{R}^2_{\alpha}:= \frac{\hat{\nu}^2_{short}}{\hat{\nu}^2}.\]</div>
+<p>The benchmarked estimates are then defined as</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_y</span></code><span class="math notranslate nohighlight">\(:=\frac{\hat{R}^2 - \hat{R}^2_{short}}{1 - \hat{R}^2}\)</span>  measures the proportion of residual variance in the outcome <span class="math notranslate nohighlight">\(Y\)</span> explained by adding the purposely omitted <code class="docutils literal notranslate"><span class="pre">benchmarking_set</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_d</span></code><span class="math notranslate nohighlight">\(:=\frac{1 - \hat{R}^2_{\alpha}}{\hat{R}^2_{\alpha}}\)</span> measures the proportional gain in variation that the <code class="docutils literal notranslate"><span class="pre">benchmarking_set</span></code> creates in the Riesz representer</p></li>
+</ul>
+<p>Further, the degree of adversity <span class="math notranslate nohighlight">\(\rho\)</span> can be estimated via</p>
+<div class="math notranslate nohighlight">
+\[\hat{\rho} := \frac{\hat{\theta}_{short} - \hat{\theta}}{ \sqrt{(\hat{\sigma}^2_{short} - \hat{\sigma}^2)(\hat{\nu}^2 - \hat{\nu}^2_{short})}}.\]</div>
+<p>For a more detailed description, see <a class="reference external" href="https://www.nber.org/papers/w30302">Chernozhukov et al. (2022)</a> Appendix D.</p>
 </section>
 </section>
 <section id="model-specific-implementations">
@@ -896,6 +963,7 @@ For <code class="docutils literal notranslate"><span class="pre">score='ATE'</sp
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-algorithm">10.1. General algorithm</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theory">10.1.1. Theory</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">10.1.2. Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmarking">10.1.3. Benchmarking</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-specific-implementations">10.2. Model-specific implementations</a><ul class="nav section-nav flex-column">

@@ -470,6 +470,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
@@ -602,189 +603,45 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+               nifa       net_tfa            tw          age            inc  \
+count  9.915000e+03  9.915000e+03  9.915000e+03  9915.000000    9915.000000
+mean   1.392864e+04  1.805153e+04  6.381685e+04    41.060212   37200.621094
+std    5.490504e+04  6.352259e+04  1.115296e+05    10.344505   24774.251953
+min    0.000000e+00 -5.023020e+05 -5.023020e+05    25.000000   -2652.000000
+25%    2.000000e+02 -5.000000e+02  3.291500e+03    32.000000   19413.000000
+50%    1.635000e+03  1.499000e+03  2.510000e+04    40.000000   31476.000000
+75%    8.765500e+03  1.652450e+04  8.148750e+04    48.000000   48583.500000
+max    1.430298e+06  1.536798e+06  2.029910e+06    64.000000  242124.000000
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
+             fsize         educ           db         marr      twoearn  \
+count  9915.000000  9915.000000  9915.000000  9915.000000  9915.000000
+mean      2.865860    13.206253     0.271004     0.604841     0.380837
+std       1.538937     2.810382     0.444500     0.488909     0.485617
+min       1.000000     1.000000     0.000000     0.000000     0.000000
+25%       2.000000    12.000000     0.000000     0.000000     0.000000
+50%       3.000000    12.000000     0.000000     1.000000     0.000000
+75%       4.000000    16.000000     1.000000     1.000000     1.000000
+max      13.000000    18.000000     1.000000     1.000000     1.000000
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>nifa</th>
-      <th>net_tfa</th>
-      <th>tw</th>
-      <th>age</th>
-      <th>inc</th>
-      <th>fsize</th>
-      <th>educ</th>
-      <th>db</th>
-      <th>marr</th>
-      <th>twoearn</th>
-      <th>e401</th>
-      <th>p401</th>
-      <th>pira</th>
-      <th>hown</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>count</th>
-      <td>9.915000e+03</td>
-      <td>9.915000e+03</td>
-      <td>9.915000e+03</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-      <td>9915.000000</td>
-    </tr>
-    <tr>
-      <th>mean</th>
-      <td>1.392864e+04</td>
-      <td>1.805153e+04</td>
-      <td>6.381685e+04</td>
-      <td>41.060212</td>
-      <td>37200.621094</td>
-      <td>2.865860</td>
-      <td>13.206253</td>
-      <td>0.271004</td>
-      <td>0.604841</td>
-      <td>0.380837</td>
-      <td>0.371357</td>
-      <td>0.261624</td>
-      <td>0.242158</td>
-      <td>0.635199</td>
-    </tr>
-    <tr>
-      <th>std</th>
-      <td>5.490504e+04</td>
-      <td>6.352259e+04</td>
-      <td>1.115296e+05</td>
-      <td>10.344505</td>
-      <td>24774.251953</td>
-      <td>1.538937</td>
-      <td>2.810382</td>
-      <td>0.444500</td>
-      <td>0.488909</td>
-      <td>0.485617</td>
-      <td>0.483192</td>
-      <td>0.439541</td>
-      <td>0.428411</td>
-      <td>0.481399</td>
-    </tr>
-    <tr>
-      <th>min</th>
-      <td>0.000000e+00</td>
-      <td>-5.023020e+05</td>
-      <td>-5.023020e+05</td>
-      <td>25.000000</td>
-      <td>-2652.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>25%</th>
-      <td>2.000000e+02</td>
-      <td>-5.000000e+02</td>
-      <td>3.291500e+03</td>
-      <td>32.000000</td>
-      <td>19413.000000</td>
-      <td>2.000000</td>
-      <td>12.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>50%</th>
-      <td>1.635000e+03</td>
-      <td>1.499000e+03</td>
-      <td>2.510000e+04</td>
-      <td>40.000000</td>
-      <td>31476.000000</td>
-      <td>3.000000</td>
-      <td>12.000000</td>
-      <td>0.000000</td>
-      <td>1.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>1.000000</td>
-    </tr>
-    <tr>
-      <th>75%</th>
-      <td>8.765500e+03</td>
-      <td>1.652450e+04</td>
-      <td>8.148750e+04</td>
-      <td>48.000000</td>
-      <td>48583.500000</td>
-      <td>4.000000</td>
-      <td>16.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>0.000000</td>
-      <td>1.000000</td>
-    </tr>
-    <tr>
-      <th>max</th>
-      <td>1.430298e+06</td>
-      <td>1.536798e+06</td>
-      <td>2.029910e+06</td>
-      <td>64.000000</td>
-      <td>242124.000000</td>
-      <td>13.000000</td>
-      <td>18.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+              e401         p401         pira         hown
+count  9915.000000  9915.000000  9915.000000  9915.000000
+mean      0.371357     0.261624     0.242158     0.635199
+std       0.483192     0.439541     0.428411     0.481399
+min       0.000000     0.000000     0.000000     0.000000
+25%       0.000000     0.000000     0.000000     0.000000
+50%       0.000000     0.000000     0.000000     1.000000
+75%       1.000000     1.000000     0.000000     1.000000
+max       1.000000     1.000000     1.000000     1.000000
+</pre></div></div>
 </div>
 <p>The data consist of 9,915 observations at the household level drawn from the 1991 Survey of Income and Program Participation (SIPP). All the variables are referred to 1990. We use net financial assets (<em>net_tfa</em>) as the outcome variable, <span class="math notranslate nohighlight">\(Y\)</span>, in our analysis. The net financial assets are computed as the sum of IRA balances, 401(k) balances, checking accounts, saving bonds, other interest-earning accounts, other interest-earning assets, stocks, and mutual funds less non mortgage debts.</p>
 <p>Among the <span class="math notranslate nohighlight">\(9915\)</span> individuals, <span class="math notranslate nohighlight">\(3682\)</span> are eligible to participate in the program. The variable <em>e401</em> indicates eligibility and <em>p401</em> indicates participation, respectively.</p>
@@ -924,8 +781,8 @@ DML algorithm: dml2
 Learner ml_g: LGBMClassifier(learning_rate=0.05, n_estimators=300, num_leaves=10)
 Learner ml_m: LGBMClassifier(learning_rate=0.05, n_estimators=300, num_leaves=10)
 Out-of-sample Performance:
-Learner ml_g RMSE: [[0.31779146]]
-Learner ml_m RMSE: [[0.44403714]]
+Learner ml_g RMSE: [[0.31337878]]
+Learner ml_m RMSE: [[0.4449272]]
 
 ------------------ Resampling        ------------------
 No. folds: 5
@@ -934,10 +791,10 @@ Apply cross-fitting: True
 
 ------------------ Fit summary       ------------------
          coef      std err          t          P&gt;|t|         2.5 %  \
-e401  63249.0  1843.426765  34.310557  5.461287e-258  59635.949932
+e401  63499.0  1855.668337  34.218938  1.264274e-256  59861.956892
 
             97.5 %
-e401  66862.050068
+e401  67136.043108
 </pre></div></div>
 </div>
 <p>Finally, let us take a look at the estimated potential quantiles</p>
@@ -959,43 +816,43 @@ e401  66862.050068
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-    Quantile      DML Y(0)      DML Y(1)  DML Y(0) lower  DML Y(0) upper  \
-0       0.10 -5.365000e+03 -4.300000e+03    -5754.675552    -4975.324448
-1       0.15 -3.197000e+03 -2.000000e+03    -3423.793623    -2970.206377
-2       0.20 -1.984000e+03 -7.390000e+02    -2152.398173    -1815.601827
-3       0.25 -1.000000e+03 -1.353629e-12    -1142.458571     -857.541429
-4       0.30 -3.500000e+02  2.000000e+02     -488.349949     -211.650051
-5       0.35 -1.869954e-12  1.000000e+03     -137.644525      137.644525
-6       0.40  8.723548e-13  2.006000e+03     -146.970611      146.970611
-7       0.45  1.300000e+02  3.038000e+03      -22.361553      282.361553
-8       0.50  5.000000e+02  5.000000e+03      354.612769      645.387231
-9       0.55  1.200000e+03  7.349000e+03     1039.750058     1360.249942
-10      0.60  2.300000e+03  1.008000e+04     2086.587831     2513.412169
-11      0.65  4.050000e+03  1.337400e+04     3667.788879     4432.211121
-12      0.70  6.540000e+03  1.831500e+04     5844.939410     7235.060590
-13      0.75  1.070000e+04  2.311000e+04     9728.749866    11671.250134
-14      0.80  1.620000e+04  3.374900e+04    14709.382835    17690.617165
-15      0.85  2.600000e+04  4.510000e+04    23751.740387    28248.259613
-16      0.90  4.164900e+04  6.324900e+04    38300.288443    44997.711557
+    Quantile      DML Y(0)  DML Y(1)  DML Y(0) lower  DML Y(0) upper  \
+0       0.10 -5.150000e+03   -4200.0    -5518.552508    -4781.447492
+1       0.15 -3.197000e+03   -2000.0    -3420.763691    -2973.236309
+2       0.20 -1.900000e+03    -733.0    -2061.872222    -1738.127778
+3       0.25 -9.910000e+02      -6.0    -1129.758391     -852.241609
+4       0.30 -3.310000e+02     201.0     -467.454081     -194.545919
+5       0.35 -9.880808e-13    1000.0     -140.411447      140.411447
+6       0.40  8.262423e-13    1586.0     -141.518446      141.518446
+7       0.45  1.490000e+02    2927.0        6.781233      291.218767
+8       0.50  5.000000e+02    5250.0      354.965774      645.034226
+9       0.55  1.200000e+03    6530.0     1038.506687     1361.493313
+10      0.60  2.318000e+03   10000.0     2103.647002     2532.352998
+11      0.65  4.100000e+03   13300.0     3710.041459     4489.958541
+12      0.70  6.750000e+03   18500.0     6029.711024     7470.288976
+13      0.75  1.052000e+04   24199.0     9551.134146    11488.865854
+14      0.80  1.650000e+04   33500.0    14984.664147    18015.335853
+15      0.85  2.600000e+04   45500.0    23748.752283    28251.247717
+16      0.90  4.144500e+04   63499.0    37939.488460    44950.511540
 
     DML Y(1) lower  DML Y(1) upper
-0     -5222.807453    -3377.192547
-1     -2418.481667    -1581.518333
-2     -1235.627612     -242.372388
-3      -374.672361      374.672361
-4      -208.904479      608.904479
-5       494.463332     1505.536668
-6      1467.124301     2544.875699
-7      2332.284885     3743.715115
-8      4161.927496     5838.072504
-9      6305.905061     8392.094939
-10     8763.168748    11396.831252
-11    11771.371367    14976.628633
-12    16721.184586    19908.815414
-13    20895.634100    25324.365900
-14    30779.314265    36718.685735
-15    42205.471566    47994.528434
-16    59635.949932    66862.050068
+0     -4835.847966    -3564.152034
+1     -2439.318552    -1560.681448
+2     -1238.098317     -227.901683
+3      -472.478032      460.478032
+4      -343.083750      745.083750
+5       552.392400     1447.607600
+6      1107.286593     2064.713407
+7      2036.542333     3817.457667
+8      4389.402902     6110.597098
+9      5702.335176     7357.664824
+10     8440.555150    11559.444850
+11    11932.311253    14667.688747
+12    16725.272296    20274.727704
+13    22222.986383    26175.013617
+14    30383.148802    36616.851198
+15    42338.762748    48661.237252
+16    59861.956892    67136.043108
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1342,10 +1199,10 @@ No. Observations: 9915
 
 ------------------ DataFrame info    ------------------
 &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Int64Index: 9915 entries, 0 to 9914
+RangeIndex: 9915 entries, 0 to 9914
 Columns: 14 entries, nifa to hown
 dtypes: float32(4), int8(10)
-memory usage: 329.2 KB
+memory usage: 251.9 KB
 
 </pre></div></div>
 </div>

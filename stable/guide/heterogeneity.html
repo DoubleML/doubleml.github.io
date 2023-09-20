@@ -888,6 +888,76 @@ Python</label><div class="sd-tab-content docutils">
 is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
 </section>
 </section>
+<section id="policy-learning-with-trees">
+<h2><span class="section-number">4.5. </span>Policy Learning with Trees<a class="headerlink" href="#policy-learning-with-trees" title="Permalink to this heading">#</a></h2>
+<p><strong>Policy Learning</strong> considers to find an optimal decision policy. We consider deterministic binary policies, which are defined as mapping</p>
+<div class="math notranslate nohighlight">
+\[\pi: X\mapsto \{0,1\}.\]</div>
+<p>Using the score component <span class="math notranslate nohighlight">\(\psi_b(W_i,\hat{\eta})\)</span> of the <a class="reference internal" href="models.html#irm-model"><span class="std std-ref">IRM</span></a> score,
+we can find the optimal treatment policy by solving the weighted classification problem</p>
+<div class="math notranslate nohighlight">
+\[\mathop{\arg \min}\limits_{\pi\in\Pi} = \frac{1}{n}\sum_{i=1}^n(2\pi(X_i)-1)\hat{\psi_b(W_i,\hat{\eta})},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Pi\)</span> denotes a policy class, which we define as depth-<span class="math notranslate nohighlight">\(m\)</span> classification trees.
+Thus, we estimate splits in the features <span class="math notranslate nohighlight">\(X\)</span> that reflect the heterogeneity of the treatment effect
+and consequently maximize the sum of the estimated individual treatment effects of all individuals by assigning different treatments.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> class contains the <code class="docutils literal notranslate"><span class="pre">policy_tree()</span></code> method, which enables the estimation of a policy tree
+using weighted classification after fitting the <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> object. To estimate a policy tree, the user has to specify a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> containing
+the covariates on based on which the policy will make treatment decisions. These can be either the original covariates used in the
+<code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> estimation, or a subset, or new covariates.
+This will construct and fit a <code class="docutils literal notranslate"><span class="pre">DoubleMLPolicyTree</span></code> object. A plot of the decision rules can be displayed by the
+<code class="docutils literal notranslate"><span class="pre">plot_tree()</span></code> method. The <code class="docutils literal notranslate"><span class="pre">predict()</span></code> method enables the application of the estimated policy on new data.
+The <code class="docutils literal notranslate"><span class="pre">depth</span></code> parameter, which defaults to <code class="docutils literal notranslate"><span class="pre">2</span></code>, can be used to adjust the maximum depth of the tree.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-7">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [93]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [94]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="gp">In [95]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [96]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
+
+<span class="gp">In [97]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
+
+<span class="gp">In [98]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="gp">In [99]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="gp">In [100]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
+
+<span class="gp">In [101]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+
+<span class="gp">In [102]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="gp">In [103]: </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+
+<span class="gp">In [104]: </span><span class="n">_</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="go"># define features to learn policy on</span>
+<span class="gp">In [105]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="gp">In [106]: </span><span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span><span class="s2">&quot;X2&quot;</span><span class="p">,</span><span class="s2">&quot;X3&quot;</span><span class="p">]]</span>
+
+<span class="gp">In [107]: </span><span class="nb">print</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">         X1        X2        X3</span>
+<span class="go">0  0.305133  0.497298 -0.811398</span>
+<span class="go">1 -0.696770 -1.717860 -2.030087</span>
+<span class="go">2 -0.903135  0.174940  0.185585</span>
+<span class="go">3  0.095475 -0.653820 -1.800272</span>
+<span class="go">4 -0.198953  0.203893  0.204653</span>
+
+<span class="go"># fits a tree of depth 2</span>
+<span class="gp">In [108]: </span><span class="n">policy_tree_obj</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">policy_tree</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+
+<span class="gp">In [109]: </span><span class="n">policy_tree_obj</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A more detailed notebook on Policy Trees is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
+</section>
 </section>
 
 
@@ -949,6 +1019,7 @@ is available in the <a class="reference internal" href="../examples/index.html#e
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cvar-treatment-effects">4.4.2. CVaR treatment effects</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#policy-learning-with-trees">4.5. Policy Learning with Trees</a></li>
 </ul>
   </nav></div>
 

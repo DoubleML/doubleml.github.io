@@ -470,6 +470,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
@@ -572,10 +573,11 @@ Download Jupyter notebook:
 </div>
 </div>
 <p>The data is generated as</p>
-<p>$ <span class="math">\begin{align}
-Y_i & = g(W_1)T_i + \langle W_i,\gamma_0\rangle + \epsilon_i \\
-T_i & = \langle W_i,\beta_0\rangle +\eta_i,
-\end{align}</span> $</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+Y_i &amp; = g(W_1)T_i + \langle W_i,\gamma_0\rangle + \epsilon_i \\
+T_i &amp; = \langle W_i,\beta_0\rangle +\eta_i,
+\end{aligned}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(W_i\sim\mathcal{N}(0,I_{d_w})\)</span> and <span class="math notranslate nohighlight">\(\epsilon_i,\eta_i\sim\mathcal{U}[0,1]\)</span>. The coefficient vectors <span class="math notranslate nohighlight">\(\gamma_0\)</span> and <span class="math notranslate nohighlight">\(\beta_0\)</span> both have small random support which values are drawn independently from <span class="math notranslate nohighlight">\(\mathcal{U}[0,1]\)</span>. Further, <span class="math notranslate nohighlight">\(g(w_1)\)</span> defines the conditional treatment effect, which is generated depending on <span class="math notranslate nohighlight">\(w_1\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}g(w_1) = \begin{cases}3\quad,\text{for } w_1\le -0.7\\
@@ -704,7 +706,7 @@ Training IRM Model
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;doubleml.double_ml_irm.DoubleMLIRM at 0x143cca0ee10&gt;
+&lt;doubleml.double_ml_irm.DoubleMLIRM at 0x1b4784fff10&gt;
 </pre></div></div>
 </div>
 </section>
@@ -726,72 +728,22 @@ Training IRM Model
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">groups</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Group 1</th>
-      <th>Group 2</th>
-      <th>Group 3</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>False</td>
-      <td>True</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>False</td>
-      <td>True</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>True</td>
-      <td>False</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>True</td>
-      <td>False</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>True</td>
-      <td>False</td>
-      <td>False</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+   Group 1  Group 2  Group 3
+0    False     True    False
+1    False     True    False
+2     True    False    False
+3     True    False    False
+4     True    False    False
+</pre></div></div>
 </div>
 <p>To calculate GATEs just call the <code class="docutils literal notranslate"><span class="pre">gate()</span></code> method and supply the DataFrame with the group definitions and the <code class="docutils literal notranslate"><span class="pre">level</span></code> (with default of <code class="docutils literal notranslate"><span class="pre">0.95</span></code>).</p>
 <div class="nbinput docutils container">
@@ -809,9 +761,9 @@ Training IRM Model
 <div class="output_area docutils container">
 <div class="highlight"><pre>
             2.5 %    effect    97.5 %
-Group 1  2.793245  3.124311  3.455376
-Group 2  0.934467  1.232243  1.530019
-Group 3 -0.168916  0.026632  0.222179
+Group 1  2.793648  3.125180  3.456711
+Group 2  0.935750  1.233350  1.530950
+Group 3 -0.170841  0.024572  0.219985
 </pre></div></div>
 </div>
 <p>The confidence intervals above are point-wise, but by setting the option <code class="docutils literal notranslate"><span class="pre">joint</span></code> and providing a number of bootstrap repetitions <code class="docutils literal notranslate"><span class="pre">n_rep_boot</span></code>.</p>
@@ -830,9 +782,9 @@ Group 3 -0.168916  0.026632  0.222179
 <div class="output_area docutils container">
 <div class="highlight"><pre>
             2.5 %    effect    97.5 %
-Group 1  2.498706  3.124311  3.749916
-Group 2  0.669544  1.232243  1.794941
-Group 3 -0.342888  0.026632  0.396152
+Group 1  2.498694  3.125180  3.751665
+Group 2  0.670983  1.233350  1.795717
+Group 3 -0.344695  0.024572  0.393839
 </pre></div></div>
 </div>
 <p>Finally, let us plot the estimates together with the true effect within each group.</p>
@@ -881,60 +833,22 @@ Group 3 -0.342888  0.026632  0.396152
     <span class="k">else</span><span class="p">:</span>
          <span class="n">groups</span><span class="p">[</span><span class="s1">&#39;Group&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
 
-<span class="n">groups</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Group</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+  Group
+0     2
+1     2
+2     1
+3     1
+4     1
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
@@ -952,9 +866,9 @@ Group 3 -0.342888  0.026632  0.396152
 <div class="output_area docutils container">
 <div class="highlight"><pre>
             2.5 %    effect    97.5 %
-Group_1  2.793245  3.124311  3.455376
-Group_2  0.934467  1.232243  1.530019
-Group_3 -0.168916  0.026632  0.222179
+Group_1  2.793648  3.125180  3.456711
+Group_2  0.935750  1.233350  1.530950
+Group_3 -0.170841  0.024572  0.219985
 </pre></div></div>
 </div>
 <p>The coefficients of the best linear predictor can be seen via the summary (the values can be accessed through the underlying model <code class="docutils literal notranslate"><span class="pre">.blp_model</span></code>).</p>
@@ -962,72 +876,20 @@ Group_3 -0.168916  0.026632  0.222179
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gate</span><span class="o">.</span><span class="n">summary</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>[0.025</th>
-      <th>0.975]</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Group_1</th>
-      <td>3.124311</td>
-      <td>0.149752</td>
-      <td>20.863194</td>
-      <td>6.777357e-70</td>
-      <td>2.830085</td>
-      <td>3.418536</td>
-    </tr>
-    <tr>
-      <th>Group_2</th>
-      <td>1.232243</td>
-      <td>0.142015</td>
-      <td>8.676878</td>
-      <td>5.830480e-17</td>
-      <td>0.953220</td>
-      <td>1.511265</td>
-    </tr>
-    <tr>
-      <th>Group_3</th>
-      <td>0.026632</td>
-      <td>0.117678</td>
-      <td>0.226310</td>
-      <td>8.210535e-01</td>
-      <td>-0.204576</td>
-      <td>0.257840</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             coef   std err          t         P&gt;|t|    [0.025    0.975]
+Group_1  3.125180  0.149762  20.867623  6.450889e-70  2.830935  3.419425
+Group_2  1.233350  0.142024   8.684105  5.517504e-17  0.954309  1.512391
+Group_3  0.024572  0.117686   0.208795  8.346940e-01 -0.206651  0.255795
+</pre></div></div>
 </div>
 <p>Remark that the confidence intervals are slightly smaller, since they are not based on the White’s heteroskedasticity robus standard errors.</p>
 <div class="nbinput docutils container">
@@ -1047,9 +909,9 @@ Group_3 -0.168916  0.026632  0.222179
 
 ------------------ Fit summary ------------------
              coef   std err          t         P&gt;|t|    [0.025    0.975]
-Group_1  3.124311  0.149752  20.863194  6.777357e-70  2.830085  3.418536
-Group_2  1.232243  0.142015   8.676878  5.830480e-17  0.953220  1.511265
-Group_3  0.026632  0.117678   0.226310  8.210535e-01 -0.204576  0.257840
+Group_1  3.125180  0.149762  20.867623  6.450889e-70  2.830935  3.419425
+Group_2  1.233350  0.142024   8.684105  5.517504e-17  0.954309  1.512391
+Group_3  0.024572  0.117686   0.208795  8.346940e-01 -0.206651  0.255795
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
