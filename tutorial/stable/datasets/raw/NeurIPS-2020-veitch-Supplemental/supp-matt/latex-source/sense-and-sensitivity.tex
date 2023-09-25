@@ -1,0 +1,1085 @@
+\pdfoutput=1
+\documentclass{article}
+
+%
+%
+%
+
+%
+%
+
+%
+%
+     \usepackage[nonatbib]{preamble/neurips_2020}
+
+%
+%
+
+%
+%
+
+
+%
+%
+\usepackage{amsmath}
+%
+
+%
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\definecolor{shadecolor}{gray}{0.9}
+
+%
+\usepackage[english]{babel}
+
+%
+\DeclareRobustCommand{\parhead}[1]{\textbf{#1}~}
+
+%
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[labelfont=bf,font=footnotesize,width=.9\textwidth]{caption}
+\usepackage[format=hang]{subcaption}
+
+%
+\usepackage{booktabs,multirow,multicol}       %
+
+%
+\usepackage[colorlinks,linktoc=all]{hyperref}
+\usepackage[all]{hypcap}
+\hypersetup{citecolor=MidnightBlue}
+\hypersetup{linkcolor=MidnightBlue}
+\hypersetup{urlcolor=MidnightBlue}
+
+%
+\usepackage[nameinlink]{cleveref}
+
+%
+\usepackage[acronym,smallcaps,nowarn]{glossaries}
+     
+%
+\input{preamble/preamble_math}
+\input{preamble/definitions_basic}
+%
+%
+%
+%
+\input{preamble/minimalist_biblatex}
+
+\addbibresource{bibs/sensitivity}
+
+%
+
+\crefformat{equation}{(#2#1#3)}
+\crefformat{figure}{Figure~#2#1#3}
+\crefname{example}{Example}{Examples}
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{cor}{Corollary}{Corollaries}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{assumption}{Assumption}{Assumptions}
+
+%
+%
+%
+\usepackage{enumitem} %
+\usepackage[separate-uncertainty=true,multi-part-units=single]{siunitx} %
+
+\newcommand{\maxf}[1]{{\cellcolor[gray]{0.8}} #1}
+\global\long\def\embedding{\lambda}
+\global\long\def\globparam{\gamma}
+\newcommand{\psiaiptw}{\hat{\psi}^{\mathrm{A}}}
+
+\usepackage{upgreek}
+\newcommand{\digammafn}{\uppsi}
+
+%
+\declaretheoremstyle[
+%
+spacebelow=\parsep,
+    spaceabove=\parsep,
+  mdframed={
+    backgroundcolor=gray!10!white,     %
+    hidealllines=true, 
+    innertopmargin=8pt, 
+    innerbottommargin=4pt, 
+    skipabove=8pt,
+    skipbelow=10pt,
+    nobreak=true
+}
+]{grayboxed}
+\declaretheorem[style=grayboxed,name=Assumption]{gassumption}
+%
+%
+%
+\crefname{gassumption}{Assumption}{Assumptions}
+
+\usepackage{thm-restate}
+
+%
+%
+%
+\usepackage{xcolor}
+\input{preamble/commenting.tex}
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+\usepackage[affil-it]{authblk}
+
+\title{Sense and Sensitivity Analysis: Simple Post-Hoc Analysis of Bias Due to Unobserved Confounding}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  It is a truth universally acknowledged that an observed association without known mechanism must be in want of a causal estimate.
+  Causal estimates from observational data will be biased in the presence of `unobserved confounding'.
+%
+ %
+%
+   However, we might hope that the influence of unobserved confounders is weak
+   relative to a `large' estimated effect.
+   %
+  The purpose of this paper is to develop \emph{Austen plots}, a sensitivity analysis tool to aid such judgments
+  by making it easier to reason about potential bias induced by unobserved confounding.
+  We formalize confounding strength in terms of how strongly the unobserved confounding influences treatment assignment and outcome.
+  For a target level of bias, an Austen plot shows the minimum values of treatment and outcome influence
+  required to induce that level of bias.
+  %
+  %
+  Austen plots generalize the classic sensitivity analysis approach of \citet{Imbens:2003}.
+  Critically, Austen plots allow \emph{any} approach for modeling the observed data. %
+  We illustrate the tool by assessing biases for several real causal inference problems, using a variety of
+  machine learning approaches for the initial data analysis. Code, demo data, and a tutorial are available at [removed].
+  %
+  %
+%
+%
+%
+%
+%
+%
+%
+%
+\end{abstract}
+
+%
+
+\linepenalty=1000
+
+The high costs of randomized controlled trials coupled with the relative availability of
+(large scale) observational data motivate attempts to infer causal relationships from observational data.
+For example, we may wish to use a database of electronic health records to estimate the effect of a treatment.
+Causal inference from observational data must account for possible \defnphrase{confounders} that influence
+both treatment assignment and the outcome; e.g., wealth may be a common cause influencing whether a patient
+takes an expensive drug and whether they recover.
+Often, causal inference is based on the assumption of `no unobserved confounding'; i.e.,
+the assumption that the observed covariates include all common causes of the treatment assignment and outcome.
+This assumption is fundamentally untestable from observed data, but its violation can induce bias in the estimation
+of the treatment effect---the unobserved confounding may completely or in part explain the observed association.
+Our aim in this paper is to develop a sensitivity analysis tool to aid in reasoning about potential bias induced by unobserved confounding.
+
+Intuitively, if we estimate a large positive effect then we might expect the real effect is also positive,
+even in the presence of mild unobserved confounding.
+For example, consider the association between smoking and lung cancer.
+One could argue that this association arises from a genetic mutation that predisposes
+carriers to both an increased desire to smoke and to a greater risk of lung cancer.
+However, the association between smoking and lung cancer is large---is it plausible that
+some unknown genetic association could have a strong enough influence to explain the association?
+Answering such questions requires a domain expert to make a judgment about whether plausible
+confounding is ``mild'' relative to the ``large'' effect.
+In particular, the domain expert must translate judgments about the strength
+of the unobserved confounding into judgments about the bias induced in the estimate of the effect.
+Accordingly,
+we must formalize what is meant by strength of unobserved confounding,
+and to show how to translate judgments about confounding strength into judgments about bias.\looseness=-1
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \vspace{-25pt}
+  \begin{center}
+    \includegraphics[height=0.48\textwidth]{figures/nhanes_dbp_log_reg_bart_vert.png}  
+  \end{center}
+  \vspace{-5pt}
+  \caption{Austen plot showing how strong an unobserved confounder would need to be to induce
+    a bias of 2 in an observational study of the effect of combination blood pressure medications on diastolic blood pressure \cite{Dorie:Harada:Carnegie:Hill:2016}. 
+    We chose this bias to equal the nominal average treatment effect estimated from the data.
+    We model the outcome with Bayesian Additive Regression Trees and the treatment assignment
+    with logistic regression---Austen plots accommodate any choice of models.
+    The curve shows all values treatment and outcome influence that would induce a bias of 2.
+    The colored dots show the influence strength of (groups of) observed covariates,
+    given all other covariates.
+    For example, an unobserved confounder with as much influence as the patient's age
+    might induce a bias of about 2.
+    \label{fig:dbp-intro}}
+   \vspace{-38pt}
+ \end{wrapfigure}
+%
+%
+A prototypical example, due to \citet{Imbens:2003} (building on \cite{Rosenbaum:Rubin:1983}), illustrates
+the broad approach.
+The observed data consists of a treatment $T$,
+%
+an outcome $Y$,
+%
+and covariates $X$ that may causally affect the treatment and outcome.
+%
+\citet{Imbens:2003} then posits an additional unobserved binary confounder
+$U$ for each patient, and
+%
+supposes that the observed data and unobserved confounder
+were generated according to:
+\begin{align*}\label{eq:rosenbaum-rubin}
+U_{i} & \distiid\bernDist(\nicefrac{1}{2})\\
+T_{i}\given X_{i},U_{i} & \distind\bernDist(\mathrm{sig}(\gamma X_{i} \!+\! \alpha U_{i})) \\
+Y_{i}\given X_{i},T_{i},U_{i} & \distind \mathrm{Norm}(\tau T_{i} \!+\! \beta X_{i} \!+\! \delta U_{i},\sigma^{2}). 
+\end{align*}
+where $\mathrm{sig}$ is the sigmoid function.
+If we had observed $U_{i}$, we could estimate $(\hat{\tau},\hat{\gamma},\hat{\beta},\hat{\alpha},\hat{\delta},\hat{\sigma}^{2})$
+from the data
+%
+and report $\hat{\tau}$
+as the estimate of the average treatment effect. 
+Since $U_{i}$ is not observed, it is not possible to identify the
+parameters from the data. Instead, we make (subjective) judgments
+about plausible values of $\alpha$---how
+strongly $U_{i}$ affects the treatment assignment---and
+$\delta$---how strongly $U_{i}$ affects the outcome.
+Contingent on plausible $\alpha=\alpha^{*}$ and $\delta=\delta^{*}$,
+the other parameters can be estimated.
+This yields an estimate of the treatment effect $\hat{\tau}(\alpha^{*},\delta^{*})$
+under the presumed values of the sensitivity parameters.
+
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+The approach just outlined has a major drawback:
+it relies on a parametric model for the full data generating process. 
+The assumed model is equivalent to assuming that, had $U$ been observed,
+it would have been appropriate to use logistic regression to model
+treatment assignment, and linear regression to model the outcome.
+This assumption also implies a simple, parametric model for the relationships
+governing the observed data.
+This restriction is out of step with modern practice, where we use flexible machine-learning
+methods to model these relationships. For example, the assumption
+forbids the use of neural networks or random forests, though such
+methods are often state-of-the-art for causal effect estimation.
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\parhead{Austen plots} The purpose of this paper is to introduce \emph{Austen plots},
+an adaptation of Imbens' approach that fully decouples
+sensitivity analysis and modeling of the observed data. 
+An example Austen plot is shown in \cref{fig:dbp-intro}.
+The high-level idea is to posit a generative model
+that uses a simple, interpretable parametric form for the
+influence of the unobserved confounder, but
+that \emph{puts no constraints on the model for the observed data}.
+We then use the parametric part of the model to
+formalize ``confounding strength'' and to compute the induced bias
+as a function of the confounding.\looseness=-1
+
+We further adapt two innovations pioneered by \citet{Imbens:2003}.
+First, we find a parameterization of the model so that the
+sensitivity parameters, measuring strength of confounding,
+are on a standardized, unitless scale.
+This allows us to compare the strength of hypothetical unobserved confounding
+to the strength of observed covariates, measured from data.
+Second, we plot the curve
+of all values of the sensitivity parameter that would yield given level of bias.
+This moves the analyst judgment from ``what are
+plausible values of the sensitivity parameters?'' to ``are sensitivity
+parameters this extreme plausible?''
+
+\cref{fig:dbp-intro}, an Austen plot for an observational study of the effect of
+combination medications on diastolic blood pressure, illustrates the idea. A bias of 2 would suffice to undermine the
+qualitative conclusion that the blood-pressure treatment is effective. Examining the plot,
+an unobserved confounder as strong as age could induce this amount of confounding,
+but no other (group of) observed confounders has so much influence.
+Accordingly, if a domain expert thinks an unobserved confounder as strong as age is unlikely
+then they may conclude that the treatment is likely effective. Or, if such a confounder is plausible,
+they may conclude that the study fails to establish efficacy.
+
+The purpose of this paper is adapting Imbens' sensitivity analysis
+approach to allow for arbitrary models for observed data.
+The contributions are: 1. Positing a generative model that is
+both easily interpretable and where the required bias calculations are tractable.
+2. Deriving a reparameterization that standardizes the scale of influence strength,
+and showing how to estimate the influence strength of observed covariates for reference.
+And, 3. illustrative examples showing that Austen plots preserve the key elements of Imbens'
+approach and are informative about sensitivity to unobserved confounding in real-world data.
+
+The key advantages of Austen plots as a sensitivity analysis method are\footnote{See \cref{sec:related-work} for a more detailed comparison with related work.}
+1. Plausibility judgments are made on directly
+interpretable quantities, the total confounding influence on $Y$ and $T$.
+Additionally, the Austen plot model does not rely on the detailed nature of the
+unobserved confounding---there may be one or many unobserved confounders, with
+any sort of distribution---all that matters is the total confounding influence.
+2. The unobserved strength of confounding can be directly compared to the strength of observed covariates.
+3. The method is entirely post-hoc.
+That is, the analyst does not need to consider any aspect of the sensitivity
+analysis when modeling the observed data.
+In particular, producing Austen plots requires \emph{only predictions} from the data models.
+We provide software and a tutorial for producing the plots.\footnote{Supplementary material.}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+\parhead{Notation}
+For concreteness, we focus on the estimation of the average effect of a binary treatment.
+The data are generated independently and identically $(Y_{i},T_{i},X_{i},U_{i}) \distiid P$,
+where $U_{i}$ is not observed and $P$ is some unknown probability distribution.
+The average treatment affect (ATE) is 
+\[
+\mathtt{ATE}=\EE[Y\given\cdo(T=1)]-\EE[Y\given\cdo(T=0)].
+\]
+The use of Pearl's $\cdo$ notation indicates that the effect of interest
+is causal.
+The results that follow can also be simply adapted to the average treatment effect on the treated, see \cref{sec:att}.
+%
+%
+%
+
+The traditional approach to causal estimation assumes that the observed
+covariates $X$ contain all common causes of $Y$ and $T$.
+If this `no unobserved confounding' assumption holds, then the ATE is equal
+to parameter, $\tau$, of the observed data distribution, where
+\begin{equation}
+\tau=\EE[\EE[Y\given X,T=1]-\EE[Y\given X,T=0]].\label{eq:psi-def}
+\end{equation}
+The parameter $\tau$ can be estimated from a finite data sample.
+The general approach proceeds in two steps. First, we produce estimates
+$\hat{g}$ and $\hat{Q}$ for the propensity score $g$ and the conditional
+expected outcome $Q$, where
+\begin{defn}
+The \defnphrase{propensity score} $g$ is $g(x)=\Pr(T=1\given X=x)$
+and the \defnphrase{conditional expected outcome} $Q$ is $Q(t,x)=\EE[Y\given T=t,X=x]$.
+\end{defn}
+In modern practice, $Q$ and $g$ are often estimated by fitting flexible
+machine learning models. The second step is to plug the estimated
+$\hat{Q}$ and $\hat{g}$ in to some downstream estimator $\hat{\tau}$.
+For example,
+following \ref{eq:psi-def}, the estimator
+\begin{align*}
+\hat{\tau}^{Q} & =\frac{1}{n}\sum_{i}\hat{Q}(1,x_{i})-\hat{Q}(0,x_{i}),
+\end{align*}
+is a natural choice. Other estimators incorporate $\hat{g}$.
+%
+%
+%
+%
+%
+%
+
+We are interested in the case of possible unobserved confounding.
+That is, where $U$ causally affects $Y$ and $T$. If there is unobserved
+confounding then the parameter $\tau$ is not equal to the ATE, so
+$\hat{\tau}$ is a biased estimate. Inference about the ATE then divides
+into two tasks. First, the statistical task: estimating $\tau$ as
+accurately as possible from the observed data. And, second, the causal
+(domain-specific) problem of assessing $\mathtt{bias}=\mathtt{ATE}-\tau$.
+We emphasize that our focus here is bias due to causal misidentification,
+not the statistical bias of the estimator.
+Our aim is to reason about the bias induced by unobserved confounding\textemdash the
+second task\textemdash in a way that imposes no constraints on
+the modeling choices for $\hat{Q}$, $\hat{g}$ and $\hat{\tau}$
+used in the initial analysis.
+
+\section{Sensitivity Model}
+
+Our sensitivity analysis should impose no constraints on how the \emph{observed} data is modeled.
+%
+However, sensitivity analysis demands some assumption on the relationship between the observed data
+and the \emph{unobserved} confounder.
+It is convenient to formalize such
+assumptions by specifying a probabilistic model for how the data is generated.
+%
+The strength of confounding is then formalized in terms of the parameters
+of the model (the sensitivity parameters).
+Then, the bias induced by the confounding can be derived from the assumed model.
+Our task is to posit a generative model that both yields a useful and easily interpretable sensitivity analysis,
+and that avoids imposing any assumptions about the observed data.
+
+To begin, consider the functional form of the
+sensitivity model used by \citet{Imbens:2003}.
+\begin{align}
+\logit\Pr(T=1\given x,u) & =h(x)+\alpha u\label{eq:functional-form-g} \\
+\EE[Y\given t,x,u] & =l(t,x)+\delta u,\label{eq:functional-form-q}
+\end{align}
+for some functions $h$ and $l$. That is, the propensity score is
+logit-linear in the unobserved confounder, and the conditional expected
+outcome is linear.
+
+By rearranging \cref{eq:functional-form-g} to
+solve for $u$ and plugging in to \cref{eq:functional-form-q}, we see that
+it's equivalent to assume $\EE[Y\given t,x,u] =\tilde{l}(t,x)+\tilde{\delta} \logit\Pr(T=1\given x,u)$.
+That is, the unobserved confounder $u$ only influences the outcome through
+the propensity score.
+Accordingly, by positing a distribution on $\Pr(T=1\given x,u)$ directly,
+we can circumvent the need to explicitly articulate $U$ (and $h$).
+%
+%
+
+\begin{defn}
+Let $\tilde{g}(x,u)=\Pr(T=1\given x,u)$ denote the propensity score
+given observed covariates $x$ and the unobserved confounder $u$.
+\end{defn}
+The insight is that we can posit a sensitivity model by defining a distribution
+on $\tilde{g}$ directly.
+The logit-linear model does not directly lead to a tractable sensitivity analysis. 
+Instead, we choose:%
+\[
+\tilde{g}(X,U)\given X \!\dist\! \betaDist(g(X)(\nicefrac{1}{\alpha}\!-\!1), (1\!-\!g(X))(\nicefrac{1}{\alpha}\!-\!1)).
+\]
+The sensitivity parameter $\alpha$ plays the same role as in Imbens'
+model: it controls the influence of the unobserved confounder $U$ on treatment assignment.
+When $\alpha$ is close to $0$ then $\tilde{g}(X,U)\given X$ is tightly concentrated around $g(X)$, and
+the unobserved confounder has little influence. That is, $U$ minimally affects our belief about
+who is likely to receive treatment.
+Conversely, when $\alpha$ is close to $1$ then $\tilde{g}$ concentrates near $0$ and $1$;
+i.e., knowing $U$ would let us accurately predict treatment assignment.
+%
+Indeed, it can be shown that $\alpha$ is the change in our belief about how likely
+a unit was to have gotten the treatment, given that they were actually
+observed to be treated (or not):
+\begin{equation}
+ \label{eq:alpha-interp}
+ \alpha=\EE[\tilde{g}(X,U) \given T=1]-\EE[\tilde{g}(X,U) \given T=0].
+ \end{equation}
+
+
+With the $\tilde{g}$ model in hand, we define our sensitivity model:
+\begin{gassumption}[Sensitivity Model]\label{ass:main-sensitivity-model}
+\begin{align*}
+\tilde{g}(X,U)\given X & \!\dist\! \betaDist(g(X)(\nicefrac{1}{\alpha}\!-\!1), (1\!-\!g(X))(\nicefrac{1}{\alpha}\!-\!1)) \\
+T\given X,U & \!\dist\! \bernDist(\tilde{g}(X,U)) \\
+  \EE[Y\given T,X,U] & = Q(T,X) + \delta \big( \logit\tilde{g}(X,U) - \EE[\logit\tilde{g}(X,U)\given X,T] \big).
+\end{align*}
+\end{gassumption}
+This model has been constructed to satisfy the requirement
+that the propensity score and conditional expected outcome
+are the $g$ and $Q$ actually present in the observed data:
+\begin{align*}
+\Pr(T=1\given X) & = \EE[\EE[T \given X,U] \given X] = \EE[\tilde{g}(X,U)\given X]=g(X)\\
+\EE[Y\given T,X] & = \EE[\EE[Y \given T,X,U] \given T,X] = Q(T,X).
+\end{align*}
+The sensitivity parameters are $\alpha$, controlling
+the dependence between the unobserved confounder the treatment assignment,
+and $\delta$, controlling the relationship with the outcome.
+In effect, by making an assumption about the propensity score directly,
+we have sidestepped the need to explicitly articulate the parts of
+the observed/unobserved relationship that are not actually relevant
+for the treatment effect estimation.
+%
+%
+ 
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\parhead{Bias}
+We now turn to calculating the bias induced by unobserved confounding.
+By assumption, $X$ and $U$ together
+suffice to render the average treatment effect identifiable as:
+\[
+\mathtt{ATE}=\EE[\EE[Y\given T=1,X,U]-\EE[Y\given T=0,X,U]].
+\] 
+Plugging in our sensitivity model yields,
+\[
+  \mathtt{ATE} =\EE[Q(1,X)-Q(0,X)] +\delta(\EE[\logit\tilde{g}(X,U)\given X,T=1]-\EE[\logit\tilde{g}(X,U)\given X,T=0]).
+ %
+ %
+\]
+The first term is the observed-data estimate $\tau$, so
+\[
+  \mathtt{bias} = \delta(\EE[\logit\tilde{g}(X,U)\given X,T=1]-\EE[\logit\tilde{g}(X,U)\given X,T=0]).
+\]
+Then, by invoking Beta-Bernoulli conjugacy and standard Beta identities,
+we arrive at,
+\begin{theorem}\label{thm:bias-expression}
+  Under our sensitivity model, \cref{ass:main-sensitivity-model}, an unobserved confounder with influence $\alpha$ and $\delta$ induces bias in
+  the estimated treatment effect equal to
+\begin{align*}
+\mathtt{bias} & =\delta\EE\big[\digammafn \big(g(X)(\nicefrac{1}{\alpha}-1)+1 \big)-\digammafn \big((1-g(X))(\nicefrac{1}{\alpha}-1) \big)\\
+ & \quad-\digammafn \big(g(X)(\nicefrac{1}{\alpha}-1)\big)+\digammafn \big((1-g(X))(\nicefrac{1}{\alpha}-1)+1 \big)\big],
+\end{align*}
+where $\digammafn$ is the digamma function
+\end{theorem}
+
+%
+%
+
+\parhead{Reparameterization}
+The model in the previous section provides a formalization of confounding
+strength and tells us how much bias is induced by a given strength
+of confounding. This lets us translate judgments about confounding
+strength to judgments about bias.
+However, $\delta$ may be difficult to interpret.
+%
+%
+%
+%
+Following \citet{Imbens:2003}, we will reexpress
+the outcome-confounder strength in terms of the partial coefficient
+of determination: 
+\begin{equation*}
+  R_{Y,\mathrm{par}}^{2}(\alpha,\delta)=\frac{\EE(Y-Q(T,X))^{2}-\EE(Y-\EE[Y\given T,X,U])^{2}}{\EE(Y-Q(T,X))^{2}}.
+\end{equation*}
+
+This parameterization has two advantages over $\delta$.
+First, $R_{Y,\mathrm{par}}^{2}$ has a familiar interpretation---the proportion of previously
+unexplained variation in $Y$ that is explained by the unobserved
+covariate $U$.
+Second,  $R_{Y,\mathrm{par}}^{2}$ has a fixed, unitless scale---enabling 
+easy comparisons with reference values.
+
+The key to computing the reparameterization is the following result
+(proof in appendix):
+\begin{restatable}{theorem}{tpartrsq}\label{thm:part-rsq}
+  Under our sensitivity model, \cref{ass:main-sensitivity-model},
+  the outcome influence is
+  \begin{align*}
+    R_{Y,\mathrm{par}}^{2}(\alpha,\delta) =
+    \delta^{2}\sum_{t=0}^1\frac{ \EE\big[\digammafn_1 \big(g(X)^t(1-g(X))^{1-t}(\nicefrac{1}{\alpha}-1) + 1[T=t]\big)\big]
+    }{\EE[(Y-Q(T,X))^{2}]},
+  %
+  %
+    \end{align*}
+where $\digammafn_1$ is the trigamma function.
+\end{restatable}
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+We do not reparameterize the strength of confounding
+on treatment assignment because, by design, $\alpha$ is already interpretable
+and on a fixed, unitless scale.
+
+%
+%
+%
+%
+%
+%
+%
+%
+
+\parhead{Estimating bias}
+In combination, \cref{thm:bias-expression,thm:part-rsq} yield an expression for the bias in terms of $\alpha$ and $R_{Y,\mathrm{par}}^{2}$.
+%
+%
+%
+%
+In practice, we can estimate the bias induced by confounding by fitting models for $\hat{Q}$ and $\hat{g}$ and replacing
+the expectations by means over the data. To avoid problems associated with overfitting, we recommend a data splitting approach.
+Namely, split the data into $k$ folds and, for each fold, estimate $Q(t_i,x_i)$ and $g(x_i)$
+by fitting the $\hat{Q}$ and $\hat{g}$ models on the other $k-1$ folds.
+
+
+\section{Calibration using observed data}
+The analyst must make judgments about the influence a hypothetical
+unobserved confounder might have on treatment assignment and outcome.
+To calibrate such judgments, we'd like to have a reference point
+for how much the observed covariates influence the treatment assignment
+and outcome. In the sensitivity model, the degree of influence is
+measured by $R_{Y,\mathrm{par}}^{2}$ and $\alpha$. We want to measure
+the degree of influence of an observed covariate $Z$ given the other
+observed covariates $X\exclude Z$.
+
+For the outcome, this can be measured as:
+\[
+R_{Y,X\exclude Z}^{2}\defeq\frac{\EE(Y-\EE[Y\given T,X\exclude Z])^{2}-\EE(Y-Q(T,X))^{2}}{\EE(Y-\EE[Y\given T,X\exclude Z])^{2}}.
+\]
+%
+%
+%
+%
+In practice, estimate the
+quantity by fitting a new regression model $\hat{Q}_{Z}$ that predicts $Y$ from
+$T$ and $X\exclude Z$. Then we compute
+%
+\[
+\hat{R}_{Y,X\exclude Z}^{2}=\frac{\frac{1}{n}\sum_i(y_{i}-\hat{Q}_{Z}(t_{i},x_{i}\exclude z_{i}))^{2}-\frac{1}{n}\sum_i(y_{i}-\hat{Q}(t_{i},x_{i}))^{2}}{\frac{1}{n}\sum_i(y_{i}-\hat{Q}_{Z}(t_{i},x_{i}\exclude z_{i}))^{2}}.
+\]
+
+It is less clear how to produce the analogous estimate for the influence on treatment assignment.
+To facilitate the estimation, we reexpress $\alpha$ in a more convenient form (proof in appendix):
+\begin{restatable}{theorem}{tgformula}
+  Under our sensitivity model, \cref{ass:main-sensitivity-model},
+\[
+  \alpha=1 - \frac{\EE[\tilde{g}(X,U)(1-\tilde{g}(X,U))]}{\EE[g(X)(1-g(X))]}.
+\]
+\end{restatable}
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+Then, we can measure influence of observed covariate $Z$ on treatment
+assignment given $X\exclude Z$ in an analogous fashion to the outcome.
+We define $g_{X\exclude Z}(X\exclude Z)=\Pr(T=1\given X\exclude Z)$,
+%
+%
+%
+%
+then fit a model for $g_{X\exclude Z}$ by predicting $T$ from $X\exclude Z$, and estimate 
+\[
+\hat{\alpha}_{X\exclude Z}=1 - \frac{\frac{1}{n}\sum_{i}\hat{g}(x_{i})(1-\hat{g}(x_{i}))}{\frac{1}{n}\sum_{i}\hat{g}_{X\exclude Z}(x_{i}\exclude z_{i})(1-\hat{g}_{X\exclude Z}(x_{i}\exclude z_{i}))}.
+\]
+
+\parhead{Grouping covariates} The estimated values $\hat{\alpha}_{X\exclude Z}$ and $\hat{R}_{Y,X\exclude Z}^{2}$ measure the influence of $Z$
+\begin{wrapfigure}{r}{0.6\textwidth}
+   \vspace{-5pt}
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{figures/imbens_att.png}
+  \end{center}
+  \vspace{-5pt}
+  \caption{Austen plots preserve the qualitative conclusions of Imbens' analysis without imposing any restriction on
+    the modeling of the observed data. In each plot, the black solid line indicates the partial $R^2$ and $\alpha$ values that would induce a bias of at least \$1000. Each plot also includes estimates for the strength of confounding for  each of the nine covariates (red circles) as well as recent lag in earnings (RE75 and pos75, yellow circles), and the all preprogram earnings (RE74, pos74, RE75, pos75, green circles).  \label{fig:sensitivity-plots}}
+   \vspace{-25pt}
+ \end{wrapfigure}
+conditioned on all the other confounders. In some cases, this can be misleading. For example, if some piece of information is important but there are multiple covariates providing redundant measurements, then the estimated influence of each covariate will be small.
+To avoid this, we suggest grouping together related or strongly dependent covariates and computing the influence of the entire
+group in aggregate. For example, grouping income, location, and race as `socioeconomic variables'. 
+
+\section{Examples}
+We now examine several examples of Austen plots for sensitivity analysis, showing:
+(1) We preserve the qualitative usefulness of Imbens' approach, without any modeling restrictions.
+(2) Austen plots are informative about bias due to unobserved confounding in real observational studies.
+%
+(3) The bias estimates tend to be conservative.\footnote{Code and data in supplementary material.}
+%
+
+
+\parhead{Imbens' analysis}%
+To demonstrate the use of Austen plots, we replicate \citet{Imbens:2003} example and produce sensitivity plots for
+variations on the LaLonde job training data \cite{LaLonde:1986}.
+We use exactly the same data splitting and adjustment sets as \citet{Imbens:2003}.
+We find that the conclusions about the effects of unobserved confounding are substantively the same as \citet{Imbens:2003}.
+That is, we arrive at sensible sensitivity conclusions while liberating ourselves from the need for
+parametric assumptions on the observed data. We report bias for the average treatment effect on the treated.
+
+
+The original purpose of the LaLonde job training data was to analyze the effect of a job training program on the annual earnings of a participant.
+The data consists of both an experimental (randomly assigned) part, and an observational sample from the Panel Study of
+Income Dynamics (PSID).
+We test on (1) the experimental sample, (2) the experimental treated with observational controls, (3) the same as 2, except with outcome defined as change in earnings since 1974, and (4) the same as 2, except individuals with high earnings pretreatment ($>$\$5000) are dropped.  
+%
+%
+%
+%
+%
+%
+%
+We adjust for: married, age, education, race, and earnings in 1974 and 1975. 
+%
+There are large differences in these background covariates between the experimental sample
+and the PSID controls---this is a main challenge for the LaLonde setup.\looseness=-1
+%
+
+Deviating from Imbens, we fit random forests for $\hat{Q}$ and $\hat{g}$. This demonstrates the sensitivity analysis
+in the case where the observed data model does not have a simple parametric specification.
+%
+%
+ 
+Austen plots for these analyses are displayed in \cref{fig:sensitivity-plots}.
+Following Imbens, we choose a bias of \$1000 (for context, the effect estimate from the RCT is about \$1800).
+The experimental sample (panel A) is robust to unobserved confounding:
+inducing a bias of \$1000 would require an unobserved confounder with a much stronger
+effect than any of the measured covariates or earning variables. 
+By contrast, the non-experimental samples (panels B and C) are much more sensitive to unobserved confounding.
+Several of the covariates, if unobserved, would suffice to bias the estimate by \$1000.
+Note that the sensitivity curves are the same for both B and C, since the outcome is just a linear transformation.
+Finally, the restricted sample (panel D) is both significantly more robust to bias than the
+full non-experimental samples, and the influence of the observed covariates is much reduced.
+Imposing the restriction mitigates the treatment-control population mismatch.
+%
+%
+
+\parhead{Practical relevance}
+\cref{fig:real-data} shows Austen plots for two effects estimated from observational data.
+\begin{wrapfigure}{r}{0.6\textwidth}
+  \vspace{-5pt}
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{figures/real-data.png}
+  \end{center}
+  \vspace{-5pt}
+  \caption{\label{fig:real-data} Austen plots are informative when applied to real data analysis.
+    The left-hand plot is for the estimated effect of IHDP participation level on child IQ.
+    The conclusions of this study seem robust to unobserved confounding---even
+    the observed covariate groups do not have sufficient influence to undo the qualitative conclusion of the model.
+    The right-hand plot is for the estimated effect of combination treatment on diastolic blood pressure. 
+    In this case, whether the study conclusions are reliable depends on whether an unobserved confounder as influential as age is credible---we should consult with an expert.
+    In both cases, we model the outcome with Bayesian Additive Regression Trees, and the propensity score with logistic regression.}
+  \vspace{-15pt}
+\end{wrapfigure}
+The first study is based on data from the Infant Health and Development Program (IHDP) \cite{BrooksGunn:Liaw:Klebanov:1992},
+an experiment targeted at low-birth-weight, premature infants that provided child care and
+home visits. We look at a study measuring the effect of the level of participation in
+IHDP child development centers in the two years preceding an IQ test on the outcome of the IQ test \citep[][\S 6.1]{Hill:2011}.
+Level of participation is not randomly assigned, so \citet{Hill:2011} estimates the effect
+by using Bayesian Additive Regression Trees (BART) \cite{Chipman:George:McCulloch:2010} to control for a range of covariates.
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+ 
+The second plot corresponds to the estimate of the effect of combination blood pressure medications on diastolic blood pressure
+described in \cite{Dorie:Harada:Carnegie:Hill:2016}. The data is derived from %
+an American survey that includes a variety of socioeconomic and health factors. We again use BART.
+
+The Austen plots are informative for these examples.
+In the first case, the Austen plot increases our confidence in the qualitative result.
+In the second case, it suggests we should be cautious about the conclusions unless unobserved confounders as strong as age are deemed unlikely.
+
+%
+%
+%
+%
+%
+%
+%
+
+\parhead{Sensitivity model conservatism}
+\begin{table*}[t]
+  \caption{The sensitivity model tends to be conservative in its bias estimates.
+    Bias estimates for leaving out a confounding covariate are computed
+    according to the sensitivity model (using the left-out covariate data)
+    and by comparing non-parametric effect estimates from the full data ($\tau_x$),
+    and the left-out covariate data ($\tau_{x\exclude z}$). In all cases,
+    the sensitivity model estimate is larger.
+  }\label{tb:cons-bias}
+  \begin{center}
+    \begin{tabular}{l @{\hskip 3em} *{3}{S}}
+      \toprule
+      \multicolumn{1}{r}{Study:\ \ }  & {LaLonde Restricted} & {Blood Pressure} & {IHDP} \\ 
+      \multicolumn{1}{r}{Omitted covariate:\ \ }  & {Education} & {Age} & {Socioeconomic} \\ 
+      \midrule
+      $\tau_x$ & 2508.63 &	-2.33 &	12.72 \\
+      $\tau_{x\exclude z}$& 1982.54 &	-2.86 &	13.35 \\
+      \cmidrule{2-4}
+      Nonparametric $\mathtt{bias}$ & 526.09 & 0.53 & -0.63  \\
+      Sensitivity Model $\abs{\mathtt{bias}}$  & 986.90 & 1.91	& 0.75  \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{-18pt}
+\end{table*}
+Any sensitivity analysis must be predicated on some assumption about the influence of the unobserved confounder.
+The bias curves and influence estimates in Austen plots are contingent on the assumed sensitivity model, \cref{ass:main-sensitivity-model}.
+We motivated our particular choice by simplicity and tractibility.
+We also expect that our associated sensitivity model will often yield conservative values for bias; i.e., the bias anticipated by the sensitivity model is higher than the true bias induced by the real, physical, mechanism of confounding.
+The reason is that bias is monotonically increasing in both treatment and outcome influence.
+In reality, hidden confounders can have more complicated relationships that `cancel out'.
+For example, the effect of age in the blood pressure example might be: blood pressure increases with age, but young patients don't take their medication (preferring diet and exercise), middle age patients take it at a base rate, and old patients don't take the medication (fatalism).
+%
+These effects cancel out somewhat, reducing the bias induced by failing to adjust for age. \cref{ass:main-sensitivity-model} does not allow for such cancellations.
+
+To test conservativism, we create deliberately confounded datasets by removing an observed confounder from our baseline data.
+We compute the bias anticipated by our model, $\mathtt{bias}(R_{Y,X\exclude Z}^{2},\alpha_{X\exclude Z})$, using the measured influence strength  of the covariate.
+We compute a non-parametric estimate of the bias by estimating the effect with the full data,
+estimating the effect with the deliberately confounded data, and taking the difference.
+The results are shown in \cref{tb:cons-bias}, and confirm the conservatism-in-practice.
+This increases our confidence that when an Austen plot suggests robustness to unobserved confounding we
+do indeed have such robustness.
+
+\section{Related Work}\label{sec:related-work}
+%
+There are a wealth of approaches to sensitivity analysis.
+%
+%
+%
+The most closely related approaches to ours are sensitivity analysis based on parametric models in the style of \citet{Imbens:2003}.
+These typically assume some relatively simple parametric latent variable model, where the latent variable is the unobserved confounder.
+\citet{Dorie:Harada:Carnegie:Hill:2016} extends an Imbens-like approach to accomodate BART as the outcome model.
+%
+%
+\citet{Cinelli:Hazlett:2019} allow for arbitrary kinds of confounders and propensity score models, but require
+that the outcome is modeled with linear regression.
+\citet{Cinelli:Kumor:Chen:Pearl:Bareinboim:2019} make concrete assumptions about the edges of a causal DAG and use causal identification tools to translate those assumptions into effect (hence, bias) estimates. However, they assume that all relationships in the DAG are linear.
+\citet{Rosenbaum:Rubin:1983} assume a categorical covariate and a binary confounder. They don't impose any explicit additional constraints on the propensity score or outcome model, but their general approach requires 4 sensitivity parameters for each level of the observed covariate; making the sensitivity analysis practical requires further assumptions.
+
+
+A different line of work relaxes parametric assumptions at the price of requiring the analyst to
+make judgments about more abstract sensitivity parameters \citep[e.g.,][]{Franks:Damour:Feller:2019,Shen:Li:Li:Were:2011,VanderWeele:Arah:2011,Ding:VanderWeele:2015}.
+For example, \citet{Franks:Damour:Feller:2019} allow arbitrary models to be used for the initial analysis. Their sensitivity model is adapted from the missing data literature, and requires the analyst to specify $\Pr(T=t \given Y(1-t), X)$---the posterior belief about probability of treatment assignment had the counterfactual outcome under no-treatment been observed.
+The sensitivity parameters used by these methods are more abstruse than the ones used in parametric-model-based sensitivity analysis. However, the subjective judgments required for each analysis are quite different, and these alternative approaches may be easier in some scenarios. In this sense, these methods are complimentary to the sensitivity analysis approach proposed in this paper.
+%
+%
+%
+%
+%
+
+%
+
+\newpage
+\section{Societal Consequences}
+This paper addressed sensitivity analysis for causal inference.
+We have extended Imbens' approach to allow the use of arbitrary machine-learning methods
+for the data modeling.
+Austen plots provide an entirely post-hoc and blackbox manner of conducting sensitivity analysis.
+In particular, they make it substantially simpler to perform sensitivity analysis.
+This is because the initial analysis can be performed without have a sensitivty analysis already in mind,
+and because producing the sensitivity plots only requires predictions from models that the practitioner has fit anyways.
+
+The ideal positive consequence is that routine use of Austen plots will improve the credibility of machine-learning based
+causal inferences from observational data.
+Austen plots allow us to both use state-of-the-art models for the observed part of the data, and to reason coherently about the
+causal effects of potential unobserved confounders. 
+The availability of such a tool may speed the adoption of machine-learning based causal inference
+for important real-world applications (where, so far, adoption has been slow).
+
+On the negative side, an accelerated adoption of machine-learning methods into causal practice
+may be undesirable. This is simply because the standards of evidence and evaluation used in common
+machine-learning practice do not fully reflect the needs of causal practice.
+Austen plots partially bridge this gap, but they just one of the elements required to establish credibility. 
+
+\printbibliography
+
+\newpage
+\appendix
+\onecolumn
+
+\title{Appendix}
+\date{\vspace{-5ex}}
+\maketitle
+
+\section{Average Treatment Effect on the Treated}
+\label{sec:att}
+In many situations, the average treatment effect (ATT) on the treated is a more convenient estimand than the ATE.
+
+\parhead{Bias} The same logic we used to derive an expression for the bias of the ATE
+can be used to derive an expression for the bias of the ATT.
+For the bias estimand, we just change 
+take the expectation over $X$ in \cref{thm:bias-expression} conditioned on $T=1$.
+In practice, the bias can be estimated by taking the mean over only treated units.
+Note that the reparameterization calculation does not change.
+
+\parhead{Calibration using observed data}
+Reference values for the ATT can be computed in exactly the same way as for the ATE---i.e., it is not required to restrict the expectations to only the treated units.
+This is because the bias expression is given in terms of `full data' $\alpha$ and $R_{Y,\mathrm{par}}^{2}$.
+
+\section{Proofs}
+
+\tpartrsq*
+\begin{proof}
+First, we write:
+\begin{align}
+\EE(Y-\EE[Y\given T,X,U])^{2} & =\EE(Y-Q(T,X))^{2}\nonumber \\
+ & \quad-2\delta\EE[(Y-Q(T,X))(\logit\tilde{g}(X,U)-\EE[\logit\tilde{g}(X,U)\given X,T])]\nonumber \\
+ & \quad+\delta^{2}\EE((\logit\tilde{g}(X,U)-\EE[\logit\tilde{g}(X,U)\given X,T]))^{2}\nonumber \\
+ & =\EE(Y-Q(T,X))^{2}-\delta^{2}\EE[\var(\logit\tilde{g}(X,U)\given X,T)].\label{eq:txu-residual}
+\end{align}
+Where we've used, 
+\begin{align*}
+\EE[(Y-Q(T,X))(\logit\tilde{g}(X,U)-\EE[\logit\tilde{g}(X,U)\given X,T])]\\
+\qquad=\EE[\EE[(Y-Q(T,X))\given T,X,U](\logit\tilde{g}(X,U)-\EE[\logit\tilde{g}(X,U)\given X,T])]]
+\end{align*}
+ and other standard conditional expectation manipulations. 
+
+The usefulness of \cref{eq:txu-residual} is that $\var(\logit\tilde{g}(X,U)\given X,T)$
+has an analytic expression.
+Namely, by Beta-Bernoulli conjugacy, this is the variance of a logit-transformed Beta distribution.
+The analytic expression for this variance is,
+\[
+  \var(\logit\tilde{g}(X,U)\given X,T) = \digammafn_1 \big(g(X)(\nicefrac{1}{\alpha}-1) + T\big) +
+  \digammafn_1 \big((1-g(X))(\nicefrac{1}{\alpha}-1) + 1-T \big),
+\]
+where $\digammafn_1$ is the trigamma function.
+The claimed result follows by plugging in this expression into \cref{eq:txu-residual}. 
+
+\end{proof}
+
+\tgformula*
+\begin{proof}
+The key insight is:
+\begin{align*}
+\var(\tilde{g}) & =\EE[\var(\tilde{g}\given g)]+\var(\EE[\tilde{g}\given g])\\
+ & =\EE[\alpha g(1-g)]+\var(g),
+\end{align*}
+where the first line is the law of total variance, and the second
+line uses the assumed $\betaDist$ distribution of $\tilde{g}\given g$.
+Accordingly,
+\[
+\alpha=\frac{\var(\tilde{g})-\var(g)}{\EE[g(1-g)]}.
+\]
+Now, observe that by the law of total variance,
+\begin{align*}
+  \var(T) &= \EE[\var(T \given g)] + \var(\EE[T \given g]) \\
+          &= \EE[g(1-g)] + \var(g),
+\end{align*}
+where we have used that $T \given g$ is Bernoulli.
+By the same logic,
+\[
+  \var(T) = \EE[\tilde{g}(1-\tilde{g})] + \var(\tilde{g}).
+\]
+Whence,
+\[
+\var(\tilde{g}) - \var(g) = \EE[g(1-g)] - \EE[\tilde{g}(1-\tilde{g})].
+\]
+The result follows immediately.
+\end{proof}
+
+
+%
+%
+
+\end{document}
+
