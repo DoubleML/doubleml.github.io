@@ -523,20 +523,24 @@ document.write(`
                   
   <section id="heterogeneous-treatment-effects">
 <span id="heterogeneity"></span><h1><span class="section-number">4. </span>Heterogeneous treatment effects<a class="headerlink" href="#heterogeneous-treatment-effects" title="Permalink to this heading">#</a></h1>
-<p>All implemented solutions focus on the <a class="reference internal" href="models.html#irm-model"><span class="std std-ref">IRM</span></a> or <a class="reference internal" href="models.html#iivm-model"><span class="std std-ref">IIVM</span></a> models, as for
+<p>Most implemented solutions focus on the <a class="reference internal" href="models.html#irm-model"><span class="std std-ref">IRM</span></a> or <a class="reference internal" href="models.html#iivm-model"><span class="std std-ref">IIVM</span></a> models, as for
 the <a class="reference internal" href="models.html#plr-model"><span class="std std-ref">PLR</span></a> and <a class="reference internal" href="models.html#pliv-model"><span class="std std-ref">PLIV</span></a> models heterogeneous treatment effects can be usually modelled
 via feature construction.</p>
 <section id="group-average-treatment-effects-gates">
 <span id="gates"></span><h2><span class="section-number">4.1. </span>Group average treatment effects (GATEs)<a class="headerlink" href="#group-average-treatment-effects-gates" title="Permalink to this heading">#</a></h2>
-<p><strong>Group Average Treatment Effects (GATEs)</strong> consider the target parameters</p>
-<div class="math notranslate nohighlight">
-\[\theta_{0,k} = \mathbb{E}[Y(1) - Y(0)| G_k],\quad k=1,\dots, K.\]</div>
-<p>where <span class="math notranslate nohighlight">\(G_k\)</span> denotes a group indicator and <span class="math notranslate nohighlight">\(Y(d)\)</span> the potential outcome with <span class="math notranslate nohighlight">\(d \in \{0, 1\}\)</span>.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> class contains the <code class="docutils literal notranslate"><span class="pre">gate()</span></code> method, which enables the estimation and construction of confidence intervals
-for GATEs after fitting the <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> object. To estimate GATEs, the user has to specify a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> containing
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> and <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> classes contain the <code class="docutils literal notranslate"><span class="pre">gate()</span></code> method, which enables the estimation and construction of confidence intervals
+for GATEs after fitting the <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> object. To estimate GATEs, the user has to specify a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> containing
 the groups (dummy coded or one column with strings).
 This will construct and fit a <code class="docutils literal notranslate"><span class="pre">DoubleMLBLP</span></code> object. Confidence intervals can then be constructed via
 the <code class="docutils literal notranslate"><span class="pre">confint()</span></code> method. Jointly valid confidence intervals will be based on a gaussian multiplier bootstrap.</p>
+<section id="gates-for-irm-models">
+<h3><span class="section-number">4.1.1. </span>GATEs for IRM models<a class="headerlink" href="#gates-for-irm-models" title="Permalink to this heading">#</a></h3>
+<p><strong>Group Average Treatment Effects (GATEs)</strong> for <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> models consider the target parameters</p>
+<div class="math notranslate nohighlight">
+\[\theta_{0,k} = \mathbb{E}[Y(1) - Y(0)| G_k],\quad k=1,\dots, K.\]</div>
+<p>where <span class="math notranslate nohighlight">\(G_k\)</span> denotes a group indicator and <span class="math notranslate nohighlight">\(Y(d)\)</span> the potential outcome with <span class="math notranslate nohighlight">\(d \in \{0, 1\}\)</span>.</p>
+<p>Point estimates and confidence intervals can be obtained via the <code class="docutils literal notranslate"><span class="pre">gate()</span></code> and <code class="docutils literal notranslate"><span class="pre">confint()</span></code> methods.
+Remark that for straightforward interpretation, the groups have to be mutually exclusive.</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
 </input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-0">
@@ -584,26 +588,24 @@ Python</label><div class="sd-tab-content docutils">
 
 <span class="gp">In [18]: </span><span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
 <span class="go">            2.5 %    effect    97.5 %</span>
-<span class="go">Group_0  0.231499  0.645472  1.059445</span>
-<span class="go">Group_1 -0.625735  0.363644  1.353023</span>
-<span class="go">Group_2  0.362585  0.771560  1.180534</span>
+<span class="go">Group_0  0.231638  0.645582  1.059525</span>
+<span class="go">Group_1 -0.625448  0.363870  1.353188</span>
+<span class="go">Group_2  0.362418  0.771480  1.180542</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>A more detailed notebook on GATEs is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
+<p>A more detailed notebook on GATEs with <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> models is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
 </section>
-<section id="conditional-average-treatment-effects-cates">
-<span id="cates"></span><h2><span class="section-number">4.2. </span>Conditional average treatment effects (CATEs)<a class="headerlink" href="#conditional-average-treatment-effects-cates" title="Permalink to this heading">#</a></h2>
-<p><strong>Conditional Average Treatment Effects (CATEs)</strong> consider the target parameters</p>
+<section id="gates-for-plr-models">
+<h3><span class="section-number">4.1.2. </span>GATEs for PLR models<a class="headerlink" href="#gates-for-plr-models" title="Permalink to this heading">#</a></h3>
+<p><strong>Group Average Treatment Effects (GATEs)</strong> for <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> models consider a slightly adjusted version of the <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> model.
+Instead of considering a constant treatment effect <span class="math notranslate nohighlight">\(\theta_0\)</span> for all observations, the adjusted model allows for a different effect based on groups.</p>
 <div class="math notranslate nohighlight">
-\[\theta_{0}(x) = \mathbb{E}[Y(1) - Y(0)| X=x]\]</div>
-<p>for a low-dimensional feature <span class="math notranslate nohighlight">\(X\)</span>, where <span class="math notranslate nohighlight">\(Y(d)\)</span> the potential outcome with <span class="math notranslate nohighlight">\(d \in \{0, 1\}\)</span>.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> class contains the <code class="docutils literal notranslate"><span class="pre">cate()</span></code> method, which enables the estimation and construction of confidence intervals
-for CATEs after fitting the <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> object. To estimate CATEs, the user has to specify a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> containing
-the basis (e.g. B-splines) for the conditional treatment effects.
-This will construct and fit a <code class="docutils literal notranslate"><span class="pre">DoubleMLBLP</span></code> object. Confidence intervals can then be constructed via
-the <code class="docutils literal notranslate"><span class="pre">confint()</span></code> method. Jointly valid confidence intervals will be based on a gaussian multiplier bootstrap.</p>
+\[ \begin{align}\begin{aligned}Y = D \theta_0(G_k) + g_0(X) + \zeta, &amp; &amp;\mathbb{E}(\zeta | D,X) = 0,\\D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(G_k\)</span> for <span class="math notranslate nohighlight">\(k=1,\dots, K\)</span> denotes a group indicator where the groups can depend on the counfounding features <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>Point estimates and confidence intervals can be obtained via the <code class="docutils literal notranslate"><span class="pre">gate()</span></code> and <code class="docutils literal notranslate"><span class="pre">confint()</span></code> methods.
+Remark that for straightforward interpretation, the groups have to be mutually exclusive.</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
 </input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-1">
@@ -612,34 +614,103 @@ Python</label><div class="sd-tab-content docutils">
 
 <span class="gp">In [20]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="gp">In [21]: </span><span class="kn">import</span> <span class="nn">patsy</span>
+<span class="gp">In [21]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
-<span class="gp">In [22]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="gp">In [22]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
 
-<span class="gp">In [23]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
+<span class="gp">In [23]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
 
-<span class="gp">In [24]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">In [24]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [25]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [25]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [26]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [26]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
 
-<span class="gp">In [27]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
+<span class="gp">In [27]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
-<span class="gp">In [28]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">In [28]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
-<span class="gp">In [29]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="gp">In [29]: </span><span class="n">_</span> <span class="o">=</span> <span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
-<span class="gp">In [30]: </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="go"># define groups</span>
+<span class="gp">In [30]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="gp">In [31]: </span><span class="n">_</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gp">In [31]: </span><span class="n">groups</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Group&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="gp">In [32]: </span><span class="nb">print</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">  Group</span>
+<span class="go">0     2</span>
+<span class="go">1     0</span>
+<span class="go">2     2</span>
+<span class="go">3     2</span>
+<span class="go">4     0</span>
+
+<span class="gp">In [33]: </span><span class="n">gate_obj</span> <span class="o">=</span> <span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">gate</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>
+
+<span class="gp">In [34]: </span><span class="n">ci</span> <span class="o">=</span> <span class="n">gate_obj</span><span class="o">.</span><span class="n">confint</span><span class="p">()</span>
+
+<span class="gp">In [35]: </span><span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
+<span class="go">            2.5 %    effect    97.5 %</span>
+<span class="go">Group_0  0.498119  0.644565  0.791012</span>
+<span class="go">Group_1  0.247555  0.395402  0.543248</span>
+<span class="go">Group_2  0.451385  0.593896  0.736407</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A more detailed notebook on GATEs with <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> models is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
+</section>
+</section>
+<section id="conditional-average-treatment-effects-cates">
+<span id="cates"></span><h2><span class="section-number">4.2. </span>Conditional average treatment effects (CATEs)<a class="headerlink" href="#conditional-average-treatment-effects-cates" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> and <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> classes contain the <code class="docutils literal notranslate"><span class="pre">cate()</span></code> method, which enables the estimation and construction of confidence intervals
+for CATEs after fitting the <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> object. To estimate CATEs, the user has to specify a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> containing
+the basis (e.g. B-splines) for the conditional treatment effects.
+This will construct and fit a <code class="docutils literal notranslate"><span class="pre">DoubleMLBLP</span></code> object. Confidence intervals can then be constructed via
+the <code class="docutils literal notranslate"><span class="pre">confint()</span></code> method. Jointly valid confidence intervals will be based on a gaussian multiplier bootstrap.</p>
+<section id="cates-for-irm-models">
+<h3><span class="section-number">4.2.1. </span>CATEs for IRM models<a class="headerlink" href="#cates-for-irm-models" title="Permalink to this heading">#</a></h3>
+<p><strong>Conditional Average Treatment Effects (CATEs)</strong> for <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> models consider the target parameters</p>
+<div class="math notranslate nohighlight">
+\[\theta_{0}(x) = \mathbb{E}[Y(1) - Y(0)| X=x]\]</div>
+<p>for a low-dimensional feature <span class="math notranslate nohighlight">\(X\)</span>, where <span class="math notranslate nohighlight">\(Y(d)\)</span> the potential outcome with <span class="math notranslate nohighlight">\(d \in \{0, 1\}\)</span>.</p>
+<p>Point estimates and confidence intervals can be obtained via the <code class="docutils literal notranslate"><span class="pre">gate()</span></code> and <code class="docutils literal notranslate"><span class="pre">confint()</span></code> methods.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-2">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [36]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [37]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="gp">In [38]: </span><span class="kn">import</span> <span class="nn">patsy</span>
+
+<span class="gp">In [39]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [40]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
+
+<span class="gp">In [41]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+
+<span class="gp">In [42]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="gp">In [43]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="gp">In [44]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
+
+<span class="gp">In [45]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+
+<span class="gp">In [46]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="gp">In [47]: </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+
+<span class="gp">In [48]: </span><span class="n">_</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
 <span class="go"># define a basis with respect to the first variable</span>
-<span class="gp">In [32]: </span><span class="n">design_matrix</span> <span class="o">=</span> <span class="n">patsy</span><span class="o">.</span><span class="n">dmatrix</span><span class="p">(</span><span class="s2">&quot;bs(x, df=5, degree=2)&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span><span class="n">obj_dml_data</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;X1&quot;</span><span class="p">]})</span>
+<span class="gp">In [49]: </span><span class="n">design_matrix</span> <span class="o">=</span> <span class="n">patsy</span><span class="o">.</span><span class="n">dmatrix</span><span class="p">(</span><span class="s2">&quot;bs(x, df=5, degree=2)&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span><span class="n">obj_dml_data</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;X1&quot;</span><span class="p">]})</span>
 
-<span class="gp">In [33]: </span><span class="n">spline_basis</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">design_matrix</span><span class="p">)</span>
+<span class="gp">In [50]: </span><span class="n">spline_basis</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">design_matrix</span><span class="p">)</span>
 
-<span class="gp">In [34]: </span><span class="nb">print</span><span class="p">(</span><span class="n">spline_basis</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="gp">In [51]: </span><span class="nb">print</span><span class="p">(</span><span class="n">spline_basis</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">     0         1         2         3         4    5</span>
 <span class="go">0  1.0  0.000000  0.191397  0.782646  0.025958  0.0</span>
 <span class="go">1  1.0  0.342467  0.653991  0.000000  0.000000  0.0</span>
@@ -647,30 +718,182 @@ Python</label><div class="sd-tab-content docutils">
 <span class="go">3  1.0  0.000000  0.456552  0.543358  0.000091  0.0</span>
 <span class="go">4  1.0  0.046405  0.778852  0.174743  0.000000  0.0</span>
 
-<span class="gp">In [35]: </span><span class="n">cate_obj</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">cate</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">spline_basis</span><span class="p">)</span>
+<span class="gp">In [52]: </span><span class="n">cate_obj</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">cate</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">spline_basis</span><span class="p">)</span>
 
-<span class="gp">In [36]: </span><span class="n">ci</span> <span class="o">=</span> <span class="n">cate_obj</span><span class="o">.</span><span class="n">confint</span><span class="p">()</span>
+<span class="gp">In [53]: </span><span class="n">ci</span> <span class="o">=</span> <span class="n">cate_obj</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">spline_basis</span><span class="p">)</span>
 
-<span class="gp">In [37]: </span><span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="gp">In [54]: </span><span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">      2.5 %    effect    97.5 %</span>
-<span class="go">0  0.253713  0.740842  1.227971</span>
-<span class="go">1 -1.093402 -0.115726  0.861950</span>
-<span class="go">2 -1.937456 -0.406043  1.125370</span>
-<span class="go">3  0.269661  0.690793  1.111925</span>
-<span class="go">4  0.000336  0.570962  1.141588</span>
+<span class="go">0  0.253949  0.741076  1.228203</span>
+<span class="go">1 -1.093401 -0.115761  0.861879</span>
+<span class="go">2 -1.937669 -0.406249  1.125172</span>
+<span class="go">3  0.269999  0.691113  1.112227</span>
+<span class="go">4  0.000768  0.571317  1.141866</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>A more detailed notebook on CATEs is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.
+<p>A more detailed notebook on CATEs for <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> models is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.
 The examples also include the construction of a two-dimensional basis with B-splines.</p>
 </section>
+<section id="cates-for-plr-models">
+<h3><span class="section-number">4.2.2. </span>CATEs for PLR models<a class="headerlink" href="#cates-for-plr-models" title="Permalink to this heading">#</a></h3>
+<p><strong>Conditional Average Treatment Effects (CATEs)</strong> for <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> models consider a slightly adjusted version of the <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> model.
+Instead of considering a constant treatment effect <span class="math notranslate nohighlight">\(\theta_0\)</span> for all observations, the adjusted model allows for a different effect based on groups.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}Y = D \theta_0(X) + g_0(X) + \zeta, &amp; &amp;\mathbb{E}(\zeta | D,X) = 0,\\D = m_0(X) + V, &amp; &amp;\mathbb{E}(V | X) = 0,\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta_0(X)\)</span> denotes the heterogeneous treatment effect.</p>
+<p>Point estimates and confidence intervals can be obtained via the <code class="docutils literal notranslate"><span class="pre">gate()</span></code> and <code class="docutils literal notranslate"><span class="pre">confint()</span></code> methods.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-3">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [55]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [56]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="gp">In [57]: </span><span class="kn">import</span> <span class="nn">patsy</span>
+
+<span class="gp">In [58]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [59]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
+
+<span class="gp">In [60]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
+
+<span class="gp">In [61]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="gp">In [62]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="gp">In [63]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
+
+<span class="gp">In [64]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="gp">In [65]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+
+<span class="gp">In [66]: </span><span class="n">_</span> <span class="o">=</span> <span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="go"># define a basis with respect to the first variable</span>
+<span class="gp">In [67]: </span><span class="n">design_matrix</span> <span class="o">=</span> <span class="n">patsy</span><span class="o">.</span><span class="n">dmatrix</span><span class="p">(</span><span class="s2">&quot;bs(x, df=5, degree=2)&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span><span class="n">obj_dml_data</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;X1&quot;</span><span class="p">]})</span>
+
+<span class="gp">In [68]: </span><span class="n">spline_basis</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">design_matrix</span><span class="p">)</span>
+
+<span class="gp">In [69]: </span><span class="nb">print</span><span class="p">(</span><span class="n">spline_basis</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">     0         1         2         3         4    5</span>
+<span class="go">0  1.0  0.000000  0.191397  0.782646  0.025958  0.0</span>
+<span class="go">1  1.0  0.342467  0.653991  0.000000  0.000000  0.0</span>
+<span class="go">2  1.0  0.460535  0.511022  0.000000  0.000000  0.0</span>
+<span class="go">3  1.0  0.000000  0.456552  0.543358  0.000091  0.0</span>
+<span class="go">4  1.0  0.046405  0.778852  0.174743  0.000000  0.0</span>
+
+<span class="gp">In [70]: </span><span class="n">cate_obj</span> <span class="o">=</span> <span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">cate</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">spline_basis</span><span class="p">)</span>
+
+<span class="gp">In [71]: </span><span class="n">ci</span> <span class="o">=</span> <span class="n">cate_obj</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">spline_basis</span><span class="p">)</span>
+
+<span class="gp">In [72]: </span><span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">      2.5 %    effect    97.5 %</span>
+<span class="go">0  0.391971  0.548740  0.705509</span>
+<span class="go">1  0.433640  0.600482  0.767324</span>
+<span class="go">2  0.381653  0.587828  0.794002</span>
+<span class="go">3  0.438942  0.570852  0.702763</span>
+<span class="go">4  0.419818  0.592956  0.766095</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A more detailed notebook on CATEs for <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> models is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
+<p><strong>Theory:</strong> In the model above, it holds</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbb{E}[Y|X] &amp;= \mathbb{E}[\theta_0(X) D|X] + \mathbb{E}[g(X)|X] + \underbrace{\mathbb{E}[\varepsilon|X]}_{=\mathbb{E}[\mathbb{E}[\varepsilon|D, X]|X]=0}\\
+&amp;=\theta(X) \mathbb{E}[D|X] + g(X)\end{split}\]</div>
+<p>such that</p>
+<div class="math notranslate nohighlight">
+\[\underbrace{Y - \mathbb{E}[Y|X]}_{=:\tilde{Y}} = \theta_0(X) (\underbrace{D - \mathbb{E}[D|X]}_{=:\tilde{D}}) + \varepsilon.\]</div>
+<p>Remark that for the generated <span class="math notranslate nohighlight">\(\sigma\)</span>-agebras <span class="math notranslate nohighlight">\(\sigma(\tilde{D})\subseteq \sigma(D,X)\)</span> implying</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{E}[\epsilon|\tilde{D}] = \mathbb{E}[\mathbb{E}[\epsilon|X, D]|\tilde{D}] = 0\]</div>
+<p>and consequently</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{E}[\tilde{Y}|\tilde{D}] = \theta(X)\tilde{D}.\]</div>
+<p>Consequently, <span class="math notranslate nohighlight">\(\theta_0(X)\)</span> can be estimated by regressing <span class="math notranslate nohighlight">\(\tilde{Y}\)</span> on <span class="math notranslate nohighlight">\(\tilde{D}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\theta_0(X) = \arg\min_{\theta(X) \in \Theta}\mathbb{E}[(\tilde{Y} - \theta(X)\tilde{D})^2]\]</div>
+<p>The <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> implementation approximates the effect <span class="math notranslate nohighlight">\(\theta(X)\)</span> by a linear projection on a supplied basis <span class="math notranslate nohighlight">\(\phi(X)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\theta_0(X) \approx \beta_0^T \phi(X)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\beta_0\)</span> are coefficients to be estimated.
+The coverage of the confidence intervals is meant to include the the approximation <span class="math notranslate nohighlight">\(\beta_0^T\phi(X)\)</span>.</p>
+</section>
+</section>
+<section id="weighted-average-treatment-effects">
+<span id="weighted-cates"></span><h2><span class="section-number">4.3. </span>Weighted Average Treatment Effects<a class="headerlink" href="#weighted-average-treatment-effects" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> class allows to specify weights via the <code class="docutils literal notranslate"><span class="pre">weights</span></code> argument in the initialization of the <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> object.
+Given some weights, <span class="math notranslate nohighlight">\(\omega(Y,D,X)\)</span> the model identifies the weighted average treatment effect</p>
+<div class="math notranslate nohighlight">
+\[\theta_0 = \mathbb{E}[(g_0(1,X) - g_0(0,X))\omega(Y,D,X)].\]</div>
+<p>The interpretation depends on the choice of weights. The simplest examples include</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\omega(Y,D,X) = 1\)</span> which corresponds to the average treatment effect (ATE)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega(Y,D,X) = \frac{1\{X\in G\}}{P(X\in G)}\)</span> which corresponds to the group average treatment effect (GATE) for group <span class="math notranslate nohighlight">\(G\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega(Y,D,X) = \pi(X)\)</span> which corresponds to the average value of policy <span class="math notranslate nohighlight">\(\pi\)</span>, where <span class="math notranslate nohighlight">\(0\le \pi \le 1\)</span></p></li>
+</ul>
+<p>where the weights <span class="math notranslate nohighlight">\(\omega(Y,D,X)\)</span> only depend on the features <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>In these cases the weights can be specified as an array via the <code class="docutils literal notranslate"><span class="pre">weights</span></code> argument in the initialization of the <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> object.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-4">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [73]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [74]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="gp">In [75]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [76]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
+
+<span class="gp">In [77]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+
+<span class="gp">In [78]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="gp">In [79]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="gp">In [80]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
+
+<span class="gp">In [81]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+
+<span class="gp">In [82]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="gp">In [83]: </span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="gp">In [84]: </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+
+<span class="gp">In [85]: </span><span class="n">_</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="gp">In [86]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="go">       coef   std err         t     P&gt;|t|     2.5 %   97.5 %</span>
+<span class="go">d  0.593036  0.195602  3.031848  0.002431  0.209663  0.97641</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If the weights do not only depend on the features <span class="math notranslate nohighlight">\(X\)</span>, but e.g. also on the treatment <span class="math notranslate nohighlight">\(D\)</span> estimation becomes more involved.
+To identifiy the correct parameter not only the weights <span class="math notranslate nohighlight">\(\omega(Y,D,X)\)</span> but also their conditional expectation</p>
+<div class="math notranslate nohighlight">
+\[\bar{\omega}(X) = \mathbb{E}[\omega(Y,D,X)|X]\]</div>
+<p>has to be specified. A common example is the average treatment effect on the treated (ATTE) which can be identified by setting</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\omega(Y,D,X) = \frac{D}{P(D=1)}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\bar{\omega}(X) = \frac{\mathbb{E}[D|X]}{P(D=1)} = \frac{m_0(X)}{P(D=1)}\)</span></p></li>
+</ul>
+<p>which depends on the propensity score <span class="math notranslate nohighlight">\(m_0(X)\)</span>.
+In this case the weights can be specified as a <code class="docutils literal notranslate"><span class="pre">dictionary</span></code> the <code class="docutils literal notranslate"><span class="pre">weights</span></code> argument in the initialization of the <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> object.</p>
+<p>A more detailed notebook on weighted average treatment effects for on GATE sensitivity analysis is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
+</section>
 <section id="quantiles">
-<span id="qtes"></span><h2><span class="section-number">4.3. </span>Quantiles<a class="headerlink" href="#quantiles" title="Permalink to this heading">#</a></h2>
+<span id="qtes"></span><h2><span class="section-number">4.4. </span>Quantiles<a class="headerlink" href="#quantiles" title="Permalink to this heading">#</a></h2>
 <p>The <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> package includes (local) quantile estimation for potential outcomes for
 <a class="reference internal" href="models.html#irm-model"><span class="std std-ref">IRM</span></a> and <a class="reference internal" href="models.html#iivm-model"><span class="std std-ref">IIVM</span></a> models.</p>
 <section id="potential-quantiles-pqs">
-<h3><span class="section-number">4.3.1. </span>Potential quantiles (PQs)<a class="headerlink" href="#potential-quantiles-pqs" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.4.1. </span>Potential quantiles (PQs)<a class="headerlink" href="#potential-quantiles-pqs" title="Permalink to this heading">#</a></h3>
 <p>For a quantile <span class="math notranslate nohighlight">\(\tau \in (0,1)\)</span> the target parameters <span class="math notranslate nohighlight">\(\theta_{\tau}(d)\)</span> of interest are the <strong>potential quantiles (PQs)</strong>,</p>
 <div class="math notranslate nohighlight">
 \[P(Y(d) \le \theta_{\tau}(d)) = \tau,\]</div>
@@ -680,31 +903,31 @@ The examples also include the construction of a two-dimensional basis with B-spl
 <p>where <span class="math notranslate nohighlight">\(Y(d)\)</span> denotes the potential outcome with <span class="math notranslate nohighlight">\(d \in \{0, 1\}\)</span>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> implements potential quantile estimation. Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
-</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-2">
+<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-5">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [38]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [87]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="gp">In [39]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="gp">In [88]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
-<span class="gp">In [40]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
+<span class="gp">In [89]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
 
-<span class="gp">In [41]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">In [90]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
 
-<span class="gp">In [42]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+<span class="gp">In [91]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
 
-<span class="gp">In [43]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [92]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [44]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [93]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [45]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">In [94]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
 
-<span class="gp">In [46]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="gp">In [95]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
-<span class="gp">In [47]: </span><span class="n">dml_pq_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPQ</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">treatment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">In [96]: </span><span class="n">dml_pq_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPQ</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">treatment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
-<span class="gp">In [48]: </span><span class="n">dml_pq_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
-<span class="gh">Out[48]: </span>
+<span class="gp">In [97]: </span><span class="n">dml_pq_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
+<span class="gh">Out[97]: </span>
 <span class="go">       coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">d  0.553878  0.149858  3.696011  0.000219  0.260161  0.847595</span>
 </pre></div>
@@ -714,31 +937,31 @@ Python</label><div class="sd-tab-content docutils">
 <p><code class="docutils literal notranslate"><span class="pre">DoubleMLLPQ</span></code> implements local potential quantile estimation, where the argument <code class="docutils literal notranslate"><span class="pre">treatment</span></code> indicates the potential outcome.
 Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-3">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-6">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [49]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [98]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="gp">In [50]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="gp">In [99]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
-<span class="gp">In [51]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_iivm_data</span>
+<span class="gp">In [100]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_iivm_data</span>
 
-<span class="gp">In [52]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">In [101]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
 
-<span class="gp">In [53]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+<span class="gp">In [102]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
 
-<span class="gp">In [54]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [103]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [55]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [104]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [56]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_iivm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">In [105]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_iivm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
 
-<span class="gp">In [57]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">z_cols</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+<span class="gp">In [106]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">z_cols</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
 
-<span class="gp">In [58]: </span><span class="n">dml_lpq_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLLPQ</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">treatment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">In [107]: </span><span class="n">dml_lpq_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLLPQ</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">treatment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
-<span class="gp">In [59]: </span><span class="n">dml_lpq_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
-<span class="gh">Out[59]: </span>
+<span class="gp">In [108]: </span><span class="n">dml_lpq_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
+<span class="gh">Out[108]: </span>
 <span class="go">       coef   std err       t     P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">d  0.327341  0.548862  0.5964  0.550908 -0.748408  1.403091</span>
 </pre></div>
@@ -747,7 +970,7 @@ Python</label><div class="sd-tab-content docutils">
 </div>
 </section>
 <section id="quantile-treatment-effects-qtes">
-<h3><span class="section-number">4.3.2. </span>Quantile treatment effects (QTEs)<a class="headerlink" href="#quantile-treatment-effects-qtes" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.4.2. </span>Quantile treatment effects (QTEs)<a class="headerlink" href="#quantile-treatment-effects-qtes" title="Permalink to this heading">#</a></h3>
 <p>For a quantile <span class="math notranslate nohighlight">\(\tau \in (0,1)\)</span> the target parameter <span class="math notranslate nohighlight">\(\theta_{\tau}\)</span> of interest are the <strong>quantile treatment effect (QTE)</strong>,</p>
 <div class="math notranslate nohighlight">
 \[\theta_{\tau} = \theta_{\tau}(1) - \theta_{\tau}(0)\]</div>
@@ -756,31 +979,31 @@ Python</label><div class="sd-tab-content docutils">
 the corresponding local potential quantiles.</p>
 <p><code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> implements quantile treatment effect estimation. Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
-</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-4">
+<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-7">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [60]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [109]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="gp">In [61]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="gp">In [110]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
-<span class="gp">In [62]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
+<span class="gp">In [111]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
 
-<span class="gp">In [63]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">In [112]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
 
-<span class="gp">In [64]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+<span class="gp">In [113]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
 
-<span class="gp">In [65]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [114]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [66]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [115]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [67]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">In [116]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
 
-<span class="gp">In [68]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="gp">In [117]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
-<span class="gp">In [69]: </span><span class="n">dml_qte_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLQTE</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s1">&#39;PQ&#39;</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+<span class="gp">In [118]: </span><span class="n">dml_qte_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLQTE</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s1">&#39;PQ&#39;</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
 
-<span class="gp">In [70]: </span><span class="n">dml_qte_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
-<span class="gh">Out[70]: </span>
+<span class="gp">In [119]: </span><span class="n">dml_qte_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
+<span class="gh">Out[119]: </span>
 <span class="go">          coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">0.25  0.274825  0.347310  0.791297  0.428771 -0.405890  0.955541</span>
 <span class="go">0.50  0.449150  0.192539  2.332782  0.019660  0.071782  0.826519</span>
@@ -794,11 +1017,11 @@ A detailed notebook on PQs and QTEs is available in the <a class="reference inte
 </section>
 </section>
 <section id="conditional-value-at-risk-cvar">
-<h2><span class="section-number">4.4. </span>Conditional value at risk (CVaR)<a class="headerlink" href="#conditional-value-at-risk-cvar" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">4.5. </span>Conditional value at risk (CVaR)<a class="headerlink" href="#conditional-value-at-risk-cvar" title="Permalink to this heading">#</a></h2>
 <p>The <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> package includes conditional value at risk estimation for
 <a class="reference internal" href="models.html#irm-model"><span class="std std-ref">IRM</span></a> models.</p>
 <section id="cvar-of-potential-outcomes">
-<h3><span class="section-number">4.4.1. </span>CVaR of potential outcomes<a class="headerlink" href="#cvar-of-potential-outcomes" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.5.1. </span>CVaR of potential outcomes<a class="headerlink" href="#cvar-of-potential-outcomes" title="Permalink to this heading">#</a></h3>
 <p>For a quantile <span class="math notranslate nohighlight">\(\tau \in (0,1)\)</span> the target parameters <span class="math notranslate nohighlight">\(\theta_{\tau}(d)\)</span> of interest are
 the <strong>conditional values at risk (CVaRs)</strong> of the potential outcomes,</p>
 <div class="math notranslate nohighlight">
@@ -808,31 +1031,31 @@ the <strong>conditional values at risk (CVaRs)</strong> of the potential outcome
 <p><code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR</span></code> implements conditional value at risk estimation for potential outcomes, where the argument <code class="docutils literal notranslate"><span class="pre">treatment</span></code> indicates the potential outcome.
 Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
-</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-5">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-8">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [71]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [120]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="gp">In [72]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="gp">In [121]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
-<span class="gp">In [73]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
+<span class="gp">In [122]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
 
-<span class="gp">In [74]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
+<span class="gp">In [123]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
 
-<span class="gp">In [75]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+<span class="gp">In [124]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
 
-<span class="gp">In [76]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [125]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [77]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [126]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [78]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">In [127]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
 
-<span class="gp">In [79]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="gp">In [128]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
-<span class="gp">In [80]: </span><span class="n">dml_cvar_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLCVAR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">treatment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">In [129]: </span><span class="n">dml_cvar_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLCVAR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">treatment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
-<span class="gp">In [81]: </span><span class="n">dml_cvar_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
-<span class="gh">Out[81]: </span>
+<span class="gp">In [130]: </span><span class="n">dml_cvar_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
+<span class="gh">Out[130]: </span>
 <span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">d  1.585192  0.096897  16.359623  3.714182e-60  1.395278  1.775106</span>
 </pre></div>
@@ -841,7 +1064,7 @@ Python</label><div class="sd-tab-content docutils">
 </div>
 </section>
 <section id="cvar-treatment-effects">
-<h3><span class="section-number">4.4.2. </span>CVaR treatment effects<a class="headerlink" href="#cvar-treatment-effects" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.5.2. </span>CVaR treatment effects<a class="headerlink" href="#cvar-treatment-effects" title="Permalink to this heading">#</a></h3>
 <p>For a quantile <span class="math notranslate nohighlight">\(\tau \in (0,1)\)</span> the target parameter <span class="math notranslate nohighlight">\(\theta_{\tau}\)</span> of interest are the
 <strong>treatment effects on the conditional value at risk</strong>,</p>
 <div class="math notranslate nohighlight">
@@ -851,34 +1074,34 @@ of the potential outcomes.</p>
 <p><code class="docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> implements CVaR treatment effect estimation, if the <code class="docutils literal notranslate"><span class="pre">score</span></code> argument has been set to <code class="docutils literal notranslate"><span class="pre">'CVaR'</span></code> (default is <code class="docutils literal notranslate"><span class="pre">'PQ'</span></code>).
 Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
-</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-6">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-9" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-9">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [82]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [131]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="gp">In [83]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="gp">In [132]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
-<span class="gp">In [84]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
+<span class="gp">In [133]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
 
-<span class="gp">In [85]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
+<span class="gp">In [134]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
 
-<span class="gp">In [86]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+<span class="gp">In [135]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
 
-<span class="gp">In [87]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [136]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [88]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [137]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [89]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">In [138]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
 
-<span class="gp">In [90]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="gp">In [139]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
-<span class="gp">In [91]: </span><span class="n">dml_cvar_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLQTE</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s1">&#39;CVaR&#39;</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+<span class="gp">In [140]: </span><span class="n">dml_cvar_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLQTE</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s1">&#39;CVaR&#39;</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
 
-<span class="gp">In [92]: </span><span class="n">dml_cvar_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
-<span class="gh">Out[92]: </span>
+<span class="gp">In [141]: </span><span class="n">dml_cvar_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
+<span class="gh">Out[141]: </span>
 <span class="go">          coef   std err         t         P&gt;|t|     2.5 %    97.5 %</span>
-<span class="go">0.25  0.473467  0.244647  1.935309  5.295234e-02 -0.006032  0.952966</span>
-<span class="go">0.50  0.694429  0.142934  4.858391  1.183434e-06  0.414284  0.974575</span>
+<span class="go">0.25  0.473428  0.244647  1.935145  5.297245e-02 -0.006072  0.952927</span>
+<span class="go">0.50  0.694323  0.142952  4.857027  1.191614e-06  0.414142  0.974505</span>
 <span class="go">0.75  1.001638  0.165765  6.042534  1.517128e-09  0.676745  1.326530</span>
 </pre></div>
 </div>
@@ -889,7 +1112,7 @@ is available in the <a class="reference internal" href="../examples/index.html#e
 </section>
 </section>
 <section id="policy-learning-with-trees">
-<h2><span class="section-number">4.5. </span>Policy Learning with Trees<a class="headerlink" href="#policy-learning-with-trees" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">4.6. </span>Policy Learning with Trees<a class="headerlink" href="#policy-learning-with-trees" title="Permalink to this heading">#</a></h2>
 <p><strong>Policy Learning</strong> considers to find an optimal decision policy. We consider deterministic binary policies, which are defined as mapping</p>
 <div class="math notranslate nohighlight">
 \[\pi: X\mapsto \{0,1\}.\]</div>
@@ -908,39 +1131,39 @@ This will construct and fit a <code class="docutils literal notranslate"><span c
 <code class="docutils literal notranslate"><span class="pre">plot_tree()</span></code> method. The <code class="docutils literal notranslate"><span class="pre">predict()</span></code> method enables the application of the estimated policy on new data.
 The <code class="docutils literal notranslate"><span class="pre">depth</span></code> parameter, which defaults to <code class="docutils literal notranslate"><span class="pre">2</span></code>, can be used to adjust the maximum depth of the tree.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
-</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-7">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-10" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-10">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [93]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [142]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="gp">In [94]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">In [143]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="gp">In [95]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="gp">In [144]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
 
-<span class="gp">In [96]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
+<span class="gp">In [145]: </span><span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_irm_data</span>
 
-<span class="gp">In [97]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">In [146]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
 
-<span class="gp">In [98]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [147]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [99]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [148]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [100]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
+<span class="gp">In [149]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
 
-<span class="gp">In [101]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">In [150]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
 
-<span class="gp">In [102]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="gp">In [151]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
-<span class="gp">In [103]: </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="gp">In [152]: </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
-<span class="gp">In [104]: </span><span class="n">_</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gp">In [153]: </span><span class="n">_</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
 <span class="go"># define features to learn policy on</span>
-<span class="gp">In [105]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">In [154]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="gp">In [106]: </span><span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span><span class="s2">&quot;X2&quot;</span><span class="p">,</span><span class="s2">&quot;X3&quot;</span><span class="p">]]</span>
+<span class="gp">In [155]: </span><span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span><span class="s2">&quot;X2&quot;</span><span class="p">,</span><span class="s2">&quot;X3&quot;</span><span class="p">]]</span>
 
-<span class="gp">In [107]: </span><span class="nb">print</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="gp">In [156]: </span><span class="nb">print</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">         X1        X2        X3</span>
 <span class="go">0  0.305133  0.497298 -0.811398</span>
 <span class="go">1 -0.696770 -1.717860 -2.030087</span>
@@ -949,9 +1172,9 @@ Python</label><div class="sd-tab-content docutils">
 <span class="go">4 -0.198953  0.203893  0.204653</span>
 
 <span class="go"># fits a tree of depth 2</span>
-<span class="gp">In [108]: </span><span class="n">policy_tree_obj</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">policy_tree</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<span class="gp">In [157]: </span><span class="n">policy_tree_obj</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">policy_tree</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
 
-<span class="gp">In [109]: </span><span class="n">policy_tree_obj</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">();</span>
+<span class="gp">In [158]: </span><span class="n">policy_tree_obj</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
@@ -1007,19 +1230,28 @@ Python</label><div class="sd-tab-content docutils">
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#group-average-treatment-effects-gates">4.1. Group average treatment effects (GATEs)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-average-treatment-effects-cates">4.2. Conditional average treatment effects (CATEs)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quantiles">4.3. Quantiles</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#potential-quantiles-pqs">4.3.1. Potential quantiles (PQs)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantile-treatment-effects-qtes">4.3.2. Quantile treatment effects (QTEs)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#group-average-treatment-effects-gates">4.1. Group average treatment effects (GATEs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gates-for-irm-models">4.1.1. GATEs for IRM models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gates-for-plr-models">4.1.2. GATEs for PLR models</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-value-at-risk-cvar">4.4. Conditional value at risk (CVaR)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cvar-of-potential-outcomes">4.4.1. CVaR of potential outcomes</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cvar-treatment-effects">4.4.2. CVaR treatment effects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-average-treatment-effects-cates">4.2. Conditional average treatment effects (CATEs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cates-for-irm-models">4.2.1. CATEs for IRM models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cates-for-plr-models">4.2.2. CATEs for PLR models</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#policy-learning-with-trees">4.5. Policy Learning with Trees</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#weighted-average-treatment-effects">4.3. Weighted Average Treatment Effects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quantiles">4.4. Quantiles</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#potential-quantiles-pqs">4.4.1. Potential quantiles (PQs)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantile-treatment-effects-qtes">4.4.2. Quantile treatment effects (QTEs)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-value-at-risk-cvar">4.5. Conditional value at risk (CVaR)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cvar-of-potential-outcomes">4.5.1. CVaR of potential outcomes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cvar-treatment-effects">4.5.2. CVaR treatment effects</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#policy-learning-with-trees">4.6. Policy Learning with Trees</a></li>
 </ul>
   </nav></div>
 
