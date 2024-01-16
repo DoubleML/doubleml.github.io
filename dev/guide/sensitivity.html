@@ -657,7 +657,7 @@ representer (both are model specific, see <a class="reference internal" href="#s
 </input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-1">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[13]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f4cb257e100&gt;</span>
+<span class="gh">Out[13]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f36e3543940&gt;</span>
 
 <span class="gp">In [14]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_elements</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gh">Out[14]: </span><span class="go">dict_keys([&#39;sigma2&#39;, &#39;nu2&#39;, &#39;psi_sigma2&#39;, &#39;psi_nu2&#39;])</span>
@@ -675,7 +675,7 @@ The results are summarized as a formatted string in the <code class="docutils li
 </input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-2">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_analysis</span><span class="p">(</span><span class="n">cf_y</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">cf_d</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
-<span class="gh">Out[15]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f4cb257e100&gt;</span>
+<span class="gh">Out[15]: </span><span class="go">&lt;doubleml.double_ml_plr.DoubleMLPLR at 0x7f36e3543940&gt;</span>
 
 <span class="gp">In [16]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_summary</span><span class="p">)</span>
 <span class="go">================== Sensitivity Analysis ==================</span>
@@ -864,11 +864,29 @@ This implies the following representations</p>
 \[ \begin{align}\begin{aligned}m(W,g) &amp;= \big(g(1,X) - g(0,X))\omega(Y,D,X)\\\alpha(W) &amp;= \bigg(\frac{D}{m(X)} - \frac{1-D}{1-m(X)}\bigg)  \mathbb{E}[\omega(Y,D,X)|X].\end{aligned}\end{align} \]</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In the <a class="reference internal" href="models.html#irm-model"><span class="std std-ref">Interactive regression model (IRM)</span></a> with the ATE, it holds</p>
+<p>In the <a class="reference internal" href="models.html#irm-model"><span class="std std-ref">Interactive regression model (IRM)</span></a> with for the ATE (weights equal to <span class="math notranslate nohighlight">\(1\)</span>), the form and interpretation of <code class="docutils literal notranslate"><span class="pre">cf_y</span></code> is the same as in the <a class="reference internal" href="models.html#plr-model"><span class="std std-ref">Partially linear regression model (PLR)</span></a>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_y</span></code> has the interpretation as the <em>nonparametric partial</em> <span class="math notranslate nohighlight">\(R^2\)</span> <em>of</em> <span class="math notranslate nohighlight">\(A\)</span> <em>with</em> <span class="math notranslate nohighlight">\(Y\)</span> <em>given</em> <span class="math notranslate nohighlight">\((D,X)\)</span></p></li>
+</ul>
 <div class="math notranslate nohighlight">
-\[C_D^2= \frac{\mathbb{E}\Big[\big(P(D=1|X,A)(1-P(D=1|X,A))\big)^{-1}\Big]}{\mathbb{E}\Big[\big(P(D=1|X)(1-P(D=1|X))\big)^{-1}\Big]} - 1\]</div>
-<p>which is the <em>average gain in conditional precision to predict</em> <span class="math notranslate nohighlight">\(D\)</span> <em>by using</em> <span class="math notranslate nohighlight">\(A\)</span> <em>in addition to</em> <span class="math notranslate nohighlight">\(X\)</span>.
-This can be used to choose <code class="docutils literal notranslate"><span class="pre">cf_d</span></code><span class="math notranslate nohighlight">\(:=\frac{C_D^2}{1 + C_D^2}\)</span>.</p>
+\[\frac{\textrm{Var}(\mathbb{E}[Y|D,X,A]) - \textrm{Var}(\mathbb{E}[Y|D,X])}{\textrm{Var}(Y)-\textrm{Var}(\mathbb{E}[Y|D,X])}\]</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cf_d</span></code> takes the following form</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\small{\frac{\mathbb{E}\Big[\big(P(D=1|X,A)(1-P(D=1|X,A))\big)^{-1}\Big] - \mathbb{E}\Big[\big(P(D=1|X)(1-P(D=1|X))\big)^{-1}\Big]}{\mathbb{E}\Big[\big(P(D=1|X,A)(1-P(D=1|X,A))\big)^{-1}\Big]}}\]</div>
+<p>where the numerator measures the <em>gain in average conditional precision to predict</em> <span class="math notranslate nohighlight">\(D\)</span> <em>by using</em> <span class="math notranslate nohighlight">\(A\)</span> <em>in addition to</em> <span class="math notranslate nohighlight">\(X\)</span>.
+The denominator is the <em>average conditional precision to predict</em> <span class="math notranslate nohighlight">\(D\)</span> <em>by using</em> <span class="math notranslate nohighlight">\(A\)</span> <em>and</em> <span class="math notranslate nohighlight">\(X\)</span>. Consequently <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> measures the <em>relative gain in average conditional precision</em>.</p>
+<p>Remark that <span class="math notranslate nohighlight">\(P(D=1|X,A)(1-P(D=1|X,A))\)</span> denotes the variance of the conditional distribution of <span class="math notranslate nohighlight">\(D\)</span> given <span class="math notranslate nohighlight">\((X,A)\)</span>, such that the inverse measures the precision of
+predicting <span class="math notranslate nohighlight">\(D\)</span> conditional on <span class="math notranslate nohighlight">\((X,A)\)</span>.</p>
+<p>Since <span class="math notranslate nohighlight">\(C_D^2=\frac{cf_d}{1 - cf_d}\)</span>, this corresponds to</p>
+<div class="math notranslate nohighlight">
+\[C_D^2= \small{\frac{\mathbb{E}\Big[\big(P(D=1|X,A)(1-P(D=1|X,A))\big)^{-1}\Big] - \mathbb{E}\Big[\big(P(D=1|X)(1-P(D=1|X))\big)^{-1}\Big]}{\mathbb{E}\Big[\big(P(D=1|X)(1-P(D=1|X))\big)^{-1}\Big]}}\]</div>
+<p>which has the same numerator but is instead relative to the <em>average conditional precision to predict</em> <span class="math notranslate nohighlight">\(D\)</span> <em>by using only</em> <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>Including weights changes only the definition of <code class="docutils literal notranslate"><span class="pre">cf_d</span></code> to</p>
+<div class="math notranslate nohighlight">
+\[\frac{\mathbb{E}\left[\frac{\mathbb{E}[\omega(Y,D,X)|X,A]^2}{P(D=1|X,A)(1-P(D=1|X,A))}\right] - \mathbb{E}\left[\frac{\mathbb{E}[\omega(Y,D,X)|X]^2}{P(D=1|X)(1-P(D=1|X))}\right]}{\mathbb{E}\left[\frac{\mathbb{E}[\omega(Y,D,X)|X,A]^2}{P(D=1|X,A)(1-P(D=1|X,A))}\right]}\]</div>
+<p>which has a interpretation as the <em>relative weighted gain in average conditional precision</em>.</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">nuisance_elements</span></code> are then computed with plug-in versions according to the general <a class="reference internal" href="#sensitivity-implementation"><span class="std std-ref">Implementation</span></a>.
 For <code class="docutils literal notranslate"><span class="pre">score='ATE'</span></code>, the weights are set to one</p>
