@@ -1,0 +1,858 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>R: Basic Instrumental Variables Calculation &#8212; DoubleML  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="../_static/design-tabs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/R_double_ml_basic_iv';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="R: Ensemble Learners and More with mlr3pipelines" href="R_double_ml_pipeline.html" />
+    <link rel="prev" title="R: Cluster Robust Double Machine Learning" href="R_double_ml_multiway_cluster.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">DoubleML  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/install.html">
+                         Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/intro.html">
+                         Getting started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../workflow/workflow.html">
+                         Workflow
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../guide/guide.html">
+                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                         Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/api.html">
+                         Python API
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+                         R API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../literature/literature.html">
+                         Literature
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../release/release.html">
+                         Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/install.html">
+                         Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/intro.html">
+                         Getting started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../workflow/workflow.html">
+                         Workflow
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../guide/guide.html">
+                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                         Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/api.html">
+                         Python API
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+                         R API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../literature/literature.html">
+                         Literature
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../release/release.html">
+                         Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p>
+
+<script type="text/javascript">
+    // Change the logo depending on the theme
+    var logo = document.querySelector('img.logo');
+    var observer = new MutationObserver(function(mutations) {
+        const dark = document.documentElement.dataset.theme == 'dark';
+        if (dark) {
+            logo.src = "../logo_dark.png";
+        } else {
+            logo.src = "../logo.png";
+        }
+    });
+    observer.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+</script></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pension.html">Python: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_did.html">Python: Difference-in-Differences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_did_pretest.html">Python: Difference-in-Differences Pre-Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_basic_iv.html">Python: Basic Instrumental Variables calculation</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate.html">Python: Group Average Treatment Effects (GATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate_plr.html">Python: Group Average Treatment Effects (GATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cate.html">Python: Conditional Average Treatment Effects (CATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cate_plr.html">Python: Conditional Average Treatment Effects (CATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate_sensitivity.html">Python: GATE Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pension_qte.html">Python: Impact of 401(k) on Financial Wealth (Quantile Effects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pq.html">Python: Potential Quantiles and Quantile Treatment Effects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_pension.html">R: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_multiway_cluster.html">R: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">R: Basic Instrumental Variables Calculation</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="double_ml_bonus_data.html">DML: Bonus Data</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Examples</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">R: Basic Instrumental Variables Calculation</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+      <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/R_double_ml_basic_iv.ipynb">https://docs.doubleml.org/stable/examples/R_double_ml_basic_iv.ipynb</a>.
+
+    </ul>
+    </div><section id="R:-Basic-Instrumental-Variables-Calculation">
+<h1>R: Basic Instrumental Variables Calculation<a class="headerlink" href="#R:-Basic-Instrumental-Variables-Calculation" title="Permalink to this heading">#</a></h1>
+<p>In this example we show how to use the DoubleML functionality of Instrumental Variables (IVs) in the basic setting shown in the graph below, where:</p>
+<ul class="simple">
+<li><p>Z is the instrument</p></li>
+<li><p>C is a vector of unobserved confounders</p></li>
+<li><p>D is the decision or treatment variable</p></li>
+<li><p>Y is the outcome</p></li>
+</ul>
+<p>So, we will first generate synthetic data using linear models compatible with the diagram, and then use the DoubleML package to estimate the causal effect from D to Y.</p>
+<p>We assume that you have basic knowledge of instrumental variables and linear regression.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<span class="nf">options</span><span class="p">(</span><span class="n">warn</span><span class="o">=</span><span class="m">-1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Loading required package: mlr3
+
+</pre></div></div>
+</div>
+<section id="Instrumental-Variables-Directed-Acyclic-Graph-(IV---DAG)">
+<h2>Instrumental Variables Directed Acyclic Graph (IV - DAG)<a class="headerlink" href="#Instrumental-Variables-Directed-Acyclic-Graph-(IV---DAG)" title="Permalink to this heading">#</a></h2>
+<p><img alt="basic_iv_example_nb.png" src="data:image/png;base64,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" /></p>
+</section>
+<section id="Data-Simulation">
+<h2>Data Simulation<a class="headerlink" href="#Data-Simulation" title="Permalink to this heading">#</a></h2>
+<p>This code generates <code class="docutils literal notranslate"><span class="pre">n</span></code> samples in which there is a unique binary confounder. The treatment is also a binary variable, while the outcome is a continuous linear model.</p>
+<p>The quantity we want to recover using IVs is the <code class="docutils literal notranslate"><span class="pre">decision_impact</span></code>, which is the impact of the decision variable into the outcome.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">n</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">10000</span>
+<span class="n">decision_effect</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">-2</span>
+<span class="n">instrument_effect</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">0.7</span>
+
+<span class="n">confounder</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rbinom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span>
+<span class="n">instrument</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rbinom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span>
+<span class="n">decision</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="nf">runif</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">instrument_effect</span><span class="o">*</span><span class="n">instrument</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">0.4</span><span class="o">*</span><span class="n">confounder</span><span class="p">)</span>
+<span class="n">outcome</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">decision_effect</span><span class="o">*</span><span class="n">decision</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">confounder</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">sd</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">data.frame</span><span class="p">(</span><span class="n">instrument</span><span class="p">,</span><span class="w"> </span><span class="n">decision</span><span class="p">,</span><span class="w"> </span><span class="n">outcome</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Naive-estimation">
+<h2>Naive estimation<a class="headerlink" href="#Naive-estimation" title="Permalink to this heading">#</a></h2>
+<p>We can see that if we make a direct estimation of the impact of the <code class="docutils literal notranslate"><span class="pre">decision</span></code> into the <code class="docutils literal notranslate"><span class="pre">outcome</span></code>, though the difference of the averages of outcomes between the two decision groups, we obtain a biased estimate.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">mean</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">$</span><span class="n">decision</span><span class="o">==</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;outcome&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">$</span><span class="n">decision</span><span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;outcome&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+1.00047580260495</div>
+</div>
+</section>
+<section id="Using-DoubleML">
+<h2>Using DoubleML<a class="headerlink" href="#Using-DoubleML" title="Permalink to this heading">#</a></h2>
+<p>DoubleML assumes that there is at least one observed confounder. For this reason, we create a fake variable that doesn’t bring any kind of information to the model, called <code class="docutils literal notranslate"><span class="pre">obs_confounder</span></code>.</p>
+<p>To use the DoubleML we need to specify the Machine Learning methods we want to use to estimate the different relationships between variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ml_g</span></code> models the functional relationship betwen the <code class="docutils literal notranslate"><span class="pre">outcome</span></code> and the pair <code class="docutils literal notranslate"><span class="pre">instrument</span></code> and observed confounders <code class="docutils literal notranslate"><span class="pre">obs_confounders</span></code>. In this case we choose a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code> because the outcome is continuous.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ml_m</span></code> models the functional relationship betwen the <code class="docutils literal notranslate"><span class="pre">obs_confounders</span></code> and the <code class="docutils literal notranslate"><span class="pre">instrument</span></code>. In this case we choose a <code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code> because the outcome is dichotomic.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ml_r</span></code> models the functional relationship betwen the <code class="docutils literal notranslate"><span class="pre">decision</span></code> and the pair <code class="docutils literal notranslate"><span class="pre">instrument</span></code> and observed confounders <code class="docutils literal notranslate"><span class="pre">obs_confounders</span></code>. In this case we choose a <code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code> because the outcome is dichotomic.</p></li>
+</ul>
+<p>Notice that instead of using linear and logistic regression, we could use more flexible models capable of dealing with non-linearities such as random forests, boosting, …</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s">&#39;obs_confounders&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">1</span>
+
+<span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span>
+<span class="w">  </span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;outcome&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;decision&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">z_cols</span><span class="o">=</span><span class="w"> </span><span class="s">&quot;instrument&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;obs_confounders&quot;</span>
+<span class="p">)</span>
+
+<span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.lm&quot;</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.log_reg&quot;</span><span class="p">)</span>
+<span class="n">ml_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_m</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+
+<span class="n">iv_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLIIVM</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">ml_r</span><span class="p">)</span>
+<span class="n">result</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">iv_2</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+INFO  [15:32:15.276] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_m&#39; (iter 1/5)
+INFO  [15:32:15.617] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_m&#39; (iter 2/5)
+INFO  [15:32:15.652] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_m&#39; (iter 3/5)
+INFO  [15:32:15.684] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_m&#39; (iter 4/5)
+INFO  [15:32:15.716] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_m&#39; (iter 5/5)
+INFO  [15:32:15.841] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g0&#39; (iter 1/5)
+INFO  [15:32:15.864] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g0&#39; (iter 2/5)
+INFO  [15:32:15.880] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g0&#39; (iter 3/5)
+INFO  [15:32:15.896] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g0&#39; (iter 4/5)
+INFO  [15:32:15.912] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g0&#39; (iter 5/5)
+INFO  [15:32:16.023] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g1&#39; (iter 1/5)
+INFO  [15:32:16.040] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g1&#39; (iter 2/5)
+INFO  [15:32:16.056] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g1&#39; (iter 3/5)
+INFO  [15:32:16.076] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g1&#39; (iter 4/5)
+INFO  [15:32:16.092] [mlr3] Applying learner &#39;regr.lm&#39; on task &#39;nuis_g1&#39; (iter 5/5)
+INFO  [15:32:16.196] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r0&#39; (iter 1/5)
+INFO  [15:32:16.223] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r0&#39; (iter 2/5)
+INFO  [15:32:16.249] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r0&#39; (iter 3/5)
+INFO  [15:32:16.283] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r0&#39; (iter 4/5)
+INFO  [15:32:16.316] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r0&#39; (iter 5/5)
+INFO  [15:32:16.425] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r1&#39; (iter 1/5)
+INFO  [15:32:16.459] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r1&#39; (iter 2/5)
+INFO  [15:32:16.485] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r1&#39; (iter 3/5)
+INFO  [15:32:16.516] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r1&#39; (iter 4/5)
+INFO  [15:32:16.543] [mlr3] Applying learner &#39;classif.log_reg&#39; on task &#39;nuis_r1&#39; (iter 5/5)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">result</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================= DoubleMLIIVM Object ==================
+
+
+------------------ Data summary      ------------------
+Outcome variable: outcome
+Treatment variable(s): decision
+Covariates: obs_confounders
+Instrument(s): instrument
+No. Observations: 10000
+
+------------------ Score &amp; algorithm ------------------
+Score function: LATE
+DML algorithm: dml2
+
+------------------ Machine learner   ------------------
+ml_g: regr.lm
+ml_m: classif.log_reg
+ml_r: classif.log_reg
+
+------------------ Resampling        ------------------
+No. folds: 5
+No. repeated sample splits: 1
+Apply cross-fitting: TRUE
+
+------------------ Fit summary       ------------------
+ Estimates and significance testing of the effect of target variables
+         Estimate. Std. Error t value Pr(&gt;|t|)
+decision   -1.8904     0.1492  -12.67   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+</pre></div></div>
+</div>
+<p>We can see that the causal effect is estimated without bias.</p>
+</section>
+<section id="References">
+<h2>References<a class="headerlink" href="#References" title="Permalink to this heading">#</a></h2>
+<p>Ruiz de Villa, A. Causal Inference for Data Science, Manning Publications, 2024.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="R_double_ml_multiway_cluster.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">R: Cluster Robust Double Machine Learning</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="R_double_ml_pipeline.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Instrumental-Variables-Directed-Acyclic-Graph-(IV---DAG)">Instrumental Variables Directed Acyclic Graph (IV - DAG)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-Simulation">Data Simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Naive-estimation">Naive estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Using-DoubleML">Using DoubleML</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#References">References</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/examples/R_double_ml_basic_iv.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

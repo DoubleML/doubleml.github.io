@@ -7,177 +7,105 @@
     "collapsed": false
    },
    "source": [
-    "# Python: Conditional Average Treatment Effects (CATEs)\n",
+    "# Python: Conditional Average Treatment Effects (CATEs) for IRM models\n",
     "\n",
-    "In this simple example, we illustrate how the [DoubleML](https://docs.doubleml.org/stable/index.html) package can be used to estimate conditional average treatment effects with B-splines for one or two-dimensional effects."
-   ]
-  },
-  {
-   "attachments": {},
-   "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
-   "source": [
-    "## Data\n",
-    "\n",
-    "We define a data generating process to create synthetic data to compare the estimates to the true effect. The data generating process is based on the Monte Carlo simulation from [Oprescu et al. (2019)](http://proceedings.mlr.press/v97/oprescu19a.html) and this [notebook](https://github.com/py-why/EconML/blob/main/notebooks/Causal%20Forest%20and%20Orthogonal%20Random%20Forest%20Examples.ipynb) from [EconML](https://github.com/py-why/EconML)."
+    "In this simple example, we illustrate how the [DoubleML](https://docs.doubleml.org/stable/index.html) package can be used to estimate conditional average treatment effects with B-splines for one or two-dimensional effects in the [DoubleMLIRM](https://docs.doubleml.org/stable/guide/models.html#interactive-regression-model-irm) model."
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "import numpy as np\n",
     "import pandas as pd\n",
-    "import doubleml as dml"
+    "import doubleml as dml\n",
+    "\n",
+    "from doubleml.datasets import make_heterogeneous_data"
    ]
   },
   {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "source": [
-    "The data is generated as\n",
+    "## Data\n",
     "\n",
-    "$$\n",
-    "\\begin{aligned}\n",
-    "Y_i & = g(X_i)T_i + \\langle W_i,\\gamma_0\\rangle + \\epsilon_i \\\\\n",
-    "T_i & = \\langle W_i,\\beta_0\\rangle +\\eta_i,\n",
-    "\\end{aligned}\n",
-    "$$\n",
+    "We define a data generating process to create synthetic data to compare the estimates to the true effect. The data generating process is based on the Monte Carlo simulation from [Oprescu et al. (2019)](http://proceedings.mlr.press/v97/oprescu19a.html).\n",
     "\n",
-    "where $W_i\\sim\\mathcal{N}(0,I_{d_w})$, $X_i\\sim\\mathcal{U}[0,1]^{d_x}$ and $\\epsilon_i,\\eta_i\\sim\\mathcal{U}[0,1]$.\n",
-    "The coefficient vectors $\\gamma_0$ and $\\beta_0$ both have small random support which values are drawn independently from $\\mathcal{U}[0,1]$.\n",
-    "Further, $g(x)$ defines the conditional treatment effect, which is defined differently depending on the dimension of $x$.\n",
-    "\n",
-    "If $x$ is univariate the conditional treatment effect takes the following form\n",
-    "\n",
-    "$$ g(x) = \\exp(2x) + 3\\sin(4x),$$\n",
-    "\n",
-    "whereas for a two-dimensional variable $x=(x_1,x_2)$ the conditional treatment effect is defined as\n",
-    "\n",
-    "$$ g(x) = \\exp(2x_1) + 3\\sin(4x_2).$$"
+    "The documentation of the data generating process can be found [here](https://docs.doubleml.org/dev/api/api.html#dataset-generators)."
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [],
-   "source": [
-    "def treatment_effect_1d(x):\n",
-    "    te = np.exp(2 * x) + 3 * np.sin(4 * x)\n",
-    "    return te\n",
-    "\n",
-    "def treatment_effect_2d(x):\n",
-    "    te = np.exp(2 * x[0]) + 3 * np.sin(4 * x[1])\n",
-    "    return te\n",
-    "\n",
-    "def create_synthetic_data(n_samples=200, n_w=30, support_size=5, n_x=1):\n",
-    "    # Outcome support\n",
-    "    # With the next two lines we are effectively choosing the matrix gamma in the example\n",
-    "    support_y = np.random.choice(np.arange(n_w), size=support_size, replace=False)\n",
-    "    coefs_y = np.random.uniform(0, 1, size=support_size)\n",
-    "    # Define the function to generate the noise\n",
-    "    epsilon_sample = lambda n: np.random.uniform(-1, 1, size=n_samples)\n",
-    "    # Treatment support\n",
-    "    # Assuming the matrices gamma and beta have the same non-zero components\n",
-    "    support_t = support_y\n",
-    "    coefs_t = np.random.uniform(0, 1, size=support_size)\n",
-    "    # Define the function to generate the noise\n",
-    "    eta_sample = lambda n: np.random.uniform(-1, 1, size=n_samples)\n",
-    "\n",
-    "    # Generate controls, covariates, treatments and outcomes\n",
-    "    w = np.random.normal(0, 1, size=(n_samples, n_w))\n",
-    "    x = np.random.uniform(0, 1, size=(n_samples, n_x))\n",
-    "    # Heterogeneous treatment effects\n",
-    "    if n_x == 1:\n",
-    "        te = np.array([treatment_effect_1d(x_i) for x_i in x]).reshape(-1)\n",
-    "    elif n_x == 2:\n",
-    "        te = np.array([treatment_effect_2d(x_i) for x_i in x]).reshape(-1)\n",
-    "    # Define treatment\n",
-    "    log_odds = np.dot(w[:, support_t], coefs_t) + eta_sample(n_samples)\n",
-    "    t_sigmoid = 1 / (1 + np.exp(-log_odds))\n",
-    "    t = np.array([np.random.binomial(1, p) for p in t_sigmoid])\n",
-    "    # Define the outcome\n",
-    "    y = te * t + np.dot(w[:, support_y], coefs_y) + epsilon_sample(n_samples)\n",
-    "\n",
-    "    # Now we build the dataset\n",
-    "    y_df = pd.DataFrame({'y': y})\n",
-    "    if n_x == 1:\n",
-    "        x_df = pd.DataFrame({'x': x.reshape(-1)})\n",
-    "    elif n_x == 2:\n",
-    "        x_df = pd.DataFrame({'x_0': x[:,0],\n",
-    "                             'x_1': x[:,1]})\n",
-    "    t_df = pd.DataFrame({'t': t})\n",
-    "    w_df = pd.DataFrame(data=w, index=np.arange(w.shape[0]), columns=[f'w_{i}' for i in range(w.shape[1])])\n",
-    "\n",
-    "    data = pd.concat([y_df, x_df, t_df, w_df], axis=1)\n",
-    "\n",
-    "    covariates = list(w_df.columns.values) + list(x_df.columns.values)\n",
-    "    return data, covariates, te"
-   ]
-  },
-  {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "source": [
     "## One-dimensional Example\n",
     "\n",
-    "We start with $X$ being one-dimensional and create our training data."
+    "We start with an one-dimensional effect and create our training data. In this example the true effect depends only the first covariate $X_0$ and takes the following form\n",
+    "\n",
+    "$$\n",
+    "\\theta_0(X) = \\exp(2X_0) + 3\\sin(4X_0).\n",
+    "$$"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The generated dictionary also contains a callable with key `treatment_effect` to calculate the true treatment effect for new observations."
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
-    "# DGP constants\n",
     "np.random.seed(42)\n",
-    "n_samples = 2000\n",
-    "n_w = 10\n",
-    "support_size = 5\n",
-    "n_x = 1\n",
-    "\n",
-    "# Create data\n",
-    "data, covariates, true_effect = create_synthetic_data(n_samples=n_samples, n_w=n_w, support_size=support_size, n_x=n_x)\n",
-    "data_dml_base = dml.DoubleMLData(data,\n",
-    "                                 y_col='y',\n",
-    "                                 d_cols='t',\n",
-    "                                 x_cols=covariates)"
+    "data_dict = make_heterogeneous_data(\n",
+    "    n_obs=2000,\n",
+    "    p=10,\n",
+    "    support_size=5,\n",
+    "    n_x=1,\n",
+    "    binary_treatment=True,\n",
+    ")\n",
+    "treatment_effect = data_dict['treatment_effect']\n",
+    "data = data_dict['data']\n",
+    "print(data.head())"
    ]
   },
   {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "source": [
-    "Next, define the learners for the nuisance functions and fit the [IRM Model](https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLIRM.html). Remark that the learners are not optimal for the linear form of this example."
+    "First, define the ``DoubleMLData`` object."
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data_dml_base = dml.DoubleMLData(\n",
+    "    data,\n",
+    "    y_col='y',\n",
+    "    d_cols='d'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Next, define the learners for the nuisance functions and fit the [IRM Model](https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLIRM.html). Remark that linear learners would usually be optimal due to the data generating process."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
    "outputs": [],
    "source": [
     "# First stage estimation\n",
@@ -190,41 +118,35 @@
     "dml_irm = dml.DoubleMLIRM(data_dml_base,\n",
     "                          ml_g=randomForest_reg,\n",
     "                          ml_m=randomForest_class,\n",
-    "                          trimming_threshold=0.01,\n",
+    "                          trimming_threshold=0.05,\n",
     "                          n_folds=5)\n",
     "print(\"Training IRM Model\")\n",
-    "dml_irm.fit()"
+    "dml_irm.fit()\n",
+    "\n",
+    "print(dml_irm.summary)"
    ]
   },
   {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "source": [
-    "To estimate the CATE, we rely on the best-linear-predictor of the linear score as in [Semenova et al. (2021)](https://doi.org/10.1093/ectj/utaa027) To approximate the target function $g(x)$ with a linear form, we have to define a data frame of basis functions. Here, we rely on [patsy](https://patsy.readthedocs.io/en/latest/) to construct a suitable basis of [B-splines](https://en.wikipedia.org/wiki/B-spline)."
+    "To estimate the CATE, we rely on the best-linear-predictor of the linear score as in [Semenova et al. (2021)](https://doi.org/10.1093/ectj/utaa027) To approximate the target function $\\theta_0(x)$ with a linear form, we have to define a data frame of basis functions. Here, we rely on [patsy](https://patsy.readthedocs.io/en/latest/) to construct a suitable basis of [B-splines](https://en.wikipedia.org/wiki/B-spline)."
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "import patsy\n",
-    "design_matrix = patsy.dmatrix(\"bs(x, df=5, degree=2)\", {\"x\":data[\"x\"]})\n",
+    "design_matrix = patsy.dmatrix(\"bs(x, df=5, degree=2)\", {\"x\": data[\"X_0\"]})\n",
     "spline_basis = pd.DataFrame(design_matrix)"
    ]
   },
   {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "source": [
     "To estimate the parameters to calculate the CATE estimate call the ``cate()`` method and supply the dataframe of basis elements."
    ]
@@ -232,9 +154,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "cate = dml_irm.cate(spline_basis)\n",
@@ -242,11 +162,8 @@
    ]
   },
   {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "source": [
     "To obtain the confidence intervals for the CATE, we have to call the ``confint()`` method and a supply a dataframe of basis elements.\n",
     "This could be the same basis as for fitting the CATE model or a new basis to e.g. evaluate the CATE model on a grid.\n",
@@ -257,9 +174,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "new_data = {\"x\": np.linspace(0.1, 0.9, 100)}\n",
@@ -269,11 +184,8 @@
    ]
   },
   {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "source": [
     "Finally, we can plot our results and compare them with the true effect."
    ]
@@ -281,19 +193,14 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false,
-    "tags": [
-     "nbsphinx-thumbnail"
-    ]
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "from matplotlib import pyplot as plt\n",
     "plt.rcParams['figure.figsize'] = 10., 7.5\n",
     "\n",
     "df_cate['x'] = new_data['x']\n",
-    "df_cate['true_effect'] = treatment_effect_1d(new_data['x'])\n",
+    "df_cate['true_effect'] = treatment_effect(new_data[\"x\"].reshape(-1, 1))\n",
     "fig, ax = plt.subplots()\n",
     "ax.plot(df_cate['x'],df_cate['effect'], label='Estimated Effect')\n",
     "ax.plot(df_cate['x'],df_cate['true_effect'], color=\"green\", label='True Effect')\n",
@@ -306,55 +213,53 @@
    ]
   },
   {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
+   "source": [
+    "If the effect is not one-dimensional, the estimate still corresponds to the projection of the true effect on the basis functions."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "## Two-Dimensional Example\n",
     "\n",
-    "It is also possible to estimate multi-dimensional conditional effects. We will use the same data-generating process as above, but let $X$ be two-dimensional."
+    "It is also possible to estimate multi-dimensional conditional effects. We will use a similar data generating process but now the effect depends on the first two covariates $X_0$ and $X_1$ and takes the following form\n",
+    "$$\n",
+    "\\theta_0(X) = \\exp(2X_0) + 3\\sin(4X_1).\n",
+    "$$"
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [],
-   "source": [
-    "# DGP constants\n",
-    "np.random.seed(42)\n",
-    "n_samples = 5000\n",
-    "n_w = 10\n",
-    "support_size = 5\n",
-    "n_x = 2"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [],
-   "source": [
-    "# Create data\n",
-    "data, covariates, true_effect = create_synthetic_data(n_samples=n_samples, n_w=n_w, support_size=support_size, n_x=n_x)\n",
-    "data_dml_base = dml.DoubleMLData(data,\n",
-    "                                 y_col='y',\n",
-    "                                 d_cols='t',\n",
-    "                                 x_cols=covariates)"
-   ]
-  },
-  {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
+   "source": [
+    "With the argument ``n_x=2`` we can specify set the effect to be two-dimensional."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "np.random.seed(42)\n",
+    "data_dict = make_heterogeneous_data(\n",
+    "    n_obs=5000,\n",
+    "    p=10,\n",
+    "    support_size=5,\n",
+    "    n_x=2,\n",
+    "    binary_treatment=True,\n",
+    ")\n",
+    "treatment_effect = data_dict['treatment_effect']\n",
+    "data = data_dict['data']\n",
+    "print(data.head())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "As univariate example estimate the [IRM Model](https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLIRM.html)."
    ]
@@ -362,9 +267,20 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data_dml_base = dml.DoubleMLData(\n",
+    "    data,\n",
+    "    y_col='y',\n",
+    "    d_cols='d'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
    "outputs": [],
    "source": [
     "# First stage estimation\n",
@@ -372,23 +288,22 @@
     "randomForest_reg = RandomForestRegressor(n_estimators=500)\n",
     "randomForest_class = RandomForestClassifier(n_estimators=500)\n",
     "\n",
-    "np.random.seed(123)\n",
+    "np.random.seed(42)\n",
     "\n",
     "dml_irm = dml.DoubleMLIRM(data_dml_base,\n",
     "                          ml_g=randomForest_reg,\n",
     "                          ml_m=randomForest_class,\n",
-    "                          trimming_threshold=0.01,\n",
+    "                          trimming_threshold=0.05,\n",
     "                          n_folds=5)\n",
     "print(\"Training IRM Model\")\n",
-    "dml_irm.fit()"
+    "dml_irm.fit()\n",
+    "\n",
+    "print(dml_irm.summary)"
    ]
   },
   {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "source": [
     "As above, we will rely on the [patsy](https://patsy.readthedocs.io/en/latest/) package to construct the basis elements.\n",
     "In the two-dimensional case, we will construct a tensor product of B-splines (for more information see [here](https://patsy.readthedocs.io/en/latest/spline-regression.html#tensor-product-smooths))."
@@ -397,12 +312,10 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
-    "design_matrix = patsy.dmatrix(\"te(bs(x_0, df=7, degree=3), bs(x_1, df=7, degree=3))\", {\"x_0\": data[\"x_0\"], \"x_1\": data[\"x_1\"]})\n",
+    "design_matrix = patsy.dmatrix(\"te(bs(x_0, df=7, degree=3), bs(x_1, df=7, degree=3))\", {\"x_0\": data[\"X_0\"], \"x_1\": data[\"X_1\"]})\n",
     "spline_basis = pd.DataFrame(design_matrix)\n",
     "\n",
     "cate = dml_irm.cate(spline_basis)\n",
@@ -410,11 +323,8 @@
    ]
   },
   {
-   "attachments": {},
    "cell_type": "markdown",
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "source": [
     "Finally, we create a new grid to evaluate and plot the effects."
    ]
@@ -422,9 +332,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "grid_size = 100\n",
@@ -438,9 +346,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "spline_grid = pd.DataFrame(patsy.build_design_matrices([design_matrix.design_info], new_data)[0])\n",
@@ -451,14 +357,13 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "import plotly.graph_objects as go\n",
     "\n",
-    "true_effect = np.array([treatment_effect_2d(x_i) for x_i in zip(x_0.ravel(), x_1.ravel())]).reshape(x_0.shape)\n",
+    "grid_array = np.array(list(zip(x_0.ravel(), x_1.ravel())))\n",
+    "true_effect = treatment_effect(grid_array).reshape(x_0.shape)\n",
     "effect = np.asarray(df_cate['effect']).reshape(x_0.shape)\n",
     "lower_bound = np.asarray(df_cate['2.5 %']).reshape(x_0.shape)\n",
     "upper_bound = np.asarray(df_cate['97.5 %']).reshape(x_0.shape)\n",

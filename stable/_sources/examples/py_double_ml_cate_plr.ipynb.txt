@@ -1,0 +1,410 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Python: Conditional Average Treatment Effects (CATEs) for PLR models\n",
+    "\n",
+    "In this simple example, we illustrate how the [DoubleML](https://docs.doubleml.org/stable/index.html) package can be used to estimate conditional average treatment effects with B-splines for one or two-dimensional effects in the [DoubleMLPLR](https://docs.doubleml.org/stable/guide/models.html#partially-linear-regression-model-plr) model."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import doubleml as dml\n",
+    "\n",
+    "from doubleml.datasets import make_heterogeneous_data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Data\n",
+    "\n",
+    "We define a data generating process to create synthetic data to compare the estimates to the true effect. The data generating process is based on the Monte Carlo simulation from [Oprescu et al. (2019)](http://proceedings.mlr.press/v97/oprescu19a.html).\n",
+    "\n",
+    "The documentation of the data generating process can be found [here](https://docs.doubleml.org/dev/api/api.html#dataset-generators)."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## One-dimensional Example\n",
+    "\n",
+    "We start with an one-dimensional effect and create our training data. In this example the true effect depends only the first covariate $X_0$ and takes the following form\n",
+    "\n",
+    "$$\n",
+    "\\theta_0(X) = \\exp(2X_0) + 3\\sin(4X_0).\n",
+    "$$"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The generated dictionary also contains a callable with key `treatment_effect` to calculate the true treatment effect for new observations."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "np.random.seed(42)\n",
+    "data_dict = make_heterogeneous_data(\n",
+    "    n_obs=2000,\n",
+    "    p=10,\n",
+    "    support_size=5,\n",
+    "    n_x=1,\n",
+    ")\n",
+    "treatment_effect = data_dict['treatment_effect']\n",
+    "data = data_dict['data']\n",
+    "print(data.head())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "First, define the ``DoubleMLData`` object."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data_dml_base = dml.DoubleMLData(\n",
+    "    data,\n",
+    "    y_col='y',\n",
+    "    d_cols='d'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Next, define the learners for the nuisance functions and fit the [PLR Model](https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLPLR.html). Remark that linear learners would usually be optimal due to the data generating process."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# First stage estimation\n",
+    "from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor\n",
+    "ml_l = RandomForestRegressor(n_estimators=500)\n",
+    "ml_m = RandomForestRegressor(n_estimators=500)\n",
+    "\n",
+    "np.random.seed(42)\n",
+    "\n",
+    "dml_plr = dml.DoubleMLPLR(data_dml_base,\n",
+    "                          ml_l=ml_l,\n",
+    "                          ml_m=ml_m,\n",
+    "                          n_folds=5)\n",
+    "print(\"Training PLR Model\")\n",
+    "dml_plr.fit()\n",
+    "\n",
+    "print(dml_plr.summary)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To estimate the CATE, we rely on the best-linear-predictor of the linear score as in [Semenova et al. (2021)](https://doi.org/10.1093/ectj/utaa027) To approximate the target function $\\theta_0(x)$ with a linear form, we have to define a data frame of basis functions. Here, we rely on [patsy](https://patsy.readthedocs.io/en/latest/) to construct a suitable basis of [B-splines](https://en.wikipedia.org/wiki/B-spline)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import patsy\n",
+    "design_matrix = patsy.dmatrix(\"bs(x, df=5, degree=2)\", {\"x\": data[\"X_0\"]})\n",
+    "spline_basis = pd.DataFrame(design_matrix)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To estimate the parameters to calculate the CATE estimate call the ``cate()`` method and supply the dataframe of basis elements."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "cate = dml_plr.cate(spline_basis)\n",
+    "print(cate)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To obtain the confidence intervals for the CATE, we have to call the ``confint()`` method and a supply a dataframe of basis elements.\n",
+    "This could be the same basis as for fitting the CATE model or a new basis to e.g. evaluate the CATE model on a grid.\n",
+    "Here, we will evaluate the CATE on a grid from 0.1 to 0.9 to plot the final results.\n",
+    "Further, we construct uniform confidence intervals by setting the option ``joint`` and providing a number of bootstrap repetitions ``n_rep_boot``."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "new_data = {\"x\": np.linspace(0.1, 0.9, 100)}\n",
+    "spline_grid = pd.DataFrame(patsy.build_design_matrices([design_matrix.design_info], new_data)[0])\n",
+    "df_cate = cate.confint(spline_grid, level=0.95, joint=True, n_rep_boot=2000)\n",
+    "print(df_cate)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Finally, we can plot our results and compare them with the true effect."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from matplotlib import pyplot as plt\n",
+    "plt.rcParams['figure.figsize'] = 10., 7.5\n",
+    "\n",
+    "df_cate['x'] = new_data['x']\n",
+    "df_cate['true_effect'] = treatment_effect(new_data[\"x\"].reshape(-1, 1))\n",
+    "fig, ax = plt.subplots()\n",
+    "ax.plot(df_cate['x'],df_cate['effect'], label='Estimated Effect')\n",
+    "ax.plot(df_cate['x'],df_cate['true_effect'], color=\"green\", label='True Effect')\n",
+    "ax.fill_between(df_cate['x'], df_cate['2.5 %'], df_cate['97.5 %'], color='b', alpha=.3, label='Confidence Interval')\n",
+    "\n",
+    "plt.legend()\n",
+    "plt.title('CATE')\n",
+    "plt.xlabel('x')\n",
+    "_ =  plt.ylabel('Effect and 95%-CI')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "If the effect is not one-dimensional, the estimate still corresponds to the projection of the true effect on the basis functions."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Two-Dimensional Example\n",
+    "\n",
+    "It is also possible to estimate multi-dimensional conditional effects. We will use a similar data generating process but now the effect depends on the first two covariates $X_0$ and $X_1$ and takes the following form\n",
+    "$$\n",
+    "\\theta_0(X) = \\exp(2X_0) + 3\\sin(4X_1).\n",
+    "$$"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "With the argument ``n_x=2`` we can specify set the effect to be two-dimensional."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "np.random.seed(42)\n",
+    "data_dict = make_heterogeneous_data(\n",
+    "    n_obs=5000,\n",
+    "    p=10,\n",
+    "    support_size=5,\n",
+    "    n_x=2,\n",
+    ")\n",
+    "treatment_effect = data_dict['treatment_effect']\n",
+    "data = data_dict['data']\n",
+    "print(data.head())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "As univariate example estimate the [PLR Model](https://docs.doubleml.org/stable/api/generated/doubleml.DoubleMLPLR.html)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data_dml_base = dml.DoubleMLData(\n",
+    "    data,\n",
+    "    y_col='y',\n",
+    "    d_cols='d'\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# First stage estimation\n",
+    "from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor\n",
+    "ml_l = RandomForestRegressor(n_estimators=500)\n",
+    "ml_m = RandomForestRegressor(n_estimators=500)\n",
+    "\n",
+    "np.random.seed(42)\n",
+    "\n",
+    "dml_plr = dml.DoubleMLPLR(data_dml_base,\n",
+    "                          ml_l=ml_l,\n",
+    "                          ml_m=ml_m,\n",
+    "                          n_folds=5)\n",
+    "print(\"Training PLR Model\")\n",
+    "dml_plr.fit()\n",
+    "\n",
+    "print(dml_plr.summary)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "As above, we will rely on the [patsy](https://patsy.readthedocs.io/en/latest/) package to construct the basis elements.\n",
+    "In the two-dimensional case, we will construct a tensor product of B-splines (for more information see [here](https://patsy.readthedocs.io/en/latest/spline-regression.html#tensor-product-smooths))."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "design_matrix = patsy.dmatrix(\"te(bs(x_0, df=7, degree=3), bs(x_1, df=7, degree=3))\", {\"x_0\": data[\"X_0\"], \"x_1\": data[\"X_1\"]})\n",
+    "spline_basis = pd.DataFrame(design_matrix)\n",
+    "\n",
+    "cate = dml_plr.cate(spline_basis)\n",
+    "print(cate)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Finally, we create a new grid to evaluate and plot the effects."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grid_size = 100\n",
+    "x_0 = np.linspace(0.1, 0.9, grid_size)\n",
+    "x_1 = np.linspace(0.1, 0.9, grid_size)\n",
+    "x_0, x_1 = np.meshgrid(x_0, x_1)\n",
+    "\n",
+    "new_data = {\"x_0\": x_0.ravel(), \"x_1\": x_1.ravel()}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "spline_grid = pd.DataFrame(patsy.build_design_matrices([design_matrix.design_info], new_data)[0])\n",
+    "df_cate = cate.confint(spline_grid, joint=True, n_rep_boot=2000)\n",
+    "print(df_cate)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import plotly.graph_objects as go\n",
+    "\n",
+    "grid_array = np.array(list(zip(x_0.ravel(), x_1.ravel())))\n",
+    "true_effect = treatment_effect(grid_array).reshape(x_0.shape)\n",
+    "effect = np.asarray(df_cate['effect']).reshape(x_0.shape)\n",
+    "lower_bound = np.asarray(df_cate['2.5 %']).reshape(x_0.shape)\n",
+    "upper_bound = np.asarray(df_cate['97.5 %']).reshape(x_0.shape)\n",
+    "\n",
+    "fig = go.Figure(data=[\n",
+    "    go.Surface(x=x_0,\n",
+    "               y=x_1,\n",
+    "               z=true_effect),\n",
+    "    go.Surface(x=x_0,\n",
+    "               y=x_1,\n",
+    "               z=upper_bound, showscale=False, opacity=0.4,colorscale='purp'),\n",
+    "    go.Surface(x=x_0,\n",
+    "               y=x_1,\n",
+    "               z=lower_bound, showscale=False, opacity=0.4,colorscale='purp'),\n",
+    "])\n",
+    "fig.update_traces(contours_z=dict(show=True, usecolormap=True,\n",
+    "                                  highlightcolor=\"limegreen\", project_z=True))\n",
+    "\n",
+    "fig.update_layout(scene = dict(\n",
+    "                    xaxis_title='X_0',\n",
+    "                    yaxis_title='X_1',\n",
+    "                    zaxis_title='Effect'),\n",
+    "                    width=700,\n",
+    "                    margin=dict(r=20, b=10, l=10, t=10))\n",
+    "\n",
+    "fig.show()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "dml_dev",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.2"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
