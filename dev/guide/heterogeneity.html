@@ -886,6 +886,14 @@ To identifiy the correct parameter not only the weights <span class="math notran
 </ul>
 <p>which depends on the propensity score <span class="math notranslate nohighlight">\(m_0(X)\)</span>.
 In this case the weights can be specified as a <code class="docutils literal notranslate"><span class="pre">dictionary</span></code> the <code class="docutils literal notranslate"><span class="pre">weights</span></code> argument in the initialization of the <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> object.</p>
+<p>One other important example would be the sensitivity analysis for group average treatment effects on the treated (GATET).
+In this case the weights would take the following form</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\omega(Y,D,X) = \frac{1\{D=1, X\in G\}}{P(D=1, X\in G)}= \frac{D \cdot 1\{X\in G\}}{P(D=1, X\in G)}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\bar{\omega}(X) = \frac{\mathbb{E}[D|X]1\{X\in G\}}{P(D=1, X\in G)} = \frac{m_0(X)1\{X\in G\}}{P(D=1, X\in G)}.\)</span></p></li>
+</ul>
+<p>To simplify the specification of the weights, the <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> with <code class="docutils literal notranslate"><span class="pre">score='ATTE'</span></code> accepts binary weights, which should correspond to <span class="math notranslate nohighlight">\(1\{X\in G\}\)</span>.
+This automatically relies on the propensity score <span class="math notranslate nohighlight">\(m(X)\)</span> to construct the weights mentioned above (e.g. for weights equal to one this refers to the average treatment effect on the treated).</p>
 <p>A more detailed notebook on weighted average treatment effects for on GATE sensitivity analysis is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
 </section>
 <section id="quantiles">
