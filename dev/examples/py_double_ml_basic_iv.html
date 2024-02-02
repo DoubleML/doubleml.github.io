@@ -560,7 +560,7 @@ Download Jupyter notebook:
 <p>So, we will first generate synthetic data using linear models compatible with the diagram, and then use the DoubleML package to estimate the causal effect from D to Y.</p>
 <p>We assume that you have basic knowledge of instrumental variables and linear regression.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">seed</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">binomial</span><span class="p">,</span> <span class="n">uniform</span>
@@ -581,7 +581,7 @@ Download Jupyter notebook:
 <p>This code generates <code class="docutils literal notranslate"><span class="pre">n</span></code> samples in which there is a unique binary confounder. The treatment is also a binary variable, while the outcome is a continuous linear model.</p>
 <p>The quantity we want to recover using IVs is the <code class="docutils literal notranslate"><span class="pre">decision_impact</span></code>, which is the impact of the decision variable into the outcome.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
@@ -606,7 +606,7 @@ Download Jupyter notebook:
 <h2>Naive estimation<a class="headerlink" href="#Naive-estimation" title="Permalink to this heading">#</a></h2>
 <p>We can see that if we make a direct estimation of the impact of the <code class="docutils literal notranslate"><span class="pre">decision</span></code> into the <code class="docutils literal notranslate"><span class="pre">outcome</span></code>, though the difference of the averages of outcomes between the two decision groups, we obtain a biased estimate.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outcome_1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">decision</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">outcome</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -635,7 +635,7 @@ Download Jupyter notebook:
 </ul>
 <p>Notice that instead of using linear and logistic regression, we could use more flexible models capable of dealing with non-linearities such as random forests, boosting, …</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;obs_confounders&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -649,54 +649,18 @@ Download Jupyter notebook:
     <span class="n">z_cols</span><span class="o">=</span><span class="s1">&#39;instrument&#39;</span><span class="p">,</span> <span class="n">x_cols</span><span class="o">=</span><span class="s1">&#39;obs_confounders&#39;</span>
 <span class="p">)</span>
 <span class="n">dml_iivm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIIVM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">ml_r</span><span class="p">)</span>
-<span class="n">dml_iivm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_iivm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>P&gt;|t|</th>
-      <th>2.5 %</th>
-      <th>97.5 %</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>decision</th>
-      <td>-1.917092</td>
-      <td>0.487533</td>
-      <td>-3.932227</td>
-      <td>0.000084</td>
-      <td>-2.87264</td>
-      <td>-0.961544</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+              coef   std err         t     P&gt;|t|    2.5 %    97.5 %
+decision -1.917092  0.487533 -3.932227  0.000084 -2.87264 -0.961544
+</pre></div></div>
 </div>
 <p>We can see that the causal effect is estimated without bias.</p>
 </section>
