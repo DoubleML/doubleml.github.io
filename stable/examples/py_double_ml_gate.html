@@ -686,42 +686,35 @@ Download Jupyter notebook:
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First stage estimation</span>
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
-<span class="n">ml_l</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-<span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="n">dml_plr</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">data_dml_base</span><span class="p">,</span>
-                          <span class="n">ml_l</span><span class="o">=</span><span class="n">ml_l</span><span class="p">,</span>
+<span class="n">dml_irm</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">data_dml_base</span><span class="p">,</span>
+                          <span class="n">ml_g</span><span class="o">=</span><span class="n">ml_g</span><span class="p">,</span>
                           <span class="n">ml_m</span><span class="o">=</span><span class="n">ml_m</span><span class="p">,</span>
                           <span class="n">n_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training PLR Model&quot;</span><span class="p">)</span>
-<span class="n">dml_plr</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training IRM Model&quot;</span><span class="p">)</span>
+<span class="n">dml_irm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">dml_plr</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_irm</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Training PLR Model
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-       coef   std err         t  P&gt;|t|     2.5 %    97.5 %
-d  4.352155  0.097631  44.57782    0.0  4.160803  4.543507
+Training IRM Model
+       coef   std err          t  P&gt;|t|     2.5 %    97.5 %
+d  4.482012  0.086889  51.583034    0.0  4.311712  4.652312
 </pre></div></div>
 </div>
 </section>
@@ -729,10 +722,10 @@ d  4.352155  0.097631  44.57782    0.0  4.160803  4.543507
 <h2>Group Average Treatment Effects (GATEs)<a class="headerlink" href="#Group-Average-Treatment-Effects-(GATEs)" title="Permalink to this heading">#</a></h2>
 <p>To calculate GATEs just call the <code class="docutils literal notranslate"><span class="pre">gate()</span></code> method and supply the DataFrame with the group definitions and the <code class="docutils literal notranslate"><span class="pre">level</span></code> (with default of <code class="docutils literal notranslate"><span class="pre">0.95</span></code>). Remark that for straightforward interpretation of the GATEs the groups should be mutually exclusive.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gate</span> <span class="o">=</span> <span class="n">dml_plr</span><span class="o">.</span><span class="n">gate</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gate</span> <span class="o">=</span> <span class="n">dml_irm</span><span class="o">.</span><span class="n">gate</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -743,14 +736,14 @@ d  4.352155  0.097631  44.57782    0.0  4.160803  4.543507
 <div class="output_area docutils container">
 <div class="highlight"><pre>
             2.5 %    effect    97.5 %
-Group 1  2.435908  2.782428  3.128949
-Group 2  5.020208  5.222908  5.425608
-Group 3  4.421540  4.675198  4.928855
+Group 1  2.701265  3.016315  3.331365
+Group 2  5.096550  5.314651  5.532751
+Group 3  4.412004  4.668981  4.925957
 </pre></div></div>
 </div>
 <p>The confidence intervals above are point-wise, but by setting the option <code class="docutils literal notranslate"><span class="pre">joint</span></code> and providing a number of bootstrap repetitions <code class="docutils literal notranslate"><span class="pre">n_rep_boot</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci</span> <span class="o">=</span> <span class="n">gate</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
@@ -764,14 +757,14 @@ Group 3  4.421540  4.675198  4.928855
 <div class="output_area docutils container">
 <div class="highlight"><pre>
             2.5 %    effect    97.5 %
-Group 1  2.127618  2.782428  3.437238
-Group 2  4.839872  5.222908  5.605944
-Group 3  4.195868  4.675198  5.154527
+Group 1  2.441219  3.016315  3.591411
+Group 2  4.916528  5.314651  5.712774
+Group 3  4.199893  4.668981  5.138068
 </pre></div></div>
 </div>
 <p>Finally, let us plot the estimates together with the true effect within each group.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -803,7 +796,7 @@ Group 3  4.195868  4.675198  5.154527
 </div>
 <p>It is also possible to supply disjoint groups as a single vector (still as a data frame). Remark the slightly different name.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">groups</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Group&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;X_0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
@@ -834,10 +827,10 @@ Group 3  4.195868  4.675198  5.154527
 </div>
 <p>This time lets consider pointwise confidence intervals.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gate</span> <span class="o">=</span> <span class="n">dml_plr</span><span class="o">.</span><span class="n">gate</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gate</span> <span class="o">=</span> <span class="n">dml_irm</span><span class="o">.</span><span class="n">gate</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>
 <span class="n">ci</span> <span class="o">=</span> <span class="n">gate</span><span class="o">.</span><span class="n">confint</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
 </pre></div>
@@ -849,14 +842,14 @@ Group 3  4.195868  4.675198  5.154527
 <div class="output_area docutils container">
 <div class="highlight"><pre>
             2.5 %    effect    97.5 %
-Group_1  2.435908  2.782428  3.128949
-Group_2  5.020208  5.222908  5.425608
-Group_3  4.421540  4.675198  4.928855
+Group_1  2.701265  3.016315  3.331365
+Group_2  5.096550  5.314651  5.532751
+Group_3  4.412004  4.668981  4.925957
 </pre></div></div>
 </div>
 <p>The coefficients of the best linear predictor can be seen via the summary (the values can be accessed through the underlying model <code class="docutils literal notranslate"><span class="pre">.blp_model</span></code>).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
@@ -869,14 +862,14 @@ Group_3  4.421540  4.675198  4.928855
 <div class="output_area docutils container">
 <div class="highlight"><pre>
              coef   std err          t          P&gt;|t|    [0.025    0.975]
-Group_1  2.782428  0.141645  19.643720   5.256191e-64  2.504132  3.060724
-Group_2  5.222908  0.116759  44.732488  2.210752e-176  4.993506  5.452309
-Group_3  4.675198  0.149954  31.177490  4.783915e-119  4.380575  4.969820
+Group_1  3.016315  0.144241  20.911662   3.948154e-70  2.732918  3.299712
+Group_2  5.314651  0.117072  45.396300  6.151047e-179  5.084633  5.544669
+Group_3  4.668981  0.138851  33.625766  3.991444e-130  4.396173  4.941788
 </pre></div></div>
 </div>
 <p>Remark that the confidence intervals in the summary are slightly smaller, since they are not based on the White’s heteroskedasticity robus standard errors.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">ci</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
