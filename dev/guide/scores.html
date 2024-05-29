@@ -598,7 +598,6 @@ Python</label><div class="sd-tab-content docutils">
 
 <span class="go">------------------ Score &amp; algorithm ------------------</span>
 <span class="go">Score function: partialling out</span>
-<span class="go">DML algorithm: dml2</span>
 
 <span class="go">------------------ Machine learner   ------------------</span>
 <span class="go">Learner ml_l: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
@@ -610,7 +609,6 @@ Python</label><div class="sd-tab-content docutils">
 <span class="go">------------------ Resampling        ------------------</span>
 <span class="go">No. folds: 5</span>
 <span class="go">No. repeated sample splits: 1</span>
-<span class="go">Apply cross-fitting: True</span>
 
 <span class="go">------------------ Fit summary       ------------------</span>
 <span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
@@ -922,6 +920,33 @@ a quantile <span class="math notranslate nohighlight">\(\tau\in (0,1)\)</span> t
 <p>and <span class="math notranslate nohighlight">\(\gamma_0\)</span> being the potential quantile of <span class="math notranslate nohighlight">\(Y(d)\)</span>. As for potential quantiles, the estimate <span class="math notranslate nohighlight">\(g_d\)</span> is constructed via
 a preliminary estimate of <span class="math notranslate nohighlight">\(\gamma_0\)</span>. For further details, see <a class="reference external" href="https://arxiv.org/abs/1912.12945">Kallus et al. (2019)</a>.</p>
 </section>
+<section id="missingness-at-random">
+<span id="ssm-mar-score"></span><h3><span class="section-number">5.2.10. </span>Missingness at Random<a class="headerlink" href="#missingness-at-random" title="Permalink to this heading">#</a></h3>
+<p>For <code class="docutils literal notranslate"><span class="pre">DoubleMLCSSM``the</span> <span class="pre">``score='missing-at-random'</span></code> implements the score function:</p>
+<div class="math notranslate nohighlight">
+\[\psi(W; \theta, \eta) := \tilde{\psi}_1(W; \eta) - \tilde{\psi}_0(W; \eta) - \theta\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}_1(W; \eta) &amp;= \frac{D \cdot S \cdot [Y - g(1,1,X)]}{m(X) \cdot \pi(1, X)} + g(1,1,X)\\\tilde{\psi}_0(W; \eta) &amp;= \frac{(1-D) \cdot S \cdot [Y - g(0,1,X)]}{(1-m(X)) \cdot \pi(0, X)} + g(0,1,X)\end{aligned}\end{align} \]</div>
+<p>for <span class="math notranslate nohighlight">\(d\in\{0,1\}\)</span> and <span class="math notranslate nohighlight">\(\eta=(g, m, \pi)\)</span> with true values</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}g_0(d,s,X) &amp;= \mathbb{E}[Y|D=d, S=s, X]\\m_0(X) &amp;= P(D=1|X)\\\pi_0(d, X) &amp;= P(S=1|D=d, X).\end{aligned}\end{align} \]</div>
+<p>For further details, see <a class="reference external" href="https://doi.org/10.1080/07350015.2023.2271071">Bia, Huber and Lafférs (2023)</a>.</p>
+</section>
+<section id="nonignorable-nonresponse">
+<span id="ssm-nr-score"></span><h3><span class="section-number">5.2.11. </span>Nonignorable Nonresponse<a class="headerlink" href="#nonignorable-nonresponse" title="Permalink to this heading">#</a></h3>
+<p>For <code class="docutils literal notranslate"><span class="pre">DoubleMLCSSM``the</span> <span class="pre">``score='nonignorable'</span></code> implements the score function:</p>
+<div class="math notranslate nohighlight">
+\[\psi(W; \theta, \eta) := \tilde{\psi}_1(W; \eta) - \tilde{\psi}_0(W; \eta) - \theta\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}_1(W; \eta) &amp;= \frac{D \cdot S \cdot [Y - g(1,1,X,\Pi)]}{m(X, \Pi) \cdot \pi(1,X,Z)} + g(1,1,X,\Pi)\\\tilde{\psi}_0(W; \eta) &amp;= \frac{(1-D) \cdot S \cdot [Y - g(0,1,X,\Pi)]}{(1-m(X,\Pi)) \cdot \pi(0,X,Z)} + g(0,1,X,\Pi)\end{aligned}\end{align} \]</div>
+<p>for <span class="math notranslate nohighlight">\(d\in\{0,1\}\)</span> and <span class="math notranslate nohighlight">\(\eta=(g, m, \pi, \Pi)\)</span> with true values</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\pi_0(d, X, Z) &amp;= P(S=1|D=d, X, Z)\\\Pi_0 &amp;:= \pi_0(D, Z, X) = P(S=1|D,X,Z)\\g_0(d,s,X) &amp;= \mathbb{E}[Y|D=d, S=s, X, \Pi_0]\\m_0(X, \Pi_0) &amp;= P(D=1|X, \Pi_0).\end{aligned}\end{align} \]</div>
+<p>The estimate of <span class="math notranslate nohighlight">\(\Pi_0\)</span> is constructed via a preliminary estimate of <span class="math notranslate nohighlight">\(\pi_0(D,X,Z)\)</span> via nested cross-fitting.</p>
+<p>For further details, see <a class="reference external" href="https://doi.org/10.1080/07350015.2023.2271071">Bia, Huber and Lafférs (2023)</a>.</p>
+</section>
 </section>
 <section id="specifying-alternative-score-functions-via-callables">
 <h2><span class="section-number">5.3. </span>Specifying alternative score functions via callables<a class="headerlink" href="#specifying-alternative-score-functions-via-callables" title="Permalink to this heading">#</a></h2>
@@ -1036,6 +1061,8 @@ Note that this estimate will in general be prone to a regularization bias, see a
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#potential-quantiles-pqs">5.2.7. Potential quantiles (PQs)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#local-potential-quantiles-lpqs">5.2.8. Local potential quantiles (LPQs)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-value-at-risk-cvar">5.2.9. Conditional value at risk (CVaR)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#missingness-at-random">5.2.10. Missingness at Random</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nonignorable-nonresponse">5.2.11. Nonignorable Nonresponse</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specifying-alternative-score-functions-via-callables">5.3. Specifying alternative score functions via callables</a></li>

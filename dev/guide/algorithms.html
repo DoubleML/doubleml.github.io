@@ -524,6 +524,11 @@ document.write(`
   <section id="double-machine-learning-algorithms">
 <span id="algorithms"></span><h1><span class="section-number">6. </span>Double machine learning algorithms<a class="headerlink" href="#double-machine-learning-algorithms" title="Permalink to this heading">#</a></h1>
 <p>The DoubleML package comes with two different algorithms to obtain DML estimates.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The algorithms are argument <code class="docutils literal notranslate"><span class="pre">dml_procedure</span></code> is deprecated in the python package. Generally, the second version of the algorithm DML2 is recommended, to obtain
+more stable estimates.</p>
+</div>
 <section id="algorithm-dml1">
 <h2><span class="section-number">6.1. </span>Algorithm DML1<a class="headerlink" href="#algorithm-dml1" title="Permalink to this heading">#</a></h2>
 <p>The algorithm <code class="docutils literal notranslate"><span class="pre">dml_procedure='dml1'</span></code> can be summarized as</p>
@@ -567,7 +572,7 @@ document.write(`
 <h2><span class="section-number">6.3. </span>Implementation of the double machine learning algorithms<a class="headerlink" href="#implementation-of-the-double-machine-learning-algorithms" title="Permalink to this heading">#</a></h2>
 <p>As an example we consider a partially linear regression model (PLR)
 implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code>.
-The DML algorithm can be selected via parameter <code class="docutils literal notranslate"><span class="pre">dml_procedure='dml1'</span></code> vs. <code class="docutils literal notranslate"><span class="pre">dml_procedure='dml2'</span></code>.</p>
+The default version of the <code class="xref py py-class docutils literal notranslate"><span class="pre">DoubleML</span></code> class is based on the DML2 algorithm.</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
 </input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-0">
@@ -592,7 +597,7 @@ Python</label><div class="sd-tab-content docutils">
 
 <span class="gp">In [10]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
-<span class="gp">In [11]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">dml_procedure</span><span class="o">=</span><span class="s1">&#39;dml1&#39;</span><span class="p">)</span>
+<span class="gp">In [11]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
 <span class="gp">In [12]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">();</span>
 </pre></div>
@@ -601,6 +606,7 @@ Python</label><div class="sd-tab-content docutils">
 <input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
 </input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-1">
 R</label><div class="sd-tab-content docutils">
+<p>The DML algorithm can be selected via parameter <code class="docutils literal notranslate"><span class="pre">dml_procedure='dml1'</span></code> vs. <code class="docutils literal notranslate"><span class="pre">dml_procedure='dml2'</span></code>.</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
@@ -632,7 +638,7 @@ stores the estimate <span class="math notranslate nohighlight">\(\tilde{\theta}_
 </input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-2">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">coef</span>
-<span class="gh">Out[13]: </span><span class="go">array([0.47750236])</span>
+<span class="gh">Out[13]: </span><span class="go">array([0.48025158])</span>
 </pre></div>
 </div>
 </div>
@@ -659,21 +665,23 @@ are stored in the attribute <code class="docutils literal notranslate"><span cla
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">psi</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
 <span class="gh">Out[14]: </span>
-<span class="go">array([[[ 0.01128862]],</span>
+<span class="go">array([[[ 0.01128689]],</span>
 
-<span class="go">       [[-0.00369822]],</span>
+<span class="go">       [[-0.0036984 ]],</span>
 
-<span class="go">       [[ 0.00137319]],</span>
+<span class="go">       [[ 0.00136267]],</span>
 
-<span class="go">       [[-0.1177361 ]],</span>
+<span class="go">       [[-0.11932146]],</span>
 
-<span class="go">       [[-0.29814114]]])</span>
+<span class="go">       [[-0.29951284]]])</span>
 </pre></div>
 </div>
 </div>
 <input id="sd-tab-item-5" name="sd-tab-set-2" type="radio">
 </input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-5">
 R</label><div class="sd-tab-content docutils">
+<p>For the DML1 algorithm, the estimates for the different folds
+<span class="math notranslate nohighlight">\(\check{\theta}_{0,k}`\)</span>, <span class="math notranslate nohighlight">\(k \in [K]\)</span> are stored in attribute <code class="docutils literal notranslate"><span class="pre">all_dml1_coef</span></code>.</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">psi</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="m">1</span><span class="p">]</span>
@@ -689,22 +697,6 @@ R</label><div class="sd-tab-content docutils">
 <ol class=list-inline><li>-0.000784623154372457</li><li>0.783124384910379</li><li>0.00902031947837708</li><li>-0.403569975514042</li><li>0.867033752141195</li></ol>
 </div></div>
 </div>
-</div>
-</div>
-<p>For the DML1 algorithm, the estimates for the different folds
-<span class="math notranslate nohighlight">\(\check{\theta}_{0,k}`\)</span>, <span class="math notranslate nohighlight">\(k \in [K]\)</span> are stored in attribute <code class="docutils literal notranslate"><span class="pre">all_dml1_coef</span></code>.</p>
-<div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-6">
-Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">all_dml1_coef</span>
-<span class="gh">Out[15]: </span><span class="go">array([[[0.49421097, 0.37437521, 0.47473713, 0.52208736, 0.52210111]]])</span>
-</pre></div>
-</div>
-</div>
-<input id="sd-tab-item-7" name="sd-tab-set-3" type="radio">
-</input><label class="sd-tab-label" data-sync-id="r" for="sd-tab-item-7">
-R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">dml_plr_obj</span><span class="o">$</span><span class="n">all_dml1_coef</span>

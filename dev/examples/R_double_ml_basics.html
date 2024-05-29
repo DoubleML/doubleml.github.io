@@ -1,0 +1,1248 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>R: Basics of Double Machine Learning &#8212; DoubleML  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="../_static/design-tabs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/R_double_ml_basics';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="R: Impact of 401(k) on Financial Wealth" href="R_double_ml_pension.html" />
+    <link rel="prev" title="Python: Conditional Value at Risk of potential outcomes" href="py_double_ml_cvar.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">DoubleML  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/install.html">
+                         Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/intro.html">
+                         Getting started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../workflow/workflow.html">
+                         Workflow
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../guide/guide.html">
+                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                         Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/api.html">
+                         Python API
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+                         R API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../literature/literature.html">
+                         Literature
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../release/release.html">
+                         Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/install.html">
+                         Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../intro/intro.html">
+                         Getting started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../workflow/workflow.html">
+                         Workflow
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../guide/guide.html">
+                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                         Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/api.html">
+                         Python API
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+                         R API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../literature/literature.html">
+                         Literature
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../release/release.html">
+                         Release notes
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p>
+
+<script type="text/javascript">
+    // Change the logo depending on the theme
+    var logo = document.querySelector('img.logo');
+    var observer = new MutationObserver(function(mutations) {
+        const dark = document.documentElement.dataset.theme == 'dark';
+        if (dark) {
+            logo.src = "../logo_dark.png";
+        } else {
+            logo.src = "../logo.png";
+        }
+    });
+    observer.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+</script></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_basics.html">Python: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pension.html">Python: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_did.html">Python: Difference-in-Differences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_did_pretest.html">Python: Difference-in-Differences Pre-Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_basic_iv.html">Python: Basic Instrumental Variables calculation</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate.html">Python: Group Average Treatment Effects (GATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate_plr.html">Python: Group Average Treatment Effects (GATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cate.html">Python: Conditional Average Treatment Effects (CATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cate_plr.html">Python: Conditional Average Treatment Effects (CATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate_sensitivity.html">Python: GATE Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pension_qte.html">Python: Impact of 401(k) on Financial Wealth (Quantile Effects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pq.html">Python: Potential Quantiles and Quantile Treatment Effects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">R: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_pension.html">R: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_multiway_cluster.html">R: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_basic_iv.html">R: Basic Instrumental Variables Calculation</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="double_ml_bonus_data.html">DML: Bonus Data</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Examples</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">R: Basics of Double Machine Learning</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+      <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/R_double_ml_basics.ipynb">https://docs.doubleml.org/stable/examples/R_double_ml_basics.ipynb</a>.
+
+    </ul>
+    </div><section id="R:-Basics-of-Double-Machine-Learning">
+<h1>R: Basics of Double Machine Learning<a class="headerlink" href="#R:-Basics-of-Double-Machine-Learning" title="Permalink to this heading">#</a></h1>
+<p><strong>Remark</strong>: This notebook has a long computation time due to the large number of simulations.</p>
+<p>This notebooks contains the detailed simulations according to the introduction to double machine learning in the <a class="reference external" href="https://docs.doubleml.org/stable/guide/basics.html">User Guide</a> of the DoubleML package.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+<span class="nf">options</span><span class="p">(</span><span class="n">repr.plot.width</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">repr.plot.height</span><span class="o">=</span><span class="m">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Data-Generating-Process-(DGP)">
+<h2>Data Generating Process (DGP)<a class="headerlink" href="#Data-Generating-Process-(DGP)" title="Permalink to this heading">#</a></h2>
+<p>We consider the following partially linear model:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+y_i &amp;= \theta_0 d_i + g_0(x_i) + \zeta_i, &amp; \zeta_i \sim \mathcal{N}(0,1), \\
+d_i &amp;= m_0(x_i) + v_i, &amp; v_i \sim \mathcal{N}(0,1),
+\end{align*}\end{split}\]</div>
+<p>with covariates <span class="math notranslate nohighlight">\(x_i \sim \mathcal{N}(0, \Sigma)\)</span>, where <span class="math notranslate nohighlight">\(\Sigma\)</span> is a matrix with entries <span class="math notranslate nohighlight">\(\Sigma_{kj} = 0.7^{|j-k|}\)</span>. We are interested in performing valid inference on the causal parameter <span class="math notranslate nohighlight">\(\theta_0\)</span>. The true parameter <span class="math notranslate nohighlight">\(\theta_0\)</span> is set to <span class="math notranslate nohighlight">\(0.5\)</span> in our simulation experiment.</p>
+<p>The nuisance functions are given by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+m_0(x_i) &amp;= x_{i,1} + \frac{1}{4}  \frac{\exp(x_{i,3})}{1+\exp(x_{i,3})}, \\
+g_0(x_i) &amp;= \frac{\exp(x_{i,1})}{1+\exp(x_{i,1})} + \frac{1}{4} x_{i,3}.
+\end{align*}\end{split}\]</div>
+<p>We generate <code class="docutils literal notranslate"><span class="pre">n_rep</span></code> replications of the data generating process with sample size <code class="docutils literal notranslate"><span class="pre">n_obs</span></code> and compare the performance of different estimators.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<span class="n">n_rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1000</span>
+<span class="n">n_obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">500</span>
+<span class="n">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span>
+<span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span>
+
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">()</span>
+<span class="nf">for </span><span class="p">(</span><span class="n">i_rep</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="nf">seq_len</span><span class="p">(</span><span class="n">n_rep</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">data</span><span class="p">[[</span><span class="n">i_rep</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span><span class="w"> </span><span class="n">dim_x</span><span class="o">=</span><span class="n">n_vars</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">return_type</span><span class="o">=</span><span class="s">&quot;data.frame&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Regularization-Bias-in-Simple-ML-Approaches">
+<h2>Regularization Bias in Simple ML-Approaches<a class="headerlink" href="#Regularization-Bias-in-Simple-ML-Approaches" title="Permalink to this heading">#</a></h2>
+<p>Naive inference that is based on a direct application of machine learning methods to estimate the causal parameter, <span class="math notranslate nohighlight">\(\theta_0\)</span>, is generally invalid. The use of machine learning methods introduces a bias that arises due to regularization. A simple ML approach is given by randomly splitting the sample into two parts. On the auxiliary sample indexed by <span class="math notranslate nohighlight">\(i \in I^C\)</span> the nuisance function <span class="math notranslate nohighlight">\(g_0(X)\)</span> is estimated with an ML method, for example a random forest learner. Given the
+estimate <span class="math notranslate nohighlight">\(\hat{g}_0(X)\)</span>, the final estimate of <span class="math notranslate nohighlight">\(\theta_0\)</span> is obtained as (<span class="math notranslate nohighlight">\(n=N/2\)</span>) using the other half of observations indexed with <span class="math notranslate nohighlight">\(i \in I\)</span></p>
+<div class="math notranslate nohighlight">
+\[\hat{\theta}_0 = \left(\frac{1}{n} \sum_{i\in I} D_i^2\right)^{-1} \frac{1}{n} \sum_{i\in I} D_i (Y_i - \hat{g}_0(X_i)).\]</div>
+<p>As this corresponds to a “non-orthogonal” score, which is not implemented in the DoubleML package, we need to define a custom callable.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">non_orth_score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">l_hat</span><span class="p">,</span><span class="w"> </span><span class="n">m_hat</span><span class="p">,</span><span class="w"> </span><span class="n">g_hat</span><span class="p">,</span><span class="w"> </span><span class="n">smpls</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="n">u_hat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">g_hat</span>
+<span class="n">psi_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-1</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">d</span>
+<span class="n">psi_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="o">*</span><span class="n">u_hat</span>
+<span class="n">psis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">psi_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">psi_a</span><span class="p">,</span><span class="w"> </span><span class="n">psi_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">psi_b</span><span class="p">)</span>
+<span class="nf">return</span><span class="p">(</span><span class="n">psis</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>Remark that the estimator is not able to estimate <span class="math notranslate nohighlight">\(\hat{g}_0(X)\)</span> directly, but has to be based on a preliminary estimate of <span class="math notranslate nohighlight">\(\hat{m}_0(X)\)</span>. All following estimators with <code class="docutils literal notranslate"><span class="pre">score=&quot;IV-type&quot;</span></code> are based on the same preliminary procedure.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">1111</span><span class="p">)</span>
+
+<span class="n">ml_l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.xgboost&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nrounds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span><span class="w"> </span><span class="n">eta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span>
+<span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.xgboost&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nrounds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span><span class="w"> </span><span class="n">eta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span>
+<span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_l</span><span class="o">$</span><span class="nf">clone</span><span class="p">()</span>
+
+<span class="n">theta_nonorth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">se_nonorth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+
+<span class="nf">for </span><span class="p">(</span><span class="n">i_rep</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="nf">seq_len</span><span class="p">(</span><span class="n">n_rep</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Replication %d/%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i_rep</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;\r&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">flush.console</span><span class="p">()</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">[[</span><span class="n">i_rep</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_data_frame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr_nonorth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">n_folds</span><span class="o">=</span><span class="m">2</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">score</span><span class="o">=</span><span class="n">non_orth_score</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">apply_cross_fitting</span><span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr_nonorth</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="w">    </span><span class="n">theta_nonorth</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr_nonorth</span><span class="o">$</span><span class="n">coef</span>
+<span class="w">    </span><span class="n">se_nonorth</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr_nonorth</span><span class="o">$</span><span class="n">se</span>
+<span class="p">}</span>
+
+<span class="n">g_nonorth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">theta_rescaled</span><span class="o">=</span><span class="p">(</span><span class="n">theta_nonorth</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_nonorth</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">theta_rescaled</span><span class="p">,</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">),</span>
+<span class="w">                            </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_vline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">suppressWarnings</span><span class="p">(</span><span class="nf">geom_function</span><span class="p">(</span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnorm</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="o">=</span><span class="s">&quot;dark blue&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="o">=</span><span class="s">&quot;dark blue&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="kc">NA</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">xlim</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">-6.0</span><span class="p">,</span><span class="w"> </span><span class="m">6.0</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">theme_minimal</span><span class="p">()</span>
+
+<span class="n">g_nonorth</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Replication 1000/1000
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Warning message in geom_function(fun = dnorm, aes(colour = &#34;N(0, 1)&#34;, fill = &#34;N(0, 1)&#34;)):
+&#34;All aesthetics have length 1, but the data has 1000 rows.
+<span class="ansi-cyan-fg">ℹ</span> Did you mean to use `annotate()`?&#34;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_R_double_ml_basics_9_2.png" class="no-scaled-link" src="../_images/examples_R_double_ml_basics_9_2.png" style="width: 300px; height: 240px;" />
+</div>
+</div>
+<p>The regularization bias in the simple ML-approach is caused by the slow convergence of <span class="math notranslate nohighlight">\(\hat{\theta}_0\)</span></p>
+<div class="math notranslate nohighlight">
+\[|\sqrt{n} (\hat{\theta}_0 - \theta_0) | \rightarrow_{P} \infty\]</div>
+<p>i.e., slower than <span class="math notranslate nohighlight">\(1/\sqrt{n}\)</span>. The driving factor is the bias that arises by learning <span class="math notranslate nohighlight">\(g\)</span> with a random forest or any other ML technique. A heuristic illustration is given by</p>
+<div class="math notranslate nohighlight">
+\[\sqrt{n}(\hat{\theta}_0 - \theta_0) = \underbrace{\left(\frac{1}{n} \sum_{i\in I} D_i^2\right)^{-1} \frac{1}{n} \sum_{i\in I} D_i \zeta_i}_{=:a}
++  \underbrace{\left(\frac{1}{n} \sum_{i\in I} D_i^2\right)^{-1} \frac{1}{n} \sum_{i\in I} D_i (g_0(X_i) - \hat{g}_0(X_i))}_{=:b}.\]</div>
+<p><span class="math notranslate nohighlight">\(a\)</span> is approximately Gaussian under mild conditions. However, <span class="math notranslate nohighlight">\(b\)</span> (the regularization bias) diverges in general.</p>
+</section>
+<section id="Overcoming-regularization-bias-by-orthogonalization">
+<h2>Overcoming regularization bias by orthogonalization<a class="headerlink" href="#Overcoming-regularization-bias-by-orthogonalization" title="Permalink to this heading">#</a></h2>
+<p>To overcome the regularization bias we can partial out the effect of <span class="math notranslate nohighlight">\(X\)</span> from <span class="math notranslate nohighlight">\(D\)</span> to obtain the orthogonalized regressor <span class="math notranslate nohighlight">\(V = D - m(X)\)</span>. We then use the final estimate</p>
+<div class="math notranslate nohighlight">
+\[\check{\theta}_0 = \left(\frac{1}{n} \sum_{i\in I} \hat{V}_i D_i\right)^{-1} \frac{1}{n} \sum_{i\in I} \hat{V}_i (Y_i - \hat{g}_0(X_i)).\]</div>
+<p>The following figure shows the distribution of the resulting estimates <span class="math notranslate nohighlight">\(\hat{\theta}_0\)</span> without sample-splitting. Again, we are using external predictions to avoid cross-fitting (for demonstration purposes).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">2222</span><span class="p">)</span>
+
+<span class="n">theta_orth_nosplit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">se_orth_nosplit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+
+<span class="nf">for </span><span class="p">(</span><span class="n">i_rep</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="nf">seq_len</span><span class="p">(</span><span class="n">n_rep</span><span class="p">)){</span>
+<span class="w">    </span><span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Replication %d/%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i_rep</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;\r&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">flush.console</span><span class="p">()</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">[[</span><span class="n">i_rep</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_data_frame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr_orth_nosplit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">n_folds</span><span class="o">=</span><span class="m">1</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">score</span><span class="o">=</span><span class="s">&#39;IV-type&#39;</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">apply_cross_fitting</span><span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr_orth_nosplit</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="w">    </span><span class="n">theta_orth_nosplit</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr_orth_nosplit</span><span class="o">$</span><span class="n">coef</span>
+<span class="w">    </span><span class="n">se_orth_nosplit</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr_orth_nosplit</span><span class="o">$</span><span class="n">se</span>
+<span class="p">}</span>
+
+<span class="n">g_nosplit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">theta_rescaled</span><span class="o">=</span><span class="p">(</span><span class="n">theta_orth_nosplit</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_orth_nosplit</span><span class="p">),</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">theta_rescaled</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">theta_rescaled</span><span class="p">,</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">),</span>
+<span class="w">                            </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_vline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">suppressWarnings</span><span class="p">(</span><span class="nf">geom_function</span><span class="p">(</span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnorm</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="o">=</span><span class="s">&quot;dark orange&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="o">=</span><span class="s">&quot;dark orange&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="kc">NA</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">xlim</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">-6.0</span><span class="p">,</span><span class="w"> </span><span class="m">6.0</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">theme_minimal</span><span class="p">()</span>
+
+<span class="n">g_nosplit</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Replication 1000/1000
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Warning message:
+&#34;Removed 927 rows containing non-finite outside the scale range (`stat_bin()`).&#34;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_R_double_ml_basics_12_2.png" class="no-scaled-link" src="../_images/examples_R_double_ml_basics_12_2.png" style="width: 300px; height: 240px;" />
+</div>
+</div>
+<p>If the nuisance models <span class="math notranslate nohighlight">\(\hat{g}_0()\)</span> and <span class="math notranslate nohighlight">\(\hat{m}()\)</span> are estimated on the whole dataset, which is also used for obtaining the final estimate <span class="math notranslate nohighlight">\(\check{\theta}_0\)</span>, another bias is observed.</p>
+</section>
+<section id="Sample-splitting-to-remove-bias-induced-by-overfitting">
+<h2>Sample splitting to remove bias induced by overfitting<a class="headerlink" href="#Sample-splitting-to-remove-bias-induced-by-overfitting" title="Permalink to this heading">#</a></h2>
+<p>Using sample splitting, i.e., estimate the nuisance models <span class="math notranslate nohighlight">\(\hat{g}_0()\)</span> and <span class="math notranslate nohighlight">\(\hat{m}()\)</span> on one part of the data (training data) and estimate <span class="math notranslate nohighlight">\(\check{\theta}_0\)</span> on the other part of the data (test data), overcomes the bias induced by overfitting. We can exploit the benefits of cross-fitting by switching the role of the training and test sample. Cross-fitting performs well empirically because the entire sample can be used for estimation.</p>
+<p>The following figure shows the distribution of the resulting estimates <span class="math notranslate nohighlight">\(\hat{\theta}_0\)</span> with orthogonal score and sample-splitting.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">3333</span><span class="p">)</span>
+
+<span class="n">theta_dml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">se_dml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+
+<span class="nf">for </span><span class="p">(</span><span class="n">i_rep</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="nf">seq_len</span><span class="p">(</span><span class="n">n_rep</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Replication %d/%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i_rep</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;\r&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">flush.console</span><span class="p">()</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">[[</span><span class="n">i_rep</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_data_frame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">n_folds</span><span class="o">=</span><span class="m">2</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">score</span><span class="o">=</span><span class="s">&#39;IV-type&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="w">    </span><span class="n">theta_dml</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr</span><span class="o">$</span><span class="n">coef</span>
+<span class="w">    </span><span class="n">se_dml</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr</span><span class="o">$</span><span class="n">se</span>
+<span class="p">}</span>
+
+<span class="n">g_dml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">theta_rescaled</span><span class="o">=</span><span class="p">(</span><span class="n">theta_dml</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_dml</span><span class="p">),</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">theta_rescaled</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">theta_rescaled</span><span class="p">,</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">),</span>
+<span class="w">                            </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_vline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">suppressWarnings</span><span class="p">(</span><span class="nf">geom_function</span><span class="p">(</span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnorm</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="o">=</span><span class="s">&quot;dark green&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="o">=</span><span class="s">&quot;dark green&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="kc">NA</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">xlim</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">-6.0</span><span class="p">,</span><span class="w"> </span><span class="m">6.0</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">theme_minimal</span><span class="p">()</span>
+
+<span class="n">g_dml</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Replication 1000/1000
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_R_double_ml_basics_14_1.png" class="no-scaled-link" src="../_images/examples_R_double_ml_basics_14_1.png" style="width: 300px; height: 240px;" />
+</div>
+</div>
+</section>
+<section id="Double/debiased-machine-learning">
+<h2>Double/debiased machine learning<a class="headerlink" href="#Double/debiased-machine-learning" title="Permalink to this heading">#</a></h2>
+<p>To illustrate the benefits of the auxiliary prediction step in the DML framework we write the error as</p>
+<div class="math notranslate nohighlight">
+\[\sqrt{n}(\check{\theta}_0 - \theta_0) = a^* + b^* + c^*\]</div>
+<p>Chernozhukov et al. (2018) argues that:</p>
+<p>The first term</p>
+<div class="math notranslate nohighlight">
+\[a^* := (EV^2)^{-1} \frac{1}{\sqrt{n}} \sum_{i\in I} V_i \zeta_i\]</div>
+<p>will be asymptotically normally distributed.</p>
+<p>The second term</p>
+<div class="math notranslate nohighlight">
+\[b^* := (EV^2)^{-1} \frac{1}{\sqrt{n}} \sum_{i\in I} (\hat{m}(X_i) - m(X_i)) (\hat{g}_0(X_i) - g_0(X_i))\]</div>
+<p>vanishes asymptotically for many data generating processes.</p>
+<p>The third term <span class="math notranslate nohighlight">\(c^*\)</span> vanishes in probability if sample splitting is applied. Finally, let us compare all distributions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">g_all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">t_nonorth</span><span class="o">=</span><span class="p">(</span><span class="n">theta_nonorth</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_nonorth</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">t_orth_nosplit</span><span class="o">=</span><span class="p">(</span><span class="n">theta_orth_nosplit</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_orth_nosplit</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">t_dml</span><span class="o">=</span><span class="p">(</span><span class="n">theta_dml</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_dml</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_nonorth</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">),</span>
+<span class="w">                                </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_orth_nosplit</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">),</span>
+<span class="w">                                </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_dml</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">),</span>
+<span class="w">                                </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_vline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">suppressWarnings</span><span class="p">(</span><span class="nf">geom_function</span><span class="p">(</span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnorm</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="o">=</span><span class="s">&quot;dark blue&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="o">=</span><span class="s">&quot;dark orange&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="o">=</span><span class="s">&quot;dark green&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="o">=</span><span class="s">&quot;dark blue&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="o">=</span><span class="s">&quot;dark orange&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="o">=</span><span class="s">&quot;dark green&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="kc">NA</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="nf">xlim</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">-6.0</span><span class="p">,</span><span class="w"> </span><span class="m">6.0</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">theme_minimal</span><span class="p">()</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="n">g_all</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Warning message in geom_function(fun = dnorm, aes(colour = &#34;N(0, 1)&#34;, fill = &#34;N(0, 1)&#34;)):
+&#34;All aesthetics have length 1, but the data has 1000 rows.
+<span class="ansi-cyan-fg">ℹ</span> Did you mean to use `annotate()`?&#34;
+Warning message:
+&#34;Removed 927 rows containing non-finite outside the scale range (`stat_bin()`).&#34;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_R_double_ml_basics_16_1.png" class="no-scaled-link" src="../_images/examples_R_double_ml_basics_16_1.png" style="width: 300px; height: 240px;" />
+</div>
+</div>
+</section>
+<section id="Partialling-out-score">
+<h2>Partialling out score<a class="headerlink" href="#Partialling-out-score" title="Permalink to this heading">#</a></h2>
+<p>Another debiased estimator, based on the partialling-out approach of Robinson(1988), is</p>
+<div class="math notranslate nohighlight">
+\[\check{\theta}_0 = \left(\frac{1}{n} \sum_{i\in I} \hat{V}_i \hat{V}_i \right)^{-1} \frac{1}{n} \sum_{i\in I} \hat{V}_i (Y_i - \hat{\ell}_0(X_i)),\]</div>
+<p>with <span class="math notranslate nohighlight">\(\ell_0(X_i) = E(Y|X)\)</span>. All nuisance parameters for the estimator with <code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> are conditional mean functions, which can be directly estimated using ML methods. This is a minor advantage over the estimator with <code class="docutils literal notranslate"><span class="pre">score='IV-type'</span></code>. In the following, we repeat the above analysis with <code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code>. In a first part of the analysis, we estimate <span class="math notranslate nohighlight">\(\theta_0\)</span> without sample splitting. Again we observe a bias from overfitting.</p>
+<p>The following figure shows the distribution of the resulting estimates <span class="math notranslate nohighlight">\(\hat{\theta}_0\)</span> without sample-splitting.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">4444</span><span class="p">)</span>
+
+<span class="n">theta_orth_po_nosplit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">se_orth_po_nosplit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+
+<span class="nf">for </span><span class="p">(</span><span class="n">i_rep</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="nf">seq_len</span><span class="p">(</span><span class="n">n_rep</span><span class="p">)){</span>
+<span class="w">    </span><span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Replication %d/%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i_rep</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;\r&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">flush.console</span><span class="p">()</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">[[</span><span class="n">i_rep</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_data_frame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr_orth_nosplit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+<span class="w">                                            </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span>
+<span class="w">                                            </span><span class="n">n_folds</span><span class="o">=</span><span class="m">1</span><span class="p">,</span>
+<span class="w">                                            </span><span class="n">score</span><span class="o">=</span><span class="s">&#39;partialling out&#39;</span><span class="p">,</span>
+<span class="w">                                            </span><span class="n">apply_cross_fitting</span><span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr_orth_nosplit</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="w">    </span><span class="n">theta_orth_po_nosplit</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr_orth_nosplit</span><span class="o">$</span><span class="n">coef</span>
+<span class="w">    </span><span class="n">se_orth_po_nosplit</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr_orth_nosplit</span><span class="o">$</span><span class="n">se</span>
+<span class="p">}</span>
+
+<span class="n">g_nosplit_po</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">theta_rescaled</span><span class="o">=</span><span class="p">(</span><span class="n">theta_orth_po_nosplit</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_orth_po_nosplit</span><span class="p">),</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">theta_rescaled</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">theta_rescaled</span><span class="p">,</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">),</span>
+<span class="w">                            </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_vline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">suppressWarnings</span><span class="p">(</span><span class="nf">geom_function</span><span class="p">(</span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnorm</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="o">=</span><span class="s">&quot;dark orange&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="o">=</span><span class="s">&quot;dark orange&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="kc">NA</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">xlim</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">-6.0</span><span class="p">,</span><span class="w"> </span><span class="m">6.0</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">theme_minimal</span><span class="p">()</span>
+<span class="n">g_nosplit_po</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Replication 1000/1000
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Warning message:
+&#34;Removed 27 rows containing non-finite outside the scale range (`stat_bin()`).&#34;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_R_double_ml_basics_18_2.png" class="no-scaled-link" src="../_images/examples_R_double_ml_basics_18_2.png" style="width: 300px; height: 240px;" />
+</div>
+</div>
+<p>Using sample splitting, overcomes the bias induced by overfitting. Again, the implementation automatically applies cross-fitting.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">5555</span><span class="p">)</span>
+
+<span class="n">theta_dml_po</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+<span class="n">se_dml_po</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">)</span>
+
+<span class="nf">for </span><span class="p">(</span><span class="n">i_rep</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="nf">seq_len</span><span class="p">(</span><span class="n">n_rep</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">cat</span><span class="p">(</span><span class="nf">sprintf</span><span class="p">(</span><span class="s">&quot;Replication %d/%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i_rep</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;\r&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">flush.console</span><span class="p">()</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">[[</span><span class="n">i_rep</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_data_frame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;d&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLPLR</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">ml_l</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">n_folds</span><span class="o">=</span><span class="m">2</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">score</span><span class="o">=</span><span class="s">&#39;partialling out&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">obj_dml_plr</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="w">    </span><span class="n">theta_dml_po</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr</span><span class="o">$</span><span class="n">coef</span>
+<span class="w">    </span><span class="n">se_dml_po</span><span class="p">[</span><span class="n">i_rep</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_dml_plr</span><span class="o">$</span><span class="n">se</span>
+<span class="p">}</span>
+
+<span class="n">g_dml_po</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">theta_rescaled</span><span class="o">=</span><span class="p">(</span><span class="n">theta_dml_po</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_dml_po</span><span class="p">),</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">theta_rescaled</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">theta_rescaled</span><span class="p">,</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">),</span>
+<span class="w">                            </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_vline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">suppressWarnings</span><span class="p">(</span><span class="nf">geom_function</span><span class="p">(</span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnorm</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="o">=</span><span class="s">&quot;dark green&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="o">=</span><span class="s">&quot;dark green&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="kc">NA</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">xlim</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">-6.0</span><span class="p">,</span><span class="w"> </span><span class="m">6.0</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">theme_minimal</span><span class="p">()</span>
+<span class="n">g_dml_po</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Replication 1000/1000
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_R_double_ml_basics_20_1.png" class="no-scaled-link" src="../_images/examples_R_double_ml_basics_20_1.png" style="width: 300px; height: 240px;" />
+</div>
+</div>
+<p>Finally, let us compare all distributions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">g_all_po</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ggplot</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">t_nonorth</span><span class="o">=</span><span class="p">(</span><span class="n">theta_nonorth</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_nonorth</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">t_orth_nosplit</span><span class="o">=</span><span class="p">(</span><span class="n">theta_orth_po_nosplit</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_orth_po_nosplit</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">t_dml</span><span class="o">=</span><span class="p">(</span><span class="n">theta_dml_po</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="n">se_dml_po</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_nonorth</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">),</span>
+<span class="w">                                </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_orth_nosplit</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">),</span>
+<span class="w">                                </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_histogram</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_dml</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="nf">after_stat</span><span class="p">(</span><span class="n">density</span><span class="p">),</span><span class="w"> </span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">),</span>
+<span class="w">                                </span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">geom_vline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">),</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">suppressWarnings</span><span class="p">(</span><span class="nf">geom_function</span><span class="p">(</span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dnorm</span><span class="p">,</span><span class="w"> </span><span class="nf">aes</span><span class="p">(</span><span class="n">colour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">)))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="o">=</span><span class="s">&quot;dark blue&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="o">=</span><span class="s">&quot;dark orange&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="o">=</span><span class="s">&quot;dark green&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">breaks</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N(0, 1)&quot;</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">values</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Non-orthogonal ML&quot;</span><span class="o">=</span><span class="s">&quot;dark blue&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;Double ML (no sample splitting)&quot;</span><span class="o">=</span><span class="s">&quot;dark orange&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;Double ML with cross-fitting&quot;</span><span class="o">=</span><span class="s">&quot;dark green&quot;</span><span class="p">,</span>
+<span class="w">                            </span><span class="s">&quot;N(0, 1)&quot;</span><span class="o">=</span><span class="kc">NA</span><span class="p">))</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="nf">xlim</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">-6.0</span><span class="p">,</span><span class="w"> </span><span class="m">6.0</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">theme_minimal</span><span class="p">()</span>
+<span class="n">g_all_po</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Warning message in geom_function(fun = dnorm, aes(colour = &#34;N(0, 1)&#34;, fill = &#34;N(0, 1)&#34;)):
+&#34;All aesthetics have length 1, but the data has 1000 rows.
+<span class="ansi-cyan-fg">ℹ</span> Did you mean to use `annotate()`?&#34;
+Warning message:
+&#34;Removed 27 rows containing non-finite outside the scale range (`stat_bin()`).&#34;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_R_double_ml_basics_22_1.png" class="no-scaled-link" src="../_images/examples_R_double_ml_basics_22_1.png" style="width: 300px; height: 240px;" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># save all plots</span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../guide/figures/r_non_orthogonal.svg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_nonorth</span><span class="p">,</span><span class="w"> </span><span class="n">dpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span><span class="w"> </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;in&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../guide/figures/r_dml_nosplit.svg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_nosplit</span><span class="p">,</span><span class="w"> </span><span class="n">dpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span><span class="w"> </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;in&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../guide/figures/r_dml.svg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_dml</span><span class="p">,</span><span class="w"> </span><span class="n">dpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span><span class="w"> </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;in&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../guide/figures/r_all.svg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_all</span><span class="p">,</span><span class="w"> </span><span class="n">dpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span><span class="w"> </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;in&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
+
+<span class="nf">ggsave</span><span class="p">(</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../guide/figures/r_dml_po_nosplit.svg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_nosplit_po</span><span class="p">,</span><span class="w"> </span><span class="n">dpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span><span class="w"> </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;in&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../guide/figures/r_dml_po.svg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_dml_po</span><span class="p">,</span><span class="w"> </span><span class="n">dpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span><span class="w"> </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;in&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
+<span class="nf">ggsave</span><span class="p">(</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../guide/figures/r_po_all.svg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_all_po</span><span class="p">,</span><span class="w"> </span><span class="n">dpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span><span class="w"> </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;in&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Warning message in geom_function(fun = dnorm, aes(colour = &#34;N(0, 1)&#34;, fill = &#34;N(0, 1)&#34;)):
+&#34;All aesthetics have length 1, but the data has 1000 rows.
+<span class="ansi-cyan-fg">ℹ</span> Did you mean to use `annotate()`?&#34;
+Warning message:
+&#34;Removed 927 rows containing non-finite outside the scale range (`stat_bin()`).&#34;
+Warning message in geom_function(fun = dnorm, aes(colour = &#34;N(0, 1)&#34;, fill = &#34;N(0, 1)&#34;)):
+&#34;All aesthetics have length 1, but the data has 1000 rows.
+<span class="ansi-cyan-fg">ℹ</span> Did you mean to use `annotate()`?&#34;
+Warning message:
+&#34;Removed 927 rows containing non-finite outside the scale range (`stat_bin()`).&#34;
+Warning message:
+&#34;Removed 27 rows containing non-finite outside the scale range (`stat_bin()`).&#34;
+Warning message in geom_function(fun = dnorm, aes(colour = &#34;N(0, 1)&#34;, fill = &#34;N(0, 1)&#34;)):
+&#34;All aesthetics have length 1, but the data has 1000 rows.
+<span class="ansi-cyan-fg">ℹ</span> Did you mean to use `annotate()`?&#34;
+Warning message:
+&#34;Removed 27 rows containing non-finite outside the scale range (`stat_bin()`).&#34;
+</pre></div></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="py_double_ml_cvar.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Python: Conditional Value at Risk of potential outcomes</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="R_double_ml_pension.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">R: Impact of 401(k) on Financial Wealth</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-Generating-Process-(DGP)">Data Generating Process (DGP)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Regularization-Bias-in-Simple-ML-Approaches">Regularization Bias in Simple ML-Approaches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Overcoming-regularization-bias-by-orthogonalization">Overcoming regularization bias by orthogonalization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Sample-splitting-to-remove-bias-induced-by-overfitting">Sample splitting to remove bias induced by overfitting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Double/debiased-machine-learning">Double/debiased machine learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Partialling-out-score">Partialling out score</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/examples/R_double_ml_basics.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
