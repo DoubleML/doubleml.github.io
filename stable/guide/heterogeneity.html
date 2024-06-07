@@ -588,9 +588,9 @@ Python</label><div class="sd-tab-content docutils">
 
 <span class="gp">In [18]: </span><span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
 <span class="go">            2.5 %    effect    97.5 %</span>
-<span class="go">Group_0  0.231638  0.645582  1.059525</span>
-<span class="go">Group_1 -0.625448  0.363870  1.353188</span>
-<span class="go">Group_2  0.362418  0.771480  1.180542</span>
+<span class="go">Group_0  0.287186  0.692300  1.097415</span>
+<span class="go">Group_1 -4.925119 -1.098433  2.728253</span>
+<span class="go">Group_2  0.136062  0.572424  1.008785</span>
 </pre></div>
 </div>
 </div>
@@ -724,11 +724,11 @@ Python</label><div class="sd-tab-content docutils">
 
 <span class="gp">In [54]: </span><span class="nb">print</span><span class="p">(</span><span class="n">ci</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 <span class="go">      2.5 %    effect    97.5 %</span>
-<span class="go">0  0.253949  0.741076  1.228203</span>
-<span class="go">1 -1.093401 -0.115761  0.861879</span>
-<span class="go">2 -1.937669 -0.406249  1.125172</span>
-<span class="go">3  0.269999  0.691113  1.112227</span>
-<span class="go">4  0.000768  0.571317  1.141866</span>
+<span class="go">0  0.142292  0.646079  1.149866</span>
+<span class="go">1 -5.492968 -1.698898  2.095172</span>
+<span class="go">2 -9.143246 -2.929154  3.284938</span>
+<span class="go">3  0.025685  1.014572  2.003459</span>
+<span class="go">4 -0.564720  1.125526  2.815772</span>
 </pre></div>
 </div>
 </div>
@@ -803,8 +803,8 @@ Python</label><div class="sd-tab-content docutils">
 <p>A more detailed notebook on CATEs for <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> models is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
 <p><strong>Theory:</strong> In the model above, it holds</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\mathbb{E}[Y|X] &amp;= \mathbb{E}[\theta_0(X) D|X] + \mathbb{E}[g(X)|X] + \underbrace{\mathbb{E}[\varepsilon|X]}_{=\mathbb{E}[\mathbb{E}[\varepsilon|D, X]|X]=0}\\
-&amp;=\theta(X) \mathbb{E}[D|X] + g(X)\end{split}\]</div>
+\[\begin{split}\mathbb{E}[Y|X] &amp;= \mathbb{E}[\theta_0(X) D|X] + \mathbb{E}[g_0(X)|X] + \underbrace{\mathbb{E}[\varepsilon|X]}_{=\mathbb{E}[\mathbb{E}[\varepsilon|D, X]|X]=0}\\
+&amp;=\theta_0(X) \mathbb{E}[D|X] + g_0(X)\end{split}\]</div>
 <p>such that</p>
 <div class="math notranslate nohighlight">
 \[\underbrace{Y - \mathbb{E}[Y|X]}_{=:\tilde{Y}} = \theta_0(X) (\underbrace{D - \mathbb{E}[D|X]}_{=:\tilde{D}}) + \varepsilon.\]</div>
@@ -813,11 +813,11 @@ Python</label><div class="sd-tab-content docutils">
 \[\mathbb{E}[\epsilon|\tilde{D}] = \mathbb{E}[\mathbb{E}[\epsilon|X, D]|\tilde{D}] = 0\]</div>
 <p>and consequently</p>
 <div class="math notranslate nohighlight">
-\[\mathbb{E}[\tilde{Y}|\tilde{D}] = \theta(X)\tilde{D}.\]</div>
+\[\mathbb{E}[\tilde{Y}|\tilde{D}] = \theta_0(X)\tilde{D}.\]</div>
 <p>Consequently, <span class="math notranslate nohighlight">\(\theta_0(X)\)</span> can be estimated by regressing <span class="math notranslate nohighlight">\(\tilde{Y}\)</span> on <span class="math notranslate nohighlight">\(\tilde{D}\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\theta_0(X) = \arg\min_{\theta(X) \in \Theta}\mathbb{E}[(\tilde{Y} - \theta(X)\tilde{D})^2]\]</div>
-<p>The <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> implementation approximates the effect <span class="math notranslate nohighlight">\(\theta(X)\)</span> by a linear projection on a supplied basis <span class="math notranslate nohighlight">\(\phi(X)\)</span>:</p>
+<p>The <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> implementation approximates the effect <span class="math notranslate nohighlight">\(\theta_0(X)\)</span> by a linear projection on a supplied basis <span class="math notranslate nohighlight">\(\phi(X)\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\theta_0(X) \approx \beta_0^T \phi(X)\]</div>
 <p>where <span class="math notranslate nohighlight">\(\beta_0\)</span> are coefficients to be estimated.
@@ -869,8 +869,8 @@ Python</label><div class="sd-tab-content docutils">
 <span class="gp">In [85]: </span><span class="n">_</span> <span class="o">=</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
 <span class="gp">In [86]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-<span class="go">       coef   std err         t     P&gt;|t|     2.5 %   97.5 %</span>
-<span class="go">d  0.593036  0.195602  3.031848  0.002431  0.209663  0.97641</span>
+<span class="go">       coef   std err         t     P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.054636  0.660914  0.082667  0.934116 -1.240732  1.350004</span>
 </pre></div>
 </div>
 </div>

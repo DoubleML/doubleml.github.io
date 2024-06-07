@@ -769,7 +769,6 @@ Python</label><div class="sd-tab-content docutils">
 
 <span class="go">------------------ Score &amp; algorithm ------------------</span>
 <span class="go">Score function: partialling out</span>
-<span class="go">DML algorithm: dml2</span>
 
 <span class="go">------------------ Machine learner   ------------------</span>
 <span class="go">Learner ml_l: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
@@ -781,7 +780,6 @@ Python</label><div class="sd-tab-content docutils">
 <span class="go">------------------ Resampling        ------------------</span>
 <span class="go">No. folds: 5</span>
 <span class="go">No. repeated sample splits: 1</span>
-<span class="go">Apply cross-fitting: True</span>
 
 <span class="go">------------------ Fit summary       ------------------</span>
 <span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
@@ -863,11 +861,10 @@ The number of bootstrap samples is provided as input <code class="docutils liter
 <code class="docutils literal notranslate"><span class="pre">'normal'</span></code> or <code class="docutils literal notranslate"><span class="pre">'wild'</span></code>.
 Based on the estimates of the standard errors <span class="math notranslate nohighlight">\(\hat{\sigma}_j\)</span>
 and <span class="math notranslate nohighlight">\(\hat{J}_{0,j} = \mathbb{E}_N(\psi_{a,j}(W; \eta_{0,j}))\)</span>
-that are obtained from DML, we construct bootstrap coefficients
-<span class="math notranslate nohighlight">\(\theta^{*,b}_j\)</span> and bootstrap t-statistics <span class="math notranslate nohighlight">\(t^{*,b}_j\)</span>
+that are obtained from DML, we construct bootstraped t-statistics <span class="math notranslate nohighlight">\(t^{*,b}_j\)</span>
 for <span class="math notranslate nohighlight">\(j=1, \ldots, p_1\)</span></p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\theta^{*,b}_{j} &amp;= \frac{1}{\sqrt{N} \hat{J}_{0,j}}\sum_{k=1}^{K} \sum_{i \in I_k} \xi_{i}^b \cdot \psi_j(W_i; \tilde{\theta}_{0,j}, \hat{\eta}_{0,j;k}),\\t^{*,b}_{j} &amp;= \frac{1}{\sqrt{N} \hat{J}_{0,j} \hat{\sigma}_{j}} \sum_{k=1}^{K} \sum_{i \in I_k} \xi_{i}^b  \cdot \psi_j(W_i; \tilde{\theta}_{0,j}, \hat{\eta}_{0,j;k}).\end{aligned}\end{align} \]</div>
+\[t^{*,b}_{j} = \frac{1}{\sqrt{N} \hat{J}_{0,j} \hat{\sigma}_{j}} \sum_{k=1}^{K} \sum_{i \in I_k} \xi_{i}^b  \cdot \psi_j(W_i; \tilde{\theta}_{0,j}, \hat{\eta}_{0,j;k}).\]</div>
 <p>The output of the multiplier bootstrap can be used to determine the constant, <span class="math notranslate nohighlight">\(c_{1-\alpha}\)</span> that is required for the construction of a
 simultaneous <span class="math notranslate nohighlight">\((1-\alpha)\)</span> confidence band</p>
 <div class="math notranslate nohighlight">
@@ -929,20 +926,20 @@ Python</label><div class="sd-tab-content docutils">
 <span class="go">d10 -0.110717  0.138698</span>
 
 <span class="gp">In [35]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr</span><span class="o">.</span><span class="n">p_adjust</span><span class="p">())</span>
-<span class="go">         coef   pval</span>
+<span class="go">       thetas   pval</span>
 <span class="go">d1   2.934511  0.000</span>
 <span class="go">d2   2.949241  0.000</span>
 <span class="go">d3   2.984866  0.000</span>
-<span class="go">d4  -0.025077  0.850</span>
-<span class="go">d5   0.058042  0.492</span>
-<span class="go">d6  -0.040112  0.850</span>
-<span class="go">d7  -0.054529  0.850</span>
-<span class="go">d8   0.053389  0.514</span>
-<span class="go">d9   0.023563  0.802</span>
-<span class="go">d10  0.013990  0.850</span>
+<span class="go">d4  -0.025077  0.902</span>
+<span class="go">d5   0.058042  0.784</span>
+<span class="go">d6  -0.040112  0.808</span>
+<span class="go">d7  -0.054529  0.784</span>
+<span class="go">d8   0.053389  0.784</span>
+<span class="go">d9   0.023563  0.902</span>
+<span class="go">d10  0.013990  0.902</span>
 
 <span class="gp">In [36]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr</span><span class="o">.</span><span class="n">p_adjust</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;bonferroni&#39;</span><span class="p">))</span>
-<span class="go">         coef  pval</span>
+<span class="go">       thetas  pval</span>
 <span class="go">d1   2.934511   0.0</span>
 <span class="go">d2   2.949241   0.0</span>
 <span class="go">d3   2.984866   0.0</span>
@@ -1048,8 +1045,164 @@ R</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </section>
+<section id="simultaneous-inference-over-different-doubleml-models-advanced">
+<h2><span class="section-number">8.3. </span>Simultaneous inference over different DoubleML models (advanced)<a class="headerlink" href="#simultaneous-inference-over-different-doubleml-models-advanced" title="Permalink to this heading">#</a></h2>
+<p>The <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> package provides a method to perform valid simultaneous inference over different DoubleML models.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Remark that the confidence intervals will generally only be valid if the stronger (uniform) assumptions on e.g. nuisance
+estimates are satisfied. Further, the models should be estimated on the same data set.</p>
+</div>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleML</span></code> class contains a <code class="docutils literal notranslate"><span class="pre">framework</span></code> attribute which stores a <code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLFramework</span></code> object. This
+object contains a scaled version of the score function</p>
+<div class="math notranslate nohighlight">
+\[\tilde{\psi}(W_i; \theta, \eta) = \hat{J}_{0}^{-1}\psi(W_i; \hat{\theta}_{0}, \hat{\eta}_{0})\]</div>
+<p>which is used to construct confidence intervals. The framework objects can be concatenated using the
+<a href="#id1"><span class="problematic" id="id2">:py:function:`doubleml.concat`</span></a> function.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-14" name="sd-tab-set-7" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-14">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [37]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [38]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [39]: </span><span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">clone</span>
+
+<span class="gp">In [40]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span>
+
+<span class="gp">In [41]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+
+<span class="gp">In [42]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="go"># Simulate data</span>
+<span class="gp">In [43]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+
+<span class="gp">In [44]: </span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="gp">In [45]: </span><span class="n">n_vars</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="gp">In [46]: </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">))</span>
+
+<span class="gp">In [47]: </span><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])</span>
+
+<span class="gp">In [48]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+
+<span class="gp">In [49]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">:],</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+
+<span class="gp">In [50]: </span><span class="n">learner</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span>
+
+<span class="gp">In [51]: </span><span class="n">dml_plr_1</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">))</span>
+
+<span class="gp">In [52]: </span><span class="n">learner_rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+
+<span class="gp">In [53]: </span><span class="n">dml_plr_2</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner_rf</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner_rf</span><span class="p">))</span>
+
+<span class="gp">In [54]: </span><span class="n">dml_plr_1</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gh">Out[54]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7f9c605fbca0&gt;</span>
+
+<span class="gp">In [55]: </span><span class="n">dml_plr_2</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gh">Out[55]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7f9c6088bf70&gt;</span>
+
+<span class="gp">In [56]: </span><span class="n">dml_combined</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dml_plr_1</span><span class="o">.</span><span class="n">framework</span><span class="p">,</span> <span class="n">dml_plr_2</span><span class="o">.</span><span class="n">framework</span><span class="p">])</span>
+
+<span class="gp">In [57]: </span><span class="n">dml_combined</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gh">Out[57]: </span>
+<span class="go">       2.5 %    97.5 %</span>
+<span class="go">0   2.797737  3.071285</span>
+<span class="go">1   2.797965  3.100517</span>
+<span class="go">2   2.844667  3.125065</span>
+<span class="go">3  -0.156545  0.106391</span>
+<span class="go">4  -0.076156  0.192240</span>
+<span class="go">5  -0.173969  0.093746</span>
+<span class="go">6  -0.187153  0.078096</span>
+<span class="go">7  -0.083318  0.190096</span>
+<span class="go">8  -0.107295  0.154421</span>
+<span class="go">9  -0.126777  0.154758</span>
+<span class="go">10  2.634577  3.054348</span>
+<span class="go">11  2.676534  3.178704</span>
+<span class="go">12  2.771157  3.215967</span>
+<span class="go">13 -0.360065  0.157091</span>
+<span class="go">14 -0.167993  0.358799</span>
+<span class="go">15 -0.402113  0.199458</span>
+<span class="go">16 -0.313056  0.238225</span>
+<span class="go">17 -0.266922  0.318584</span>
+<span class="go">18 -0.181446  0.385240</span>
+<span class="go">19 -0.280514  0.321686</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Frameworks can also be added or subtracted from each other. Of course, this changes the estimated parameter and should be used with caution.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-8" type="radio">
+</input><label class="sd-tab-label" data-sync-id="py" for="sd-tab-item-15">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [58]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="gp">In [59]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">In [60]: </span><span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">clone</span>
+
+<span class="gp">In [61]: </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span>
+
+<span class="gp">In [62]: </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+
+<span class="gp">In [63]: </span><span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+
+<span class="go"># Simulate data</span>
+<span class="gp">In [64]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+
+<span class="gp">In [65]: </span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="gp">In [66]: </span><span class="n">n_vars</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="gp">In [67]: </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">))</span>
+
+<span class="gp">In [68]: </span><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])</span>
+
+<span class="gp">In [69]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+
+<span class="gp">In [70]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">:],</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+
+<span class="gp">In [71]: </span><span class="n">learner</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span>
+
+<span class="gp">In [72]: </span><span class="n">dml_plr_1</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner</span><span class="p">))</span>
+
+<span class="gp">In [73]: </span><span class="n">learner_rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+
+<span class="gp">In [74]: </span><span class="n">dml_plr_2</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner_rf</span><span class="p">),</span> <span class="n">clone</span><span class="p">(</span><span class="n">learner_rf</span><span class="p">))</span>
+
+<span class="gp">In [75]: </span><span class="n">dml_plr_1</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gh">Out[75]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7f9c59b050a0&gt;</span>
+
+<span class="gp">In [76]: </span><span class="n">dml_plr_2</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gh">Out[76]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7f9c5a9b1370&gt;</span>
+
+<span class="gp">In [77]: </span><span class="n">dml_combined</span> <span class="o">=</span> <span class="n">dml_plr_1</span><span class="o">.</span><span class="n">framework</span> <span class="o">-</span> <span class="n">dml_plr_2</span><span class="o">.</span><span class="n">framework</span>
+
+<span class="gp">In [78]: </span><span class="n">dml_combined</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gh">Out[78]: </span>
+<span class="go">      2.5 %    97.5 %</span>
+<span class="go">0 -0.074304  0.254400</span>
+<span class="go">1 -0.145748  0.188991</span>
+<span class="go">2 -0.164034  0.146641</span>
+<span class="go">3 -0.122777  0.275596</span>
+<span class="go">4 -0.242815  0.168092</span>
+<span class="go">5 -0.178934  0.301366</span>
+<span class="go">6 -0.242139  0.207912</span>
+<span class="go">7 -0.197484  0.252601</span>
+<span class="go">8 -0.292047  0.135379</span>
+<span class="go">9 -0.244622  0.231430</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>One possible use case is to substract the estimates from two average potential outcome models as e.g. in the <code class="xref py py-class docutils literal notranslate"><span class="pre">DoubleMLQTE</span></code> example.</p>
+<p>This also works for multiple repetitions if both models have the same number of repetitions, as each repetition is treated seperately.</p>
+</section>
 <section id="references">
-<h2><span class="section-number">8.3. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">8.4. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Belloni, A., Chernozhukov, V., Chetverikov, D., Wei, Y. (2018), Uniformly valid post-regularization confidence regions for many functional parameters in z-estimation framework. The Annals of Statistics, 46 (6B): 3643-75,  <a class="reference external" href="https://dx.doi.org/10.1214%2F17-AOS1671">doi: 10.1214/17-AOS1671</a>.</p></li>
 <li><p>Chernozhukov, V., Chetverikov, D., Kato, K. (2013). Gaussian approximations and multiplier bootstrap for maxima of sums of high-dimensional random vectors. The Annals of Statistics 41 (6): 2786-2819, <a class="reference external" href="https://dx.doi.org/10.1214/13-AOS1161">doi: 10.1214/13-AOS1161</a>.</p></li>
@@ -1107,7 +1260,8 @@ R</label><div class="sd-tab-content docutils">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-estimation">8.1. Variance estimation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-bands-and-multiplier-bootstrap-for-valid-simultaneous-inference">8.2. Confidence bands and multiplier bootstrap for valid simultaneous inference</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">8.3. References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simultaneous-inference-over-different-doubleml-models-advanced">8.3. Simultaneous inference over different DoubleML models (advanced)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">8.4. References</a></li>
 </ul>
   </nav></div>
 
