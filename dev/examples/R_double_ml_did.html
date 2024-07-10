@@ -1,0 +1,1431 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>R: DoubleML for Difference-in-Differences &#8212; DoubleML  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=c49bcd98" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=1ecd1175"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/R_double_ml_did';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="R: Cluster Robust Double Machine Learning" href="R_double_ml_multiway_cluster.html" />
+    <link rel="prev" title="R: Impact of 401(k) on Financial Wealth" href="R_double_ml_pension.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DoubleML  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../intro/install.html">
+     Install
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../intro/intro.html">
+     Getting started
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../workflow/workflow.html">
+     Workflow
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../guide/guide.html">
+     User guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+     Examples
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../api/api.html">
+     Python API
+  </a>
+</li>
+
+            <li class="nav-item dropdown pst-header-nav-item">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class="nav-item ">
+  <a class="nav-link dropdown-item nav-external" href="https://docs.doubleml.org/r/stable/">
+     R API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link dropdown-item nav-internal" href="../literature/literature.html">
+     Literature
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link dropdown-item nav-internal" href="../release/release.html">
+     Release notes
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../intro/install.html">
+     Install
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../intro/intro.html">
+     Getting started
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../workflow/workflow.html">
+     Workflow
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../guide/guide.html">
+     User guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+     Examples
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../api/api.html">
+     Python API
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+     R API
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../literature/literature.html">
+     Literature
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../release/release.html">
+     Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p>
+
+<script type="text/javascript">
+    // Change the logo depending on the theme
+    var logo = document.querySelector('img.logo');
+    var observer = new MutationObserver(function(mutations) {
+        const dark = document.documentElement.dataset.theme == 'dark';
+        if (dark) {
+            logo.src = "../logo_dark.png";
+        } else {
+            logo.src = "../logo.png";
+        }
+    });
+    observer.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+</script></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_basics.html">Python: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pension.html">Python: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_did.html">Python: Difference-in-Differences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_did_pretest.html">Python: Difference-in-Differences Pre-Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_basic_iv.html">Python: Basic Instrumental Variables calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_plm_irm_hetfx.html">Python: PLM and IRM for Multiple Treatments</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate.html">Python: Group Average Treatment Effects (GATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate_plr.html">Python: Group Average Treatment Effects (GATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cate.html">Python: Conditional Average Treatment Effects (CATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cate_plr.html">Python: Conditional Average Treatment Effects (CATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate_sensitivity.html">Python: GATE Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pension_qte.html">Python: Impact of 401(k) on Financial Wealth (Quantile Effects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pq.html">Python: Potential Quantiles and Quantile Treatment Effects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_basics.html">R: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_pension.html">R: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">R: DoubleML for Difference-in-Differences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_multiway_cluster.html">R: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_basic_iv.html">R: Basic Instrumental Variables Calculation</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="double_ml_bonus_data.html">DML: Bonus Data</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Examples</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">R: DoubleML...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+      <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/R_double_ml_did.ipynb">https://docs.doubleml.org/stable/examples/R_double_ml_did.ipynb</a>.
+
+    </ul>
+    </div><section id="R:-DoubleML-for-Difference-in-Differences">
+<h1>R: DoubleML for Difference-in-Differences<a class="headerlink" href="#R:-DoubleML-for-Difference-in-Differences" title="Link to this heading">#</a></h1>
+<p>In this example, we demonstrate, how <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> can be used in combination with the <a class="reference external" href="https://bcallaway11.github.io/did/index.html">did package for R</a> in order to estimate group-time average treatment effects in difference-in-difference (DiD) models with multiple periods.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">did</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+
+<span class="c1"># suppress messages during fitting</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<section id="Demo-example-from-did">
+<h2>Demo example from <code class="docutils literal notranslate"><span class="pre">did</span></code><a class="headerlink" href="#Demo-example-from-did" title="Link to this heading">#</a></h2>
+<p>We will demonstrate the use of <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> for DiD in the <a class="reference external" href="https://bcallaway11.github.io/did/articles/did-basics.html">introductory example</a> of the <code class="docutils literal notranslate"><span class="pre">did</span></code> package.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate data, original code available at https://github.com/bcallaway11/did/blob/master/vignettes/did-basics.Rmd</span>
+<span class="n">time.periods</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">4</span>
+<span class="n">sp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">reset.sim</span><span class="p">()</span>
+<span class="n">sp</span><span class="o">$</span><span class="n">te</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">0</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1814</span><span class="p">)</span>
+
+<span class="c1"># generate dataset with 4 time periods</span>
+<span class="n">time.periods</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">4</span>
+
+<span class="c1"># add dynamic effects</span>
+<span class="n">sp</span><span class="o">$</span><span class="n">te.e</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="n">time.periods</span>
+
+<span class="c1"># generate data set with these parameters</span>
+<span class="c1"># here, we dropped all units who are treated in time period 1 as they do not help us recover ATT(g,t)&#39;s.</span>
+<span class="n">dta</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">build_sim_dataset</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+
+<span class="c1"># How many observations remained after dropping the ``always-treated&#39;&#39; units</span>
+<span class="nf">nrow</span><span class="p">(</span><span class="n">dta</span><span class="p">)</span>
+<span class="c1">#This is what the data looks like</span>
+<span class="nf">head</span><span class="p">(</span><span class="n">dta</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+15916</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table class="dataframe">
+<caption>A tibble: 6 × 7</caption>
+<thead>
+    <tr><th scope=col>G</th><th scope=col>X</th><th scope=col>id</th><th scope=col>cluster</th><th scope=col>period</th><th scope=col>Y</th><th scope=col>treat</th></tr>
+    <tr><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+    <tr><td>3</td><td>-0.8762330</td><td>1</td><td> 5</td><td>1</td><td> 5.562556</td><td>1</td></tr>
+    <tr><td>3</td><td>-0.8762330</td><td>1</td><td> 5</td><td>2</td><td> 4.349213</td><td>1</td></tr>
+    <tr><td>3</td><td>-0.8762330</td><td>1</td><td> 5</td><td>3</td><td> 7.134037</td><td>1</td></tr>
+    <tr><td>3</td><td>-0.8762330</td><td>1</td><td> 5</td><td>4</td><td> 6.243056</td><td>1</td></tr>
+    <tr><td>2</td><td>-0.8738481</td><td>2</td><td>36</td><td>1</td><td>-3.659387</td><td>1</td></tr>
+    <tr><td>2</td><td>-0.8738481</td><td>2</td><td>36</td><td>2</td><td>-1.274099</td><td>1</td></tr>
+</tbody>
+</table></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">n</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">10000</span>
+<span class="n">decision_effect</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">-2</span>
+<span class="n">instrument_effect</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">0.7</span>
+
+<span class="n">confounder</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rbinom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0.3</span><span class="p">)</span>
+<span class="n">instrument</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rbinom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span>
+<span class="n">decision</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="nf">runif</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">instrument_effect</span><span class="o">*</span><span class="n">instrument</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">0.4</span><span class="o">*</span><span class="n">confounder</span><span class="p">)</span>
+<span class="n">outcome</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">decision_effect</span><span class="o">*</span><span class="n">decision</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">confounder</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">sd</span><span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">data.frame</span><span class="p">(</span><span class="n">instrument</span><span class="p">,</span><span class="w"> </span><span class="n">decision</span><span class="p">,</span><span class="w"> </span><span class="n">outcome</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Comparison-to-did-package">
+<h3>Comparison to <code class="docutils literal notranslate"><span class="pre">did</span></code> package<a class="headerlink" href="#Comparison-to-did-package" title="Link to this heading">#</a></h3>
+<p>By default, estimation in <code class="docutils literal notranslate"><span class="pre">did</span></code> is based on (unpenalized) linear and logistic regression. Let’s start with this default model first.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimate group-time average treatment effects using att_gt method</span>
+<span class="n">example_attgt</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">att_gt</span><span class="p">(</span><span class="n">yname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Y&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">tname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;period&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">idname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">gname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;G&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">xformla</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="n">X</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dta</span>
+<span class="w">                        </span><span class="p">)</span>
+
+<span class="c1"># summarize the results</span>
+<span class="nf">summary</span><span class="p">(</span><span class="n">example_attgt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Call:
+att_gt(yname = &#34;Y&#34;, tname = &#34;period&#34;, idname = &#34;id&#34;, gname = &#34;G&#34;,
+    xformla = ~X, data = dta)
+
+Reference: Callaway, Brantly and Pedro H.C. Sant&#39;Anna.  &#34;Difference-in-Differences with Multiple Time Periods.&#34; Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt;
+
+Group-Time Average Treatment Effects:
+ Group Time ATT(g,t) Std. Error [95% Simult.  Conf. Band]
+     2    2   0.9209     0.0643        0.7440      1.0979 *
+     2    3   1.9875     0.0664        1.8047      2.1703 *
+     2    4   2.9552     0.0654        2.7752      3.1352 *
+     3    2  -0.0433     0.0652       -0.2227      0.1361
+     3    3   1.1080     0.0620        0.9374      1.2787 *
+     3    4   2.0590     0.0617        1.8893      2.2288 *
+     4    2   0.0023     0.0692       -0.1881      0.1928
+     4    3   0.0615     0.0674       -0.1240      0.2471
+     4    4   0.9523     0.0660        0.7707      1.1339 *
+---
+Signif. codes: `*&#39; confidence band does not cover 0
+
+P-value for pre-test of parallel trends assumption:  0.60857
+Control Group:  Never Treated,  Anticipation Periods:  0
+Estimation Method:  Doubly Robust
+</pre></div></div>
+</div>
+</section>
+<section id="Using-ML-for-DiD:-Integrating-DoubleML-in-did">
+<h3>Using ML for DiD: Integrating <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> in <code class="docutils literal notranslate"><span class="pre">did</span></code><a class="headerlink" href="#Using-ML-for-DiD:-Integrating-DoubleML-in-did" title="Link to this heading">#</a></h3>
+<p>As described in our <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#difference-in-differences-models-did">Section on DiD models in the user guide</a>, <a class="reference external" href="https://linkinghub.elsevier.com/retrieve/pii/S0304407620301901">Sant’Anna and Zhao (2020)</a> have developed a doubly robust DiD model which is compatible with ML-based estimation. As this doubly robust model is internally used in <code class="docutils literal notranslate"><span class="pre">did</span></code>, it is possible to use <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> here to obtain valid point estimates and confidence intervals. For
+this, we need to write a wrapper around a <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> model and pass it to <code class="docutils literal notranslate"><span class="pre">did</span></code> as a custom estimation approach. Once this is implemented, we can use all the nice features and advantages of the <code class="docutils literal notranslate"><span class="pre">did</span></code> package.</p>
+<p>For now, let’s abstract from using fancy ML algorithms to keep the comparison to the classic <code class="docutils literal notranslate"><span class="pre">did</span></code> implementation simple. Hence, we will use linear and logistic regression for the nuisance compontents in the DiD model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># DoubleML wrapper for did</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<span class="n">doubleml_did_linear</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span><span class="w"> </span><span class="n">y0</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">covariates</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.lm&quot;</span><span class="p">),</span>
+<span class="w">                         </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.log_reg&quot;</span><span class="p">),</span>
+<span class="w">                         </span><span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="kc">...</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="c1"># warning if n_rep &gt; 1 to handle mapping from psi to inf.func</span>
+<span class="w">  </span><span class="nf">if </span><span class="p">(</span><span class="n">n_rep</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">warning</span><span class="p">(</span><span class="s">&quot;n_rep &gt; 1 is not supported.&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1"># Compute difference in outcomes</span>
+<span class="w">  </span><span class="n">delta_y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y0</span>
+<span class="w">  </span><span class="c1"># Prepare data backend</span>
+<span class="w">  </span><span class="n">dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleML</span><span class="o">::</span><span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">covariates</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">delta_y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">D</span><span class="p">)</span>
+<span class="w">  </span><span class="c1"># Compute the ATT</span>
+<span class="w">  </span><span class="n">dml_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleML</span><span class="o">::</span><span class="n">DoubleMLIRM</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ATTE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_folds</span><span class="p">)</span>
+<span class="w">  </span><span class="n">dml_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="w">  </span><span class="n">att</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">coef</span><span class="p">[</span><span class="m">1</span><span class="p">]</span>
+<span class="w">  </span><span class="c1"># Return results</span>
+<span class="w">  </span><span class="n">inf.func</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">psi</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
+<span class="w">  </span><span class="n">output</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">ATT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">att</span><span class="p">,</span><span class="w"> </span><span class="n">att.inf.func</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inf.func</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">example_attgt_dml_linear</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">att_gt</span><span class="p">(</span><span class="n">yname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Y&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">tname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;period&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">idname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">gname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;G&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">xformla</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="n">X</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dta</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">est_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doubleml_did_linear</span><span class="p">)</span>
+
+
+<span class="nf">summary</span><span class="p">(</span><span class="n">example_attgt_dml_linear</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Call:
+att_gt(yname = &#34;Y&#34;, tname = &#34;period&#34;, idname = &#34;id&#34;, gname = &#34;G&#34;,
+    xformla = ~X, data = dta, est_method = doubleml_did_linear)
+
+Reference: Callaway, Brantly and Pedro H.C. Sant&#39;Anna.  &#34;Difference-in-Differences with Multiple Time Periods.&#34; Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt;
+
+Group-Time Average Treatment Effects:
+ Group Time ATT(g,t) Std. Error [95% Simult.  Conf. Band]
+     2    2   0.9145     0.0654        0.7418      1.0872 *
+     2    3   1.9951     0.0655        1.8221      2.1681 *
+     2    4   2.9561     0.0653        2.7838      3.1285 *
+     3    2  -0.0418     0.0704       -0.2276      0.1441
+     3    3   1.1041     0.0649        0.9327      1.2754 *
+     3    4   2.0533     0.0669        1.8768      2.2298 *
+     4    2  -0.0028     0.0716       -0.1918      0.1862
+     4    3   0.0635     0.0675       -0.1147      0.2416
+     4    4   0.9609     0.0673        0.7833      1.1386 *
+---
+Signif. codes: `*&#39; confidence band does not cover 0
+
+P-value for pre-test of parallel trends assumption:  0.64579
+Control Group:  Never Treated,  Anticipation Periods:  0
+</pre></div></div>
+</div>
+<p>Any differences from the default <code class="docutils literal notranslate"><span class="pre">did</span></code> implementation arise due to sampling randomness, because <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> uses cross-fitting internally, which is not necessary if classical parametric estimation methods are used.</p>
+<p>Next, let’s demonstrate how we can use more complex ML learners. For this, we just have to pass another <code class="docutils literal notranslate"><span class="pre">mlr3</span></code> learner through the wrapper, for example a random forest. Please note that the original data generating process is linear, such that we don’t expect random forest to lead to better results than the linear learners. We provide a variant of the wrapper that includes an evaluation of the nuisance predictions at the end of this notebook.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># DoubleML wrapper for did with random forest learner</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+
+<span class="n">doubleml_did_rf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span><span class="w"> </span><span class="n">y0</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">covariates</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="kc">...</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1"># warning if n_rep &gt; 1 to handle mapping from psi to inf.func</span>
+<span class="nf">if </span><span class="p">(</span><span class="n">n_rep</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="nf">warning</span><span class="p">(</span><span class="s">&quot;n_rep &gt; 1 is not supported.&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1"># Compute difference in outcomes</span>
+<span class="n">delta_y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y0</span>
+<span class="c1"># Prepare data backend</span>
+<span class="n">dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleML</span><span class="o">::</span><span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">covariates</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">delta_y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">D</span><span class="p">)</span>
+<span class="c1"># Compute the ATT</span>
+<span class="n">dml_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleML</span><span class="o">::</span><span class="n">DoubleMLIRM</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ATTE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_folds</span><span class="p">)</span>
+<span class="n">dml_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">()</span>
+<span class="n">att</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">coef</span><span class="p">[</span><span class="m">1</span><span class="p">]</span>
+<span class="c1"># Return results</span>
+<span class="n">inf.func</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">psi</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
+<span class="n">output</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">ATT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">att</span><span class="p">,</span><span class="w"> </span><span class="n">att.inf.func</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inf.func</span><span class="p">)</span>
+<span class="nf">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">example_attgt_dml_rf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">att_gt</span><span class="p">(</span><span class="n">yname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Y&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="n">tname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;period&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="n">idname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="n">gname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;G&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="n">xformla</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="n">X</span><span class="p">,</span>
+<span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dta</span><span class="p">,</span>
+<span class="w"> </span><span class="n">est_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doubleml_did_rf</span><span class="p">)</span>
+
+<span class="nf">summary</span><span class="p">(</span><span class="n">example_attgt_dml_rf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Call:
+att_gt(yname = &#34;Y&#34;, tname = &#34;period&#34;, idname = &#34;id&#34;, gname = &#34;G&#34;,
+    xformla = ~X, data = dta, est_method = doubleml_did_rf)
+
+Reference: Callaway, Brantly and Pedro H.C. Sant&#39;Anna.  &#34;Difference-in-Differences with Multiple Time Periods.&#34; Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt;
+
+Group-Time Average Treatment Effects:
+ Group Time ATT(g,t) Std. Error [95% Simult.  Conf. Band]
+     2    2   0.9647     0.0736        0.7603      1.1691 *
+     2    3   2.1055     0.0894        1.8571      2.3538 *
+     2    4   3.1295     0.1096        2.8250      3.4339 *
+     3    2   0.0820     0.0719       -0.1177      0.2818
+     3    3   1.2075     0.0707        1.0112      1.4039 *
+     3    4   2.2865     0.0916        2.0323      2.5408 *
+     4    2   0.1807     0.0743       -0.0257      0.3871
+     4    3   0.2451     0.0662        0.0611      0.4290 *
+     4    4   1.1401     0.0711        0.9425      1.3376 *
+---
+Signif. codes: `*&#39; confidence band does not cover 0
+
+P-value for pre-test of parallel trends assumption:  2e-05
+Control Group:  Never Treated,  Anticipation Periods:  0
+</pre></div></div>
+</div>
+<p>We can see that the results are not dramatically different from the results before. We can observe from the larger standard errors that the default random forest learners seems to be a less precise prediction rule.</p>
+</section>
+<section id="Exploiting-the-Functionalities-of-did">
+<h3>Exploiting the Functionalities of <code class="docutils literal notranslate"><span class="pre">did</span></code><a class="headerlink" href="#Exploiting-the-Functionalities-of-did" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">did</span></code> package offers various tools for multi-period DiD models, for example plotting the group-time average treatment effects, which can be exploited just as in the native <code class="docutils literal notranslate"><span class="pre">did</span></code> usage.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot group-time average treatment effects</span>
+<span class="nf">ggdid</span><span class="p">(</span><span class="n">example_attgt_dml_linear</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_R_double_ml_did_14_0.png" class="no-scaled-link" src="../_images/examples_R_double_ml_did_14_0.png" style="width: 420px; height: 420px;" />
+</div>
+</div>
+<p>It’s also possible to calculate aggregated effect estimates. Please note that, the results are again very close to those in <a class="reference external" href="https://bcallaway11.github.io/did/articles/did-basics.html#aggregating-group-time-average-treatment-effects">the original notebook</a>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">agg.simple</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">aggte</span><span class="p">(</span><span class="n">example_attgt_dml_linear</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;simple&quot;</span><span class="p">)</span>
+<span class="nf">summary</span><span class="p">(</span><span class="n">agg.simple</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Call:
+aggte(MP = example_attgt_dml_linear, type = &#34;simple&#34;)
+
+Reference: Callaway, Brantly and Pedro H.C. Sant&#39;Anna.  &#34;Difference-in-Differences with Multiple Time Periods.&#34; Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt;
+
+
+    ATT    Std. Error     [ 95%  Conf. Int.]
+ 1.6586        0.0368     1.5864      1.7308 *
+
+
+---
+Signif. codes: `*&#39; confidence band does not cover 0
+
+Control Group:  Never Treated,  Anticipation Periods:  0
+</pre></div></div>
+</div>
+</section>
+<section id="Details-on-Predictive-Performance">
+<h3>Details on Predictive Performance<a class="headerlink" href="#Details-on-Predictive-Performance" title="Link to this heading">#</a></h3>
+<p>We can add an evaluation functionality to the wrapper to assess how the predictive performance from the linear and logistic regression differ from that of the random forest learner.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">mlr3measures</span><span class="p">)</span>
+
+<span class="c1"># Add a wrapper that computes the RMSE and accuracy for the nuisance components, can be customized by providing custom measures</span>
+<span class="n">eval_preds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">predictions</span><span class="p">,</span><span class="w"> </span><span class="n">params_names</span><span class="p">,</span><span class="w"> </span><span class="n">custom_measures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">measures_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">()</span>
+
+<span class="w">  </span><span class="nf">if </span><span class="p">(</span><span class="o">!</span><span class="nf">is.null</span><span class="p">(</span><span class="n">custom_measures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1"># Alternatively provide a named list with custom evaluation functions</span>
+<span class="w">    </span><span class="n">measure_funcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">()</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">measure_funcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">()</span>
+<span class="w">    </span><span class="n">measure_funcs</span><span class="p">[[</span><span class="s">&#39;ml_m&#39;</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mlr3measures</span><span class="o">::</span><span class="n">acc</span>
+<span class="w">    </span><span class="n">measure_funcs</span><span class="p">[[</span><span class="s">&#39;ml_g0&#39;</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mlr3measures</span><span class="o">::</span><span class="n">rmse</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nf">for </span><span class="p">(</span><span class="n">param_name</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">params_names</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">preds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">predictions</span><span class="p">[[</span><span class="n">param_name</span><span class="p">]][,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
+
+<span class="w">  </span><span class="nf">if </span><span class="p">(</span><span class="n">param_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ml_m&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span>
+<span class="w">    </span><span class="c1"># map probability predictions to binary</span>
+<span class="w">    </span><span class="n">preds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.factor</span><span class="p">(</span><span class="nf">ifelse</span><span class="p">(</span><span class="n">preds</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">))</span>
+<span class="w">    </span><span class="n">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.factor</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">param_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ml_g0&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">d</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">]</span>
+<span class="w">    </span><span class="n">preds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">preds</span><span class="p">[</span><span class="n">d</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nf">if </span><span class="p">(</span><span class="n">param_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ml_g1&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">next</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">measure_func</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">measure_funcs</span><span class="p">[[</span><span class="n">param_name</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">measure_pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">measure_func</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span><span class="w"> </span><span class="n">preds</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">measures_res</span><span class="p">[[</span><span class="n">param_name</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">measure_pred</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="p">}</span>
+<span class="w">    </span><span class="nf">return</span><span class="p">(</span><span class="n">measures_res</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># evaluate learner performance: linear models</span>
+<span class="n">doubleml_did_eval_linear</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span><span class="w"> </span><span class="n">y0</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">covariates</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.lm&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.log_reg&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="kc">...</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="c1"># warning if n_rep &gt; 1 to handle mapping from psi to inf.func</span>
+<span class="w">  </span><span class="nf">if </span><span class="p">(</span><span class="n">n_rep</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">warning</span><span class="p">(</span><span class="s">&quot;n_rep &gt; 1 is not supported.&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1"># Compute difference in outcomes</span>
+<span class="w">  </span><span class="n">delta_y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y0</span>
+<span class="w">  </span><span class="c1"># Prepare data backend</span>
+<span class="w">  </span><span class="n">dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleML</span><span class="o">::</span><span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">covariates</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">delta_y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">D</span><span class="p">)</span>
+<span class="w">  </span><span class="c1"># Compute the ATT</span>
+<span class="w">  </span><span class="n">dml_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleML</span><span class="o">::</span><span class="n">DoubleMLIRM</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ATTE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_folds</span><span class="p">)</span>
+<span class="w">  </span><span class="n">dml_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="w">  </span><span class="n">att</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">coef</span><span class="p">[</span><span class="m">1</span><span class="p">]</span>
+<span class="w">  </span><span class="c1"># Return results</span>
+<span class="w">  </span><span class="n">inf.func</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">psi</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
+
+<span class="w">  </span><span class="c1"># Evaluate learner performance</span>
+<span class="w">  </span><span class="n">predictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">predictions</span>
+<span class="w">  </span><span class="n">params_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="nf">params_names</span><span class="p">()</span>
+<span class="w">  </span><span class="n">eval_predictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">eval_preds</span><span class="p">(</span><span class="n">delta_y</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">predictions</span><span class="p">,</span><span class="w"> </span><span class="n">params_names</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">print</span><span class="p">(</span><span class="n">eval_predictions</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">output</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">ATT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">att</span><span class="p">,</span><span class="w"> </span><span class="n">att.inf.func</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inf.func</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nf">library</span><span class="p">(</span><span class="n">mlr3measures</span><span class="p">)</span>
+
+<span class="c1"># evaluate learner performance: random forest</span>
+<span class="n">doubleml_did_eval_rf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span><span class="w"> </span><span class="n">y0</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">covariates</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;regr.ranger&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lrn</span><span class="p">(</span><span class="s">&quot;classif.ranger&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">n_rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="kc">...</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="c1"># warning if n_rep &gt; 1 to handle mapping from psi to inf.func</span>
+<span class="w">  </span><span class="nf">if </span><span class="p">(</span><span class="n">n_rep</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">warning</span><span class="p">(</span><span class="s">&quot;n_rep &gt; 1 is not supported.&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1"># Compute difference in outcomes</span>
+<span class="w">  </span><span class="n">delta_y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y0</span>
+<span class="w">  </span><span class="c1"># Prepare data backend</span>
+<span class="w">  </span><span class="n">dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleML</span><span class="o">::</span><span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">covariates</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">delta_y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">D</span><span class="p">)</span>
+<span class="w">  </span><span class="c1"># Compute the ATT</span>
+<span class="w">  </span><span class="n">dml_obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleML</span><span class="o">::</span><span class="n">DoubleMLIRM</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span><span class="w"> </span><span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_g</span><span class="p">,</span><span class="w"> </span><span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ml_m</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ATTE&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_folds</span><span class="p">)</span>
+<span class="w">  </span><span class="n">dml_obj</span><span class="o">$</span><span class="nf">fit</span><span class="p">(</span><span class="n">store_predictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="w">  </span><span class="n">att</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">coef</span><span class="p">[</span><span class="m">1</span><span class="p">]</span>
+<span class="w">  </span><span class="c1"># Return results</span>
+<span class="w">  </span><span class="n">inf.func</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">psi</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span>
+
+<span class="w">  </span><span class="c1"># Evaluate learner performance</span>
+<span class="w">  </span><span class="n">predictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="n">predictions</span>
+<span class="w">  </span><span class="n">params_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dml_obj</span><span class="o">$</span><span class="nf">params_names</span><span class="p">()</span>
+<span class="w">  </span><span class="n">eval_predictions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">eval_preds</span><span class="p">(</span><span class="n">delta_y</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">predictions</span><span class="p">,</span><span class="w"> </span><span class="n">params_names</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">print</span><span class="p">(</span><span class="n">eval_predictions</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">output</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">ATT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">att</span><span class="p">,</span><span class="w"> </span><span class="n">att.inf.func</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inf.func</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+In order to avoid name clashes, do not attach &#39;mlr3measures&#39;. Instead, only load the namespace with `requireNamespace(&#34;mlrmeasures&#34;)` and access the measures directly via `::`, e.g. `mlr3measures::auc()`.
+
+</pre></div></div>
+</div>
+<p>Running the evaluation wrappers helps to see that the random forest learner has a higher RMSE for predicting the outcome <span class="math notranslate nohighlight">\(E[\Delta Y|D=1,X]\)</span>. Both models predict individuals’ treatment (group) status with an accuracy of <span class="math notranslate nohighlight">\(1\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run estimation with evaluation: Linear model</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<span class="n">example_attgt_dml_eval_linear</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">att_gt</span><span class="p">(</span><span class="n">yname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Y&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">tname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;period&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">idname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">gname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;G&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">xformla</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="n">X</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dta</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">est_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doubleml_did_eval_linear</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">print_details</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+
+
+<span class="nf">summary</span><span class="p">(</span><span class="n">example_attgt_dml_eval_linear</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+current period: 2
+current group: 2
+set pretreatment period to be 1
+$ml_g0
+[1] 1.425103
+
+$ml_m
+[1] 1
+
+current period: 3
+current group: 2
+set pretreatment period to be 1
+$ml_g0
+[1] 1.409154
+
+$ml_m
+[1] 1
+
+current period: 4
+current group: 2
+set pretreatment period to be 1
+$ml_g0
+[1] 1.397313
+
+$ml_m
+[1] 1
+
+current period: 2
+current group: 3
+set pretreatment period to be 1
+$ml_g0
+[1] 1.425493
+
+$ml_m
+[1] 1
+
+current period: 3
+current group: 3
+set pretreatment period to be 2
+$ml_g0
+[1] 1.40676
+
+$ml_m
+[1] 1
+
+current period: 4
+current group: 3
+set pretreatment period to be 2
+$ml_g0
+[1] 1.421083
+
+$ml_m
+[1] 1
+
+current period: 2
+current group: 4
+set pretreatment period to be 1
+$ml_g0
+[1] 1.426055
+
+$ml_m
+[1] 1
+
+current period: 3
+current group: 4
+set pretreatment period to be 2
+$ml_g0
+[1] 1.40583
+
+$ml_m
+[1] 1
+
+current period: 4
+current group: 4
+set pretreatment period to be 3
+$ml_g0
+[1] 1.423951
+
+$ml_m
+[1] 1
+
+
+Call:
+att_gt(yname = &#34;Y&#34;, tname = &#34;period&#34;, idname = &#34;id&#34;, gname = &#34;G&#34;,
+    xformla = ~X, data = dta, est_method = doubleml_did_eval_linear,
+    print_details = TRUE)
+
+Reference: Callaway, Brantly and Pedro H.C. Sant&#39;Anna.  &#34;Difference-in-Differences with Multiple Time Periods.&#34; Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt;
+
+Group-Time Average Treatment Effects:
+ Group Time ATT(g,t) Std. Error [95% Simult.  Conf. Band]
+     2    2   0.9145     0.0654        0.7418      1.0872 *
+     2    3   1.9951     0.0655        1.8221      2.1681 *
+     2    4   2.9561     0.0653        2.7838      3.1285 *
+     3    2  -0.0418     0.0704       -0.2276      0.1441
+     3    3   1.1041     0.0649        0.9327      1.2754 *
+     3    4   2.0533     0.0669        1.8768      2.2298 *
+     4    2  -0.0028     0.0716       -0.1918      0.1862
+     4    3   0.0635     0.0675       -0.1147      0.2416
+     4    4   0.9609     0.0673        0.7833      1.1386 *
+---
+Signif. codes: `*&#39; confidence band does not cover 0
+
+P-value for pre-test of parallel trends assumption:  0.64579
+Control Group:  Never Treated,  Anticipation Periods:  0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run estimation with evaluation: Linear model</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<span class="n">example_attgt_dml_eval_rf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">att_gt</span><span class="p">(</span><span class="n">yname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Y&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">tname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;period&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">idname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">gname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;G&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">xformla</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="n">X</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dta</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">est_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doubleml_did_eval_rf</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">print_details</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+
+
+<span class="nf">summary</span><span class="p">(</span><span class="n">example_attgt_dml_eval_rf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+current period: 2
+current group: 2
+set pretreatment period to be 1
+$ml_g0
+[1] 1.571778
+
+$ml_m
+[1] 1
+
+current period: 3
+current group: 2
+set pretreatment period to be 1
+$ml_g0
+[1] 1.916236
+
+$ml_m
+[1] 1
+
+current period: 4
+current group: 2
+set pretreatment period to be 1
+$ml_g0
+[1] 2.404318
+
+$ml_m
+[1] 1
+
+current period: 2
+current group: 3
+set pretreatment period to be 1
+$ml_g0
+[1] 1.570486
+
+$ml_m
+[1] 1
+
+current period: 3
+current group: 3
+set pretreatment period to be 2
+$ml_g0
+[1] 1.529782
+
+$ml_m
+[1] 1
+
+current period: 4
+current group: 3
+set pretreatment period to be 2
+$ml_g0
+[1] 1.88629
+
+$ml_m
+[1] 1
+
+current period: 2
+current group: 4
+set pretreatment period to be 1
+$ml_g0
+[1] 1.570562
+
+$ml_m
+[1] 1
+
+current period: 3
+current group: 4
+set pretreatment period to be 2
+$ml_g0
+[1] 1.529405
+
+$ml_m
+[1] 1
+
+current period: 4
+current group: 4
+set pretreatment period to be 3
+$ml_g0
+[1] 1.560689
+
+$ml_m
+[1] 1
+
+
+Call:
+att_gt(yname = &#34;Y&#34;, tname = &#34;period&#34;, idname = &#34;id&#34;, gname = &#34;G&#34;,
+    xformla = ~X, data = dta, est_method = doubleml_did_eval_rf,
+    print_details = TRUE)
+
+Reference: Callaway, Brantly and Pedro H.C. Sant&#39;Anna.  &#34;Difference-in-Differences with Multiple Time Periods.&#34; Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt;
+
+Group-Time Average Treatment Effects:
+ Group Time ATT(g,t) Std. Error [95% Simult.  Conf. Band]
+     2    2   0.9647     0.0736        0.7603      1.1691 *
+     2    3   2.1055     0.0894        1.8571      2.3538 *
+     2    4   3.1295     0.1096        2.8250      3.4339 *
+     3    2   0.0820     0.0719       -0.1177      0.2818
+     3    3   1.2075     0.0707        1.0112      1.4039 *
+     3    4   2.2865     0.0916        2.0323      2.5408 *
+     4    2   0.1807     0.0743       -0.0257      0.3871
+     4    3   0.2451     0.0662        0.0611      0.4290 *
+     4    4   1.1401     0.0711        0.9425      1.3376 *
+---
+Signif. codes: `*&#39; confidence band does not cover 0
+
+P-value for pre-test of parallel trends assumption:  2e-05
+Control Group:  Never Treated,  Anticipation Periods:  0
+</pre></div></div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="R_double_ml_pension.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">R: Impact of 401(k) on Financial Wealth</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="R_double_ml_multiway_cluster.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">R: Cluster Robust Double Machine Learning</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Demo-example-from-did">Demo example from <code class="docutils literal notranslate"><span class="pre">did</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Comparison-to-did-package">Comparison to <code class="docutils literal notranslate"><span class="pre">did</span></code> package</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Using-ML-for-DiD:-Integrating-DoubleML-in-did">Using ML for DiD: Integrating <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> in <code class="docutils literal notranslate"><span class="pre">did</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Exploiting-the-Functionalities-of-did">Exploiting the Functionalities of <code class="docutils literal notranslate"><span class="pre">did</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Details-on-Predictive-Performance">Details on Predictive Performance</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/examples/R_double_ml_did.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
