@@ -34,8 +34,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c49bcd98" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -566,9 +566,9 @@ document.write(`
 <h1>doubleml.datasets.make_confounded_irm_data<a class="headerlink" href="#doubleml-datasets-make-confounded-irm-data" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="doubleml.datasets.make_confounded_irm_data">
-<span class="sig-prename descclassname"><span class="pre">doubleml.datasets.</span></span><span class="sig-name descname"><span class="pre">make_confounded_irm_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cf_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.04</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cf_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.04</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doubleml.datasets.make_confounded_irm_data" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">doubleml.datasets.</span></span><span class="sig-name descname"><span class="pre">make_confounded_irm_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.127</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.58</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doubleml.datasets.make_confounded_irm_data" title="Link to this definition">#</a></dt>
 <dd><p>Generates counfounded data from an interactive regression model.</p>
-<p>The data generating process is defined as follows (similar to the Monte Carlo simulation used
+<p>The data generating process is defined as follows (inspired by the Monte Carlo simulation used
 in Sant’Anna and Zhao (2020)).</p>
 <p>Let <span class="math notranslate nohighlight">\(X= (X_1, X_2, X_3, X_4, X_5)^T \sim \mathcal{N}(0, \Sigma)\)</span>, where  <span class="math notranslate nohighlight">\(\Sigma\)</span> corresponds
 to the identity matrix.
@@ -579,26 +579,29 @@ where</p>
 <p>Additionally, generate a confounder <span class="math notranslate nohighlight">\(A \sim \mathcal{U}[-1, 1]\)</span>.
 At first, define the propensity score as</p>
 <div class="math notranslate nohighlight">
-\[m(X, A) = P(D=1|X,A) = 0.5 + \gamma_A \cdot A\]</div>
+\[m(X, A) = P(D=1|X,A) = p(Z) + \gamma_A \cdot A\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}p(Z) &amp;= \frac{\exp(f_{ps}(Z))}{1 + \exp(f_{ps}(Z))},\\f_{ps}(Z) &amp;= 0.75 \cdot (-Z_1 + 0.1 \cdot Z_2 -0.25 \cdot Z_3 - 0.1 \cdot Z_4).\end{aligned}\end{align} \]</div>
 <p>and generate the treatment <span class="math notranslate nohighlight">\(D = 1\{m(X, A) \ge U\}\)</span> with <span class="math notranslate nohighlight">\(U \sim \mathcal{U}[0, 1]\)</span>.
 Since <span class="math notranslate nohighlight">\(A\)</span> is independent of <span class="math notranslate nohighlight">\(X\)</span>, the short form of the propensity score is given as</p>
 <div class="math notranslate nohighlight">
-\[P(D=1|X) = 0.5.\]</div>
+\[P(D=1|X) = p(Z).\]</div>
 <p>Further, generate the outcome of interest <span class="math notranslate nohighlight">\(Y\)</span> as</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}Y &amp;= \theta \cdot D (Z_5 + 1) + g(Z) + \beta_A \cdot A + \varepsilon\\g(Z) &amp;= 210 + 27.4 \cdot Z_1 +13.7 \cdot (Z_2 + Z_3 + Z_4)\end{aligned}\end{align} \]</div>
+\[ \begin{align}\begin{aligned}Y &amp;= \theta \cdot D (Z_5 + 1) + g(Z) + \beta_A \cdot A + \varepsilon\\g(Z) &amp;= 2.5 + 0.74 \cdot Z_1 + 0.25 \cdot Z_2 + 0.137 \cdot (Z_3 + Z_4)\end{aligned}\end{align} \]</div>
 <p>where <span class="math notranslate nohighlight">\(\varepsilon \sim \mathcal{N}(0,5)\)</span>.
 This implies an average treatment effect of <span class="math notranslate nohighlight">\(\theta\)</span>. Additionally, the long and short forms of
 the conditional expectation take the following forms</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\mathbb{E}[Y|D, X, A] &amp;= \theta \cdot D (Z_5 + 1) + g(Z) + \beta_A \cdot A\\\mathbb{E}[Y|D, X] &amp;= (\theta + \beta_A \frac{\mathrm{Cov}(A, D(Z_5 + 1))}{\mathrm{Var}(D(Z_5 + 1))})
     \cdot D (Z_5 + 1) + g(Z).\end{aligned}\end{align} \]</div>
-<p>Consequently, the strength of confounding is determined via <span class="math notranslate nohighlight">\(\gamma_A\)</span> and <span class="math notranslate nohighlight">\(\beta_A\)</span>.
-Both are chosen to obtain the desired confounding of the outcome and Riesz Representer (in sample).</p>
-<p>The observed data is given as <span class="math notranslate nohighlight">\(W = (Y, D, X)\)</span>.
+<p>Consequently, the strength of confounding is determined via <span class="math notranslate nohighlight">\(\gamma_A\)</span> and <span class="math notranslate nohighlight">\(\beta_A\)</span>, which can be
+set via the parameters <code class="docutils literal notranslate"><span class="pre">gamma_a</span></code> and <code class="docutils literal notranslate"><span class="pre">beta_a</span></code>.</p>
+<p>The observed data is given as <span class="math notranslate nohighlight">\(W = (Y, D, Z)\)</span>.
 Further, orcale values of the confounder <span class="math notranslate nohighlight">\(A\)</span>, the transformed covariated <span class="math notranslate nohighlight">\(Z\)</span>,
-the potential outcomes of <span class="math notranslate nohighlight">\(Y\)</span>, the coefficients <span class="math notranslate nohighlight">\(\gamma_a\)</span>, <span class="math notranslate nohighlight">\(\beta_a\)</span>, the
-long and short forms of the main regression and the propensity score
+the potential outcomes of <span class="math notranslate nohighlight">\(Y\)</span>, the long and short forms of the main regression and the propensity score and
+in sample versions of the confounding parameters <span class="math notranslate nohighlight">\(cf_d\)</span> and <span class="math notranslate nohighlight">\(cf_y\)</span> (for ATE and ATTE)
 are returned in a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -606,11 +609,13 @@ are returned in a dictionary.</p>
 <li><p><strong>n_obs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The number of observations to simulate.
 Default is <code class="docutils literal notranslate"><span class="pre">500</span></code>.</p></li>
 <li><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Average treatment effect.
-Default is <code class="docutils literal notranslate"><span class="pre">5.0</span></code>.</p></li>
-<li><p><strong>cf_y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Percentage of the residual variation of the outcome explained by latent/confounding variable.
-Default is <code class="docutils literal notranslate"><span class="pre">0.04</span></code>.</p></li>
-<li><p><strong>cf_d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Percentage gains in the variation of the Riesz Representer generated by latent/confounding variable.
-Default is <code class="docutils literal notranslate"><span class="pre">0.04</span></code>.</p></li>
+Default is <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p></li>
+<li><p><strong>gamma_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Coefficient of the unobserved confounder in the propensity score.
+Default is <code class="docutils literal notranslate"><span class="pre">0.127</span></code>.</p></li>
+<li><p><strong>beta_a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Coefficient of the unobserved confounder in the outcome regression.
+Default is <code class="docutils literal notranslate"><span class="pre">0.58</span></code>.</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the Z will be set to X, such that the underlying (short) models are linear/logistic.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
