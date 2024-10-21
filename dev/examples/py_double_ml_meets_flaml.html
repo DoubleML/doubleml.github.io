@@ -1,0 +1,1470 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DoubleML meets FLAML - How to tune learners automatically within DoubleML &#8212; DoubleML  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=c49bcd98" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=1ecd1175"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/py_double_ml_meets_flaml';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python: Group Average Treatment Effects (GATEs) for IRM models" href="py_double_ml_gate.html" />
+    <link rel="prev" title="Python: PLM and IRM for Multiple Treatments" href="py_double_ml_plm_irm_hetfx.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DoubleML  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../intro/install.html">
+     Install
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../intro/intro.html">
+     Getting started
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../workflow/workflow.html">
+     Workflow
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../guide/guide.html">
+     User guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+     Examples
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../api/api.html">
+     Python API
+  </a>
+</li>
+
+            <li class="nav-item dropdown pst-header-nav-item">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class="nav-item ">
+  <a class="nav-link dropdown-item nav-external" href="https://docs.doubleml.org/r/stable/">
+     R API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link dropdown-item nav-external" href="https://docs.doubleml.org/doubleml-coverage/">
+     Coverage Repository
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link dropdown-item nav-internal" href="../literature/literature.html">
+     Literature
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link dropdown-item nav-internal" href="../release/release.html">
+     Release notes
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../intro/install.html">
+     Install
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../intro/intro.html">
+     Getting started
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../workflow/workflow.html">
+     Workflow
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../guide/guide.html">
+     User guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+     Examples
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../api/api.html">
+     Python API
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+     R API
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-external" href="https://docs.doubleml.org/doubleml-coverage/">
+     Coverage Repository
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../literature/literature.html">
+     Literature
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../release/release.html">
+     Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><p class="logo" style="text-align:center;"><a href="../index.html">
+    <img class="logo" src="../logo.png" alt="Logo" width="65%" height="65%">
+</a></p>
+
+<script type="text/javascript">
+    // Change the logo depending on the theme
+    var logo = document.querySelector('img.logo');
+    var observer = new MutationObserver(function(mutations) {
+        const dark = document.documentElement.dataset.theme == 'dark';
+        if (dark) {
+            logo.src = "../logo_dark.png";
+        } else {
+            logo.src = "../logo.png";
+        }
+    });
+    observer.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+</script></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_basics.html">Python: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pension.html">Python: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_apo.html">Python: Average Potential Outcome (APO) Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity_booking.html">Example: Sensitivity Analysis for Causal ML</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_did.html">Python: Difference-in-Differences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_did_pretest.html">Python: Difference-in-Differences Pre-Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_basic_iv.html">Python: Basic Instrumental Variables calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_plm_irm_hetfx.html">Python: PLM and IRM for Multiple Treatments</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">DoubleML meets FLAML - How to tune learners automatically within <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code></a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate.html">Python: Group Average Treatment Effects (GATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate_plr.html">Python: Group Average Treatment Effects (GATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cate.html">Python: Conditional Average Treatment Effects (CATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cate_plr.html">Python: Conditional Average Treatment Effects (CATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate_sensitivity.html">Python: GATE Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pension_qte.html">Python: Impact of 401(k) on Financial Wealth (Quantile Effects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_pq.html">Python: Potential Quantiles and Quantile Treatment Effects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_basics.html">R: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_pension.html">R: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_did.html">R: DoubleML for Difference-in-Differences</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_multiway_cluster.html">R: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_basic_iv.html">R: Basic Instrumental Variables Calculation</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="double_ml_bonus_data.html">DML: Bonus Data</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Examples</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">DoubleML...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+      <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/py_double_ml_meets_flaml.ipynb">https://docs.doubleml.org/stable/examples/py_double_ml_meets_flaml.ipynb</a>.
+
+    </ul>
+    </div><section id="DoubleML-meets-FLAML---How-to-tune-learners-automatically-within-DoubleML">
+<h1>DoubleML meets FLAML - How to tune learners automatically within <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code><a class="headerlink" href="#DoubleML-meets-FLAML---How-to-tune-learners-automatically-within-DoubleML" title="Link to this heading">#</a></h1>
+<p>Recent advances in automated machine learning make it easier to tune hyperparameters of ML estimators automatically. These optimized learners can be used for the estimation part within DoubleML. In this notebook we are going to explore how to tune learners with AutoML for the DoubleML framework.</p>
+<p>This notebook will use <code class="docutils literal notranslate"><span class="pre">`FLAML</span></code> &lt;<a class="github reference external" href="https://github.com/microsoft/FLAML">microsoft/FLAML</a>&gt;`__, but there are also many other AutoML frameworks. Particularly useful for DoubleML are packages that provide some way to export the model in <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>-style.</p>
+<p>Examples are: <code class="docutils literal notranslate"><span class="pre">`TPOT</span></code> &lt;<a class="reference external" href="https://epistasislab.github.io/tpot/">https://epistasislab.github.io/tpot/</a>&gt;`__, <code class="docutils literal notranslate"><span class="pre">`autosklearn</span></code> &lt;<a class="reference external" href="https://automl.github.io/auto-sklearn/master/">https://automl.github.io/auto-sklearn/master/</a>&gt;`__, <code class="docutils literal notranslate"><span class="pre">`H20</span></code> &lt;<a class="reference external" href="https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html">https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html</a>&gt;`__ or <code class="docutils literal notranslate"><span class="pre">`Gama</span></code> &lt;<a class="reference external" href="https://openml-labs.github.io/gama/master/">https://openml-labs.github.io/gama/master/</a>&gt;`__.</p>
+<section id="Data-Generation">
+<h2>Data Generation<a class="headerlink" href="#Data-Generation" title="Link to this heading">#</a></h2>
+<p>We create synthetic data using the <code class="docutils literal notranslate"><span class="pre">`make_plr_CCDDHNR2018()</span></code> &lt;<a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.datasets.make_plr_CCDDHNR2018.html">https://docs.doubleml.org/stable/api/generated/doubleml.datasets.make_plr_CCDDHNR2018.html</a>&gt;`__ process, with <span class="math notranslate nohighlight">\(1000\)</span> observations of <span class="math notranslate nohighlight">\(50\)</span> covariates as well as <span class="math notranslate nohighlight">\(1\)</span> treatment variable and an outcome. We calibrate the process such that hyperparameter tuning becomes more important.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
+<span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<span class="kn">from</span> <span class="nn">flaml</span> <span class="kn">import</span> <span class="n">AutoML</span>
+<span class="kn">from</span> <span class="nn">xgboost</span> <span class="kn">import</span> <span class="n">XGBRegressor</span>
+
+<span class="c1"># Generate synthetic data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;DataFrame&quot;</span><span class="p">,</span> <span class="n">a0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">s1</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">s2</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>X1</th>
+      <th>X2</th>
+      <th>X3</th>
+      <th>X4</th>
+      <th>X5</th>
+      <th>X6</th>
+      <th>X7</th>
+      <th>X8</th>
+      <th>X9</th>
+      <th>X10</th>
+      <th>...</th>
+      <th>X43</th>
+      <th>X44</th>
+      <th>X45</th>
+      <th>X46</th>
+      <th>X47</th>
+      <th>X48</th>
+      <th>X49</th>
+      <th>X50</th>
+      <th>y</th>
+      <th>d</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.065368</td>
+      <td>1.162593</td>
+      <td>1.089964</td>
+      <td>0.824657</td>
+      <td>0.157733</td>
+      <td>-1.228404</td>
+      <td>-0.675775</td>
+      <td>-0.223928</td>
+      <td>0.166238</td>
+      <td>0.124480</td>
+      <td>...</td>
+      <td>-2.021823</td>
+      <td>-1.662975</td>
+      <td>-2.100385</td>
+      <td>-1.225670</td>
+      <td>-1.223158</td>
+      <td>0.397536</td>
+      <td>-0.450031</td>
+      <td>0.511257</td>
+      <td>0.845534</td>
+      <td>-0.784792</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.214458</td>
+      <td>1.699616</td>
+      <td>3.222882</td>
+      <td>3.550242</td>
+      <td>2.692460</td>
+      <td>1.821970</td>
+      <td>1.223617</td>
+      <td>-0.100154</td>
+      <td>-0.234431</td>
+      <td>0.375844</td>
+      <td>...</td>
+      <td>-0.695711</td>
+      <td>-0.819507</td>
+      <td>-1.465424</td>
+      <td>-0.341472</td>
+      <td>-0.023537</td>
+      <td>0.436016</td>
+      <td>-0.503374</td>
+      <td>-1.342632</td>
+      <td>1.987307</td>
+      <td>0.835035</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.725820</td>
+      <td>-0.310145</td>
+      <td>-0.586921</td>
+      <td>-0.879058</td>
+      <td>0.239267</td>
+      <td>0.638461</td>
+      <td>0.131024</td>
+      <td>0.459436</td>
+      <td>-1.140081</td>
+      <td>-0.583692</td>
+      <td>...</td>
+      <td>-0.002388</td>
+      <td>0.716801</td>
+      <td>0.075942</td>
+      <td>1.439958</td>
+      <td>0.674747</td>
+      <td>-0.268343</td>
+      <td>0.682122</td>
+      <td>0.978303</td>
+      <td>0.154890</td>
+      <td>-0.168089</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.265744</td>
+      <td>0.479655</td>
+      <td>0.013313</td>
+      <td>1.417736</td>
+      <td>0.908767</td>
+      <td>1.786090</td>
+      <td>0.996892</td>
+      <td>-0.026822</td>
+      <td>-0.867201</td>
+      <td>0.433753</td>
+      <td>...</td>
+      <td>-0.482616</td>
+      <td>-0.172628</td>
+      <td>-0.309539</td>
+      <td>-0.609522</td>
+      <td>-0.830263</td>
+      <td>-0.883953</td>
+      <td>-1.249986</td>
+      <td>-2.688641</td>
+      <td>1.254035</td>
+      <td>0.161288</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.581827</td>
+      <td>0.926901</td>
+      <td>2.302382</td>
+      <td>0.803112</td>
+      <td>-0.152896</td>
+      <td>-0.389164</td>
+      <td>-0.569590</td>
+      <td>-0.124306</td>
+      <td>0.055439</td>
+      <td>-0.383531</td>
+      <td>...</td>
+      <td>0.048220</td>
+      <td>-0.698751</td>
+      <td>-0.754678</td>
+      <td>-0.689600</td>
+      <td>0.726658</td>
+      <td>0.780068</td>
+      <td>1.475517</td>
+      <td>0.777718</td>
+      <td>1.773769</td>
+      <td>1.786563</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 52 columns</p>
+</div></div>
+</div>
+</section>
+<section id="Tuning-on-the-full-Sample">
+<h2>Tuning on the full Sample<a class="headerlink" href="#Tuning-on-the-full-Sample" title="Link to this heading">#</a></h2>
+<p>In this section, we manually tune two <a class="reference external" href="https://xgboost.readthedocs.io/en/stable/">XGBoost</a> models using FLAML for a <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#partially-linear-regression-model-plr">Partially Linear Regression Model</a>. In the PLR (using the default score) we have to estimate a nuisance <span class="math notranslate nohighlight">\(\eta\)</span> consisting of</p>
+<div class="math notranslate nohighlight">
+\[\eta := \{m_0(x), \ell_0(x)\} = \{\mathbb{E}[D|X], \mathbb{E}[Y|X]\}.\]</div>
+<p>We initialize two <code class="docutils literal notranslate"><span class="pre">FLAML</span></code> AutoML objects and fit them accordingly. Once the tuning has been completed, we pass the learners to <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>.</p>
+<section id="Step-1:-Initialize-and-Train-the-AutoML-Models:">
+<h3>Step 1: Initialize and Train the AutoML Models:<a class="headerlink" href="#Step-1:-Initialize-and-Train-the-AutoML-Models:" title="Link to this heading">#</a></h3>
+<p><em>Note: This cell will optimize the nuisance models for 4 minutes in total.</em></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize AutoML for outcome model (ml_l): Predict Y based on X</span>
+<span class="n">automl_l</span> <span class="o">=</span> <span class="n">AutoML</span><span class="p">()</span>
+<span class="n">settings_l</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;time_budget&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="s1">&#39;rmse&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;estimator_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;xgboost&#39;</span><span class="p">],</span>
+    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s1">&#39;regression&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">automl_l</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">y_train</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">settings_l</span><span class="p">)</span>
+
+<span class="c1"># Initialize AutoML for treatment model (ml_m): Predict D based on X</span>
+<span class="n">automl_m</span> <span class="o">=</span> <span class="n">AutoML</span><span class="p">()</span>
+<span class="n">settings_m</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;time_budget&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="s1">&#39;rmse&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;estimator_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;xgboost&#39;</span><span class="p">],</span>
+    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s1">&#39;regression&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">automl_m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">y_train</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">settings_m</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+</section>
+<section id="Step-2:-Evaluate-the-Tuned-Models">
+<h3>Step 2: Evaluate the Tuned Models<a class="headerlink" href="#Step-2:-Evaluate-the-Tuned-Models" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">FLAML</span></code> reports the best loss during training as <code class="docutils literal notranslate"><span class="pre">best_loss</span></code> attribute. For more details, we refer to the <a class="reference external" href="https://microsoft.github.io/FLAML/docs/Getting-Started">FLAML documentation</a>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rmse_oos_ml_m</span> <span class="o">=</span> <span class="n">automl_m</span><span class="o">.</span><span class="n">best_loss</span>
+<span class="n">rmse_oos_ml_l</span> <span class="o">=</span> <span class="n">automl_l</span><span class="o">.</span><span class="n">best_loss</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best RMSE during tuning (ml_m):&quot;</span><span class="p">,</span><span class="n">rmse_oos_ml_m</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best RMSE during tuning (ml_l):&quot;</span><span class="p">,</span><span class="n">rmse_oos_ml_l</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Best RMSE during tuning (ml_m): 1.0078540263583833
+Best RMSE during tuning (ml_l): 1.1155142425200442
+</pre></div></div>
+</div>
+</section>
+<section id="Step-3:-Create-and-Fit-DoubleML-Model">
+<h3>Step 3: Create and Fit DoubleML Model<a class="headerlink" href="#Step-3:-Create-and-Fit-DoubleML-Model" title="Link to this heading">#</a></h3>
+<p>We create a <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> object with the dataset, specifying <span class="math notranslate nohighlight">\(y\)</span> as the outcome variable and <span class="math notranslate nohighlight">\(d\)</span> as the treatment variable. We then initialize a <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> model using the tuned <code class="docutils literal notranslate"><span class="pre">FLAML</span></code> estimators for both the treatment and outcome components. <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> will use copies with identical configurations on each fold.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">)</span>
+
+<span class="n">obj_dml_plr_fullsample</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_m</span><span class="o">=</span><span class="n">automl_m</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span>
+                                           <span class="n">ml_l</span><span class="o">=</span><span class="n">automl_l</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">obj_dml_plr_fullsample</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+       coef   std err          t         P&gt;|t|     2.5 %    97.5 %
+d  0.498286  0.032738  15.220407  2.589147e-52  0.434121  0.562452
+</pre></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>’s built-in learner evaluation reports the out-of-sample error during cross-fitting. We can compare this measure to the best loss during training from above.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rmse_dml_ml_l_fullsample</span> <span class="o">=</span> <span class="n">obj_dml_plr_fullsample</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">()[</span><span class="s1">&#39;ml_l&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">rmse_dml_ml_m_fullsample</span> <span class="o">=</span> <span class="n">obj_dml_plr_fullsample</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">()[</span><span class="s1">&#39;ml_m&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RMSE evaluated by DoubleML (ml_m):&quot;</span><span class="p">,</span> <span class="n">rmse_dml_ml_m_fullsample</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RMSE evaluated by DoubleML (ml_l):&quot;</span><span class="p">,</span> <span class="n">rmse_dml_ml_l_fullsample</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+RMSE evaluated by DoubleML (ml_m): 1.0156853566737638
+RMSE evaluated by DoubleML (ml_l): 1.1309844442144665
+</pre></div></div>
+</div>
+<p>The best RMSE during automated tuning and the out-of-sample error in nuisance prediction are similar, which hints that there is no overfitting. We don’t expect large amounts of overfitting, since FLAML uses cross-validation internally and reports the best loss on a hold-out sample.</p>
+</section>
+</section>
+<section id="Tuning-on-the-Folds">
+<h2>Tuning on the Folds<a class="headerlink" href="#Tuning-on-the-Folds" title="Link to this heading">#</a></h2>
+<p>Instead of externally tuning the <code class="docutils literal notranslate"><span class="pre">FLAML</span></code> learners, it is also possible to tune the AutoML learners internally. We have to define custom classes for integrating <code class="docutils literal notranslate"><span class="pre">FLAML</span></code> to <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>. The tuning will be automatically be started when calling <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>’s <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method. Training will occure <span class="math notranslate nohighlight">\(K\)</span> times, so each fold will have an individualized optimal set of hyperparameters.</p>
+<section id="Step-1:-Custom-API-for-FLAML-Models-within-DoubleML">
+<h3>Step 1: Custom API for FLAML Models within <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code><a class="headerlink" href="#Step-1:-Custom-API-for-FLAML-Models-within-DoubleML" title="Link to this heading">#</a></h3>
+<p>The following API is designed to facilitate automated machine learning model tuning for both regression and classification tasks. In this example however, we will only need the Regressor API as the treatment is continous.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
+
+<span class="k">class</span> <span class="nc">FlamlRegressorDoubleML</span><span class="p">:</span>
+    <span class="n">_estimator_type</span> <span class="o">=</span> <span class="s1">&#39;regressor&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">estimator_list</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span> <span class="o">=</span> <span class="n">AutoML</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_list</span> <span class="o">=</span> <span class="n">estimator_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+
+    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="p">)</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;estimator_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_list</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;metric&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span>
+        <span class="k">return</span> <span class="nb">dict</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">,</span> <span class="n">time_budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">estimator_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator_list</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tuned_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">estimator</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuned_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">preds</span>
+
+<span class="k">class</span> <span class="nc">FlamlClassifierDoubleML</span><span class="p">:</span>
+    <span class="n">_estimator_type</span> <span class="o">=</span> <span class="s1">&#39;classifier&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">estimator_list</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span> <span class="o">=</span> <span class="n">AutoML</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_list</span> <span class="o">=</span> <span class="n">estimator_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+
+    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="p">)</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;estimator_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_list</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;metric&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span>
+        <span class="k">return</span> <span class="nb">dict</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span> <span class="n">time_budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">estimator_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator_list</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tuned_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">estimator</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuned_model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">preds</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Step-2:-Using-the-API-when-calling-DoubleML's-.fit()-Method">
+<h3>Step 2: Using the API when calling <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>’s <code class="docutils literal notranslate"><span class="pre">.fit()</span></code> Method<a class="headerlink" href="#Step-2:-Using-the-API-when-calling-DoubleML's-.fit()-Method" title="Link to this heading">#</a></h3>
+<p>We initialize a <code class="docutils literal notranslate"><span class="pre">FlamlRegressorDoubleML</span></code> and hand it without fitting into the DoubleML object. When calling <code class="docutils literal notranslate"><span class="pre">.fit()</span></code> on the DoubleML object, copies of the API object will be created on the folds and a seperate set of hyperparameters is created. Since we fit <span class="math notranslate nohighlight">\(K\)</span> times, we reduce the computation time accordingly to ensure comparibility to the full sample case.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the FlamlRegressorDoubleML</span>
+<span class="n">ml_l</span> <span class="o">=</span> <span class="n">FlamlRegressorDoubleML</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">estimator_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;xgboost&#39;</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;rmse&#39;</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">FlamlRegressorDoubleML</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">estimator_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;xgboost&#39;</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;rmse&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create DoubleMLPLR object using the new regressors</span>
+<span class="n">dml_plr_obj_onfolds</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">)</span>
+
+<span class="c1"># Fit the DoubleMLPLR model</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj_onfolds</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">store_models</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+       coef   std err          t         P&gt;|t|     2.5 %    97.5 %
+d  0.502016  0.033265  15.091263  1.848688e-51  0.436817  0.567215
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rmse_oos_onfolds_ml_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">dml_plr_obj_onfolds</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="s2">&quot;ml_l&quot;</span><span class="p">][</span><span class="s2">&quot;d&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">best_loss</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)])</span>
+<span class="n">rmse_oos_onfolds_ml_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">dml_plr_obj_onfolds</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="s2">&quot;ml_m&quot;</span><span class="p">][</span><span class="s2">&quot;d&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">auto_ml</span><span class="o">.</span><span class="n">best_loss</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best RMSE during tuning (ml_m):&quot;</span><span class="p">,</span><span class="n">rmse_oos_onfolds_ml_m</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best RMSE during tuning (ml_l):&quot;</span><span class="p">,</span><span class="n">rmse_oos_onfolds_ml_l</span><span class="p">)</span>
+
+<span class="n">rmse_dml_ml_l_onfolds</span> <span class="o">=</span> <span class="n">dml_plr_obj_onfolds</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">()[</span><span class="s1">&#39;ml_l&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">rmse_dml_ml_m_onfolds</span> <span class="o">=</span> <span class="n">dml_plr_obj_onfolds</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">()[</span><span class="s1">&#39;ml_m&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RMSE evaluated by DoubleML (ml_m):&quot;</span><span class="p">,</span> <span class="n">rmse_dml_ml_m_onfolds</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RMSE evaluated by DoubleML (ml_l):&quot;</span><span class="p">,</span> <span class="n">rmse_dml_ml_l_onfolds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Best RMSE during tuning (ml_m): 1.0068101213851626
+Best RMSE during tuning (ml_l): 1.1151610541568202
+RMSE evaluated by DoubleML (ml_m): 1.0084871742256079
+RMSE evaluated by DoubleML (ml_l): 1.1272404618426184
+</pre></div></div>
+</div>
+<p>Similar to the above case, we see no hints for overfitting.</p>
+<section id="Comparison-to-AutoML-with-less-Computation-time-and-Untuned-XGBoost-Learners">
+<h4>Comparison to AutoML with less Computation time and Untuned XGBoost Learners<a class="headerlink" href="#Comparison-to-AutoML-with-less-Computation-time-and-Untuned-XGBoost-Learners" title="Link to this heading">#</a></h4>
+</section>
+</section>
+<section id="AutoML-with-less-Computation-time">
+<h3>AutoML with less Computation time<a class="headerlink" href="#AutoML-with-less-Computation-time" title="Link to this heading">#</a></h3>
+<p>As a baseline, we can compare the learners above that have been tuned using two minutes of training time each with ones that only use ten seconds.</p>
+<p>Note: These tuning times are examples. For this setting, we found 10s to be insuffienct and 120s to be sufficient. In general, necessary tuning time can depend on data complexity, data set size, computational power of the machine used, etc.. For more info on how to use <code class="docutils literal notranslate"><span class="pre">FLAML</span></code> properly please refer to <a class="reference external" href="https://microsoft.github.io/FLAML/docs/Getting-Started/">the documentation</a> and <a class="reference external" href="https://arxiv.org/pdf/1911.04706">the paper</a>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize AutoML for outcome model similar to above, but use a smaller time budget.</span>
+<span class="n">automl_l_lesstime</span> <span class="o">=</span> <span class="n">AutoML</span><span class="p">()</span>
+<span class="n">settings_l</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;time_budget&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="s1">&#39;rmse&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;estimator_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;xgboost&#39;</span><span class="p">],</span>
+    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s1">&#39;regression&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">automl_l_lesstime</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">y_train</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">settings_l</span><span class="p">)</span>
+
+<span class="c1"># Initialize AutoML for treatment model similar to above, but use a smaller time budget.</span>
+<span class="n">automl_m_lesstime</span> <span class="o">=</span> <span class="n">AutoML</span><span class="p">()</span>
+<span class="n">settings_m</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;time_budget&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="s1">&#39;rmse&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;estimator_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;xgboost&#39;</span><span class="p">],</span>
+    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s1">&#39;regression&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">automl_m_lesstime</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">y_train</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">settings_m</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obj_dml_plr_lesstime</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_m</span><span class="o">=</span><span class="n">automl_m_lesstime</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span>
+                                           <span class="n">ml_l</span><span class="o">=</span><span class="n">automl_l_lesstime</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">obj_dml_plr_lesstime</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+       coef   std err          t         P&gt;|t|     2.5 %    97.5 %
+d  0.436394  0.031007  14.073929  5.493102e-45  0.375621  0.497168
+</pre></div></div>
+</div>
+<p>We can check the performance again.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rmse_dml_ml_l_lesstime</span> <span class="o">=</span> <span class="n">obj_dml_plr_lesstime</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">()[</span><span class="s1">&#39;ml_l&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">rmse_dml_ml_m_lesstime</span> <span class="o">=</span> <span class="n">obj_dml_plr_lesstime</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">()[</span><span class="s1">&#39;ml_m&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best RMSE during tuning (ml_m):&quot;</span><span class="p">,</span> <span class="n">automl_m_lesstime</span><span class="o">.</span><span class="n">best_loss</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best RMSE during tuning (ml_l):&quot;</span><span class="p">,</span> <span class="n">automl_l_lesstime</span><span class="o">.</span><span class="n">best_loss</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RMSE evaluated by DoubleML (ml_m):&quot;</span><span class="p">,</span> <span class="n">rmse_dml_ml_m_lesstime</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RMSE evaluated by DoubleML (ml_l):&quot;</span><span class="p">,</span> <span class="n">rmse_dml_ml_l_lesstime</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Best RMSE during tuning (ml_m): 0.9158080176561963
+Best RMSE during tuning (ml_l): 1.2197237644227434
+RMSE evaluated by DoubleML (ml_m): 1.0739130271918385
+RMSE evaluated by DoubleML (ml_l): 1.1362430723104844
+</pre></div></div>
+</div>
+<p>We see a more severe difference in oos RMSE between AutoML and DML estimations. This could hint that the learner underfits, i.e. training time was not sufficient.</p>
+</section>
+<section id="Untuned-(default-parameter)-XGBoost">
+<h3>Untuned (default parameter) XGBoost<a class="headerlink" href="#Untuned-(default-parameter)-XGBoost" title="Link to this heading">#</a></h3>
+<p>As another baseline, we set up DoubleML with an XGBoost learner that has not been tuned at all, i.e. using the default set of hyperparameters.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb_untuned_m</span><span class="p">,</span> <span class="n">xgb_untuned_l</span> <span class="o">=</span> <span class="n">XGBRegressor</span><span class="p">(),</span> <span class="n">XGBRegressor</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create DoubleMLPLR object using AutoML models</span>
+<span class="n">dml_plr_obj_untuned</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">xgb_untuned_l</span><span class="p">,</span> <span class="n">xgb_untuned_m</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj_untuned</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+
+<span class="n">rmse_dml_ml_l_untuned</span> <span class="o">=</span> <span class="n">dml_plr_obj_untuned</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">()[</span><span class="s1">&#39;ml_l&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">rmse_dml_ml_m_untuned</span> <span class="o">=</span> <span class="n">dml_plr_obj_untuned</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">()[</span><span class="s1">&#39;ml_m&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+       coef  std err          t         P&gt;|t|     2.5 %    97.5 %
+d  0.431253  0.03258  13.236884  5.373218e-40  0.367398  0.495108
+</pre></div></div>
+</div>
+<section id="Comparison-and-summary">
+<h4>Comparison and summary<a class="headerlink" href="#Comparison-and-summary" title="Link to this heading">#</a></h4>
+<p>We combine the summaries from various models: full-sample and on-the-folds tuned AutoML, untuned XGB, and dummy models.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">obj_dml_plr_fullsample</span><span class="o">.</span><span class="n">summary</span><span class="p">,</span> <span class="n">dml_plr_obj_onfolds</span><span class="o">.</span><span class="n">summary</span><span class="p">,</span> <span class="n">dml_plr_obj_untuned</span><span class="o">.</span><span class="n">summary</span><span class="p">,</span> <span class="n">obj_dml_plr_lesstime</span><span class="o">.</span><span class="n">summary</span><span class="p">],</span>
+                     <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Full Sample&#39;</span><span class="p">,</span> <span class="s1">&#39;On the folds&#39;</span><span class="p">,</span> <span class="s1">&#39;Default&#39;</span><span class="p">,</span> <span class="s1">&#39;Less time&#39;</span><span class="p">])</span>
+<span class="n">summary</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Model Type&#39;</span><span class="p">,</span> <span class="s1">&#39;Metric&#39;</span><span class="p">]</span>
+
+<span class="n">summary</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>coef</th>
+      <th>std err</th>
+      <th>t</th>
+      <th>P&gt;|t|</th>
+      <th>2.5 %</th>
+      <th>97.5 %</th>
+    </tr>
+    <tr>
+      <th>Model Type</th>
+      <th>Metric</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Full Sample</th>
+      <th>d</th>
+      <td>0.498286</td>
+      <td>0.032738</td>
+      <td>15.220407</td>
+      <td>2.589147e-52</td>
+      <td>0.434121</td>
+      <td>0.562452</td>
+    </tr>
+    <tr>
+      <th>On the folds</th>
+      <th>d</th>
+      <td>0.502016</td>
+      <td>0.033265</td>
+      <td>15.091263</td>
+      <td>1.848688e-51</td>
+      <td>0.436817</td>
+      <td>0.567215</td>
+    </tr>
+    <tr>
+      <th>Default</th>
+      <th>d</th>
+      <td>0.431253</td>
+      <td>0.032580</td>
+      <td>13.236884</td>
+      <td>5.373218e-40</td>
+      <td>0.367398</td>
+      <td>0.495108</td>
+    </tr>
+    <tr>
+      <th>Less time</th>
+      <th>d</th>
+      <td>0.436394</td>
+      <td>0.031007</td>
+      <td>14.073929</td>
+      <td>5.493102e-45</td>
+      <td>0.375621</td>
+      <td>0.497168</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<section id="Plot-Coefficients-and-95%-Confidence-Intervals">
+<h5>Plot Coefficients and 95% Confidence Intervals<a class="headerlink" href="#Plot-Coefficients-and-95%-Confidence-Intervals" title="Link to this heading">#</a></h5>
+<p>This section generates a plot comparing the coefficients and 95% confidence intervals for each model type.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract model labels and coefficient values</span>
+<span class="n">model_labels</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="s1">&#39;Model Type&#39;</span><span class="p">)</span>
+<span class="n">coef_values</span> <span class="o">=</span> <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;coef&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># Calculate errors</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">coef_values</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;coef&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;2.5 %&#39;</span><span class="p">]</span>
+<span class="n">errors</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;97.5 %&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;coef&#39;</span><span class="p">]</span>
+
+<span class="c1"># Plot Coefficients and 95% Confidence Intervals</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">model_labels</span><span class="p">,</span> <span class="n">coef_values</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">errors</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Coefficients and 95%-CI&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Comparison of Coefficients and 95% Confidence Intervals&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_meets_flaml_31_0.png" src="../_images/examples_py_double_ml_meets_flaml_31_0.png" />
+</div>
+</div>
+</section>
+<section id="Compare-Metrics-for-Nuisance-Estimation">
+<h5>Compare Metrics for Nuisance Estimation<a class="headerlink" href="#Compare-Metrics-for-Nuisance-Estimation" title="Link to this heading">#</a></h5>
+<p>In this section, we compare metrics for different models and plot a bar chart to visualize the differences in their performance.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Full Sample&#39;</span><span class="p">,</span> <span class="s1">&#39;On the folds&#39;</span><span class="p">,</span> <span class="s1">&#39;Default&#39;</span><span class="p">,</span> <span class="s1">&#39;Less time&#39;</span><span class="p">],</span>
+           <span class="n">height</span><span class="o">=</span><span class="p">[</span><span class="n">rmse_dml_ml_m_fullsample</span><span class="p">,</span> <span class="n">rmse_dml_ml_m_onfolds</span><span class="p">,</span> <span class="n">rmse_dml_ml_m_untuned</span><span class="p">,</span> <span class="n">rmse_dml_ml_m_lesstime</span><span class="p">])</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Full Sample&#39;</span><span class="p">,</span> <span class="s1">&#39;On the folds&#39;</span><span class="p">,</span> <span class="s1">&#39;Default&#39;</span><span class="p">,</span> <span class="s1">&#39;Less time&#39;</span><span class="p">],</span>
+           <span class="n">height</span><span class="o">=</span><span class="p">[</span><span class="n">rmse_dml_ml_l_fullsample</span><span class="p">,</span> <span class="n">rmse_dml_ml_l_onfolds</span><span class="p">,</span> <span class="n">rmse_dml_ml_l_untuned</span><span class="p">,</span> <span class="n">rmse_dml_ml_l_lesstime</span><span class="p">])</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Tuning Method&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.12</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;RMSE&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;OOS RMSE for Different Tuning Methods (ml_m)&quot;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Tuning Method&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">1.22</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;RMSE&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;OOS RMSE for Different Tuning Methods (ml_l)&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Out of Sample RMSE in Nuisance Estimation by Tuning Method&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_py_double_ml_meets_flaml_33_0.png" src="../_images/examples_py_double_ml_meets_flaml_33_0.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="Conclusion">
+<h2>Conclusion<a class="headerlink" href="#Conclusion" title="Link to this heading">#</a></h2>
+<p>This notebook highlights that tuning plays an important role and can be easily done using FLAML AutoML. In our <a class="reference external" href="https://arxiv.org/abs/2402.04674">recent study</a> we provide more evidence for tuning with AutoML, especially that the full sample case in all investigated cases performed similarly to the full sample case and thus tuning time and complexity can be saved by tuning externally.</p>
+<p>See also our fully automated API for tuning DoubleML objects using AutoML, called <code class="docutils literal notranslate"><span class="pre">`AutoDoubleML</span></code> &lt;<a class="github reference external" href="https://github.com/OliverSchacht/AutoDoubleML">OliverSchacht/AutoDoubleML</a>&gt;`__ which can be installed from Github for python.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="py_double_ml_plm_irm_hetfx.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Python: PLM and IRM for Multiple Treatments</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="py_double_ml_gate.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Python: Group Average Treatment Effects (GATEs) for IRM models</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-Generation">Data Generation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Tuning-on-the-full-Sample">Tuning on the full Sample</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Step-1:-Initialize-and-Train-the-AutoML-Models:">Step 1: Initialize and Train the AutoML Models:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Step-2:-Evaluate-the-Tuned-Models">Step 2: Evaluate the Tuned Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Step-3:-Create-and-Fit-DoubleML-Model">Step 3: Create and Fit DoubleML Model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Tuning-on-the-Folds">Tuning on the Folds</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Step-1:-Custom-API-for-FLAML-Models-within-DoubleML">Step 1: Custom API for FLAML Models within <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Step-2:-Using-the-API-when-calling-DoubleML's-.fit()-Method">Step 2: Using the API when calling <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code>’s <code class="docutils literal notranslate"><span class="pre">.fit()</span></code> Method</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Comparison-to-AutoML-with-less-Computation-time-and-Untuned-XGBoost-Learners">Comparison to AutoML with less Computation time and Untuned XGBoost Learners</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#AutoML-with-less-Computation-time">AutoML with less Computation time</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Untuned-(default-parameter)-XGBoost">Untuned (default parameter) XGBoost</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Comparison-and-summary">Comparison and summary</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#Plot-Coefficients-and-95%-Confidence-Intervals">Plot Coefficients and 95% Confidence Intervals</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#Compare-Metrics-for-Nuisance-Estimation">Compare Metrics for Nuisance Estimation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/examples/py_double_ml_meets_flaml.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
