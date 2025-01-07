@@ -590,27 +590,26 @@ document.write(`
 <dl class="py function">
 <dt class="sig sig-object py" id="doubleml.rdd.datasets.make_simple_rdd_data">
 <span class="sig-prename descclassname"><span class="pre">doubleml.rdd.datasets.</span></span><span class="sig-name descname"><span class="pre">make_simple_rdd_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_obs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuzzy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binary_outcome</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doubleml.rdd.datasets.make_simple_rdd_data" title="Link to this definition">#</a></dt>
-<dd><p>Generates synthetic data for a regression discontinuity design (RDD) analysis.</p>
+<dd><p>Generates synthetic data for a regression discontinuity design (RDD) analysis.
+The data generating process is defined as</p>
 <div class="math notranslate nohighlight">
-\[Y_0 &amp;= g_0 + g_{cov} + \epsilon_0 \
-Y_1 &amp;= g_1 + g_{cov} + \epsilon_1 \
-g_0 &amp;= 0.1 \cdot \text{score}^2 \
-g_1 &amp;=  au + 0.1 \cdot \text{score}^2 - 0.5 \cdot \text{score}^2 \
-g_{cov} &amp;= \sum_{i=1}^{ ext{dim\_x}}    ext{Polynomial}(X_i) \
-\epsilon_0, \epsilon_1 &amp;\sim \mathcal{N}(0, 0.2^2)\]</div>
+\[ \begin{align}\begin{aligned}Y_0 &amp;= g_0 + g_{cov} + \epsilon_0,\\Y_1 &amp;= g_1 + g_{cov} + \epsilon_1,\\g_0 &amp;= 0.1 \cdot \text{score}^2,\\g_1 &amp;= \tau + 0.1 \cdot score^2 - 0.5 \cdot score^2 + a
+\sum_{i=1}^{\text{dim}_x} X_i \cdot score,\\g_{cov} &amp;= \sum_{i=1}^{\text{dim}_x} \text{Polynomial}(X_i),\end{aligned}\end{align} \]</div>
+<p>with random noise <span class="math notranslate nohighlight">\(\epsilon_0, \epsilon_1 \sim \mathcal{N}(0, 0.2^2)\)</span> and <span class="math notranslate nohighlight">\(X_i\)</span>
+being drawn independently from a uniform distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_obs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of observations to generate. Default is 5000.</p></li>
-<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Degree of the polynomial for covariates. Default is 4.</p></li>
+<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Degree of the polynomial for covariates. Default is 4. If zero, no covariate effect is considered.</p></li>
 <li><p><strong>fuzzy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, generates data for a fuzzy RDD. Default is True.</p></li>
-<li><p><strong>binary_outcome</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, generates binary outcomes. Default is False.</p></li>
+<li><p><strong>binary_outcome</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, generates binary outcomes based on a logistic transformation. Default is False.</p></li>
 <li><p><strong>**kwargs</strong> (<em>Additional keyword arguments.</em>) – <dl class="simple">
 <dt>cutoff<span class="classifier">float</span></dt><dd><p>The cutoff value for the score. Default is 0.0.</p>
 </dd>
 <dt>dim_x<span class="classifier">int</span></dt><dd><p>The number of independent covariates. Default is 3.</p>
 </dd>
-<dt>a<span class="classifier">float</span></dt><dd><p>Factor to control interaction of score and covariates to the outcome equation. Default is 0.0.</p>
+<dt>a<span class="classifier">float</span></dt><dd><p>Factor to control interaction of score and covariates in the outcome equation. Default is 0.0.</p>
 </dd>
 <dt>tau<span class="classifier">float</span></dt><dd><p>Parameter to control the true effect in the generated data at the given cutoff. Default is 1.0.</p>
 </dd>
@@ -619,14 +618,11 @@ g_{cov} &amp;= \sum_{i=1}^{ ext{dim\_x}}    ext{Polynomial}(X_i) \
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>dict</strong> – ‘score’ (np.ndarray): The running variable.
-‘X’ (np.ndarray): The independent covariates.
-‘Y0’ (np.ndarray): The potential outcomes without treatment.
-‘Y1’ (np.ndarray): The potential outcomes with treatment.
-‘intended_treatment’ (np.ndarray): The intended treatment assignment.</p>
+<dd class="field-even"><p><strong>res_dict</strong> – Dictionary with entries <code class="docutils literal notranslate"><span class="pre">score</span></code>, <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">Y</span></code>, <code class="docutils literal notranslate"><span class="pre">D</span></code>, and <code class="docutils literal notranslate"><span class="pre">oracle_values</span></code>.
+The oracle values contain the potential outcomes.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary containing the generated data with keys:</p>
+<dd class="field-odd"><p>dictionary</p>
 </dd>
 </dl>
 </dd></dl>
