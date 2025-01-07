@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -61,7 +61,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Python: Group Average Treatment Effects (GATEs) for PLR models" href="py_double_ml_gate_plr.html" />
-    <link rel="prev" title="Python: PLM and IRM for Multiple Treatments" href="py_double_ml_plm_irm_hetfx.html" />
+    <link rel="prev" title="Flexible Covariate Adjustment in Regression Discontinuity Designs (RDD)" href="py_double_ml_rdflex.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -494,6 +494,8 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_did_pretest.html">Python: Difference-in-Differences Pre-Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_basic_iv.html">Python: Basic Instrumental Variables calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_plm_irm_hetfx.html">Python: PLM and IRM for Multiple Treatments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_meets_flaml.html">DoubleML meets FLAML - How to tune learners automatically within <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_rdflex.html">Flexible Covariate Adjustment in Regression Discontinuity Designs (RDD)</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Python: Group Average Treatment Effects (GATEs) for IRM models</a></li>
@@ -584,16 +586,16 @@ Download Jupyter notebook:
     </ul>
     </div><section id="Python:-Group-Average-Treatment-Effects-(GATEs)-for-IRM-models">
 <h1>Python: Group Average Treatment Effects (GATEs) for IRM models<a class="headerlink" href="#Python:-Group-Average-Treatment-Effects-(GATEs)-for-IRM-models" title="Link to this heading">#</a></h1>
-<p>In this simple example, we illustrate how the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package can be used to estimate group average treatment effects in the <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#interactive-regression-model-irm">DoubleMLIRM</a> model.</p>
+<p>In this simple example, we illustrate how the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a> package can be used to estimate group average treatment effects in the <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#interactive-regression-models-irm">DoubleMLIRM</a> model.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
 
-<span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">make_heterogeneous_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_heterogeneous_data</span>
 </pre></div>
 </div>
 </div>
@@ -706,7 +708,7 @@ Download Jupyter notebook:
 </section>
 <section id="Interactive-Regression-Model-(IRM)">
 <h2>Interactive Regression Model (IRM)<a class="headerlink" href="#Interactive-Regression-Model-(IRM)" title="Link to this heading">#</a></h2>
-<p>The first step is to fit a <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#interactive-regression-model-irm">DoubleML IRM Model</a> to the data.</p>
+<p>The first step is to fit a <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#interactive-regression-models-irm">DoubleML IRM Model</a> to the data.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
@@ -724,7 +726,7 @@ Download Jupyter notebook:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First stage estimation</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
 <span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 <span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 
@@ -801,7 +803,7 @@ Group 3  4.199893  4.668981  5.138068
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">7.5</span>
 
 <span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">ci</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -942,12 +944,12 @@ Group_3  4.668981  0.138851  33.625766  3.991444e-130  4.396173  4.941788
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="py_double_ml_plm_irm_hetfx.html"
+       href="py_double_ml_rdflex.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Python: PLM and IRM for Multiple Treatments</p>
+        <p class="prev-next-title">Flexible Covariate Adjustment in Regression Discontinuity Designs (RDD)</p>
       </div>
     </a>
     <a class="right-next"

@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -494,6 +494,8 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_did_pretest.html">Python: Difference-in-Differences Pre-Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_basic_iv.html">Python: Basic Instrumental Variables calculation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_plm_irm_hetfx.html">Python: PLM and IRM for Multiple Treatments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_meets_flaml.html">DoubleML meets FLAML - How to tune learners automatically within <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_rdflex.html">Flexible Covariate Adjustment in Regression Discontinuity Designs (RDD)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_gate.html">Python: Group Average Treatment Effects (GATEs) for IRM models</a></li>
@@ -595,22 +597,22 @@ retirement savings plans and would tend to have otherwise high amounts of accumu
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">doubleml</span> <span class="k">as</span> <span class="nn">dml</span>
-<span class="kn">from</span> <span class="nn">doubleml.datasets</span> <span class="kn">import</span> <span class="n">fetch_401K</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_401K</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">PolynomialFeatures</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LassoCV</span><span class="p">,</span> <span class="n">LogisticRegressionCV</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
-<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span><span class="p">,</span> <span class="n">DecisionTreeRegressor</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">PolynomialFeatures</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LassoCV</span><span class="p">,</span> <span class="n">LogisticRegressionCV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">RandomForestRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.tree</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecisionTreeClassifier</span><span class="p">,</span> <span class="n">DecisionTreeRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
 
-<span class="kn">from</span> <span class="nn">xgboost</span> <span class="kn">import</span> <span class="n">XGBClassifier</span><span class="p">,</span> <span class="n">XGBRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xgboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">XGBClassifier</span><span class="p">,</span> <span class="n">XGBRegressor</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
 </pre></div>
 </div>
 </div>
@@ -1141,7 +1143,7 @@ e401  8688.511293  1390.8893  6.246731  4.191320e-10  5962.41836  11414.604227
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.12.5/x64/lib/python3.12/site-packages/xgboost/core.py:158: UserWarning: [09:53:56] WARNING: /workspace/src/learner.cc:740:
+/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/xgboost/core.py:158: UserWarning: [13:35:35] WARNING: /workspace/src/learner.cc:740:
 Parameters: { &#34;use_label_encoder&#34; } are not used.
 
   warnings.warn(smsg, UserWarning)
@@ -1368,7 +1370,7 @@ e401  11409.926493
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.12.5/x64/lib/python3.12/site-packages/xgboost/core.py:158: UserWarning: [09:54:12] WARNING: /workspace/src/learner.cc:740:
+/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/xgboost/core.py:158: UserWarning: [13:35:51] WARNING: /workspace/src/learner.cc:740:
 Parameters: { &#34;use_label_encoder&#34; } are not used.
 
   warnings.warn(smsg, UserWarning)
@@ -1698,11 +1700,11 @@ p401  16587.92463
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.12.5/x64/lib/python3.12/site-packages/xgboost/core.py:158: UserWarning: [09:54:32] WARNING: /workspace/src/learner.cc:740:
+/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/xgboost/core.py:158: UserWarning: [13:36:11] WARNING: /workspace/src/learner.cc:740:
 Parameters: { &#34;use_label_encoder&#34; } are not used.
 
   warnings.warn(smsg, UserWarning)
-/opt/hostedtoolcache/Python/3.12.5/x64/lib/python3.12/site-packages/xgboost/core.py:158: UserWarning: [09:54:32] WARNING: /workspace/src/learner.cc:740:
+/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/xgboost/core.py:158: UserWarning: [13:36:11] WARNING: /workspace/src/learner.cc:740:
 Parameters: { &#34;use_label_encoder&#34; } are not used.
 
   warnings.warn(smsg, UserWarning)
