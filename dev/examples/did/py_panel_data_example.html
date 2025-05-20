@@ -1,0 +1,1577 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Python: Real-Data Example for Multi-Period Difference-in-Differences &#8212; DoubleML  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c49bcd98" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=1ecd1175"></script>
+    <script src="../../_static/thebelab-helper.js"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/did/py_panel_data_example';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.doubleml.org/dev/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="R: Basics of Double Machine Learning" href="../R_double_ml_basics.html" />
+    <link rel="prev" title="Python: Panel Data with Multiple Time Periods" href="py_panel.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Interested to learn more? We offer <a href='https://trainings.doubleml.org/'>DoubleML Trainings!</a></div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="../../_static/logo_dark.png" class="logo__image only-dark" alt=""/>`);</script>
+  
+  
+    <p class="title logo__title">DoubleML</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/install.html">
+     Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/intro.html">
+     Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../workflow/workflow.html">
+     Workflow
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide/guide.html">
+     User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/api.html">
+     Python API
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://docs.doubleml.org/r/stable/">
+     R API
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://docs.doubleml.org/doubleml-coverage/">
+     Coverage Repository
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../literature/literature.html">
+     Literature
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../release/release.html">
+     Release notes
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/DoubleML/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py/discussions" title="Discussions" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discussions</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/install.html">
+     Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/intro.html">
+     Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../workflow/workflow.html">
+     Workflow
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide/guide.html">
+     User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/api.html">
+     Python API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+     R API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://docs.doubleml.org/doubleml-coverage/">
+     Coverage Repository
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../literature/literature.html">
+     Literature
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release/release.html">
+     Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/DoubleML/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py/discussions" title="Discussions" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discussions</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-3"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-3"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-3"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-3">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><p class="logo" style="text-align:center;"><a href="../../index.html">
+    <img class="logo" src="../../logo.png" alt="Logo" width="65%" height="65%">
+</a></p>
+
+<script type="text/javascript">
+    // Change the logo depending on the theme
+    var logo = document.querySelector('img.logo');
+    var observer = new MutationObserver(function(mutations) {
+        const dark = document.documentElement.dataset.theme == 'dark';
+        if (dark) {
+            logo.src = "../../logo_dark.png";
+        } else {
+            logo.src = "../../logo.png";
+        }
+    });
+    observer.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+</script></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_basics.html">Python: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_pension.html">Python: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_apo.html">Python: Average Potential Outcome (APO) Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_irm_vs_apo.html">Python: IRM and APO Model Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_learner.html">Python: Choice of learners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_sensitivity_booking.html">Example: Sensitivity Analysis for Causal ML</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_basic_iv.html">Python: Basic Instrumental Variables calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_robust_iv.html">Python: Confidence Intervals for Instrumental Variables Models That Are Robust to Weak Instruments</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_plm_irm_hetfx.html">Python: PLM and IRM for Multiple Treatments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_meets_flaml.html">DoubleML meets FLAML - How to tune learners automatically within <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_rdflex.html">Flexible Covariate Adjustment in Regression Discontinuity Designs (RDD)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_gate.html">Python: Group Average Treatment Effects (GATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_gate_plr.html">Python: Group Average Treatment Effects (GATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_cate.html">Python: Conditional Average Treatment Effects (CATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_cate_plr.html">Python: Conditional Average Treatment Effects (CATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_gate_sensitivity.html">Python: GATE Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_pension_qte.html">Python: Impact of 401(k) on Financial Wealth (Quantile Effects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_pq.html">Python: Potential Quantiles and Quantile Treatment Effects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_panel_simple.html">Python: Panel Data Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_panel.html">Python: Panel Data with Multiple Time Periods</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Python: Real-Data Example for Multi-Period Difference-in-Differences</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_basics.html">R: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_pension.html">R: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_did.html">R: DoubleML for Difference-in-Differences</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_multiway_cluster.html">R: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_ssm.html">R: Sample Selection Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_basic_iv.html">R: Basic Instrumental Variables Calculation</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../double_ml_bonus_data.html">DML: Bonus Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_did.html">Python: Difference-in-Differences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_did_pretest.html">Python: Difference-in-Differences Pre-Testing</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Python:...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+      <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/did/py_panel_data_example.ipynb">https://docs.doubleml.org/stable/examples/did/py_panel_data_example.ipynb</a>.
+
+    </ul>
+    </div><section id="Python:-Real-Data-Example-for-Multi-Period-Difference-in-Differences">
+<h1>Python: Real-Data Example for Multi-Period Difference-in-Differences<a class="headerlink" href="#Python:-Real-Data-Example-for-Multi-Period-Difference-in-Differences" title="Link to this heading">#</a></h1>
+<p>In this example, we replicate a <a class="reference external" href="https://bcallaway11.github.io/did/articles/did-basics.html#an-example-with-real-data">real-data demo notebook</a> from the <a class="reference external" href="https://bcallaway11.github.io/did/index.html">did-R-package</a> in order to illustrate the use of <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> for multi-period difference-in-differences (DiD) models.</p>
+<p>The notebook requires the following packages:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyreadr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.dummy</span><span class="w"> </span><span class="kn">import</span> <span class="n">DummyRegressor</span><span class="p">,</span> <span class="n">DummyClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LassoCV</span><span class="p">,</span> <span class="n">LogisticRegressionCV</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLPanelData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.did</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLDIDMulti</span>
+</pre></div>
+</div>
+</div>
+<section id="Causal-Research-Question">
+<h2>Causal Research Question<a class="headerlink" href="#Causal-Research-Question" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.12.001">Callaway and Sant’Anna (2021)</a> study the causal effect of raising the minimum wage on teen employment in the US using county data over a period from 2001 to 2007. A county is defined as treated if the minimum wage in that county is above the federal minimum wage. We focus on a preprocessed balanced panel data set as provided by the <a class="reference external" href="https://bcallaway11.github.io/did/index.html">did-R-package</a>. The corresponding documentation for the <code class="docutils literal notranslate"><span class="pre">mpdta</span></code>
+data is available from the <a class="reference external" href="https://bcallaway11.github.io/did/reference/mpdta.html">did package website</a>. We use this data solely as a demonstration example to help readers understand differences in the <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> and <code class="docutils literal notranslate"><span class="pre">did</span></code> packages. An analogous notebook using the same data is available from the <a class="reference external" href="https://bcallaway11.github.io/did/articles/did-basics.html#an-example-with-real-data">did documentation</a>.</p>
+<p>We follow the original notebook and provide results under identification based on unconditional and conditional parallel trends. For the Double Machine Learning (DML) Difference-in-Differences estimator, we demonstrate two different specifications, one based on linear and logistic regression and one based on their <span class="math notranslate nohighlight">\(\ell_1\)</span> penalized variants Lasso and logistic regression with cross-validated penalty choice. The results for the former are expected to be very similar to those in the <a class="reference external" href="https://bcallaway11.github.io/did/articles/did-basics.html#an-example-with-real-data">did
+data example</a>. Minor differences might arise due to the use of sample-splitting in the DML estimation.</p>
+</section>
+<section id="Data">
+<h2>Data<a class="headerlink" href="#Data" title="Link to this heading">#</a></h2>
+<p>We will download and read a preprocessed data file as provided by the <a class="reference external" href="https://bcallaway11.github.io/did/index.html">did-R-package</a>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># download file from did package for R</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/bcallaway11/did/raw/refs/heads/master/data/mpdta.rda&quot;</span>
+<span class="n">pyreadr</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s2">&quot;mpdta.rda&quot;</span><span class="p">)</span>
+
+<span class="n">mpdta</span> <span class="o">=</span> <span class="n">pyreadr</span><span class="o">.</span><span class="n">read_r</span><span class="p">(</span><span class="s2">&quot;mpdta.rda&quot;</span><span class="p">)[</span><span class="s2">&quot;mpdta&quot;</span><span class="p">]</span>
+<span class="n">mpdta</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>countyreal</th>
+      <th>lpop</th>
+      <th>lemp</th>
+      <th>first.treat</th>
+      <th>treat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2003</td>
+      <td>8001.0</td>
+      <td>5.896761</td>
+      <td>8.461469</td>
+      <td>2007.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2004</td>
+      <td>8001.0</td>
+      <td>5.896761</td>
+      <td>8.336870</td>
+      <td>2007.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2005</td>
+      <td>8001.0</td>
+      <td>5.896761</td>
+      <td>8.340217</td>
+      <td>2007.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2006</td>
+      <td>8001.0</td>
+      <td>5.896761</td>
+      <td>8.378161</td>
+      <td>2007.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2007</td>
+      <td>8001.0</td>
+      <td>5.896761</td>
+      <td>8.487352</td>
+      <td>2007.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>To work with <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>, we initialize a <code class="docutils literal notranslate"><span class="pre">DoubleMLPanelData</span></code> object. The input data has to satisfy some requirements, i.e., it should be in a <em>long</em> format with every row containing the information of one unit at one time period. Moreover, the data should contain a column on the unit identifier and a column on the time period. The requirements are virtually identical to those of the
+<a class="reference external" href="https://bcallaway11.github.io/did/index.html">did-R-package</a>, as listed in <a class="reference external" href="https://bcallaway11.github.io/did/articles/did-basics.html#an-example-with-real-data">their data example</a>. In line with the naming conventions of <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML</a>, the treatment group indicator is passed to <code class="docutils literal notranslate"><span class="pre">DoubleMLPanelData</span></code> by the <code class="docutils literal notranslate"><span class="pre">d_cols</span></code> argument. To flexibly handle different formats for handling time periods, the time variable <code class="docutils literal notranslate"><span class="pre">t_col</span></code> can handle <code class="docutils literal notranslate"><span class="pre">float</span></code>,
+<code class="docutils literal notranslate"><span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">datetime</span></code> formats. More information are available in the <a class="reference external" href="https://docs.doubleml.org/dev/guide/data_backend.html#doublemlpaneldata">user guide</a>. To indicate never treated units, we set their value for the treatment group variable to <code class="docutils literal notranslate"><span class="pre">np.inf</span></code>.</p>
+<p>Now, we can initialize the <code class="docutils literal notranslate"><span class="pre">DoubleMLPanelData</span></code> object, specifying</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">y_col</span></code> : the outcome</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d_cols</span></code>: the group variable indicating the first treated period for each unit</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">id_col</span></code>: the unique identification column for each unit</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t_col</span></code> : the time column</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_cols</span></code>: the additional pre-treatment controls</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set values for treatment group indicator for never-treated to np.inf</span>
+<span class="n">mpdta</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mpdta</span><span class="p">[</span><span class="s1">&#39;first.treat&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;first.treat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+<span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLPanelData</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">mpdta</span><span class="p">,</span>
+    <span class="n">y_col</span><span class="o">=</span><span class="s2">&quot;lemp&quot;</span><span class="p">,</span>
+    <span class="n">d_cols</span><span class="o">=</span><span class="s2">&quot;first.treat&quot;</span><span class="p">,</span>
+    <span class="n">id_col</span><span class="o">=</span><span class="s2">&quot;countyreal&quot;</span><span class="p">,</span>
+    <span class="n">t_col</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span>
+    <span class="n">x_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lpop&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLPanelData Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: lemp
+Treatment variable(s): [&#39;first.treat&#39;]
+Covariates: [&#39;lpop&#39;]
+Instrument variable(s): None
+Time variable: year
+Id variable: countyreal
+No. Observations: 500
+
+------------------ DataFrame info    ------------------
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 2500 entries, 0 to 2499
+Columns: 6 entries, year to treat
+dtypes: float64(5), int32(1)
+memory usage: 107.6 KB
+
+</pre></div></div>
+</div>
+<p>Note that we specified a pre-treatment confounding variable <code class="docutils literal notranslate"><span class="pre">lpop</span></code> through the <code class="docutils literal notranslate"><span class="pre">x_cols</span></code> argument. To consider cases under unconditional parallel trends, we can use dummy learners to ignore the pre-treatment confounding variable. This is illustrated below.</p>
+</section>
+<section id="ATT-Estimation:-Unconditional-Parallel-Trends">
+<h2>ATT Estimation: Unconditional Parallel Trends<a class="headerlink" href="#ATT-Estimation:-Unconditional-Parallel-Trends" title="Link to this heading">#</a></h2>
+<p>We start with identification under the unconditional parallel trends assumption. To do so, initialize a <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDMulti</span></code> object (see <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#difference-in-differences-models-did">model documentation</a>), which takes the previously initialized <code class="docutils literal notranslate"><span class="pre">DoubleMLPanelData</span></code> object as input. We use scikit-learn’s <code class="docutils literal notranslate"><span class="pre">DummyRegressor</span></code> (documentation <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html">here</a>) and
+<code class="docutils literal notranslate"><span class="pre">DummyClassifier</span></code> (documentation <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html">here</a>) to ignore the pre-treatment confounding variable. At this stage, we can also pass further options, for example specifying the number of folds and repetitions used for cross-fitting.</p>
+<p>When calling the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method, the model estimates standard combinations of <span class="math notranslate nohighlight">\(ATT(g,t)\)</span> parameters, which corresponds to the defaults in the <a class="reference external" href="https://bcallaway11.github.io/did/index.html">did-R-package</a>. These combinations can also be customized through the <code class="docutils literal notranslate"><span class="pre">gt_combinations</span></code> argument, see <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#panel-data">the user guide</a>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span>
+    <span class="n">obj_dml_data</span><span class="o">=</span><span class="n">dml_data</span><span class="p">,</span>
+    <span class="n">ml_g</span><span class="o">=</span><span class="n">DummyRegressor</span><span class="p">(),</span>
+    <span class="n">ml_m</span><span class="o">=</span><span class="n">DummyClassifier</span><span class="p">(),</span>
+    <span class="n">control_group</span><span class="o">=</span><span class="s2">&quot;never_treated&quot;</span><span class="p">,</span>
+    <span class="n">n_folds</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+
+<span class="n">dml_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_obj</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+                         coef  std err       t   P&gt;|t|   2.5 %  97.5 %
+ATT(2004.0,2003,2004) -0.0105   0.0232 -0.4526  0.6508 -0.0560  0.0350
+ATT(2004.0,2003,2005) -0.0704   0.0310 -2.2700  0.0232 -0.1312 -0.0096
+ATT(2004.0,2003,2006) -0.1372   0.0363 -3.7763  0.0002 -0.2085 -0.0660
+ATT(2004.0,2003,2007) -0.1008   0.0343 -2.9381  0.0033 -0.1680 -0.0335
+ATT(2006.0,2003,2004)  0.0065   0.0232  0.2811  0.7786 -0.0390  0.0520
+ATT(2006.0,2004,2005) -0.0027   0.0195 -0.1400  0.8886 -0.0410  0.0355
+ATT(2006.0,2005,2006) -0.0046   0.0179 -0.2585  0.7960 -0.0397  0.0304
+ATT(2006.0,2005,2007) -0.0412   0.0202 -2.0404  0.0413 -0.0807 -0.0016
+ATT(2007.0,2003,2004)  0.0304   0.0151  2.0197  0.0434  0.0009  0.0600
+ATT(2007.0,2004,2005) -0.0027   0.0165 -0.1645  0.8693 -0.0350  0.0296
+ATT(2007.0,2005,2006) -0.0310   0.0179 -1.7348  0.0828 -0.0660  0.0040
+ATT(2007.0,2006,2007) -0.0260   0.0167 -1.5628  0.1181 -0.0587  0.0066
+</pre></div></div>
+</div>
+<p>The summary displays estimates of the <span class="math notranslate nohighlight">\(ATT(g,t_\text{eval})\)</span> effects for different combinations of <span class="math notranslate nohighlight">\((g,t_\text{eval})\)</span> via <span class="math notranslate nohighlight">\(\widehat{ATT}(\mathrm{g},t_\text{pre},t_\text{eval})\)</span>, where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathrm{g}\)</span> specifies the group</p></li>
+<li><p><span class="math notranslate nohighlight">\(t_\text{pre}\)</span> specifies the corresponding pre-treatment period</p></li>
+<li><p><span class="math notranslate nohighlight">\(t_\text{eval}\)</span> specifies the evaluation period</p></li>
+</ul>
+<p>This corresponds to the estimates given in <code class="docutils literal notranslate"><span class="pre">att_gt</span></code> function in the <a class="reference external" href="https://bcallaway11.github.io/did/index.html">did-R-package</a>, where the standard choice is <span class="math notranslate nohighlight">\(t_\text{pre} = \min(\mathrm{g}, t_\text{eval}) - 1\)</span> (without anticipation).</p>
+<p>Remark that this includes pre-tests effects if <span class="math notranslate nohighlight">\(\mathrm{g} &gt; t_{eval}\)</span>, e.g. <span class="math notranslate nohighlight">\(ATT(2007,2005)\)</span>.</p>
+<p>As usual for the DoubleML-package, you can obtain joint confidence intervals via bootstrap.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">level</span> <span class="o">=</span> <span class="mf">0.95</span>
+
+<span class="n">ci</span> <span class="o">=</span> <span class="n">dml_obj</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+<span class="n">dml_obj</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">ci_joint</span> <span class="o">=</span> <span class="n">dml_obj</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ci_joint</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+                          2.5 %    97.5 %
+ATT(2004.0,2003,2004) -0.075498  0.054493
+ATT(2004.0,2003,2005) -0.157304  0.016469
+ATT(2004.0,2003,2006) -0.239029 -0.035446
+ATT(2004.0,2003,2007) -0.196831 -0.004706
+ATT(2006.0,2003,2004) -0.058475  0.071524
+ATT(2006.0,2004,2005) -0.057417  0.051949
+ATT(2006.0,2005,2006) -0.054715  0.045468
+ATT(2006.0,2005,2007) -0.097724  0.015351
+ATT(2007.0,2003,2004) -0.011777  0.072669
+ATT(2007.0,2004,2005) -0.048822  0.043404
+ATT(2007.0,2005,2006) -0.081068  0.019054
+ATT(2007.0,2006,2007) -0.072675  0.020621
+</pre></div></div>
+</div>
+<p>A visualization of the effects can be obtained via the <code class="docutils literal notranslate"><span class="pre">plot_effects()</span></code> method.</p>
+<p>Remark that the plot used joint confidence intervals per default.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">dml_obj</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\bachp\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\matplotlib\cbook.py:1762: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_panel_data_example_14_1.png" src="../../_images/examples_did_py_panel_data_example_14_1.png" />
+</div>
+</div>
+</section>
+<section id="Effect-Aggregation">
+<h2>Effect Aggregation<a class="headerlink" href="#Effect-Aggregation" title="Link to this heading">#</a></h2>
+<p>As the <a class="reference external" href="https://bcallaway11.github.io/did/index.html">did-R-package</a>, the <span class="math notranslate nohighlight">\(ATT\)</span>’s can be aggregated to summarize multiple effects. For details on different aggregations and details on their interpretations see <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.12.001">Callaway and Sant’Anna(2021)</a>.</p>
+<p>The aggregations are implemented via the <code class="docutils literal notranslate"><span class="pre">aggregate()</span></code> method. We follow the structure of the <a class="reference external" href="https://bcallaway11.github.io/did/articles/did-basics.html#an-example-with-real-data">did package notebook</a> and start with an aggregation relative to the treatment timing.</p>
+<section id="Event-Study-Aggregation">
+<h3>Event Study Aggregation<a class="headerlink" href="#Event-Study-Aggregation" title="Link to this heading">#</a></h3>
+<p>We can aggregate the <span class="math notranslate nohighlight">\(ATT\)</span>s relative to the treatment timing. This is done by setting <code class="docutils literal notranslate"><span class="pre">aggregation=&quot;eventstudy&quot;</span></code> in the <code class="docutils literal notranslate"><span class="pre">aggregate()</span></code> method. <code class="docutils literal notranslate"><span class="pre">aggregation=&quot;eventstudy&quot;</span></code> aggregates <span class="math notranslate nohighlight">\(\widehat{ATT}(\mathrm{g},t_\text{pre},t_\text{eval})\)</span> based on exposure time <span class="math notranslate nohighlight">\(e = t_\text{eval} - \mathrm{g}\)</span> (respecting group size).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># rerun bootstrap for valid simultaneous inference (as values are not saved)</span>
+<span class="n">dml_obj</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">aggregated_eventstudy</span> <span class="o">=</span> <span class="n">dml_obj</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="s2">&quot;eventstudy&quot;</span><span class="p">)</span>
+<span class="c1"># run bootstrap to obtain simultaneous confidence intervals</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">aggregated_eventstudy</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">aggregated_eventstudy</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDIDAggregation Object ==================
+ Event Study Aggregation
+
+------------------ Overall Aggregated Effects ------------------
+     coef  std err         t    P&gt;|t|     2.5 %    97.5 %
+-0.077214 0.019951 -3.870174 0.000109 -0.116317 -0.038111
+------------------ Aggregated Effects         ------------------
+          coef   std err         t     P&gt;|t|     2.5 %    97.5 %
+-3.0  0.030446  0.015075  2.019662  0.043418  0.000900  0.059992
+-2.0 -0.000549  0.013317 -0.041223  0.967118 -0.026650  0.025552
+-1.0 -0.024393  0.014200 -1.717808  0.085832 -0.052226  0.003439
+0.0  -0.019919  0.011816 -1.685694  0.091855 -0.043079  0.003241
+1.0  -0.050930  0.016783 -3.034679  0.002408 -0.083824 -0.018037
+2.0  -0.137238  0.036342 -3.776254  0.000159 -0.208467 -0.066008
+3.0  -0.100768  0.034297 -2.938126  0.003302 -0.167989 -0.033548
+------------------ Additional Information     ------------------
+Score function: observational
+Control group: never_treated
+Anticipation periods: 0
+
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\bachp\Documents\Promotion\DissundPapers\Software\DoubleML\doubleml-for-py\doubleml\did\did_aggregation.py:368: UserWarning: Joint confidence intervals require bootstrapping which hasn&#39;t been performed yet. Automatically applying &#39;.aggregated_frameworks.bootstrap(method=&#34;normal&#34;, n_rep_boot=500)&#39; with default values. For different bootstrap settings, call bootstrap() explicitly before plotting.
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_panel_data_example_17_2.png" src="../../_images/examples_did_py_panel_data_example_17_2.png" />
+</div>
+</div>
+<p>Alternatively, the <span class="math notranslate nohighlight">\(ATT\)</span> could also be aggregated according to (calendar) time periods or treatment groups, see the <a class="reference external" href="https://docs.doubleml.org/dev/guide/models.html#effect-aggregation">user guide</a>.</p>
+</section>
+<section id="Aggregation-Details">
+<h3>Aggregation Details<a class="headerlink" href="#Aggregation-Details" title="Link to this heading">#</a></h3>
+<p><strong>TODO</strong>: Keep or drop this?</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDAggregation</span></code> objects include several <code class="docutils literal notranslate"><span class="pre">DoubleMLFrameworks</span></code> which support methods like <code class="docutils literal notranslate"><span class="pre">bootstrap()</span></code> or <code class="docutils literal notranslate"><span class="pre">confint()</span></code>. Further, the weights can be accessed via the properties</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">overall_aggregation_weights</span></code>: weights for the overall aggregation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation_weights</span></code>: weights for the aggregation</p></li>
+</ul>
+<p>To clarify, e.g. for the eventstudy aggregation</p>
+<p>If one would like to consider how the aggregated effect with <span class="math notranslate nohighlight">\(e=0\)</span> is computed, one would have to look at the third set of weights within the <code class="docutils literal notranslate"><span class="pre">aggregation_weights</span></code> property</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aggregated_eventstudy</span><span class="o">.</span><span class="n">aggregation_weights</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([0.        , 0.        , 0.        , 0.        , 0.        ,
+       0.23391813, 0.        , 0.        , 0.        , 0.        ,
+       0.76608187, 0.        ])
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="ATT-Estimation:-Conditional-Parallel-Trends">
+<h2>ATT Estimation: Conditional Parallel Trends<a class="headerlink" href="#ATT-Estimation:-Conditional-Parallel-Trends" title="Link to this heading">#</a></h2>
+<p>We briefly demonstrate how to use the <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDMulti</span></code> model with conditional parallel trends. As the rationale behind DML is to flexibly model nuisance components as prediction problems, the DML DiD estimator includes pre-treatment covariates by default. In DiD, the nuisance components are the outcome regression and the propensity score estimation for the treatment group variable. This is why we had to enforce dummy learners in the unconditional parallel trends case to ignore the
+pre-treatment covariates. Now, we can replicate the classical doubly robust DiD estimator as of <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.12.001">Callaway and Sant’Anna(2021)</a> by using linear and logistic regression for the nuisance components. This is done by setting <code class="docutils literal notranslate"><span class="pre">ml_g</span></code> to <code class="docutils literal notranslate"><span class="pre">LinearRegression()</span></code> and <code class="docutils literal notranslate"><span class="pre">ml_m</span></code> to <code class="docutils literal notranslate"><span class="pre">LogisticRegression()</span></code>. Similarly, we can also choose other learners, for example by setting <code class="docutils literal notranslate"><span class="pre">ml_g</span></code> and <code class="docutils literal notranslate"><span class="pre">ml_m</span></code> to <code class="docutils literal notranslate"><span class="pre">LassoCV()</span></code> and <code class="docutils literal notranslate"><span class="pre">LogisticRegressionCV()</span></code>. We present
+the results for the ATTs and their event-study aggregation in the corresponding effect plots.</p>
+<p>Please note that the example is meant to illustrate the usage of the <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDMulti</span></code> model in combination with ML learners. In real-data applicatoins, careful choice and empirical evaluation of the learners are required. Default measures for the prediction of the nuisance components are printed in the model summary, as briefly illustrated below.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj_linear_logistic</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span>
+    <span class="n">obj_dml_data</span><span class="o">=</span><span class="n">dml_data</span><span class="p">,</span>
+    <span class="n">ml_g</span><span class="o">=</span><span class="n">LinearRegression</span><span class="p">(),</span>
+    <span class="n">ml_m</span><span class="o">=</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+    <span class="n">control_group</span><span class="o">=</span><span class="s2">&quot;never_treated&quot;</span><span class="p">,</span>
+    <span class="n">n_folds</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+
+<span class="n">dml_obj_linear_logistic</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_obj_linear_logistic</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">dml_obj_linear_logistic</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Estimated ATTs by Group, Linear and logistic Regression&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\bachp\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\matplotlib\cbook.py:1762: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 4 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2004.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2006.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2007.0&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_panel_data_example_23_2.png" src="../../_images/examples_did_py_panel_data_example_23_2.png" />
+</div>
+</div>
+<p>We briefly look at the model summary, which includes some standard diagnostics for the prediction of the nuisance components.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_obj_linear_logistic</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDIDMulti Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: lemp
+Treatment variable(s): [&#39;first.treat&#39;]
+Covariates: [&#39;lpop&#39;]
+Instrument variable(s): None
+Time variable: year
+Id variable: countyreal
+No. Observations: 500
+
+------------------ Score &amp; algorithm ------------------
+Score function: observational
+Control group: never_treated
+Anticipation periods: 0
+
+------------------ Machine learner   ------------------
+Learner ml_g: LinearRegression()
+Learner ml_m: LogisticRegression(penalty=None)
+Out-of-sample Performance:
+Regression:
+Learner ml_g0 RMSE: [[0.17197022 0.18219482 0.25977582 0.25762107 0.1726177  0.15159716
+  0.20238368 0.20650302 0.17381994 0.15150495 0.20118645 0.16352671]]
+Learner ml_g1 RMSE: [[0.10293317 0.12500233 0.13673155 0.1356723  0.13881924 0.1126528
+  0.08473008 0.10271377 0.13282935 0.16430589 0.15938565 0.1613265 ]]
+Classification:
+Learner ml_m Log Loss: [[0.23186483 0.23061763 0.23153821 0.23146489 0.34981033 0.34925181
+  0.35002383 0.34858068 0.60836257 0.60569912 0.60630968 0.60700137]]
+
+------------------ Resampling        ------------------
+No. folds: 10
+No. repeated sample splits: 1
+
+------------------ Fit summary       ------------------
+                           coef   std err         t     P&gt;|t|     2.5 %  \
+ATT(2004.0,2003,2004) -0.013506  0.022282 -0.606161  0.544408 -0.057178
+ATT(2004.0,2003,2005) -0.077125  0.028778 -2.680033  0.007361 -0.133528
+ATT(2004.0,2003,2006) -0.132188  0.035710 -3.701704  0.000214 -0.202178
+ATT(2004.0,2003,2007) -0.104989  0.033066 -3.175173  0.001497 -0.169797
+ATT(2006.0,2003,2004) -0.000609  0.022310 -0.027312  0.978211 -0.044336
+ATT(2006.0,2004,2005) -0.005410  0.018285 -0.295867  0.767332 -0.041248
+ATT(2006.0,2005,2006)  0.003109  0.020571  0.151158  0.879851 -0.037209
+ATT(2006.0,2005,2007) -0.041588  0.019824 -2.097880  0.035916 -0.080442
+ATT(2007.0,2003,2004)  0.027959  0.014092  1.983968  0.047259  0.000338
+ATT(2007.0,2004,2005) -0.004452  0.015648 -0.284504  0.776024 -0.035121
+ATT(2007.0,2005,2006) -0.028741  0.018211 -1.578214  0.114517 -0.064434
+ATT(2007.0,2006,2007) -0.027488  0.016248 -1.691824  0.090679 -0.059333
+
+                         97.5 %
+ATT(2004.0,2003,2004)  0.030165
+ATT(2004.0,2003,2005) -0.020722
+ATT(2004.0,2003,2006) -0.062197
+ATT(2004.0,2003,2007) -0.040182
+ATT(2006.0,2003,2004)  0.043118
+ATT(2006.0,2004,2005)  0.030428
+ATT(2006.0,2005,2006)  0.043428
+ATT(2006.0,2005,2007) -0.002734
+ATT(2007.0,2003,2004)  0.055580
+ATT(2007.0,2004,2005)  0.026217
+ATT(2007.0,2005,2006)  0.006952
+ATT(2007.0,2006,2007)  0.004357
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">es_linear_logistic</span> <span class="o">=</span> <span class="n">dml_obj_linear_logistic</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="s2">&quot;eventstudy&quot;</span><span class="p">)</span>
+<span class="n">es_linear_logistic</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Estimated ATTs by Group, Linear and logistic Regression&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\bachp\Documents\Promotion\DissundPapers\Software\DoubleML\doubleml-for-py\doubleml\did\did_aggregation.py:368: UserWarning: Joint confidence intervals require bootstrapping which hasn&#39;t been performed yet. Automatically applying &#39;.aggregated_frameworks.bootstrap(method=&#34;normal&#34;, n_rep_boot=500)&#39; with default values. For different bootstrap settings, call bootstrap() explicitly before plotting.
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x600 with 1 Axes&gt;,
+ &lt;Axes: title={&#39;center&#39;: &#39;Estimated ATTs by Group, Linear and logistic Regression&#39;}, ylabel=&#39;Effect&#39;&gt;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_panel_data_example_26_2.png" src="../../_images/examples_did_py_panel_data_example_26_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj_lasso</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span>
+    <span class="n">obj_dml_data</span><span class="o">=</span><span class="n">dml_data</span><span class="p">,</span>
+    <span class="n">ml_g</span><span class="o">=</span><span class="n">LassoCV</span><span class="p">(),</span>
+    <span class="n">ml_m</span><span class="o">=</span><span class="n">LogisticRegressionCV</span><span class="p">(),</span>
+    <span class="n">control_group</span><span class="o">=</span><span class="s2">&quot;never_treated&quot;</span><span class="p">,</span>
+    <span class="n">n_folds</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+
+<span class="n">dml_obj_lasso</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_obj_lasso</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">dml_obj_lasso</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Estimated ATTs by Group, LassoCV and LogisticRegressionCV()&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\bachp\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\matplotlib\cbook.py:1762: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 4 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2004.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2006.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2007.0&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_panel_data_example_27_2.png" src="../../_images/examples_did_py_panel_data_example_27_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Model summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_obj_lasso</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDIDMulti Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: lemp
+Treatment variable(s): [&#39;first.treat&#39;]
+Covariates: [&#39;lpop&#39;]
+Instrument variable(s): None
+Time variable: year
+Id variable: countyreal
+No. Observations: 500
+
+------------------ Score &amp; algorithm ------------------
+Score function: observational
+Control group: never_treated
+Anticipation periods: 0
+
+------------------ Machine learner   ------------------
+Learner ml_g: LassoCV()
+Learner ml_m: LogisticRegressionCV()
+Out-of-sample Performance:
+Regression:
+Learner ml_g0 RMSE: [[0.17242002 0.18142511 0.25935844 0.25958681 0.17338302 0.15220244
+  0.20145569 0.20566302 0.17235633 0.15194071 0.20103747 0.16455826]]
+Learner ml_g1 RMSE: [[0.09911511 0.13069581 0.13900982 0.15099534 0.13918785 0.11262764
+  0.08873154 0.1102721  0.131316   0.16060588 0.15919193 0.16009149]]
+Classification:
+Learner ml_m Log Loss: [[0.22914236 0.22913907 0.22913769 0.22913938 0.35596113 0.35595921
+  0.35596421 0.35595231 0.60886635 0.60885348 0.60885687 0.60885362]]
+
+------------------ Resampling        ------------------
+No. folds: 10
+No. repeated sample splits: 1
+
+------------------ Fit summary       ------------------
+                           coef   std err         t     P&gt;|t|     2.5 %  \
+ATT(2004.0,2003,2004) -0.016264  0.023168 -0.702029  0.482661 -0.061672
+ATT(2004.0,2003,2005) -0.077256  0.028982 -2.665626  0.007685 -0.134060
+ATT(2004.0,2003,2006) -0.136480  0.035719 -3.820990  0.000133 -0.206487
+ATT(2004.0,2003,2007) -0.104836  0.033835 -3.098432  0.001945 -0.171152
+ATT(2006.0,2003,2004) -0.001649  0.023339 -0.070667  0.943663 -0.047394
+ATT(2006.0,2004,2005) -0.005104  0.019313 -0.264274  0.791569 -0.042956
+ATT(2006.0,2005,2006) -0.003129  0.017887 -0.174943  0.861124 -0.038187
+ATT(2006.0,2005,2007) -0.041235  0.020320 -2.029240  0.042434 -0.081062
+ATT(2007.0,2003,2004)  0.028086  0.015158  1.852874  0.063900 -0.001623
+ATT(2007.0,2004,2005) -0.004803  0.016425 -0.292438  0.769951 -0.036996
+ATT(2007.0,2005,2006) -0.030093  0.017879 -1.683182  0.092340 -0.065134
+ATT(2007.0,2006,2007) -0.028444  0.016791 -1.693985  0.090268 -0.061354
+
+                         97.5 %
+ATT(2004.0,2003,2004)  0.029143
+ATT(2004.0,2003,2005) -0.020452
+ATT(2004.0,2003,2006) -0.066473
+ATT(2004.0,2003,2007) -0.038520
+ATT(2006.0,2003,2004)  0.044095
+ATT(2006.0,2004,2005)  0.032748
+ATT(2006.0,2005,2006)  0.031928
+ATT(2006.0,2005,2007) -0.001408
+ATT(2007.0,2003,2004)  0.057795
+ATT(2007.0,2004,2005)  0.027389
+ATT(2007.0,2005,2006)  0.004948
+ATT(2007.0,2006,2007)  0.004466
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">es_rf</span> <span class="o">=</span> <span class="n">dml_obj_lasso</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="s2">&quot;eventstudy&quot;</span><span class="p">)</span>
+<span class="n">es_rf</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Estimated ATTs by Group, LassoCV and LogisticRegressionCV()&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\bachp\Documents\Promotion\DissundPapers\Software\DoubleML\doubleml-for-py\doubleml\did\did_aggregation.py:368: UserWarning: Joint confidence intervals require bootstrapping which hasn&#39;t been performed yet. Automatically applying &#39;.aggregated_frameworks.bootstrap(method=&#34;normal&#34;, n_rep_boot=500)&#39; with default values. For different bootstrap settings, call bootstrap() explicitly before plotting.
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x600 with 1 Axes&gt;,
+ &lt;Axes: title={&#39;center&#39;: &#39;Estimated ATTs by Group, LassoCV and LogisticRegressionCV()&#39;}, ylabel=&#39;Effect&#39;&gt;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_panel_data_example_29_2.png" src="../../_images/examples_did_py_panel_data_example_29_2.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="py_panel.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Python: Panel Data with Multiple Time Periods</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../R_double_ml_basics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">R: Basics of Double Machine Learning</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Causal-Research-Question">Causal Research Question</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Data">Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ATT-Estimation:-Unconditional-Parallel-Trends">ATT Estimation: Unconditional Parallel Trends</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Effect-Aggregation">Effect Aggregation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Event-Study-Aggregation">Event Study Aggregation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Aggregation-Details">Aggregation Details</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ATT-Estimation:-Conditional-Parallel-Trends">ATT Estimation: Conditional Parallel Trends</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/DoubleML/doubleml-docs/edit/dev/doc/examples/did/py_panel_data_example.ipynb">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/examples/did/py_panel_data_example.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
