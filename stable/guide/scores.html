@@ -308,8 +308,20 @@ document.write(`
           
           
           
-          <a href="https://pypi.org/project/DoubleML/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-cube fa-lg" aria-hidden="true"></i>
+          <a href="https://pypi.org/project/DoubleML/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg" aria-hidden="true"></i>
             <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py/discussions" title="Discussions" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discussions</span></a>
         </li>
 </ul></div>
       
@@ -506,8 +518,20 @@ document.write(`
           
           
           
-          <a href="https://pypi.org/project/DoubleML/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-cube fa-lg" aria-hidden="true"></i>
+          <a href="https://pypi.org/project/DoubleML/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg" aria-hidden="true"></i>
             <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py/discussions" title="Discussions" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discussions</span></a>
         </li>
 </ul></div>
         
@@ -580,7 +604,7 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="basics.html">1. The basics of double/debiased machine learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data_backend.html">2. The data-backend DoubleMLData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_backend.html">2. Data Backend</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">3. Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="heterogeneity.html">4. Heterogeneous Treatment Effects</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">5. Score functions</a></li>
@@ -774,6 +798,7 @@ Outcome variable: y
 Treatment variable(s): d
 Covariates: X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20
 Instrument(s): 
+Selection variable: 
 No. Observations: 500
 
 ------------------ Score &amp; algorithm ------------------
@@ -874,7 +899,8 @@ R</label><div class="sd-tab-content docutils">
 <section id="implemented-neyman-orthogonal-score-functions">
 <h2><span class="section-number">5.2. </span>Implemented Neyman orthogonal score functions<a class="headerlink" href="#implemented-neyman-orthogonal-score-functions" title="Link to this heading">#</a></h2>
 <section id="partially-linear-models-plm">
-<h3><span class="section-number">5.2.1. </span>Partially linear models (PLM)<a class="headerlink" href="#partially-linear-models-plm" title="Link to this heading">#</a></h3>
+<span id="plm-scores"></span><h3><span class="section-number">5.2.1. </span>Partially linear models (PLM)<a class="headerlink" href="#partially-linear-models-plm" title="Link to this heading">#</a></h3>
+<p>The following scores for partially linear models are implemented.</p>
 <section id="partially-linear-regression-model-plr">
 <span id="plr-score"></span><h4><span class="section-number">5.2.1.1. </span>Partially linear regression model (PLR)<a class="headerlink" href="#partially-linear-regression-model-plr" title="Link to this heading">#</a></h4>
 <p>For the PLR model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> one can choose between
@@ -882,18 +908,24 @@ R</label><div class="sd-tab-content docutils">
 <p><code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> implements the score function:</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\psi(W; \theta, \eta) &amp;:= [Y - \ell(X) - \theta (D - m(X))] [D - m(X)]\\&amp;= - (D - m(X)) (D - m(X)) \theta + (Y - \ell(X)) (D - m(X))\\&amp;= \psi_a(W; \eta) \theta + \psi_b(W; \eta)\end{aligned}\end{align} \]</div>
-<p>with <span class="math notranslate nohighlight">\(\eta=(\ell,m)\)</span> and where the components of the linear score are</p>
+<p>with <span class="math notranslate nohighlight">\(\eta=(\ell,m)\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\ell_0(X) &amp;:= \mathbb{E}[Y \mid X] = \theta_0\mathbb{E}[D \mid X] + g(X),\\m_0(X) &amp;:= \mathbb{E}[D \mid X].\end{aligned}\end{align} \]</div>
+<p>The components of the linear score are</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  - (D - m(X)) (D - m(X)),\\\psi_b(W; \eta) &amp;= (Y - \ell(X)) (D - m(X)).\end{aligned}\end{align} \]</div>
 <p><code class="docutils literal notranslate"><span class="pre">score='IV-type'</span></code> implements the score function:</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\psi(W; \theta, \eta) &amp;:= [Y - D \theta - g(X)] [D - m(X)]\\&amp;= - D (D - m(X)) \theta + (Y - g(X)) (D - m(X))\\&amp;= \psi_a(W; \eta) \theta + \psi_b(W; \eta)\end{aligned}\end{align} \]</div>
-<p>with <span class="math notranslate nohighlight">\(\eta=(g,m)\)</span> and where the components of the linear score are</p>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g,m)\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}g_0(X) &amp;:= \mathbb{E}[Y - D \theta_0\mid X],\\m_0(X) &amp;:= \mathbb{E}[D \mid X].\end{aligned}\end{align} \]</div>
+<p>The components of the linear score are</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  - D (D - m(X)),\\\psi_b(W; \eta) &amp;= (Y - g(X)) (D - m(X)).\end{aligned}\end{align} \]</div>
 </section>
 <section id="partially-linear-iv-regression-model-pliv">
-<h4><span class="section-number">5.2.1.2. </span>Partially linear IV regression model (PLIV)<a class="headerlink" href="#partially-linear-iv-regression-model-pliv" title="Link to this heading">#</a></h4>
+<span id="pliv-score"></span><h4><span class="section-number">5.2.1.2. </span>Partially linear IV regression model (PLIV)<a class="headerlink" href="#partially-linear-iv-regression-model-pliv" title="Link to this heading">#</a></h4>
 <p>For the PLIV model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLIV</span></code> one can choose between
 <code class="docutils literal notranslate"><span class="pre">score='IV-type'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> implements the score function:</p>
@@ -911,9 +943,10 @@ R</label><div class="sd-tab-content docutils">
 </section>
 </section>
 <section id="interactive-regression-models-irm">
-<h3><span class="section-number">5.2.2. </span>Interactive regression models (IRM)<a class="headerlink" href="#interactive-regression-models-irm" title="Link to this heading">#</a></h3>
+<span id="irm-scores"></span><h3><span class="section-number">5.2.2. </span>Interactive regression models (IRM)<a class="headerlink" href="#interactive-regression-models-irm" title="Link to this heading">#</a></h3>
+<p>The following scores for nonparametric regression models are implemented.</p>
 <section id="binary-interactive-regression-model-irm">
-<h4><span class="section-number">5.2.2.1. </span>Binary Interactive Regression Model (IRM)<a class="headerlink" href="#binary-interactive-regression-model-irm" title="Link to this heading">#</a></h4>
+<span id="irm-score"></span><h4><span class="section-number">5.2.2.1. </span>Binary Interactive Regression Model (IRM)<a class="headerlink" href="#binary-interactive-regression-model-irm" title="Link to this heading">#</a></h4>
 <p>For the IRM model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLIRM</span></code> one can choose between
 <code class="docutils literal notranslate"><span class="pre">score='ATE'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='ATTE'</span></code>. Furthermore, weights <span class="math notranslate nohighlight">\(\omega(Y,D,X)\)</span> and</p>
 <div class="math notranslate nohighlight">
@@ -929,11 +962,14 @@ R</label><div class="sd-tab-content docutils">
 \[ \begin{align}\begin{aligned}\omega(Y,D,X) &amp;= 1\\\bar{\omega}(X) &amp;= 1\end{aligned}\end{align} \]</div>
 <p>whereas <code class="docutils literal notranslate"><span class="pre">score='ATTE'</span></code> changes weights to:</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\omega(Y,D,X) &amp;= \frac{D}{\mathbb{E}_n[D]}\\\omega(Y,D,X) &amp;= \frac{m(X)}{\mathbb{E}_n[D]}.\end{aligned}\end{align} \]</div>
+\[ \begin{align}\begin{aligned}\omega(Y,D,X) &amp;= \frac{D}{\mathbb{E}_n[D]}\\\bar{\omega}(Y,D,X) &amp;= \frac{m(X)}{\mathbb{E}_n[D]}.\end{aligned}\end{align} \]</div>
+<p>This score is identical to the original presentation in Section 5.1. of Chernozhukov et al. (2018)</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;= -\frac{D}{\mathbb{E}_n[D]}\\\psi_b(W; \eta) &amp;= \frac{D(Y-g(0,X))}{\mathbb{E}_n[D]} - \frac{m(X)(1-D)(Y-g(0,X))}{\mathbb{E}_n[D](1-m(X))}.\end{aligned}\end{align} \]</div>
 <p>For more details on other weight specifications, see <a class="reference internal" href="heterogeneity.html#weighted-cates"><span class="std std-ref">Weighted Average Treatment Effects</span></a>.</p>
 </section>
 <section id="average-potential-outcomes-apos">
-<h4><span class="section-number">5.2.2.2. </span>Average Potential Outcomes (APOs)<a class="headerlink" href="#average-potential-outcomes-apos" title="Link to this heading">#</a></h4>
+<span id="apo-score"></span><h4><span class="section-number">5.2.2.2. </span>Average Potential Outcomes (APOs)<a class="headerlink" href="#average-potential-outcomes-apos" title="Link to this heading">#</a></h4>
 <p>For the average potential outcomes (APO) models implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLAPO</span></code> and <code class="docutils literal notranslate"><span class="pre">DoubleMLAPOS</span></code>
 the <code class="docutils literal notranslate"><span class="pre">score='APO'</span></code> is implemented. Furthermore, weights <span class="math notranslate nohighlight">\(\omega(Y,D,X)\)</span> and</p>
 <div class="math notranslate nohighlight">
@@ -952,7 +988,7 @@ the <code class="docutils literal notranslate"><span class="pre">score='APO'</sp
 \[ \begin{align}\begin{aligned}\omega(Y,D,X) &amp;= 1\\\bar{\omega}(X) &amp;= 1.\end{aligned}\end{align} \]</div>
 </section>
 <section id="interactive-iv-model-iivm">
-<h4><span class="section-number">5.2.2.3. </span>Interactive IV model (IIVM)<a class="headerlink" href="#interactive-iv-model-iivm" title="Link to this heading">#</a></h4>
+<span id="iivm-score"></span><h4><span class="section-number">5.2.2.3. </span>Interactive IV model (IIVM)<a class="headerlink" href="#interactive-iv-model-iivm" title="Link to this heading">#</a></h4>
 <p>For the IIVM model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLIIVM</span></code>
 we employ for <code class="docutils literal notranslate"><span class="pre">score='LATE'</span></code> the score function:</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='LATE'</span></code> implements the score function:</p>
@@ -964,7 +1000,7 @@ we employ for <code class="docutils literal notranslate"><span class="pre">score
 \[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  - \bigg(r(1,X) - r(0,X) + \frac{Z (D - r(1,X))}{m(X)} - \frac{(1 - Z)(D - r(0,X))}{1 - m(X)} \bigg),\\\psi_b(W; \eta) &amp;= g(1,X) - g(0,X) + \frac{Z (Y - g(1,X))}{m(X)} - \frac{(1 - Z)(Y - g(0,X))}{1 - m(X)}.\end{aligned}\end{align} \]</div>
 </section>
 <section id="potential-quantiles-pqs">
-<h4><span class="section-number">5.2.2.4. </span>Potential quantiles (PQs)<a class="headerlink" href="#potential-quantiles-pqs" title="Link to this heading">#</a></h4>
+<span id="pq-score"></span><h4><span class="section-number">5.2.2.4. </span>Potential quantiles (PQs)<a class="headerlink" href="#potential-quantiles-pqs" title="Link to this heading">#</a></h4>
 <p>For <code class="docutils literal notranslate"><span class="pre">DoubleMLPQ</span></code> the only valid option is <code class="docutils literal notranslate"><span class="pre">score='PQ'</span></code>. For <code class="docutils literal notranslate"><span class="pre">treatment=d</span></code> with <span class="math notranslate nohighlight">\(d\in\{0,1\}\)</span> and
 a quantile <span class="math notranslate nohighlight">\(\tau\in (0,1)\)</span> this implements the nonlinear score function:</p>
 <div class="math notranslate nohighlight">
@@ -976,7 +1012,7 @@ a quantile <span class="math notranslate nohighlight">\(\tau\in (0,1)\)</span> t
 the score is estimated with a preliminary estimate <span class="math notranslate nohighlight">\(\tilde{\theta}\)</span>. For further details, see <a class="reference external" href="https://arxiv.org/abs/1912.12945">Kallus et al. (2019)</a>.</p>
 </section>
 <section id="local-potential-quantiles-lpqs">
-<h4><span class="section-number">5.2.2.5. </span>Local potential quantiles (LPQs)<a class="headerlink" href="#local-potential-quantiles-lpqs" title="Link to this heading">#</a></h4>
+<span id="lpq-score"></span><h4><span class="section-number">5.2.2.5. </span>Local potential quantiles (LPQs)<a class="headerlink" href="#local-potential-quantiles-lpqs" title="Link to this heading">#</a></h4>
 <p>For <code class="docutils literal notranslate"><span class="pre">DoubleMLLPQ</span></code> the only valid option is <code class="docutils literal notranslate"><span class="pre">score='LPQ'</span></code>. For <code class="docutils literal notranslate"><span class="pre">treatment=d</span></code> with <span class="math notranslate nohighlight">\(d\in\{0,1\}\)</span>, instrument <span class="math notranslate nohighlight">\(Z\)</span> and
 a quantile <span class="math notranslate nohighlight">\(\tau\in (0,1)\)</span> this implements the nonlinear score function:</p>
 <div class="math notranslate nohighlight">
@@ -991,7 +1027,7 @@ a quantile <span class="math notranslate nohighlight">\(\tau\in (0,1)\)</span> t
 the score is estimated with a preliminary estimate <span class="math notranslate nohighlight">\(\tilde{\theta}\)</span>. For further details, see <a class="reference external" href="https://arxiv.org/abs/1912.12945">Kallus et al. (2019)</a>.</p>
 </section>
 <section id="conditional-value-at-risk-cvar">
-<h4><span class="section-number">5.2.2.6. </span>Conditional value at risk (CVaR)<a class="headerlink" href="#conditional-value-at-risk-cvar" title="Link to this heading">#</a></h4>
+<span id="cvar-score"></span><h4><span class="section-number">5.2.2.6. </span>Conditional value at risk (CVaR)<a class="headerlink" href="#conditional-value-at-risk-cvar" title="Link to this heading">#</a></h4>
 <p>For <code class="docutils literal notranslate"><span class="pre">DoubleMLCVAR</span></code> the only valid option is <code class="docutils literal notranslate"><span class="pre">score='CVaR'</span></code>. For <code class="docutils literal notranslate"><span class="pre">treatment=d</span></code> with <span class="math notranslate nohighlight">\(d\in\{0,1\}\)</span> and
 a quantile <span class="math notranslate nohighlight">\(\tau\in (0,1)\)</span> this implements the score function:</p>
 <div class="math notranslate nohighlight">
@@ -1004,9 +1040,86 @@ a preliminary estimate of <span class="math notranslate nohighlight">\(\gamma_0\
 </section>
 </section>
 <section id="difference-in-differences-models">
-<h3><span class="section-number">5.2.3. </span>Difference-in-Differences Models<a class="headerlink" href="#difference-in-differences-models" title="Link to this heading">#</a></h3>
+<span id="did-scores"></span><h3><span class="section-number">5.2.3. </span>Difference-in-Differences Models<a class="headerlink" href="#difference-in-differences-models" title="Link to this heading">#</a></h3>
+<p>The following scores for difference-in-differences models are implemented.</p>
 <section id="panel-data">
-<h4><span class="section-number">5.2.3.1. </span>Panel Data<a class="headerlink" href="#panel-data" title="Link to this heading">#</a></h4>
+<span id="did-pa-score"></span><h4><span class="section-number">5.2.3.1. </span>Panel Data<a class="headerlink" href="#panel-data" title="Link to this heading">#</a></h4>
+<p>As in the description of the <a class="reference internal" href="models.html#did-pa-model"><span class="std std-ref">DiD model</span></a>, the required nuisance elements are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval}, \delta}(X_i) &amp;:= \mathbb{E}[Y_{i,t_\text{eval}} - Y_{i,t_\text{pre}}|X_i, C_{i,t_\text{eval} + \delta}^{(\cdot)} = 1], \\
+m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i) &amp;:= P(G_i^{\mathrm{g}}=1|X_i, G_i^{\mathrm{g}} + C_{i,t_\text{eval} + \delta}^{(\cdot)}=1).
+\end{align}\end{split}\]</div>
+<p>for a certain choice of <span class="math notranslate nohighlight">\((\mathrm{g}, t_\text{pre}, t_\text{eval})\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> and control group <span class="math notranslate nohighlight">\(C_{i,t_\text{eval} + \delta}^{(\cdot)}\)</span>.</p>
+<p>For notational purposes, we will omit the subscripts <span class="math notranslate nohighlight">\(\mathrm{g}, t_\text{pre}, t_\text{eval}, \delta\)</span> in the following and use the notation</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g_0(0, X_i)\equiv g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval}, \delta}(X_i)\)</span> (population outcome regression function of the control group)</p></li>
+<li><p><span class="math notranslate nohighlight">\(m_0(X_i)\equiv m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i)\)</span> (generalized propensity score)</p></li>
+</ul>
+<p>All scores in the multi-period setting have the form</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\psi(W_i,\theta, \eta) :=
+\begin{cases}
+\tilde{\psi}(W_i,\theta, \eta) &amp; \text{for } G_i^{\mathrm{g}} \vee C_{i,t_\text{eval} + \delta}^{(\cdot)}=1 \\
+0 &amp; \text{otherwise}
+\end{cases}\end{split}\]</div>
+<p>i.e. the score is only non-zero for units in the corresponding treatment group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span> and control group <span class="math notranslate nohighlight">\(C_{i,t_\text{eval} + \delta}^{(\cdot)}\)</span>.</p>
+<p>For the difference-in-differences model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDMulti</span></code> one can choose between
+<code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> implements the score function (dropping the unit index <span class="math notranslate nohighlight">\(i\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta, \eta)
+:&amp;= -\frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]}\theta + \left(\frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]} - \frac{\frac{m(X) (1-G^{\mathrm{g}})}{1-m(X)}}{\mathbb{E}_n\left[\frac{m(X) (1-G^{\mathrm{g}})}{1-m(X)}\right]}\right) \left(Y_{t_\text{eval}} - Y_{t_\text{pre}} - g(0,X)\right)\\&amp;= \tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>where the components of the final linear score <span class="math notranslate nohighlight">\(\psi\)</span> are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  \tilde{\psi}_a(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}),\\\psi_b(W; \eta) &amp;= \tilde{\psi}_b(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\end{aligned}\end{align} \]</div>
+<p>and the nuisance elements <span class="math notranslate nohighlight">\(\eta=(g, m)\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Remark that <span class="math notranslate nohighlight">\(1-G^{\mathrm{g}}=C^{(\cdot)}\)</span> if <span class="math notranslate nohighlight">\(G^{\mathrm{g}} \vee C_{t_\text{eval} + \delta}^{(\cdot)}=1\)</span>.</p>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">in_sample_normalization='False'</span></code>, the score is set to</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta,\eta) &amp;= - \frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]}\theta + \frac{G^{\mathrm{g}} - m(X)}{\mathbb{E}_n[G^{\mathrm{g}}](1-m(X))}\left(Y_{t_\text{eval}} - Y_{t_\text{pre}} - g(0,X)\right)\\&amp;= \tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g, m)\)</span>.
+Remark that this will result in the same score, but just uses slightly different normalization.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code> assumes that the treatment probability is independent of the covariates <span class="math notranslate nohighlight">\(X\)</span> and does not rely on the propensity score. Instead define
+the population outcome regression for treated and control group as</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g_0(0, X_i)\equiv \mathbb{E}[Y_{i,t_\text{eval}} - Y_{i,t_\text{pre}}|X_i, C_{i,t_\text{eval} + \delta}^{(\cdot)} = 1]\)</span> (control group)</p></li>
+<li><p><span class="math notranslate nohighlight">\(g_0(1, X_i)\equiv \mathbb{E}[Y_{i,t_\text{eval}} - Y_{i,t_\text{pre}}|X_i, G_i^{\mathrm{g}} = 1]\)</span> (treated group)</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code> implements the score function:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta, \eta)
+:=\; &amp;-\theta + \left(\frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]} - \frac{1-G^{\mathrm{g}}}{\mathbb{E}_n[1-G^{\mathrm{g}}]}\right)\left(Y_{t_\text{eval}} - Y_{t_\text{pre}} - g(0,X)\right)\\&amp;+ \left(1 - \frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]}\right) \left(g(1,X) - g(0,X)\right)\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>where the components of the final linear score <span class="math notranslate nohighlight">\(\psi\)</span> are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  \tilde{\psi}_a(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}),\\\psi_b(W; \eta) &amp;= \tilde{\psi}_b(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\end{aligned}\end{align} \]</div>
+<p>and the nuisance elements <span class="math notranslate nohighlight">\(\eta=(g)\)</span>.</p>
+<p>Analogously, if <code class="docutils literal notranslate"><span class="pre">in_sample_normalization='False'</span></code>,  the score is set to</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta, \eta)
+:=\; &amp;-\theta +  \frac{G^{\mathrm{g}} - \mathbb{E}_n[G^{\mathrm{g}}]}{\mathbb{E}_n[G^{\mathrm{g}}](1-\mathbb{E}_n[G^{\mathrm{g}}])}\left(Y_{t_\text{eval}} - Y_{t_\text{pre}} - g(0,X)\right)\\&amp;+ \left(1 - \frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]}\right) \left(g(1,X) - g(0,X)\right)\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g)\)</span>.
+Remark that this will result in the same score, but just uses slightly different normalization.</p>
+</section>
+<section id="repeated-cross-sectional-data">
+<span id="did-cs-score"></span><h4><span class="section-number">5.2.3.2. </span>Repeated Cross-Sectional Data<a class="headerlink" href="#repeated-cross-sectional-data" title="Link to this heading">#</a></h4>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Will be implemented soon.</p>
+</div>
+</section>
+<section id="two-treatment-periods">
+<h4><span class="section-number">5.2.3.3. </span>Two treatment periods<a class="headerlink" href="#two-treatment-periods" title="Link to this heading">#</a></h4>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This documentation refers to the deprecated implementation for two time periods.
+This functionality will be removed in a future version. The generalized version are <a class="reference internal" href="#did-pa-score"><span class="std std-ref">Panel Data</span></a> and <a class="reference internal" href="#did-cs-score"><span class="std std-ref">Repeated Cross-Sectional Data</span></a>.</p>
+</div>
+<section id="id3">
+<h5><span class="section-number">5.2.3.3.1. </span>Panel Data<a class="headerlink" href="#id3" title="Link to this heading">#</a></h5>
 <p>For the difference-in-differences model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLDID</span></code> one can choose between
 <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> implements the score function (dropping the unit index <span class="math notranslate nohighlight">\(i\)</span>):</p>
@@ -1042,8 +1155,8 @@ implements the score function:</p>
 <p>with <span class="math notranslate nohighlight">\(\eta=(g, p)\)</span>, where <span class="math notranslate nohighlight">\(p_0 = \mathbb{E}[D]\)</span> is estimated on the cross-fitting folds.
 Remark that this will result in the same score, but just uses slightly different normalization.</p>
 </section>
-<section id="repeated-cross-sectional-data">
-<h4><span class="section-number">5.2.3.2. </span>Repeated Cross-Sectional Data<a class="headerlink" href="#repeated-cross-sectional-data" title="Link to this heading">#</a></h4>
+<section id="id4">
+<h5><span class="section-number">5.2.3.3.2. </span>Repeated Cross-Sectional Data<a class="headerlink" href="#id4" title="Link to this heading">#</a></h5>
 <p>For the difference-in-differences model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDCS</span></code> one can choose between
 <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> implements the score function (dropping the unit index <span class="math notranslate nohighlight">\(i\)</span>):</p>
@@ -1077,8 +1190,10 @@ implements the score function:</p>
 Remark that this will result in the same score, but just uses slightly different normalization.</p>
 </section>
 </section>
+</section>
 <section id="sample-selection-models">
-<h3><span class="section-number">5.2.4. </span>Sample Selection Models<a class="headerlink" href="#sample-selection-models" title="Link to this heading">#</a></h3>
+<span id="ssm-scores"></span><h3><span class="section-number">5.2.4. </span>Sample Selection Models<a class="headerlink" href="#sample-selection-models" title="Link to this heading">#</a></h3>
+<p>The following scores for sample selection models are implemented.</p>
 <section id="missingness-at-random">
 <span id="ssm-mar-score"></span><h4><span class="section-number">5.2.4.1. </span>Missingness at Random<a class="headerlink" href="#missingness-at-random" title="Link to this heading">#</a></h4>
 <p>For <code class="docutils literal notranslate"><span class="pre">DoubleMLSSM</span></code> the <code class="docutils literal notranslate"><span class="pre">score='missing-at-random'</span></code> implements the score function:</p>
@@ -1228,6 +1343,11 @@ Note that this estimate will in general be prone to a regularization bias, see a
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#difference-in-differences-models">5.2.3. Difference-in-Differences Models</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#panel-data">5.2.3.1. Panel Data</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#repeated-cross-sectional-data">5.2.3.2. Repeated Cross-Sectional Data</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-treatment-periods">5.2.3.3. Two treatment periods</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">5.2.3.3.1. Panel Data</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5.2.3.3.2. Repeated Cross-Sectional Data</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-selection-models">5.2.4. Sample Selection Models</a><ul class="nav section-nav flex-column">
