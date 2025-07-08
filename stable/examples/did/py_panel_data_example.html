@@ -66,7 +66,7 @@
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="R: Basics of Double Machine Learning" href="../R_double_ml_basics.html" />
+    <link rel="next" title="Python: Repeated Cross-Sectional Data with Multiple Time Periods" href="py_rep_cs.html" />
     <link rel="prev" title="Python: Panel Data with Multiple Time Periods" href="py_panel.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -641,6 +641,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_panel_simple.html">Python: Panel Data Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_panel.html">Python: Panel Data with Multiple Time Periods</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Python: Real-Data Example for Multi-Period Difference-in-Differences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_rep_cs.html">Python: Repeated Cross-Sectional Data with Multiple Time Periods</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../R_double_ml_basics.html">R: Basics of Double Machine Learning</a></li>
@@ -890,7 +891,8 @@ Covariates: [&#39;lpop&#39;]
 Instrument variable(s): None
 Time variable: year
 Id variable: countyreal
-No. Observations: 500
+No. Unique Ids: 500
+No. Observations: 2500
 
 ------------------ DataFrame info    ------------------
 &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
@@ -931,18 +933,18 @@ memory usage: 107.6 KB
 <div class="output_area docutils container">
 <div class="highlight"><pre>
                          coef  std err       t   P&gt;|t|   2.5 %  97.5 %
-ATT(2004.0,2003,2004) -0.0105   0.0232 -0.4516  0.6516 -0.0560  0.0350
-ATT(2004.0,2003,2005) -0.0704   0.0310 -2.2728  0.0230 -0.1311 -0.0097
-ATT(2004.0,2003,2006) -0.1372   0.0371 -3.7010  0.0002 -0.2099 -0.0646
-ATT(2004.0,2003,2007) -0.1008   0.0344 -2.9314  0.0034 -0.1682 -0.0334
-ATT(2006.0,2003,2004)  0.0065   0.0233  0.2797  0.7797 -0.0392  0.0522
-ATT(2006.0,2004,2005) -0.0027   0.0195 -0.1395  0.8890 -0.0410  0.0356
-ATT(2006.0,2005,2006) -0.0046   0.0178 -0.2578  0.7966 -0.0394  0.0303
-ATT(2006.0,2005,2007) -0.0412   0.0202 -2.0458  0.0408 -0.0807 -0.0017
-ATT(2007.0,2003,2004)  0.0306   0.0151  2.0219  0.0432  0.0009  0.0602
-ATT(2007.0,2004,2005) -0.0027   0.0164 -0.1620  0.8713 -0.0348  0.0295
-ATT(2007.0,2005,2006) -0.0311   0.0179 -1.7350  0.0827 -0.0662  0.0040
-ATT(2007.0,2006,2007) -0.0259   0.0167 -1.5561  0.1197 -0.0586  0.0067
+ATT(2004.0,2003,2004) -0.0105   0.0231 -0.4525  0.6509 -0.0558  0.0349
+ATT(2004.0,2003,2005) -0.0704   0.0313 -2.2503  0.0244 -0.1317 -0.0091
+ATT(2004.0,2003,2006) -0.1373   0.0360 -3.8129  0.0001 -0.2078 -0.0667
+ATT(2004.0,2003,2007) -0.1008   0.0343 -2.9370  0.0033 -0.1681 -0.0335
+ATT(2006.0,2003,2004)  0.0065   0.0234  0.2791  0.7802 -0.0393  0.0524
+ATT(2006.0,2004,2005) -0.0028   0.0196 -0.1408  0.8881 -0.0412  0.0357
+ATT(2006.0,2005,2006) -0.0046   0.0177 -0.2588  0.7958 -0.0393  0.0301
+ATT(2006.0,2005,2007) -0.0412   0.0202 -2.0374  0.0416 -0.0809 -0.0016
+ATT(2007.0,2003,2004)  0.0305   0.0151  2.0263  0.0427  0.0010  0.0600
+ATT(2007.0,2004,2005) -0.0027   0.0164 -0.1658  0.8683 -0.0348  0.0294
+ATT(2007.0,2005,2006) -0.0311   0.0179 -1.7373  0.0823 -0.0662  0.0040
+ATT(2007.0,2006,2007) -0.0260   0.0167 -1.5605  0.1187 -0.0587  0.0067
 </pre></div></div>
 </div>
 <p>The summary displays estimates of the <span class="math notranslate nohighlight">\(ATT(g,t_\text{eval})\)</span> effects for different combinations of <span class="math notranslate nohighlight">\((g,t_\text{eval})\)</span> via <span class="math notranslate nohighlight">\(\widehat{ATT}(\mathrm{g},t_\text{pre},t_\text{eval})\)</span>, where</p>
@@ -973,18 +975,18 @@ ATT(2007.0,2006,2007) -0.0259   0.0167 -1.5561  0.1197 -0.0586  0.0067
 <div class="output_area docutils container">
 <div class="highlight"><pre>
                           2.5 %    97.5 %
-ATT(2004.0,2003,2004) -0.076871  0.055907
-ATT(2004.0,2003,2005) -0.159040  0.018202
-ATT(2004.0,2003,2006) -0.243304 -0.031176
-ATT(2004.0,2003,2007) -0.199188 -0.002446
-ATT(2006.0,2003,2004) -0.060185  0.073229
-ATT(2006.0,2004,2005) -0.058632  0.053178
-ATT(2006.0,2005,2006) -0.055458  0.046289
-ATT(2006.0,2005,2007) -0.098879  0.016415
-ATT(2007.0,2003,2004) -0.012668  0.073769
-ATT(2007.0,2004,2005) -0.049574  0.044258
-ATT(2007.0,2005,2006) -0.082285  0.020151
-ATT(2007.0,2006,2007) -0.073607  0.021736
+ATT(2004.0,2003,2004) -0.076265  0.055324
+ATT(2004.0,2003,2005) -0.159392  0.018560
+ATT(2004.0,2003,2006) -0.239643 -0.034901
+ATT(2004.0,2003,2007) -0.198431 -0.003211
+ATT(2006.0,2003,2004) -0.059967  0.073021
+ATT(2006.0,2004,2005) -0.058553  0.053029
+ATT(2006.0,2005,2006) -0.054940  0.045774
+ATT(2006.0,2005,2007) -0.098788  0.016315
+ATT(2007.0,2003,2004) -0.012310  0.073359
+ATT(2007.0,2004,2005) -0.049314  0.043879
+ATT(2007.0,2005,2006) -0.082025  0.019807
+ATT(2007.0,2006,2007) -0.073467  0.021403
 </pre></div></div>
 </div>
 <p>A visualization of the effects can be obtained via the <code class="docutils literal notranslate"><span class="pre">plot_effects()</span></code> method.</p>
@@ -1002,7 +1004,7 @@ ATT(2007.0,2006,2007) -0.073607  0.021736
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.12.10/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
   return math.isfinite(val)
 </pre></div></div>
 </div>
@@ -1044,17 +1046,17 @@ ATT(2007.0,2006,2007) -0.073607  0.021736
  Event Study Aggregation
 
 ------------------ Overall Aggregated Effects ------------------
-     coef  std err         t    P&gt;|t|    2.5 %    97.5 %
--0.077216 0.020125 -3.836778 0.000125 -0.11666 -0.037771
+     coef  std err         t    P&gt;|t|     2.5 %    97.5 %
+-0.077242 0.019952 -3.871366 0.000108 -0.116347 -0.038136
 ------------------ Aggregated Effects         ------------------
           coef   std err         t     P&gt;|t|     2.5 %    97.5 %
--3.0  0.030551  0.015110  2.021922  0.043184  0.000936  0.060166
--2.0 -0.000510  0.013291 -0.038396  0.969372 -0.026561  0.025540
--1.0 -0.024438  0.014226 -1.717846  0.085825 -0.052320  0.003444
-0.0  -0.019846  0.011813 -1.679995  0.092958 -0.042999  0.003307
-1.0  -0.050961  0.016759 -3.040777  0.002360 -0.083808 -0.018114
-2.0  -0.137240  0.037082 -3.701018  0.000215 -0.209919 -0.064561
-3.0  -0.100817  0.034392 -2.931394  0.003374 -0.168224 -0.033410
+-3.0  0.030525  0.015064  2.026303  0.042734  0.000999  0.060050
+-2.0 -0.000555  0.013284 -0.041782  0.966673 -0.026592  0.025482
+-1.0 -0.024478  0.014234 -1.719726  0.085482 -0.052375  0.003419
+0.0  -0.019910  0.011815 -1.685144  0.091961 -0.043068  0.003247
+1.0  -0.050963  0.016868 -3.021282  0.002517 -0.084024 -0.017902
+2.0  -0.137272  0.036002 -3.812850  0.000137 -0.207835 -0.066708
+3.0  -0.100821  0.034328 -2.936983  0.003314 -0.168103 -0.033539
 ------------------ Additional Information     ------------------
 Score function: observational
 Control group: never_treated
@@ -1130,7 +1132,7 @@ the results for the ATTs and their event-study aggregation in the corresponding 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.12.10/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
   return math.isfinite(val)
 </pre></div></div>
 </div>
@@ -1176,7 +1178,8 @@ Covariates: [&#39;lpop&#39;]
 Instrument variable(s): None
 Time variable: year
 Id variable: countyreal
-No. Observations: 500
+No. Unique Ids: 500
+No. Observations: 2500
 
 ------------------ Score &amp; algorithm ------------------
 Score function: observational
@@ -1188,13 +1191,13 @@ Learner ml_g: LinearRegression()
 Learner ml_m: LogisticRegression(penalty=None)
 Out-of-sample Performance:
 Regression:
-Learner ml_g0 RMSE: [[0.17226484 0.18166755 0.25783132 0.25758358 0.17220879 0.15168775
-  0.2012599  0.20593027 0.17155829 0.1514822  0.20084731 0.16406172]]
-Learner ml_g1 RMSE: [[0.10216842 0.12879101 0.14425857 0.13766611 0.13862368 0.11669285
-  0.08577943 0.10432464 0.13512132 0.16147053 0.16200373 0.16111342]]
+Learner ml_g0 RMSE: [[0.17164096 0.1812712  0.25867225 0.25764387 0.17259993 0.15152933
+  0.20148235 0.20732504 0.17230253 0.15174951 0.20171958 0.16319401]]
+Learner ml_g1 RMSE: [[0.11060636 0.12832683 0.13769214 0.14946526 0.14140679 0.11095128
+  0.08529349 0.10531537 0.13462657 0.16304026 0.1602735  0.16104269]]
 Classification:
-Learner ml_m Log Loss: [[0.22941482 0.23091908 0.23213826 0.23184114 0.34832641 0.34858298
-  0.34858917 0.3493391  0.6052269  0.6058827  0.60544154 0.60677155]]
+Learner ml_m Log Loss: [[0.23081099 0.23115113 0.23156614 0.23288768 0.34924547 0.34771323
+  0.35016806 0.34707014 0.6070252  0.60594509 0.60481056 0.60732143]]
 
 ------------------ Resampling        ------------------
 No. folds: 10
@@ -1202,32 +1205,32 @@ No. repeated sample splits: 1
 
 ------------------ Fit summary       ------------------
                            coef   std err         t     P&gt;|t|     2.5 %  \
-ATT(2004.0,2003,2004) -0.014054  0.022150 -0.634506  0.525750 -0.057466
-ATT(2004.0,2003,2005) -0.076466  0.028540 -2.679268  0.007378 -0.132403
-ATT(2004.0,2003,2006) -0.146698  0.034441 -4.259399  0.000020 -0.214201
-ATT(2004.0,2003,2007) -0.105661  0.033077 -3.194448  0.001401 -0.170490
-ATT(2006.0,2003,2004) -0.001484  0.022190 -0.066859  0.946694 -0.044975
-ATT(2006.0,2004,2005) -0.006535  0.018536 -0.352557  0.724421 -0.042864
-ATT(2006.0,2005,2006)  0.002804  0.019890  0.141000  0.887870 -0.036179
-ATT(2006.0,2005,2007) -0.040352  0.019923 -2.025390  0.042827 -0.079401
-ATT(2007.0,2003,2004)  0.027132  0.014105  1.923550  0.054411 -0.000514
-ATT(2007.0,2004,2005) -0.004200  0.015737 -0.266882  0.789560 -0.035044
-ATT(2007.0,2005,2006) -0.028712  0.018166 -1.580518  0.113988 -0.064317
-ATT(2007.0,2006,2007) -0.028947  0.016303 -1.775575  0.075803 -0.060900
+ATT(2004.0,2003,2004) -0.015249  0.022280 -0.684430  0.493704 -0.058917
+ATT(2004.0,2003,2005) -0.077057  0.028772 -2.678227  0.007401 -0.133448
+ATT(2004.0,2003,2006) -0.145420  0.034113 -4.262825  0.000020 -0.212281
+ATT(2004.0,2003,2007) -0.103256  0.033035 -3.125614  0.001774 -0.168004
+ATT(2006.0,2003,2004)  0.001374  0.022272  0.061672  0.950824 -0.042279
+ATT(2006.0,2004,2005) -0.005052  0.018492 -0.273183  0.784713 -0.041296
+ATT(2006.0,2005,2006) -0.000578  0.019341 -0.029871  0.976170 -0.038485
+ATT(2006.0,2005,2007) -0.040565  0.019991 -2.029140  0.042444 -0.079747
+ATT(2007.0,2003,2004)  0.028958  0.014174  2.042994  0.041053  0.001177
+ATT(2007.0,2004,2005) -0.003641  0.015789 -0.230612  0.817616 -0.034587
+ATT(2007.0,2005,2006) -0.028871  0.018231 -1.583649  0.113274 -0.064603
+ATT(2007.0,2006,2007) -0.028604  0.016279 -1.757141  0.078894 -0.060509
 
                          97.5 %
-ATT(2004.0,2003,2004)  0.029358
-ATT(2004.0,2003,2005) -0.020529
-ATT(2004.0,2003,2006) -0.079195
-ATT(2004.0,2003,2007) -0.040832
-ATT(2006.0,2003,2004)  0.042008
-ATT(2006.0,2004,2005)  0.029794
-ATT(2006.0,2005,2006)  0.041788
-ATT(2006.0,2005,2007) -0.001303
-ATT(2007.0,2003,2004)  0.054777
-ATT(2007.0,2004,2005)  0.026644
-ATT(2007.0,2005,2006)  0.006893
-ATT(2007.0,2006,2007)  0.003006
+ATT(2004.0,2003,2004)  0.028419
+ATT(2004.0,2003,2005) -0.020666
+ATT(2004.0,2003,2006) -0.078559
+ATT(2004.0,2003,2007) -0.038508
+ATT(2006.0,2003,2004)  0.045026
+ATT(2006.0,2004,2005)  0.031192
+ATT(2006.0,2005,2006)  0.037329
+ATT(2006.0,2005,2007) -0.001383
+ATT(2007.0,2003,2004)  0.056739
+ATT(2007.0,2004,2005)  0.027304
+ATT(2007.0,2005,2006)  0.006861
+ATT(2007.0,2006,2007)  0.003302
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1280,7 +1283,7 @@ ATT(2007.0,2006,2007)  0.003006
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/opt/hostedtoolcache/Python/3.12.10/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
   return math.isfinite(val)
 </pre></div></div>
 </div>
@@ -1326,7 +1329,8 @@ Covariates: [&#39;lpop&#39;]
 Instrument variable(s): None
 Time variable: year
 Id variable: countyreal
-No. Observations: 500
+No. Unique Ids: 500
+No. Observations: 2500
 
 ------------------ Score &amp; algorithm ------------------
 Score function: observational
@@ -1338,13 +1342,13 @@ Learner ml_g: LassoCV()
 Learner ml_m: LogisticRegressionCV()
 Out-of-sample Performance:
 Regression:
-Learner ml_g0 RMSE: [[0.17334516 0.18182436 0.25907442 0.25916087 0.17240567 0.15208742
-  0.20111859 0.20599422 0.17393255 0.15246867 0.20196347 0.16375282]]
-Learner ml_g1 RMSE: [[0.1020218  0.12694835 0.14055715 0.15369487 0.13955543 0.11426874
-  0.08906546 0.1057638  0.13274251 0.16319667 0.1596991  0.15915781]]
+Learner ml_g0 RMSE: [[0.1720386  0.18241498 0.26022814 0.25956349 0.17281014 0.15215136
+  0.20098343 0.20670659 0.17276931 0.15161913 0.200739   0.1651022 ]]
+Learner ml_g1 RMSE: [[0.10125581 0.12784545 0.14340454 0.15203597 0.13929486 0.11293281
+  0.08822379 0.10670049 0.13246118 0.16285235 0.15984665 0.15929247]]
 Classification:
-Learner ml_m Log Loss: [[0.22913291 0.22913943 0.22913294 0.22913756 0.35595646 0.35596884
-  0.35597197 0.35596843 0.60885715 0.60884359 0.61317944 0.61330627]]
+Learner ml_m Log Loss: [[0.22913757 0.22913364 0.22913731 0.22913817 0.35596303 0.35596687
+  0.35596291 0.35596765 0.60883819 0.60884097 0.60885245 0.60885814]]
 
 ------------------ Resampling        ------------------
 No. folds: 10
@@ -1352,32 +1356,32 @@ No. repeated sample splits: 1
 
 ------------------ Fit summary       ------------------
                            coef   std err         t     P&gt;|t|     2.5 %  \
-ATT(2004.0,2003,2004) -0.013439  0.022971 -0.585035  0.558524 -0.058461
-ATT(2004.0,2003,2005) -0.075213  0.028823 -2.609472  0.009068 -0.131705
-ATT(2004.0,2003,2006) -0.137772  0.035654 -3.864143  0.000111 -0.207653
-ATT(2004.0,2003,2007) -0.109893  0.034053 -3.227120  0.001250 -0.176635
-ATT(2006.0,2003,2004) -0.001413  0.023393 -0.060385  0.951849 -0.047261
-ATT(2006.0,2004,2005) -0.004386  0.019365 -0.226500  0.820813 -0.042342
-ATT(2006.0,2005,2006) -0.004544  0.017827 -0.254911  0.798792 -0.039484
-ATT(2006.0,2005,2007) -0.041241  0.020216 -2.040035  0.041347 -0.080863
-ATT(2007.0,2003,2004)  0.025978  0.015149  1.714852  0.086372 -0.003713
-ATT(2007.0,2004,2005) -0.005121  0.016412 -0.312012  0.755031 -0.037289
-ATT(2007.0,2005,2006) -0.028285  0.017837 -1.585766  0.112792 -0.063245
-ATT(2007.0,2006,2007) -0.030477  0.016885 -1.804972  0.071079 -0.063572
+ATT(2004.0,2003,2004) -0.016735  0.022837 -0.732804  0.463678 -0.061495
+ATT(2004.0,2003,2005) -0.077226  0.028702 -2.690645  0.007131 -0.133481
+ATT(2004.0,2003,2006) -0.138792  0.036216 -3.832382  0.000127 -0.209774
+ATT(2004.0,2003,2007) -0.101878  0.033921 -3.003398  0.002670 -0.168362
+ATT(2006.0,2003,2004)  0.002553  0.023520  0.108527  0.913578 -0.043545
+ATT(2006.0,2004,2005) -0.006526  0.019615 -0.332713  0.739351 -0.044971
+ATT(2006.0,2005,2006) -0.003982  0.017847 -0.223093  0.823463 -0.038961
+ATT(2006.0,2005,2007) -0.041493  0.020177 -2.056420  0.039742 -0.081040
+ATT(2007.0,2003,2004)  0.026670  0.015055  1.771446  0.076487 -0.002838
+ATT(2007.0,2004,2005) -0.005116  0.016437 -0.311238  0.755620 -0.037332
+ATT(2007.0,2005,2006) -0.031168  0.017915 -1.739786  0.081897 -0.066280
+ATT(2007.0,2006,2007) -0.027863  0.016899 -1.648766  0.099196 -0.060986
 
                          97.5 %
-ATT(2004.0,2003,2004)  0.031583
-ATT(2004.0,2003,2005) -0.018721
-ATT(2004.0,2003,2006) -0.067892
-ATT(2004.0,2003,2007) -0.043150
-ATT(2006.0,2003,2004)  0.044436
-ATT(2006.0,2004,2005)  0.033569
-ATT(2006.0,2005,2006)  0.030396
-ATT(2006.0,2005,2007) -0.001619
-ATT(2007.0,2003,2004)  0.055669
-ATT(2007.0,2004,2005)  0.027047
-ATT(2007.0,2005,2006)  0.006675
-ATT(2007.0,2006,2007)  0.002617
+ATT(2004.0,2003,2004)  0.028025
+ATT(2004.0,2003,2005) -0.020972
+ATT(2004.0,2003,2006) -0.067811
+ATT(2004.0,2003,2007) -0.035394
+ATT(2006.0,2003,2004)  0.048650
+ATT(2006.0,2004,2005)  0.031918
+ATT(2006.0,2005,2006)  0.030998
+ATT(2006.0,2005,2007) -0.001946
+ATT(2007.0,2003,2004)  0.056177
+ATT(2007.0,2004,2005)  0.027100
+ATT(2007.0,2005,2006)  0.003944
+ATT(2007.0,2006,2007)  0.005259
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1430,11 +1434,11 @@ ATT(2007.0,2006,2007)  0.002617
       </div>
     </a>
     <a class="right-next"
-       href="../R_double_ml_basics.html"
+       href="py_rep_cs.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">R: Basics of Double Machine Learning</p>
+        <p class="prev-next-title">Python: Repeated Cross-Sectional Data with Multiple Time Periods</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

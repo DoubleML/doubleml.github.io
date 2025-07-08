@@ -53,6 +53,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guide/models/did/did_cs';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
@@ -647,9 +649,137 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="admonition note">
+  <p>For the estimation of the target parameters <span class="math notranslate nohighlight">\(ATT(\mathrm{g},t)\)</span> the following nuisance functions are required:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+g^{\text{treat}}_{0,\mathrm{g}, t, \text{eval} + \delta}(X_i) &amp;:= \mathbb{E}[Y_{i,t} |X_i, G_i^{\mathrm{g}}=1, T_i=t], \\
+g^{\text{control}}_{0,\mathrm{g}, t, \text{eval} + \delta}(X_i) &amp;:= \mathbb{E}[Y_{i,t} |X_i, C_{i,t_\text{eval} + \delta}^{(\cdot)}=1, T_i=t], \\
+m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i) &amp;:= P(G_i^{\mathrm{g}}=1|X_i, G_i^{\mathrm{g}} + C_{i,t_\text{eval} + \delta}^{(\cdot)}=1).
+\end{align}\end{split}\]</div>
+<p>for <span class="math notranslate nohighlight">\(t\in\{t_\text{pre}, t_\text{eval}\}\)</span>.
+Here, <span class="math notranslate nohighlight">\(g^{(\cdot)}_{\mathrm{g}, t, \text{eval} + \delta}(\cdot)\)</span> denotes the population outcome regression function (for either treatment or control group at time period <span class="math notranslate nohighlight">\(t\)</span>) and <span class="math notranslate nohighlight">\(m_{0, \mathrm{g}, t_\text{eval} + \delta}(\cdot)\)</span> the generalized propensity score.</p>
+<div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Will be implemented soon.</p>
+<p>Remark that the nuisance functions depend on the control group used for the estimation of the target parameter.
+By slight abuse of notation we use the same notation for both control groups <span class="math notranslate nohighlight">\(C_{i,t}^{(\text{nev})}\)</span> and <span class="math notranslate nohighlight">\(C_{i,t}^{(\text{nyt})}\)</span>. More specifically, the
+control group only depends on <span class="math notranslate nohighlight">\(\delta\)</span> for <em>not yet treated</em> units.</p>
+</div>
+<p>For a given tuple <span class="math notranslate nohighlight">\((\mathrm{g}, t_\text{pre}, t_\text{eval})\)</span> the target parameter <span class="math notranslate nohighlight">\(ATT(\mathrm{g},t)\)</span> is estimated by solving the empirical version of the the following linear moment condition:</p>
+<div class="math notranslate nohighlight">
+\[ATT(\mathrm{g}, t_\text{pre}, t_\text{eval}):= -\frac{\mathbb{E}[\psi_b(W,\eta_0)]}{\mathbb{E}[\psi_a(W,\eta_0)]}\]</div>
+<p>with nuisance elements <span class="math notranslate nohighlight">\(\eta_0=(g^{0,\text{treat}}_{\mathrm{g}, t_\text{pre}, t_\text{eval} + \delta}, g^{0,\text{control}}_{\mathrm{g}, t_\text{pre}, t_\text{eval} + \delta}, g^{0,\text{treat}}_{\mathrm{g}, t_\text{eval}, t_\text{eval} + \delta}, g^{0,\text{control}}_{\mathrm{g}, t_\text{eval}, t_\text{eval} + \delta}, m_{0, \mathrm{g}, t_\text{eval}})\)</span> and score function <span class="math notranslate nohighlight">\(\psi(W,\theta, \eta)\)</span> defined in the <a class="reference internal" href="../../scores.html#did-cs-score"><span class="std std-ref">DiD Score Section</span></a>.</p>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">panel=False</span></code> will estimate the target parameter for repeated cross sections. Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-0">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="gp">In [2]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+
+<span class="gp">In [3]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.did.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_cs_CS2021</span>
+
+<span class="gp">In [4]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
+
+<span class="gp">In [5]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">make_did_cs_CS2021</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="gp">In [7]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DoubleMLPanelData</span><span class="p">(</span>
+<span class="gp">   ...: </span>    <span class="n">df</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">y_col</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">d_cols</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">id_col</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">t_col</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">x_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Z1&quot;</span><span class="p">,</span> <span class="s2">&quot;Z2&quot;</span><span class="p">,</span> <span class="s2">&quot;Z3&quot;</span><span class="p">,</span> <span class="s2">&quot;Z4&quot;</span><span class="p">],</span>
+<span class="gp">   ...: </span>    <span class="n">datetime_unit</span><span class="o">=</span><span class="s2">&quot;M&quot;</span>
+<span class="gp">   ...: </span><span class="p">)</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [8]: </span><span class="n">dml_did_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">did</span><span class="o">.</span><span class="n">DoubleMLDIDMulti</span><span class="p">(</span>
+<span class="gp">   ...: </span>    <span class="n">obj_dml_data</span><span class="o">=</span><span class="n">dml_data</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">ml_g</span><span class="o">=</span><span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">min_samples_split</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+<span class="gp">   ...: </span>    <span class="n">ml_m</span><span class="o">=</span><span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">min_samples_split</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+<span class="gp">   ...: </span>    <span class="n">gt_combinations</span><span class="o">=</span><span class="s2">&quot;standard&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">control_group</span><span class="o">=</span><span class="s2">&quot;never_treated&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">panel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">   ...: </span><span class="p">)</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [9]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_did_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">())</span>
+<span class="go">================== DoubleMLDIDMulti Object ==================</span>
+
+<span class="go">------------------ Data summary      ------------------</span>
+<span class="go">Outcome variable: y</span>
+<span class="go">Treatment variable(s): [&#39;d&#39;]</span>
+<span class="go">Covariates: [&#39;Z1&#39;, &#39;Z2&#39;, &#39;Z3&#39;, &#39;Z4&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">Time variable: t</span>
+<span class="go">Id variable: id</span>
+<span class="go">No. Unique Ids: 975</span>
+<span class="go">No. Observations: 2575</span>
+
+<span class="go">------------------ Score &amp; algorithm ------------------</span>
+<span class="go">Score function: observational</span>
+<span class="go">Control group: never_treated</span>
+<span class="go">Anticipation periods: 0</span>
+
+<span class="go">------------------ Machine learner   ------------------</span>
+<span class="go">Learner ml_g: RandomForestRegressor(min_samples_split=10)</span>
+<span class="go">Learner ml_m: RandomForestClassifier(min_samples_split=10)</span>
+<span class="go">Out-of-sample Performance:</span>
+<span class="go">Regression:</span>
+<span class="go">Learner ml_g_d0_t0 RMSE: [[ 3.91053356  7.77329414  7.92964644  8.39255938  3.93134081  8.03534806</span>
+<span class="go">   8.56876517  8.7628744   4.01091843  8.00290774  8.91683613 14.8974226 ]]</span>
+<span class="go">Learner ml_g_d0_t1 RMSE: [[ 7.13003274  8.83436056 14.46328686 19.56611407  7.62108072  8.75329595</span>
+<span class="go">  15.45594267 19.4505648   7.60113395  8.30227357 13.5825085  19.7919965 ]]</span>
+<span class="go">Learner ml_g_d1_t0 RMSE: [[ 3.12080467  6.54373574  7.32366503  7.22515044  3.72228103  7.12947879</span>
+<span class="go">   9.48489102  9.67095958  3.27794072  8.0184989  13.41428195 13.18273096]]</span>
+<span class="go">Learner ml_g_d1_t1 RMSE: [[ 7.2838546   9.60481177 13.73750654 16.23404391  7.23549489  9.55820564</span>
+<span class="go">  12.56425415 15.55642562  8.98023747 13.06329768 12.79164735 16.37191227]]</span>
+<span class="go">Classification:</span>
+<span class="go">Learner ml_m Log Loss: [[0.56403823 0.54014493 0.57015458 0.57843836 0.59827652 0.5931003</span>
+<span class="go">  0.60488374 0.60753412 0.59300411 0.5614534  0.60458433 0.60795263]]</span>
+
+<span class="go">------------------ Resampling        ------------------</span>
+<span class="go">No. folds: 5</span>
+<span class="go">No. repeated sample splits: 1</span>
+
+<span class="go">------------------ Fit summary       ------------------</span>
+<span class="go">                                  coef   std err  ...     2.5 %     97.5 %</span>
+<span class="go">ATT(2025-03,2025-01,2025-02) -2.032675  1.116090  ... -4.220171   0.154821</span>
+<span class="go">ATT(2025-03,2025-02,2025-03) -0.190534  1.870870  ... -3.857372   3.476304</span>
+<span class="go">ATT(2025-03,2025-02,2025-04)  4.361374  2.240601  ... -0.030123   8.752871</span>
+<span class="go">ATT(2025-03,2025-02,2025-05)  9.390304  2.689072  ...  4.119820  14.660788</span>
+<span class="go">ATT(2025-04,2025-01,2025-02) -1.700643  1.088935  ... -3.834916   0.433630</span>
+<span class="go">ATT(2025-04,2025-02,2025-03)  0.376399  1.787695  ... -3.127420   3.880217</span>
+<span class="go">ATT(2025-04,2025-03,2025-04)  0.554937  2.272610  ... -3.899296   5.009171</span>
+<span class="go">ATT(2025-04,2025-03,2025-05)  0.758695  4.201514  ... -7.476121   8.993512</span>
+<span class="go">ATT(2025-05,2025-01,2025-02)  0.230055  1.250341  ... -2.220568   2.680677</span>
+<span class="go">ATT(2025-05,2025-02,2025-03)  2.958789  1.971967  ... -0.906195   6.823772</span>
+<span class="go">ATT(2025-05,2025-03,2025-04) -3.546928  2.505795  ... -8.458196   1.364340</span>
+<span class="go">ATT(2025-05,2025-04,2025-05) -0.590530  2.935793  ... -6.344579   5.163519</span>
+
+<span class="go">[12 rows x 6 columns]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Remark that the output contains four different outcome regressions <span class="math notranslate nohighlight">\(g(d,t, X)\)</span> for <span class="math notranslate nohighlight">\(d,t\in\{0,1\}\)</span> . As in the <a class="reference internal" href="../../models.html#irm-model"><span class="std std-ref">IRM model</span></a>
+the outcome regression with <span class="math notranslate nohighlight">\(d=0\)</span> refers to the control group, whereas <span class="math notranslate nohighlight">\(t=0\)</span> refers to the pre-treatment period, i.e.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+g(0,0,X) &amp;\approx g^{\text{control}}_{0,\mathrm{g}, t_\text{pre}, \text{eval} + \delta}(X_i) = \mathbb{E}[Y_{i,t_\text{pre}} |X_i, C_{i,t_\text{eval} + \delta}^{(\cdot)}=1, T_i=t_\text{pre}],\\
+g(0,1,X) &amp;\approx g^{\text{control}}_{0,\mathrm{g}, t_\text{eval}, \text{eval} + \delta}(X_i) = \mathbb{E}[Y_{i,t_\text{eval}} |X_i, C_{i,t_\text{eval} + \delta}^{(\cdot)}=1, T_i=t_\text{eval}],\\
+g(1,0,X) &amp;\approx g^{\text{treat}}_{0,\mathrm{g}, t_\text{pre}, \text{eval} + \delta}(X_i) = \mathbb{E}[Y_{i,t_\text{pre}} |X_i, G_i^{\mathrm{g}}=1,, T_i=t_\text{pre}],\\
+g(1,1,X) &amp;\approx g^{\text{treat}}_{0,\mathrm{g}, t_\text{eval}, \text{eval} + \delta}(X_i) = \mathbb{E}[Y_{i,t_\text{eval}} |X_i, G_i^{\mathrm{g}}=1,, T_i=t_\text{eval}].
+\end{align}\end{split}\]</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A more detailed example is available in the <a class="reference internal" href="../../../examples/index.html#did-examplegallery"><span class="std std-ref">Example Gallery</span></a>.</p>
 </div>
 
 

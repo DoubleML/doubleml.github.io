@@ -53,6 +53,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guide/scores/did/did_cs_score';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
@@ -647,10 +649,61 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="admonition note">
+  <p>As in the description of the <a class="reference internal" href="../../models.html#did-cs-model"><span class="std std-ref">DiD model</span></a>, the required nuisance elements are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+g^{\text{treat}}_{0,\mathrm{g}, t, \text{eval} + \delta}(X_i) &amp;:= \mathbb{E}[Y_{i,t} |X_i, G_i^{\mathrm{g}}=1, T_i=t], \\
+g^{\text{control}}_{0,\mathrm{g}, t, \text{eval} + \delta}(X_i) &amp;:= \mathbb{E}[Y_{i,t} |X_i, C_{i,t_\text{eval} + \delta}^{(\cdot)}=1, T_i=t], \\
+m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i) &amp;:= P(G_i^{\mathrm{g}}=1|X_i, G_i^{\mathrm{g}} + C_{i,t_\text{eval} + \delta}^{(\cdot)}=1).
+\end{align}\end{split}\]</div>
+<p>for <span class="math notranslate nohighlight">\(t\in\{t_\text{pre}, t_\text{eval}\}\)</span> and a certain choice of <span class="math notranslate nohighlight">\((\mathrm{g}, t_\text{pre}, t_\text{eval})\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> and control group <span class="math notranslate nohighlight">\(C_{i,t_\text{eval} + \delta}^{(\cdot)}\)</span>.</p>
+<p>For notational purposes, we will omit the subscripts <span class="math notranslate nohighlight">\(\mathrm{g}, t_\text{pre}, t_\text{eval}, \delta\)</span> in the following and use the notation</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g_0(1, 0, X_i) \equiv g^{\text{treat}}_{0,\mathrm{g}, t_\text{pre}, \text{eval} + \delta}(X_i)\)</span> (pop. outcome regr. function for treatment group in <span class="math notranslate nohighlight">\(t_\text{pre}\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(g_0(1, 1, X_i) \equiv g^{\text{treat}}_{0,\mathrm{g}, t_\text{eval}, \text{eval} + \delta}(X_i)\)</span> (pop. outcome regr. function for treatment group in <span class="math notranslate nohighlight">\(t_\text{eval}\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(g_0(0, 0, X_i) \equiv g^{\text{control}}_{0,\mathrm{g}, t_\text{pre}, \text{eval} + \delta}(X_i)\)</span> (pop. outcome regr. function for control group in <span class="math notranslate nohighlight">\(t_\text{pre}\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(g_0(0, 1, X_i) \equiv g^{\text{control}}_{0,\mathrm{g}, t_\text{eval}, \text{eval} + \delta}(X_i)\)</span> (pop. outcome regr. function for control group in <span class="math notranslate nohighlight">\(t_\text{eval}\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(m_0(X_i)\equiv m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i)\)</span> (generalized propensity score).</p></li>
+</ul>
+<p>All scores in the multi-period setting have the form</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\psi(W_i,\theta, \eta) :=
+\begin{cases}
+\tilde{\psi}(W_i,\theta, \eta) &amp; \text{for } G_i^{\mathrm{g}} \vee C_{i,t_\text{eval} + \delta}^{(\cdot)}=1 \\
+0 &amp; \text{otherwise}
+\end{cases}\end{split}\]</div>
+<p>i.e. the score is only non-zero for units in the corresponding treatment group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span> and control group <span class="math notranslate nohighlight">\(C_{i,t_\text{eval} + \delta}^{(\cdot)}\)</span>.</p>
+<p>For the difference-in-differences model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDMulti</span></code> one can choose between
+<code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> implements the score function (dropping the unit index <span class="math notranslate nohighlight">\(i\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta,\eta) :=\; &amp; - \frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]}\theta + \frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]}\Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{G^{\mathrm{g}}T}{\mathbb{E}_n[G^{\mathrm{g}}T]} (Y - g(1,1,X))\\&amp; - \frac{G^{\mathrm{g}}(1-T)}{\mathbb{E}_n[G^{\mathrm{g}}(1-T)]}(Y - g(1,0,X))\\&amp; - \frac{m(X) (1-G^{\mathrm{g}})T}{1-m(X)} \mathbb{E}_n\left[\frac{m(X) (1-G^{\mathrm{g}})T}{1-m(X)}\right]^{-1} (Y-g(0,1,X))\\&amp; + \frac{m(X) (1-G^{\mathrm{g}})(1-T)}{1-m(X)} \mathbb{E}_n\left[\frac{m(X) (1-G^{\mathrm{g}})(1-T)}{1-m(X)}\right]^{-1} (Y-g(0,0,X))\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>where the components of the final linear score <span class="math notranslate nohighlight">\(\psi\)</span> are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  \tilde{\psi}_a(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}),\\\psi_b(W; \eta) &amp;= \tilde{\psi}_b(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\end{aligned}\end{align} \]</div>
+<p>and the nuisance elements <span class="math notranslate nohighlight">\(\eta=(g, m)\)</span>.</p>
+<div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Will be implemented soon.</p>
+<p>Remark that <span class="math notranslate nohighlight">\(1-G^{\mathrm{g}}=C^{(\cdot)}\)</span> if <span class="math notranslate nohighlight">\(G^{\mathrm{g}} \vee C_{t_\text{eval} + \delta}^{(\cdot)}=1\)</span>.</p>
 </div>
+<p>If <code class="docutils literal notranslate"><span class="pre">in_sample_normalization='False'</span></code>, the score is set to</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta,\eta) :=\; &amp; - \frac{G^{\mathrm{g}}}{p}\theta + \frac{G^{\mathrm{g}}}{p}\Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{G^{\mathrm{g}}T}{p\lambda} (Y - g(1,1,X))\\&amp; - \frac{G^{\mathrm{g}}(1-T)}{p(1-\lambda)}(Y - g(1,0,X))\\&amp; - \frac{m(X) (1-G^{\mathrm{g}})T}{p(1-m(X))\lambda} (Y-g(0,1,X))\\&amp; + \frac{m(X) (1-G^{\mathrm{g}})(1-T)}{p(1-m(X))(1-\lambda)} (Y-g(0,0,X))\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g, m, p, \lambda)\)</span>, where <span class="math notranslate nohighlight">\(p_0 = \mathbb{E}[G^{\mathrm{g}}]\)</span> and <span class="math notranslate nohighlight">\(\lambda_0 = \mathbb{E}[T]\)</span> are estimated on the subsample.
+Remark that this will result a similar score, but just uses slightly different normalization.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code> assumes that the treatment probability is independent of the covariates <span class="math notranslate nohighlight">\(X\)</span> and
+implements the score function:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta,\eta) :=\; &amp; - \theta + \Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{G^{\mathrm{g}}T}{\mathbb{E}_n[G^{\mathrm{g}}T]} (Y - g(1,1,X))\\&amp; - \frac{G^{\mathrm{g}}(1-T)}{\mathbb{E}_n[G^{\mathrm{g}}(1-T)]}(Y - g(1,0,X))\\&amp; - \frac{(1-G^{\mathrm{g}})T}{\mathbb{E}_n[(1-G^{\mathrm{g}})T]} (Y-g(0,1,X))\\&amp; + \frac{(1-G^{\mathrm{g}})(1-T)}{\mathbb{E}_n[(1-G^{\mathrm{g}})(1-T)]} (Y-g(0,0,X))\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>where the components of the final linear score <span class="math notranslate nohighlight">\(\psi\)</span> are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  \tilde{\psi}_a(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}),\\\psi_b(W; \eta) &amp;= \tilde{\psi}_b(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\end{aligned}\end{align} \]</div>
+<p>and the nuisance elements <span class="math notranslate nohighlight">\(\eta=(g, m)\)</span>.</p>
+<p>Analogously, if <code class="docutils literal notranslate"><span class="pre">in_sample_normalization='False'</span></code>,  the score is set to</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta,\eta) :=\; &amp; - \theta + \Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{G^{\mathrm{g}}T}{p\lambda} (Y - g(1,1,X))\\&amp; - \frac{G^{\mathrm{g}}(1-T)}{p(1-\lambda)}(Y - g(1,0,X))\\&amp; - \frac{(1-G^{\mathrm{g}})T}{(1-p)\lambda} (Y-g(0,1,X))\\&amp; + \frac{(1-G^{\mathrm{g}})(1-T)}{(1-p)(1-\lambda)} (Y-g(0,0,X))\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g, m, p, \lambda)\)</span>, where <span class="math notranslate nohighlight">\(p_0 = \mathbb{E}[G^{\mathrm{g}}]\)</span> and <span class="math notranslate nohighlight">\(\lambda_0 = \mathbb{E}[T]\)</span> are estimated on the subsample.
+Remark that this will result in a similar score, but just uses slightly different normalization.</p>
 
 
                 </article>

@@ -655,40 +655,17 @@ document.write(`
 g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval}, \delta}(X_i) &amp;:= \mathbb{E}[Y_{i,t_\text{eval}} - Y_{i,t_\text{pre}}|X_i, C_{i,t_\text{eval} + \delta}^{(\cdot)} = 1], \\
 m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i) &amp;:= P(G_i^{\mathrm{g}}=1|X_i, G_i^{\mathrm{g}} + C_{i,t_\text{eval} + \delta}^{(\cdot)}=1).
 \end{align}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval},\delta}(\cdot)\)</span> denotes the population outcome regression function and <span class="math notranslate nohighlight">\(m_{0, \mathrm{g}, t_\text{eval} + \delta}(\cdot)\)</span> the generalized propensity score.
-The interpretation of the parameters is as follows:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\mathrm{g}\)</span> is the first post-treatment period of interest, i.e. the treatment group.</p></li>
-<li><p><span class="math notranslate nohighlight">\(t_\text{pre}\)</span> is the pre-treatment period, i.e. the time period from which the conditional parallel trends are assumed.</p></li>
-<li><p><span class="math notranslate nohighlight">\(t_\text{eval}\)</span> is the time period of interest or evaluation period, i.e. the time period where the treatment effect is evaluated.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\delta\)</span> is number of anticipation periods, i.e. the number of time periods for which units are assumed to anticipate the treatment.</p></li>
-</ul>
+<p>where <span class="math notranslate nohighlight">\(g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval},\delta}(\cdot)\)</span> denotes the population outcome change regression function and <span class="math notranslate nohighlight">\(m_{0, \mathrm{g}, t_\text{eval} + \delta}(\cdot)\)</span> the generalized propensity score.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Remark that the nuisance functions depend on the control group used for the estimation of the target parameter.
 By slight abuse of notation we use the same notation for both control groups <span class="math notranslate nohighlight">\(C_{i,t}^{(\text{nev})}\)</span> and <span class="math notranslate nohighlight">\(C_{i,t}^{(\text{nyt})}\)</span>. More specifically, the
 control group only depends on <span class="math notranslate nohighlight">\(\delta\)</span> for <em>not yet treated</em> units.</p>
 </div>
-<p>Under these assumptions the target parameter <span class="math notranslate nohighlight">\(ATT(\mathrm{g},t_\text{eval})\)</span> can be estimated by choosing a suitable combination
-of <span class="math notranslate nohighlight">\((\mathrm{g}, t_\text{pre}, t_\text{eval}, \delta)\)</span> if <span class="math notranslate nohighlight">\(t_\text{eval} - t_\text{pre} \ge 1 + \delta\)</span>, i.e. the parallel trends are assumed to hold at least one period more than the anticipation period.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The choice <span class="math notranslate nohighlight">\(t_\text{pre}= \min(\mathrm{g},t_\text{eval}) -\delta-1\)</span> corresponds to the definition of <span class="math notranslate nohighlight">\(ATT_{dr}(\mathrm{g},t_\text{eval};\delta)\)</span> from <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.12.001">Callaway and Sant’Anna (2021)</a>.</p>
-<p>As an example, if the target parameter is the effect on the group receiving treatment in <span class="math notranslate nohighlight">\(2006\)</span> but evaluated in <span class="math notranslate nohighlight">\(2007\)</span> with an anticipation period of <span class="math notranslate nohighlight">\(\delta=1\)</span>, then the pre-treatment period is <span class="math notranslate nohighlight">\(2004\)</span>.
-The parallel trend assumption is slightly stronger with anticipation as the trends have to parallel for a longer periods, i.e. <span class="math notranslate nohighlight">\(ATT_{dr}(2006,2007;1)=ATT(2006,2004;2006)\)</span>.</p>
-</div>
-<p>In the following, we will omit the subscript <span class="math notranslate nohighlight">\(\delta\)</span> in the notation of the nuisance functions and the control group (implicitly assuming <span class="math notranslate nohighlight">\(\delta=0\)</span>).</p>
 <p>For a given tuple <span class="math notranslate nohighlight">\((\mathrm{g}, t_\text{pre}, t_\text{eval})\)</span> the target parameter <span class="math notranslate nohighlight">\(ATT(\mathrm{g},t)\)</span> is estimated by solving the empirical version of the the following linear moment condition:</p>
 <div class="math notranslate nohighlight">
 \[ATT(\mathrm{g}, t_\text{pre}, t_\text{eval}):= -\frac{\mathbb{E}[\psi_b(W,\eta_0)]}{\mathbb{E}[\psi_a(W,\eta_0)]}\]</div>
-<p>with nuisance elements <span class="math notranslate nohighlight">\(\eta_0=(g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval}}, m_{0, \mathrm{g}, t_\text{eval}})\)</span> and score function <span class="math notranslate nohighlight">\(\psi(W,\theta, \eta)\)</span> being defined in section <a class="reference internal" href="../../scores.html#did-pa-score"><span class="std std-ref">Panel Data</span></a>.
-Under the identifying assumptions above</p>
-<div class="math notranslate nohighlight">
-\[ATT(\mathrm{g}, t_\text{pre}, t_\text{eval}) = ATT(\mathrm{g},t).\]</div>
-<p><code class="docutils literal notranslate"><span class="pre">DoubleMLDIDMulti</span></code> implements the estimation of <span class="math notranslate nohighlight">\(ATT(\mathrm{g}, t_\text{pre}, t_\text{eval})\)</span> for multiple time periods and requires <a class="reference internal" href="../../data_backend.html#dml-panel-data"><span class="std std-ref">DoubleMLPanelData</span></a> as input.
-Setting <code class="docutils literal notranslate"><span class="pre">gt_combinations='standard'</span></code> will estimate the target parameter for all (possible) combinations of <span class="math notranslate nohighlight">\((\mathrm{g}, t_\text{pre}, t_\text{eval})\)</span> with <span class="math notranslate nohighlight">\(\mathrm{g}\in\{2,\dots,\mathcal{T}\}\)</span> and <span class="math notranslate nohighlight">\((t_\text{pre}, t_\text{eval})\)</span> with <span class="math notranslate nohighlight">\(t_\text{eval}\in\{2,\dots,\mathcal{T}\}\)</span> and
-<span class="math notranslate nohighlight">\(t_\text{pre}= \min(\mathrm{g},t_\text{eval}) -\delta-1\)</span>.
-This corresponds to the setting where all trends are set as short as possible, but still respecting the anticipation period.</p>
+<p>with nuisance elements <span class="math notranslate nohighlight">\(\eta_0=(g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval}}, m_{0, \mathrm{g}, t_\text{eval}})\)</span> and score function <span class="math notranslate nohighlight">\(\psi(W,\theta, \eta)\)</span> being defined in the <a class="reference internal" href="../../scores.html#did-pa-score"><span class="std std-ref">DiD Score Section</span></a>.</p>
 <p>Estimation is conducted via its <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
@@ -736,7 +713,8 @@ Python</label><div class="sd-tab-content docutils">
 <span class="go">Instrument variable(s): None</span>
 <span class="go">Time variable: t</span>
 <span class="go">Id variable: id</span>
-<span class="go">No. Observations: 500</span>
+<span class="go">No. Unique Ids: 500</span>
+<span class="go">No. Observations: 2500</span>
 
 <span class="go">------------------ Score &amp; algorithm ------------------</span>
 <span class="go">Score function: observational</span>
@@ -783,7 +761,7 @@ Python</label><div class="sd-tab-content docutils">
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Remark that the output contains two different outcome regressions <span class="math notranslate nohighlight">\(g(0,X)\)</span> and <span class="math notranslate nohighlight">\(g(1,X)\)</span>. As in the <a class="reference internal" href="../../models.html#irm-model"><span class="std std-ref">IRM model</span></a>
-the outcome regression <span class="math notranslate nohighlight">\(g(0,X)\)</span> refers to the control group, whereas <span class="math notranslate nohighlight">\(g(1,X)\)</span> refers to the outcome regression for the treatment group, i.e.</p>
+the outcome regression <span class="math notranslate nohighlight">\(g(0,X)\)</span> refers to the control group, whereas <span class="math notranslate nohighlight">\(g(1,X)\)</span> refers to the outcome change regression for the treatment group, i.e.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
 g(0,X) &amp;\approx g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval}, \delta}(X_i) = \mathbb{E}[Y_{i,t_\text{eval}} - Y_{i,t_\text{pre}}|X_i, C_{i,t_\text{eval} + \delta}^{(\cdot)} = 1],\\

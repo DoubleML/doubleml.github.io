@@ -738,17 +738,18 @@ Python</label><div class="sd-tab-content docutils">
 <span class="gp">In [13]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="p">)</span>
 <span class="go">================== DoubleMLPLR Object ==================</span>
 
-<span class="go">------------------ Data summary      ------------------</span>
+<span class="go">------------------ Data Summary      ------------------</span>
 <span class="go">Outcome variable: y</span>
 <span class="go">Treatment variable(s): [&#39;d&#39;]</span>
 <span class="go">Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;]</span>
 <span class="go">Instrument variable(s): None</span>
 <span class="go">No. Observations: 500</span>
 
-<span class="go">------------------ Score &amp; algorithm ------------------</span>
+
+<span class="go">------------------ Score &amp; Algorithm ------------------</span>
 <span class="go">Score function: partialling out</span>
 
-<span class="go">------------------ Machine learner   ------------------</span>
+<span class="go">------------------ Machine Learner   ------------------</span>
 <span class="go">Learner ml_l: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Learner ml_m: RandomForestRegressor(max_depth=5, max_features=20, min_samples_leaf=2)</span>
 <span class="go">Out-of-sample Performance:</span>
@@ -760,7 +761,7 @@ Python</label><div class="sd-tab-content docutils">
 <span class="go">No. folds: 5</span>
 <span class="go">No. repeated sample splits: 1</span>
 
-<span class="go">------------------ Fit summary       ------------------</span>
+<span class="go">------------------ Fit Summary       ------------------</span>
 <span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">d  0.480691  0.040533  11.859129  1.929729e-32  0.401247  0.560135</span>
 </pre></div>
@@ -1053,7 +1054,7 @@ m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i) &amp;:= P(G_i^{\mathrm{g}}=1|X_i,
 <p>for a certain choice of <span class="math notranslate nohighlight">\((\mathrm{g}, t_\text{pre}, t_\text{eval})\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> and control group <span class="math notranslate nohighlight">\(C_{i,t_\text{eval} + \delta}^{(\cdot)}\)</span>.</p>
 <p>For notational purposes, we will omit the subscripts <span class="math notranslate nohighlight">\(\mathrm{g}, t_\text{pre}, t_\text{eval}, \delta\)</span> in the following and use the notation</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(g_0(0, X_i)\equiv g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval}, \delta}(X_i)\)</span> (population outcome regression function of the control group)</p></li>
+<li><p><span class="math notranslate nohighlight">\(g_0(0, X_i)\equiv g_{0, \mathrm{g}, t_\text{pre}, t_\text{eval}, \delta}(X_i)\)</span> (population outcome change regression function of the control group)</p></li>
 <li><p><span class="math notranslate nohighlight">\(m_0(X_i)\equiv m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i)\)</span> (generalized propensity score)</p></li>
 </ul>
 <p>All scores in the multi-period setting have the form</p>
@@ -1106,10 +1107,61 @@ Remark that this will result in the same score, but just uses slightly different
 </section>
 <section id="repeated-cross-sectional-data">
 <span id="did-cs-score"></span><h4><span class="section-number">5.2.3.2. </span>Repeated Cross-Sectional Data<a class="headerlink" href="#repeated-cross-sectional-data" title="Link to this heading">#</a></h4>
+<p>As in the description of the <a class="reference internal" href="models.html#did-cs-model"><span class="std std-ref">DiD model</span></a>, the required nuisance elements are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+g^{\text{treat}}_{0,\mathrm{g}, t, \text{eval} + \delta}(X_i) &amp;:= \mathbb{E}[Y_{i,t} |X_i, G_i^{\mathrm{g}}=1, T_i=t], \\
+g^{\text{control}}_{0,\mathrm{g}, t, \text{eval} + \delta}(X_i) &amp;:= \mathbb{E}[Y_{i,t} |X_i, C_{i,t_\text{eval} + \delta}^{(\cdot)}=1, T_i=t], \\
+m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i) &amp;:= P(G_i^{\mathrm{g}}=1|X_i, G_i^{\mathrm{g}} + C_{i,t_\text{eval} + \delta}^{(\cdot)}=1).
+\end{align}\end{split}\]</div>
+<p>for <span class="math notranslate nohighlight">\(t\in\{t_\text{pre}, t_\text{eval}\}\)</span> and a certain choice of <span class="math notranslate nohighlight">\((\mathrm{g}, t_\text{pre}, t_\text{eval})\)</span> and <span class="math notranslate nohighlight">\(\delta\)</span> and control group <span class="math notranslate nohighlight">\(C_{i,t_\text{eval} + \delta}^{(\cdot)}\)</span>.</p>
+<p>For notational purposes, we will omit the subscripts <span class="math notranslate nohighlight">\(\mathrm{g}, t_\text{pre}, t_\text{eval}, \delta\)</span> in the following and use the notation</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g_0(1, 0, X_i) \equiv g^{\text{treat}}_{0,\mathrm{g}, t_\text{pre}, \text{eval} + \delta}(X_i)\)</span> (pop. outcome regr. function for treatment group in <span class="math notranslate nohighlight">\(t_\text{pre}\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(g_0(1, 1, X_i) \equiv g^{\text{treat}}_{0,\mathrm{g}, t_\text{eval}, \text{eval} + \delta}(X_i)\)</span> (pop. outcome regr. function for treatment group in <span class="math notranslate nohighlight">\(t_\text{eval}\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(g_0(0, 0, X_i) \equiv g^{\text{control}}_{0,\mathrm{g}, t_\text{pre}, \text{eval} + \delta}(X_i)\)</span> (pop. outcome regr. function for control group in <span class="math notranslate nohighlight">\(t_\text{pre}\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(g_0(0, 1, X_i) \equiv g^{\text{control}}_{0,\mathrm{g}, t_\text{eval}, \text{eval} + \delta}(X_i)\)</span> (pop. outcome regr. function for control group in <span class="math notranslate nohighlight">\(t_\text{eval}\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(m_0(X_i)\equiv m_{0, \mathrm{g}, t_\text{eval} + \delta}(X_i)\)</span> (generalized propensity score).</p></li>
+</ul>
+<p>All scores in the multi-period setting have the form</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\psi(W_i,\theta, \eta) :=
+\begin{cases}
+\tilde{\psi}(W_i,\theta, \eta) &amp; \text{for } G_i^{\mathrm{g}} \vee C_{i,t_\text{eval} + \delta}^{(\cdot)}=1 \\
+0 &amp; \text{otherwise}
+\end{cases}\end{split}\]</div>
+<p>i.e. the score is only non-zero for units in the corresponding treatment group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span> and control group <span class="math notranslate nohighlight">\(C_{i,t_\text{eval} + \delta}^{(\cdot)}\)</span>.</p>
+<p>For the difference-in-differences model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDMulti</span></code> one can choose between
+<code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> implements the score function (dropping the unit index <span class="math notranslate nohighlight">\(i\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta,\eta) :=\; &amp; - \frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]}\theta + \frac{G^{\mathrm{g}}}{\mathbb{E}_n[G^{\mathrm{g}}]}\Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{G^{\mathrm{g}}T}{\mathbb{E}_n[G^{\mathrm{g}}T]} (Y - g(1,1,X))\\&amp; - \frac{G^{\mathrm{g}}(1-T)}{\mathbb{E}_n[G^{\mathrm{g}}(1-T)]}(Y - g(1,0,X))\\&amp; - \frac{m(X) (1-G^{\mathrm{g}})T}{1-m(X)} \mathbb{E}_n\left[\frac{m(X) (1-G^{\mathrm{g}})T}{1-m(X)}\right]^{-1} (Y-g(0,1,X))\\&amp; + \frac{m(X) (1-G^{\mathrm{g}})(1-T)}{1-m(X)} \mathbb{E}_n\left[\frac{m(X) (1-G^{\mathrm{g}})(1-T)}{1-m(X)}\right]^{-1} (Y-g(0,0,X))\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>where the components of the final linear score <span class="math notranslate nohighlight">\(\psi\)</span> are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  \tilde{\psi}_a(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}),\\\psi_b(W; \eta) &amp;= \tilde{\psi}_b(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\end{aligned}\end{align} \]</div>
+<p>and the nuisance elements <span class="math notranslate nohighlight">\(\eta=(g, m)\)</span>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Will be implemented soon.</p>
+<p>Remark that <span class="math notranslate nohighlight">\(1-G^{\mathrm{g}}=C^{(\cdot)}\)</span> if <span class="math notranslate nohighlight">\(G^{\mathrm{g}} \vee C_{t_\text{eval} + \delta}^{(\cdot)}=1\)</span>.</p>
 </div>
+<p>If <code class="docutils literal notranslate"><span class="pre">in_sample_normalization='False'</span></code>, the score is set to</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta,\eta) :=\; &amp; - \frac{G^{\mathrm{g}}}{p}\theta + \frac{G^{\mathrm{g}}}{p}\Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{G^{\mathrm{g}}T}{p\lambda} (Y - g(1,1,X))\\&amp; - \frac{G^{\mathrm{g}}(1-T)}{p(1-\lambda)}(Y - g(1,0,X))\\&amp; - \frac{m(X) (1-G^{\mathrm{g}})T}{p(1-m(X))\lambda} (Y-g(0,1,X))\\&amp; + \frac{m(X) (1-G^{\mathrm{g}})(1-T)}{p(1-m(X))(1-\lambda)} (Y-g(0,0,X))\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g, m, p, \lambda)\)</span>, where <span class="math notranslate nohighlight">\(p_0 = \mathbb{E}[G^{\mathrm{g}}]\)</span> and <span class="math notranslate nohighlight">\(\lambda_0 = \mathbb{E}[T]\)</span> are estimated on the subsample.
+Remark that this will result a similar score, but just uses slightly different normalization.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code> assumes that the treatment probability is independent of the covariates <span class="math notranslate nohighlight">\(X\)</span> and
+implements the score function:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta,\eta) :=\; &amp; - \theta + \Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{G^{\mathrm{g}}T}{\mathbb{E}_n[G^{\mathrm{g}}T]} (Y - g(1,1,X))\\&amp; - \frac{G^{\mathrm{g}}(1-T)}{\mathbb{E}_n[G^{\mathrm{g}}(1-T)]}(Y - g(1,0,X))\\&amp; - \frac{(1-G^{\mathrm{g}})T}{\mathbb{E}_n[(1-G^{\mathrm{g}})T]} (Y-g(0,1,X))\\&amp; + \frac{(1-G^{\mathrm{g}})(1-T)}{\mathbb{E}_n[(1-G^{\mathrm{g}})(1-T)]} (Y-g(0,0,X))\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>where the components of the final linear score <span class="math notranslate nohighlight">\(\psi\)</span> are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(W; \eta) &amp;=  \tilde{\psi}_a(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}),\\\psi_b(W; \eta) &amp;= \tilde{\psi}_b(W; \eta) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\end{aligned}\end{align} \]</div>
+<p>and the nuisance elements <span class="math notranslate nohighlight">\(\eta=(g, m)\)</span>.</p>
+<p>Analogously, if <code class="docutils literal notranslate"><span class="pre">in_sample_normalization='False'</span></code>,  the score is set to</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\psi}(W,\theta,\eta) :=\; &amp; - \theta + \Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{G^{\mathrm{g}}T}{p\lambda} (Y - g(1,1,X))\\&amp; - \frac{G^{\mathrm{g}}(1-T)}{p(1-\lambda)}(Y - g(1,0,X))\\&amp; - \frac{(1-G^{\mathrm{g}})T}{(1-p)\lambda} (Y-g(0,1,X))\\&amp; + \frac{(1-G^{\mathrm{g}})(1-T)}{(1-p)(1-\lambda)} (Y-g(0,0,X))\\=\; &amp;\tilde{\psi}_a(W; \eta) \theta + \tilde{\psi}_b(W; \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g, m, p, \lambda)\)</span>, where <span class="math notranslate nohighlight">\(p_0 = \mathbb{E}[G^{\mathrm{g}}]\)</span> and <span class="math notranslate nohighlight">\(\lambda_0 = \mathbb{E}[T]\)</span> are estimated on the subsample.
+Remark that this will result in a similar score, but just uses slightly different normalization.</p>
 </section>
 <section id="two-treatment-periods">
 <h4><span class="section-number">5.2.3.3. </span>Two treatment periods<a class="headerlink" href="#two-treatment-periods" title="Link to this heading">#</a></h4>
@@ -1171,8 +1223,8 @@ Remark that this will result in the same score, but just uses slightly different
 <p>If <code class="docutils literal notranslate"><span class="pre">in_sample_normalization='False'</span></code>, the score is set to</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\psi(W,\theta,\eta) :=\; &amp; - \frac{D}{p}\theta + \frac{D}{p}\Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{DT}{p\lambda} (Y - g(1,1,X))\\&amp; - \frac{D(1-T)}{p(1-\lambda)}(Y - g(1,0,X))\\&amp; - \frac{m(X) (1-D)T}{p(1-m(X))\lambda} (Y-g(0,1,X))\\&amp; + \frac{m(X) (1-D)(1-T)}{p(1-m(X))(1-\lambda)} (Y-g(0,0,X))\\=\; &amp;\psi_a(W; \eta) \theta + \psi_b(W; \eta)\end{aligned}\end{align} \]</div>
-<p>with <span class="math notranslate nohighlight">\(\eta=(g, p, \lambda)\)</span>, where <span class="math notranslate nohighlight">\(p_0 = \mathbb{E}[D]\)</span> and <span class="math notranslate nohighlight">\(\lambda_0 = \mathbb{E}[T]\)</span> are estimated on the cross-fitting folds.
-Remark that this will result in the same score, but just uses slightly different normalization.</p>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g, p, \lambda)\)</span>, where <span class="math notranslate nohighlight">\(p_0 = \mathbb{E}[D]\)</span> and <span class="math notranslate nohighlight">\(\lambda_0 = \mathbb{E}[T]\)</span> are estimated on the whole sample.
+Remark that this will result in a similar score, but just uses slightly different normalization.</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code> assumes that the treatment probability is independent of the covariates <span class="math notranslate nohighlight">\(X\)</span> and
 implements the score function:</p>
 <div class="math notranslate nohighlight">
@@ -1186,8 +1238,8 @@ implements the score function:</p>
 <p>Analogously, if <code class="docutils literal notranslate"><span class="pre">in_sample_normalization='False'</span></code>,  the score is set to</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\psi(W,\theta,\eta) :=\; &amp; - \theta + \Big(g(1,1,X) - g(1,0,X) - (g(0,1,X) - g(0,0,X))\Big)\\&amp; + \frac{DT}{p\lambda} (Y - g(1,1,X))\\&amp; - \frac{D(1-T)}{p(1-\lambda)}(Y - g(1,0,X))\\&amp; - \frac{(1-D)T}{(1-p)\lambda} (Y-g(0,1,X))\\&amp; + \frac{(1-D)(1-T)}{(1-p)(1-\lambda)} (Y-g(0,0,X))\\=\; &amp;\psi_a(W; \eta) \theta + \psi_b(W; \eta)\end{aligned}\end{align} \]</div>
-<p>with <span class="math notranslate nohighlight">\(\eta=(g, m, p, \lambda)\)</span>, where <span class="math notranslate nohighlight">\(p_0 = \mathbb{E}[D]\)</span> and <span class="math notranslate nohighlight">\(\lambda_0 = \mathbb{E}[T]\)</span> are estimated on the cross-fitting folds.
-Remark that this will result in the same score, but just uses slightly different normalization.</p>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g, m, p, \lambda)\)</span>, where <span class="math notranslate nohighlight">\(p_0 = \mathbb{E}[D]\)</span> and <span class="math notranslate nohighlight">\(\lambda_0 = \mathbb{E}[T]\)</span> are estimated on the whole sample.
+Remark that this will result in a similar score, but just uses slightly different normalization.</p>
 </section>
 </section>
 </section>

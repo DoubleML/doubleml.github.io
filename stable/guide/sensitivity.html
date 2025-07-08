@@ -806,7 +806,7 @@ representer (both are model specific, see <a class="reference internal" href="#s
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-1">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[13]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7fcce8ab3dd0&gt;</span>
+<span class="gh">Out[13]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7fae7e5db2c0&gt;</span>
 
 <span class="gp">In [14]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_elements</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="gh">Out[14]: </span><span class="go">dict_keys([&#39;sigma2&#39;, &#39;nu2&#39;, &#39;psi_sigma2&#39;, &#39;psi_nu2&#39;, &#39;riesz_rep&#39;])</span>
@@ -824,7 +824,7 @@ The results are summarized as a formatted string in the <code class="docutils li
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-2">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_analysis</span><span class="p">(</span><span class="n">cf_y</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">cf_d</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
-<span class="gh">Out[15]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7fcce8ab3dd0&gt;</span>
+<span class="gh">Out[15]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7fae7e5db2c0&gt;</span>
 
 <span class="gp">In [16]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">sensitivity_summary</span><span class="p">)</span>
 <span class="go">================== Sensitivity Analysis ==================</span>
@@ -922,7 +922,7 @@ Python</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </div>
-<p>The method returns a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>, containing the benchmarked values for <code class="docutils literal notranslate"><span class="pre">cf_y</span></code>, <code class="docutils literal notranslate"><span class="pre">cf_d</span></code>,  <code class="docutils literal notranslate"><span class="pre">rho</span></code> and the change in the estimates
+<p>The method returns a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>, containing the benchmarked values for <code class="docutils literal notranslate"><span class="pre">cf_y</span></code>, <code class="docutils literal notranslate"><span class="pre">cf_d</span></code>,  <code class="docutils literal notranslate"><span class="pre">rho</span></code> and the change in the estimates
 <code class="docutils literal notranslate"><span class="pre">delta_theta</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1113,24 +1113,38 @@ Generally, we recommend <code class="docutils literal notranslate"><span class="
 <p>For a detailed description of the scores and nuisance elements, see <a class="reference internal" href="scores.html#did-pa-score"><span class="std std-ref">Panel Data</span></a>.</p>
 <p>In the <a class="reference internal" href="models.html#did-pa-model"><span class="std std-ref">Panel data</span></a> with <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code> the score function implies the following representations</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}m(W,g) &amp;= \big(g(1,X) - g(0,X)\big)\cdot \frac{G^{\mathrm{g}}}{\mathbb{E}[G^{\mathrm{g}}]}\\\alpha(W) &amp;= \left(\frac{G^{\mathrm{g}}}{\mathbb{E}[G^{\mathrm{g}}]} - \frac{\frac{m(X)(1-G^{\mathrm{g}})}{1-m(X)}}{\mathbb{E}\left[\frac{m(X)(1-G^{\mathrm{g}})}{1-m(X)}\right]}\right) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}).\end{aligned}\end{align} \]</div>
+\[ \begin{align}\begin{aligned}m(W,g) &amp;= \big(g(1,X) - g(0,X)\big)\cdot \frac{G^{\mathrm{g}}}{\mathbb{E}[G^{\mathrm{g}}]}\cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\\\alpha(W) &amp;= \left(\frac{G^{\mathrm{g}}}{\mathbb{E}[G^{\mathrm{g}}]} - \frac{\frac{m(X)(1-G^{\mathrm{g}})}{1-m(X)}}{\mathbb{E}\left[\frac{m(X)(1-G^{\mathrm{g}})}{1-m(X)}\right]}\right) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}).\end{aligned}\end{align} \]</div>
 <p>If instead <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=False</span></code>, the Riesz representer changes to</p>
 <div class="math notranslate nohighlight">
 \[\alpha(W) = \left(\frac{G^{\mathrm{g}}}{\mathbb{E}[G^{\mathrm{g}}]} - \frac{m(X)(1-G^{\mathrm{g}})}{\mathbb{E}[G^{\mathrm{g}}](1-m(X))}\right) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}).\]</div>
 <p>For <code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code> implies the score function implies the following representations</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}m(W,g) &amp;= \big(g(1,X) - g(0,X)\big)\cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\\\alpha(W) &amp;= \left(\frac{G^{\mathrm{g}}}{\mathbb{E}[G^{\mathrm{g}}]} - \frac{1-G^{\mathrm{g}}}{1-\mathbb{E}[G^{\mathrm{g}}]}\right) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}).\end{aligned}\end{align} \]</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">nuisance_elements</span></code> are then computed with plug-in versions according to the general <a class="reference internal" href="#sensitivity-implementation"><span class="std std-ref">Implementation</span></a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">nuisance_elements</span></code> are then computed with plug-in versions according to the general <a class="reference internal" href="#sensitivity-implementation"><span class="std std-ref">Implementation</span></a>, but the scores <span class="math notranslate nohighlight">\(\psi_{\sigma^2}\)</span> and <span class="math notranslate nohighlight">\(\psi_{\nu^2}\)</span> are scaled according to the sample size of the subset, i.e. with scaling factor <span class="math notranslate nohighlight">\(c=\frac{n_{\text{ids}}}{n_{\text{subset}}}\)</span>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Remark that the elements are only non-zero for units in the corresponding treatment group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span> and control group <span class="math notranslate nohighlight">\(C^{(\cdot)}\)</span>, as <span class="math notranslate nohighlight">\(1-G^{\mathrm{g}}=C^{(\cdot)}\)</span> if <span class="math notranslate nohighlight">\(G^{\mathrm{g}} \vee C_{t_\text{eval} + \delta}^{(\cdot)}=1\)</span>.</p>
+<p>Remark that the elements are only non-zero for units in the corresponding treatment group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span> and control group <span class="math notranslate nohighlight">\(C^{(\cdot)}\)</span>, as <span class="math notranslate nohighlight">\(1-G^{\mathrm{g}}=C^{(\cdot)}\)</span> if <span class="math notranslate nohighlight">\(\max(G^{\mathrm{g}}, C^{(\cdot)})=1\)</span>.</p>
 </div>
 </section>
 <section id="difference-in-differences-for-repeated-cross-sections">
 <span id="sensitivity-did-cs"></span><h4><span class="section-number">10.2.3.2. </span>Difference-in-Differences for repeated cross-sections<a class="headerlink" href="#difference-in-differences-for-repeated-cross-sections" title="Link to this heading">#</a></h4>
+<p>For a detailed description of the scores and nuisance elements, see <a class="reference internal" href="scores.html#did-cs-score"><span class="std std-ref">Repeated Cross-Sectional Data</span></a>.</p>
+<p>In the <a class="reference internal" href="models.html#did-cs-model"><span class="std std-ref">Repeated cross-sections</span></a> with <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code> the score function implies the following representations</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m(W,g) &amp;= \Big(\big(g(1,1,X) - g(1,0,X)\big) - \big(g(0,1,X) - g(0,0,X)\big)\Big) \frac{G^{\mathrm{g}}}{\mathbb{E}[G^{\mathrm{g}}]} \cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\\\alpha(W) &amp;= \Bigg(\frac{G^{\mathrm{g}}T}{\mathbb{E}[G^{\mathrm{g}}T]} - \frac{G^{\mathrm{g}}(1-T)}{\mathbb{E}[G^{\mathrm{g}}(1-T)]}\\&amp;\quad - \frac{m(X)(1-G^{\mathrm{g}})T}{1-m(X)}\mathbb{E}\left[\frac{m(X)(1-G^{\mathrm{g}})T}{1-m(X)}\right]^{-1}\\&amp;\quad + \frac{m(X)(1-G^{\mathrm{g}})(1-T)}{1-m(X)}\mathbb{E}\left[\frac{m(X)(1-G^{\mathrm{g}})(1-T)}{1-m(X)}\right]^{-1} \Bigg) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}).\end{aligned}\end{align} \]</div>
+<p>If instead <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=False</span></code>, the Riesz representer changes to</p>
+<div class="math notranslate nohighlight">
+\[\alpha(W) = \left(\frac{T}{\mathbb{E}[G^{\mathrm{g}}]\mathbb{E}[T]} + \frac{1-T}{\mathbb{E}[G^{\mathrm{g}}](1-\mathbb{E}[T])}\right)\left(G^{\mathrm{g}} - (1-G^{\mathrm{g}})\frac{m(X)}{1-m(X)}\right) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}).\]</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">score='experimental'</span></code> the score function implies the following representations</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m(W,g) &amp;= \big(g(1,1,X) - g(1,0,X)\big) - \big(g(0,1,X) - g(0,0,X)\big) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)})\\\alpha(W) &amp;= \left(\frac{G^{\mathrm{g}}T}{\mathbb{E}[G^{\mathrm{g}}T]} - \frac{G^{\mathrm{g}}(1-T)}{\mathbb{E}[G^{\mathrm{g}}(1-T)]} - \frac{(1-G^{\mathrm{g}})T}{\mathbb{E}[(1-G^{\mathrm{g}})T]} + \frac{(1-G^{\mathrm{g}})(1-T)}{\mathbb{E}[(1-G^{\mathrm{g}})(1-T)]}\right) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}).\end{aligned}\end{align} \]</div>
+<p>And again, if instead <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=False</span></code>, the Riesz representer changes to</p>
+<div class="math notranslate nohighlight">
+\[\alpha(W) = \left(\frac{G^{\mathrm{g}}T}{\mathbb{E}[G^{\mathrm{g}}]\mathbb{E}[T]} - \frac{G^{\mathrm{g}}(1-T)}{\mathbb{E}[G^{\mathrm{g}}](1-\mathbb{E}[T])} - \frac{(1-G^{\mathrm{g}})T}{(1-\mathbb{E}[G^{\mathrm{g}}])\mathbb{E}[T]} + \frac{(1-G^{\mathrm{g}})(1-T)}{(1-\mathbb{E}[G^{\mathrm{g}}])(1-\mathbb{E}[T])}\right) \cdot \max(G^{\mathrm{g}}, C^{(\cdot)}).\]</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">nuisance_elements</span></code> are then computed with plug-in versions according to the general <a class="reference internal" href="#sensitivity-implementation"><span class="std std-ref">Implementation</span></a>, but the scores <span class="math notranslate nohighlight">\(\psi_{\sigma^2}\)</span> and <span class="math notranslate nohighlight">\(\psi_{\nu^2}\)</span> are scaled according to the sample size of the subset, i.e. with scaling factor <span class="math notranslate nohighlight">\(c=\frac{n_{\text{obs}}}{n_{\text{subset}}}\)</span>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Will be implemented soon.</p>
+<p>Remark that the elements are only non-zero for units in the corresponding treatment group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span> and control group <span class="math notranslate nohighlight">\(C^{(\cdot)}\)</span>, as <span class="math notranslate nohighlight">\(1-G^{\mathrm{g}}=C^{(\cdot)}\)</span> if <span class="math notranslate nohighlight">\(\max(G^{\mathrm{g}}, C^{(\cdot)})=1\)</span>.</p>
 </div>
 </section>
 <section id="two-treatment-periods">

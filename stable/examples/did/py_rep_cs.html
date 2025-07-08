@@ -1,0 +1,2726 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Python: Repeated Cross-Sectional Data with Multiple Time Periods &#8212; DoubleML  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c49bcd98" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=1ecd1175"></script>
+    <script src="../../_static/thebelab-helper.js"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/did/py_rep_cs';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://docs.doubleml.org/dev/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="R: Basics of Double Machine Learning" href="../R_double_ml_basics.html" />
+    <link rel="prev" title="Python: Real-Data Example for Multi-Period Difference-in-Differences" href="py_panel_data_example.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">Interested to learn more? We offer <a href='https://trainings.doubleml.org/'>DoubleML Trainings!</a></div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="../../_static/logo_dark.png" class="logo__image only-dark" alt=""/>`);</script>
+  
+  
+    <p class="title logo__title">DoubleML</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/install.html">
+     Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/intro.html">
+     Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../workflow/workflow.html">
+     Workflow
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide/guide.html">
+     User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/api.html">
+     Python API
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://docs.doubleml.org/r/stable/">
+     R API
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://docs.doubleml.org/doubleml-coverage/">
+     Coverage Repository
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../literature/literature.html">
+     Literature
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../release/release.html">
+     Release notes
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/DoubleML/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py/discussions" title="Discussions" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discussions</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/install.html">
+     Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/intro.html">
+     Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../workflow/workflow.html">
+     Workflow
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide/guide.html">
+     User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+     Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/api.html">
+     Python API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://docs.doubleml.org/r/stable/">
+     R API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://docs.doubleml.org/doubleml-coverage/">
+     Coverage Repository
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../literature/literature.html">
+     Literature
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release/release.html">
+     Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/DoubleML/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/DoubleML/doubleml-for-py/discussions" title="Discussions" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discussions</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-3"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-3"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-3"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-3">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><p class="logo" style="text-align:center;"><a href="../../index.html">
+    <img class="logo" src="../../logo.png" alt="Logo" width="65%" height="65%">
+</a></p>
+
+<script type="text/javascript">
+    // Change the logo depending on the theme
+    var logo = document.querySelector('img.logo');
+    var observer = new MutationObserver(function(mutations) {
+        const dark = document.documentElement.dataset.theme == 'dark';
+        if (dark) {
+            logo.src = "../../logo_dark.png";
+        } else {
+            logo.src = "../../logo.png";
+        }
+    });
+    observer.observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+</script></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_basics.html">Python: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_pension.html">Python: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_apo.html">Python: Average Potential Outcome (APO) Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_irm_vs_apo.html">Python: IRM and APO Model Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_learner.html">Python: Choice of learners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_sensitivity_booking.html">Example: Sensitivity Analysis for Causal ML</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_basic_iv.html">Python: Basic Instrumental Variables calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_robust_iv.html">Python: Confidence Intervals for Instrumental Variables Models That Are Robust to Weak Instruments</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_plm_irm_hetfx.html">Python: PLM and IRM for Multiple Treatments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_meets_flaml.html">DoubleML meets FLAML - How to tune learners automatically within <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_rdflex.html">Flexible Covariate Adjustment in Regression Discontinuity Designs (RDD)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_gate.html">Python: Group Average Treatment Effects (GATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_gate_plr.html">Python: Group Average Treatment Effects (GATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_cate.html">Python: Conditional Average Treatment Effects (CATEs) for IRM models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_cate_plr.html">Python: Conditional Average Treatment Effects (CATEs) for PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_gate_sensitivity.html">Python: GATE Sensitivity Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_policy_tree.html">Python: Policy Learning with Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_pension_qte.html">Python: Impact of 401(k) on Financial Wealth (Quantile Effects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_pq.html">Python: Potential Quantiles and Quantile Treatment Effects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_cvar.html">Python: Conditional Value at Risk of potential outcomes</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="py_panel_simple.html">Python: Panel Data Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_panel.html">Python: Panel Data with Multiple Time Periods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_panel_data_example.html">Python: Real-Data Example for Multi-Period Difference-in-Differences</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Python: Repeated Cross-Sectional Data with Multiple Time Periods</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_basics.html">R: Basics of Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_pension.html">R: Impact of 401(k) on Financial Wealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_did.html">R: DoubleML for Difference-in-Differences</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_multiway_cluster.html">R: Cluster Robust Double Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_ssm.html">R: Sample Selection Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_basic_iv.html">R: Basic Instrumental Variables Calculation</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../R_double_ml_pipeline.html">R: Ensemble Learners and More with <code class="docutils literal notranslate"><span class="pre">mlr3pipelines</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../double_ml_bonus_data.html">DML: Bonus Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_did.html">Python: Difference-in-Differences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_did_pretest.html">Python: Difference-in-Differences Pre-Testing</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Python:...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+      <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <ul class="simple">
+
+Download Jupyter notebook:
+<a class="reference external" href="https://docs.doubleml.org/stable/examples/did/py_rep_cs.ipynb">https://docs.doubleml.org/stable/examples/did/py_rep_cs.ipynb</a>.
+
+    </ul>
+    </div><section id="Python:-Repeated-Cross-Sectional-Data-with-Multiple-Time-Periods">
+<h1>Python: Repeated Cross-Sectional Data with Multiple Time Periods<a class="headerlink" href="#Python:-Repeated-Cross-Sectional-Data-with-Multiple-Time-Periods" title="Link to this heading">#</a></h1>
+<p>In this example, a detailed guide on Difference-in-Differences with multiple time periods using the <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML-package</a>. The implementation is based on <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.12.001">Callaway and Sant’Anna(2021)</a>.</p>
+<p>The notebook requires the following packages:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMRegressor</span><span class="p">,</span> <span class="n">LGBMClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">LogisticRegression</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.did</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLDIDMulti</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLPanelData</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.did.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_cs_CS2021</span>
+</pre></div>
+</div>
+</div>
+<section id="Data">
+<h2>Data<a class="headerlink" href="#Data" title="Link to this heading">#</a></h2>
+<p>We will rely on the <code class="docutils literal notranslate"><span class="pre">make_did_cs_CS2021</span></code> DGP, which is inspired by <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.12.001">Callaway and Sant’Anna(2021)</a> (Appendix SC) and <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a>.</p>
+<p>We will observe approximately <code class="docutils literal notranslate"><span class="pre">n_obs</span></code> units over <code class="docutils literal notranslate"><span class="pre">n_periods</span></code>. The parameter <code class="docutils literal notranslate"><span class="pre">lambda_t</span></code> determines the probability of observing a unit <code class="docutils literal notranslate"><span class="pre">i</span></code> in time period <code class="docutils literal notranslate"><span class="pre">t</span></code>. The parameter <code class="docutils literal notranslate"><span class="pre">lambda_t</span></code> is set to 0.5 for all time periods, which means that each unit has a 50% chance of being observed in each time period.</p>
+<p>Remark that the dataframe includes observations of the potential outcomes <code class="docutils literal notranslate"><span class="pre">y0</span></code> and <code class="docutils literal notranslate"><span class="pre">y1</span></code>, such that we can use oracle estimates as comparisons.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">n_periods</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">make_did_cs_CS2021</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">dgp_type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">include_never_treated</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_periods</span><span class="o">=</span><span class="n">n_periods</span><span class="p">,</span> <span class="n">n_pre_treat_periods</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                        <span class="n">lambda_t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">time_type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;ite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;y1&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;y0&quot;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(29601, 11)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>y</th>
+      <th>y0</th>
+      <th>y1</th>
+      <th>d</th>
+      <th>t</th>
+      <th>Z1</th>
+      <th>Z2</th>
+      <th>Z3</th>
+      <th>Z4</th>
+      <th>ite</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>206.290533</td>
+      <td>206.290533</td>
+      <td>207.964732</td>
+      <td>3.0</td>
+      <td>0</td>
+      <td>-0.317116</td>
+      <td>-0.832171</td>
+      <td>-0.308184</td>
+      <td>-1.870001</td>
+      <td>1.674198</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>207.450885</td>
+      <td>207.450885</td>
+      <td>208.125002</td>
+      <td>3.0</td>
+      <td>1</td>
+      <td>-0.317116</td>
+      <td>-0.832171</td>
+      <td>-0.308184</td>
+      <td>-1.870001</td>
+      <td>0.674117</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>205.392812</td>
+      <td>205.392812</td>
+      <td>207.117336</td>
+      <td>3.0</td>
+      <td>2</td>
+      <td>-0.317116</td>
+      <td>-0.832171</td>
+      <td>-0.308184</td>
+      <td>-1.870001</td>
+      <td>1.724524</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>207.727118</td>
+      <td>205.829388</td>
+      <td>207.727118</td>
+      <td>3.0</td>
+      <td>3</td>
+      <td>-0.317116</td>
+      <td>-0.832171</td>
+      <td>-0.308184</td>
+      <td>-1.870001</td>
+      <td>1.897730</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0</td>
+      <td>206.798758</td>
+      <td>203.390777</td>
+      <td>206.798758</td>
+      <td>3.0</td>
+      <td>5</td>
+      <td>-0.317116</td>
+      <td>-0.832171</td>
+      <td>-0.308184</td>
+      <td>-1.870001</td>
+      <td>3.407981</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<section id="Data-Details">
+<h3>Data Details<a class="headerlink" href="#Data-Details" title="Link to this heading">#</a></h3>
+<p><em>Here, we slightly abuse the definition of the potential outcomes. :math:`Y_{i,t}(1)` corresponds to the (potential) outcome if unit :math:`i` would have received treatment at time period :math:`mathrm{g}` (where the group :math:`mathrm{g}` is drawn with probabilities based on :math:`Z`).</em></p>
+<p>The data set with repeated cross-sectional data is generated on the basis of a panel data set with the following data generating process (DGP). To obtain repeated cross-sectional data, the number of generated individuals is increased to <span class="math notranslate nohighlight">\(\frac{n_{obs}}{\lambda_t}\)</span>, where <span class="math notranslate nohighlight">\(\lambda_t\)</span> denotes the probability to observe a unit at each time period (time constant).</p>
+<p>More specifically</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+Y_{i,t}(0)&amp;:= f_t(Z) + \delta_t + \eta_i + \varepsilon_{i,t,0}\\
+Y_{i,t}(1)&amp;:= Y_{i,t}(0) + \theta_{i,t,\mathrm{g}} + \epsilon_{i,t,1} - \epsilon_{i,t,0}
+\end{align*}\end{split}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f_t(Z)\)</span> depends on pre-treatment observable covariates <span class="math notranslate nohighlight">\(Z_1,\dots, Z_4\)</span> and time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\delta_t\)</span> is a time fixed effect</p></li>
+<li><p><span class="math notranslate nohighlight">\(\eta_i\)</span> is a unit fixed effect</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_{i,t,\cdot}\)</span> are time varying unobservables (iid. <span class="math notranslate nohighlight">\(N(0,1)\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\theta_{i,t,\mathrm{g}}\)</span> correponds to the exposure effect of unit <span class="math notranslate nohighlight">\(i\)</span> based on group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span> at time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+</ul>
+<p>For the pre-treatment periods the exposure effect is set to</p>
+<div class="math notranslate nohighlight">
+\[\theta_{i,t,\mathrm{g}}:= 0 \text{ for } t&lt;\mathrm{g}\]</div>
+<p>such that</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{E}[Y_{i,t}(1) - Y_{i,t}(0)] = \mathbb{E}[\epsilon_{i,t,1} - \epsilon_{i,t,0}]=0  \text{ for } t&lt;\mathrm{g}\]</div>
+<p>The <a class="reference external" href="https://docs.doubleml.org/doubleml-coverage/">DoubleML Coverage Repository</a> includes coverage simulations based on this DGP.</p>
+</section>
+<section id="Data-Description">
+<h3>Data Description<a class="headerlink" href="#Data-Description" title="Link to this heading">#</a></h3>
+<p>The data is a balanced panel where each unit is observed over <code class="docutils literal notranslate"><span class="pre">n_periods</span></code> starting Janary 2025.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+t
+0    4914
+1    5000
+2    4854
+3    5062
+4    4887
+5    4884
+dtype: int64
+</pre></div></div>
+</div>
+<p>The treatment column <code class="docutils literal notranslate"><span class="pre">d</span></code> indicates first treatment period of the corresponding unit, whereas <code class="docutils literal notranslate"><span class="pre">NaT</span></code> units are never treated.</p>
+<p><em>Generally, never treated units should take either on the value ``np.inf`` or ``pd.NaT`` depending on the data type (``float`` or ``datetime``).</em></p>
+<p>The individual units are roughly uniformly divided between the groups, where treatment assignment depends on the pre-treatment covariates <code class="docutils literal notranslate"><span class="pre">Z1</span></code> to <code class="docutils literal notranslate"><span class="pre">Z4</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+d
+3.0    7578
+4.0    7186
+5.0    7196
+inf    7641
+dtype: int64
+</pre></div></div>
+</div>
+<p>Here, the group indicates the first treated period and <code class="docutils literal notranslate"><span class="pre">NaT</span></code> units are never treated. To simplify plotting and pands</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+d
+3.0    7578
+4.0    7186
+5.0    7196
+inf    7641
+dtype: int64
+</pre></div></div>
+</div>
+<p>To get a better understanding of the underlying data and true effects, we will compare the unconditional averages and the true effects based on the oracle values of individual effects <code class="docutils literal notranslate"><span class="pre">ite</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># rename for plotting</span>
+
+<span class="c1"># Create aggregation dictionary for means</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">agg_dict</span><span class="p">(</span><span class="n">col_name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1">_mean&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">col_name</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">),</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1">_lower_quantile&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">col_name</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)),</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1">_upper_quantile&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">col_name</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.95</span><span class="p">))</span>
+    <span class="p">}</span>
+
+<span class="c1"># Calculate means and confidence intervals</span>
+<span class="n">agg_dictionary</span> <span class="o">=</span> <span class="n">agg_dict</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">agg_dict</span><span class="p">(</span><span class="s2">&quot;ite&quot;</span><span class="p">)</span>
+
+<span class="n">agg_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="o">**</span><span class="n">agg_dictionary</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">agg_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>t</th>
+      <th>d</th>
+      <th>y_mean</th>
+      <th>y_lower_quantile</th>
+      <th>y_upper_quantile</th>
+      <th>ite_mean</th>
+      <th>ite_lower_quantile</th>
+      <th>ite_upper_quantile</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>3.0</td>
+      <td>208.711855</td>
+      <td>199.091900</td>
+      <td>218.864724</td>
+      <td>-0.008117</td>
+      <td>-2.359493</td>
+      <td>2.310664</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>4.0</td>
+      <td>210.269650</td>
+      <td>199.849703</td>
+      <td>220.428055</td>
+      <td>-0.042078</td>
+      <td>-2.386611</td>
+      <td>2.367674</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>5.0</td>
+      <td>212.460444</td>
+      <td>203.261968</td>
+      <td>222.618621</td>
+      <td>-0.017448</td>
+      <td>-2.285882</td>
+      <td>2.319843</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>inf</td>
+      <td>214.203281</td>
+      <td>204.147365</td>
+      <td>224.192737</td>
+      <td>-0.005641</td>
+      <td>-2.298443</td>
+      <td>2.271431</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>3.0</td>
+      <td>208.757128</td>
+      <td>188.251340</td>
+      <td>228.885705</td>
+      <td>-0.019994</td>
+      <td>-2.276624</td>
+      <td>2.293457</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col_name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create an improved plot with colorblind-friendly features</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    df : DataFrame</span>
+<span class="sd">        The dataframe containing the data</span>
+<span class="sd">    col_name : str, default=&#39;y&#39;</span>
+<span class="sd">        Column name to plot (will use &#39;{col_name}_mean&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">n_colors</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+    <span class="n">color_palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span> <span class="n">n_colors</span><span class="o">=</span><span class="n">n_colors</span><span class="p">)</span>
+
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1">_mean&#39;</span><span class="p">,</span>
+        <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span>
+        <span class="n">palette</span><span class="o">=</span><span class="n">color_palette</span><span class="p">,</span>
+        <span class="n">markers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">dashes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span>
+    <span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Average Values </span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1"> by Group Over Time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Average Value </span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">title_fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+               <span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">framealpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>So let us take a look at the average values over time</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">agg_df</span><span class="p">,</span> <span class="n">col_name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/colors.py:2295: RuntimeWarning: invalid value encountered in divide
+  resdat /= (vmax - vmin)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_16_1.png" src="../../_images/examples_did_py_rep_cs_16_1.png" />
+</div>
+</div>
+<p>Instead the true average treatment treatment effects can be obtained by averaging (usually unobserved) the <code class="docutils literal notranslate"><span class="pre">ite</span></code> values.</p>
+<p>The true effect just equals the exposure time (in months):</p>
+<div class="math notranslate nohighlight">
+\[ATT(\mathrm{g}, t) = \min(\mathrm{t} - \mathrm{g} + 1, 0) =: e\]</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">agg_df</span><span class="p">,</span> <span class="n">col_name</span><span class="o">=</span><span class="s1">&#39;ite&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/colors.py:2295: RuntimeWarning: invalid value encountered in divide
+  resdat /= (vmax - vmin)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_18_1.png" src="../../_images/examples_did_py_rep_cs_18_1.png" />
+</div>
+</div>
+</section>
+<section id="DoubleMLPanelData">
+<h3>DoubleMLPanelData<a class="headerlink" href="#DoubleMLPanelData" title="Link to this heading">#</a></h3>
+<p>Finally, we can construct our <code class="docutils literal notranslate"><span class="pre">DoubleMLPanelData</span></code>, specifying</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">y_col</span></code> : the outcome</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d_cols</span></code>: the group variable indicating the first treated period for each unit</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">id_col</span></code>: the unique identification column for each unit</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t_col</span></code> : the time column</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_cols</span></code>: the additional pre-treatment controls</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">datetime_unit</span></code>: unit required for <code class="docutils literal notranslate"><span class="pre">datetime</span></code> columns and plotting</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLPanelData</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+    <span class="n">y_col</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="n">d_cols</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+    <span class="n">id_col</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+    <span class="n">t_col</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span>
+    <span class="n">x_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Z1&quot;</span><span class="p">,</span> <span class="s2">&quot;Z2&quot;</span><span class="p">,</span> <span class="s2">&quot;Z3&quot;</span><span class="p">,</span> <span class="s2">&quot;Z4&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLPanelData Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): [&#39;d&#39;]
+Covariates: [&#39;Z1&#39;, &#39;Z2&#39;, &#39;Z3&#39;, &#39;Z4&#39;]
+Instrument variable(s): None
+Time variable: t
+Id variable: id
+No. Unique Ids: 9847
+No. Observations: 29601
+
+------------------ DataFrame info    ------------------
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 29601 entries, 0 to 29600
+Columns: 11 entries, id to ite
+dtypes: float64(9), int64(2)
+memory usage: 2.5 MB
+
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="ATT-Estimation">
+<h2>ATT Estimation<a class="headerlink" href="#ATT-Estimation" title="Link to this heading">#</a></h2>
+<p>The <a class="reference external" href="https://docs.doubleml.org/stable/index.html">DoubleML-package</a> implements estimation of group-time average treatment effect via the <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDMulti</span></code> class (see <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#difference-in-differences-models-did">model documentation</a>).</p>
+<section id="Basics">
+<h3>Basics<a class="headerlink" href="#Basics" title="Link to this heading">#</a></h3>
+<p>The class basically behaves like other <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> classes and requires the specification of two learners (for more details on the regression elements, see <a class="reference external" href="https://docs.doubleml.org/stable/guide/scores.html#difference-in-differences-models">score documentation</a>).</p>
+<p>The basic arguments of a <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDMulti</span></code> object include</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ml_g</span></code> “outcome” regression learner</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ml_m</span></code> propensity Score learner</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">control_group</span></code> the control group for the parallel trend assumption</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gt_combinations</span></code> combinations of <span class="math notranslate nohighlight">\((\mathrm{g},t_\text{pre}, t_\text{eval})\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">anticipation_periods</span></code> number of anticipation periods</p></li>
+</ul>
+<p>We will construct a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with “default” arguments.</p>
+<p>For repeated cross-sectional data, we additionally specify the argument</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">panel=False</span></code></p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">default_args</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ml_g&quot;</span><span class="p">:</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">123</span><span class="p">),</span>
+    <span class="s2">&quot;ml_m&quot;</span><span class="p">:</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">123</span><span class="p">),</span>
+    <span class="s2">&quot;control_group&quot;</span><span class="p">:</span> <span class="s2">&quot;never_treated&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;anticipation_periods&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;n_folds&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;n_rep&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;panel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>The model will be estimated using the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="o">**</span><span class="n">default_args</span><span class="p">)</span>
+<span class="n">dml_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_obj</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDIDMulti Object ==================
+
+------------------ Data summary      ------------------
+Outcome variable: y
+Treatment variable(s): [&#39;d&#39;]
+Covariates: [&#39;Z1&#39;, &#39;Z2&#39;, &#39;Z3&#39;, &#39;Z4&#39;]
+Instrument variable(s): None
+Time variable: t
+Id variable: id
+No. Unique Ids: 9847
+No. Observations: 29601
+
+------------------ Score &amp; algorithm ------------------
+Score function: observational
+Control group: never_treated
+Anticipation periods: 0
+
+------------------ Machine learner   ------------------
+Learner ml_g: LGBMRegressor(learning_rate=0.01, n_estimators=500, random_state=123,
+              verbose=-1)
+Learner ml_m: LGBMClassifier(learning_rate=0.01, n_estimators=500, random_state=123,
+               verbose=-1)
+Out-of-sample Performance:
+Regression:
+Learner ml_g_d0_t0 RMSE: [[1.98430085 2.92185958 3.96072074 4.01615173 3.99746842 1.94860197
+  2.91220897 3.95326435 5.33890777 5.36415913 1.96261388 2.85975739
+  3.97859413 5.41113127 6.50649578]]
+Learner ml_g_d0_t1 RMSE: [[2.90041844 4.01562045 5.374187   6.47364698 7.88686151 2.97781186
+  3.85026247 5.40043967 6.52873332 8.11570692 2.95037883 3.87334694
+  5.32207333 6.6825634  7.82987933]]
+Learner ml_g_d1_t0 RMSE: [[1.93811241 3.01601231 4.12397944 4.14368631 4.1068965  1.88728285
+  2.81496258 3.9901015  4.88683838 4.81874341 1.94094027 3.03267071
+  4.01844598 5.25465859 6.30140735]]
+Learner ml_g_d1_t1 RMSE: [[3.07358689 4.13338882 5.32536645 6.16452829 7.81141183 2.81327761
+  4.04464987 4.68690706 6.34072587 7.41243276 3.03757199 3.99817614
+  5.26103716 6.56316397 7.6340788 ]]
+Classification:
+Learner ml_m Log Loss: [[0.61228405 0.60639433 0.61638235 0.60691978 0.61086846 0.63377629
+  0.63142806 0.64685572 0.64520933 0.64537167 0.65369941 0.65833534
+  0.6622962  0.66227142 0.65609841]]
+
+------------------ Resampling        ------------------
+No. folds: 5
+No. repeated sample splits: 1
+
+------------------ Fit summary       ------------------
+                  coef   std err         t         P&gt;|t|     2.5 %    97.5 %
+ATT(3.0,0,1) -0.111021  0.217438 -0.510588  6.096396e-01 -0.537192  0.315149
+ATT(3.0,1,2)  0.195264  0.324272  0.602161  5.470670e-01 -0.440298  0.830826
+ATT(3.0,2,3)  1.194680  0.396379  3.013984  2.578410e-03  0.417791  1.971568
+ATT(3.0,2,4)  2.078489  0.417198  4.982024  6.292265e-07  1.260797  2.896182
+ATT(3.0,2,5)  2.755739  0.541919  5.085153  3.673299e-07  1.693598  3.817880
+ATT(4.0,0,1)  0.100516  0.186125  0.540049  5.891635e-01 -0.264281  0.465314
+ATT(4.0,1,2)  0.007868  0.243581  0.032303  9.742307e-01 -0.469542  0.485278
+ATT(4.0,2,3) -0.260447  0.310786 -0.838028  4.020150e-01 -0.869576  0.348682
+ATT(4.0,3,4)  1.466160  0.380038  3.857926  1.143531e-04  0.721298  2.211022
+ATT(4.0,3,5)  1.978502  0.477238  4.145737  3.387217e-05  1.043133  2.913870
+ATT(5.0,0,1)  0.135144  0.159067  0.849605  3.955447e-01 -0.176622  0.446910
+ATT(5.0,1,2)  0.004293  0.217748  0.019716  9.842697e-01 -0.422485  0.431072
+ATT(5.0,2,3) -0.470757  0.285231 -1.650440  9.885290e-02 -1.029800  0.088286
+ATT(5.0,3,4)  0.117080  0.387465  0.302168  7.625237e-01 -0.642338  0.876498
+ATT(5.0,4,5)  0.898292  0.429518  2.091396  3.649257e-02  0.056452  1.740131
+</pre></div></div>
+</div>
+<p>The summary displays estimates of the <span class="math notranslate nohighlight">\(ATT(g,t_\text{eval})\)</span> effects for different combinations of <span class="math notranslate nohighlight">\((g,t_\text{eval})\)</span> via <span class="math notranslate nohighlight">\(\widehat{ATT}(\mathrm{g},t_\text{pre},t_\text{eval})\)</span>, where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathrm{g}\)</span> specifies the group</p></li>
+<li><p><span class="math notranslate nohighlight">\(t_\text{pre}\)</span> specifies the corresponding pre-treatment period</p></li>
+<li><p><span class="math notranslate nohighlight">\(t_\text{eval}\)</span> specifies the evaluation period</p></li>
+</ul>
+<p>The choice <code class="docutils literal notranslate"><span class="pre">gt_combinations=&quot;standard&quot;</span></code>, used estimates all possible combinations of <span class="math notranslate nohighlight">\(ATT(g,t_\text{eval})\)</span> via <span class="math notranslate nohighlight">\(\widehat{ATT}(\mathrm{g},t_\text{pre},t_\text{eval})\)</span>, where the standard choice is <span class="math notranslate nohighlight">\(t_\text{pre} = \min(\mathrm{g}, t_\text{eval}) - 1\)</span> (without anticipation).</p>
+<p>Remark that this includes pre-tests effects if <span class="math notranslate nohighlight">\(\mathrm{g} &gt; t_{eval}\)</span>, e.g. <span class="math notranslate nohighlight">\(\widehat{ATT}(g=3, t_{\text{pre}}=0, t_{\text{eval}}=1)\)</span> which estimates the pre-trend from time period <span class="math notranslate nohighlight">\(0\)</span> to <span class="math notranslate nohighlight">\(1\)</span> even if the actual treatment occured in time period <span class="math notranslate nohighlight">\(3\)</span>.</p>
+<p>As usual for the DoubleML-package, you can obtain joint confidence intervals via bootstrap.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">level</span> <span class="o">=</span> <span class="mf">0.95</span>
+
+<span class="n">ci</span> <span class="o">=</span> <span class="n">dml_obj</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+<span class="n">dml_obj</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">ci_joint</span> <span class="o">=</span> <span class="n">dml_obj</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ci_joint</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>2.5 %</th>
+      <th>97.5 %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ATT(3.0,0,1)</th>
+      <td>-0.742576</td>
+      <td>0.520533</td>
+    </tr>
+    <tr>
+      <th>ATT(3.0,1,2)</th>
+      <td>-0.746594</td>
+      <td>1.137122</td>
+    </tr>
+    <tr>
+      <th>ATT(3.0,2,3)</th>
+      <td>0.043387</td>
+      <td>2.345972</td>
+    </tr>
+    <tr>
+      <th>ATT(3.0,2,4)</th>
+      <td>0.866728</td>
+      <td>3.290251</td>
+    </tr>
+    <tr>
+      <th>ATT(3.0,2,5)</th>
+      <td>1.181722</td>
+      <td>4.329756</td>
+    </tr>
+    <tr>
+      <th>ATT(4.0,0,1)</th>
+      <td>-0.440088</td>
+      <td>0.641121</td>
+    </tr>
+    <tr>
+      <th>ATT(4.0,1,2)</th>
+      <td>-0.699619</td>
+      <td>0.715356</td>
+    </tr>
+    <tr>
+      <th>ATT(4.0,2,3)</th>
+      <td>-1.163133</td>
+      <td>0.642238</td>
+    </tr>
+    <tr>
+      <th>ATT(4.0,3,4)</th>
+      <td>0.362329</td>
+      <td>2.569991</td>
+    </tr>
+    <tr>
+      <th>ATT(4.0,3,5)</th>
+      <td>0.592353</td>
+      <td>3.364651</td>
+    </tr>
+    <tr>
+      <th>ATT(5.0,0,1)</th>
+      <td>-0.326870</td>
+      <td>0.597159</td>
+    </tr>
+    <tr>
+      <th>ATT(5.0,1,2)</th>
+      <td>-0.628162</td>
+      <td>0.636748</td>
+    </tr>
+    <tr>
+      <th>ATT(5.0,2,3)</th>
+      <td>-1.299219</td>
+      <td>0.357704</td>
+    </tr>
+    <tr>
+      <th>ATT(5.0,3,4)</th>
+      <td>-1.008324</td>
+      <td>1.242483</td>
+    </tr>
+    <tr>
+      <th>ATT(5.0,4,5)</th>
+      <td>-0.349254</td>
+      <td>2.145838</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>A visualization of the effects can be obtained via the <code class="docutils literal notranslate"><span class="pre">plot_effects()</span></code> method.</p>
+<p>Remark that the plot used joint confidence intervals per default.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 4 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 3.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 4.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 5.0&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_30_2.png" src="../../_images/examples_did_py_rep_cs_30_2.png" />
+</div>
+</div>
+</section>
+<section id="Sensitivity-Analysis">
+<h3>Sensitivity Analysis<a class="headerlink" href="#Sensitivity-Analysis" title="Link to this heading">#</a></h3>
+<p>As descripted in the <a class="reference external" href="https://docs.doubleml.org/stable/guide/sensitivity.html">Sensitivity Guide</a>, robustness checks on omitted confounding/parallel trend violations are available, via the standard <code class="docutils literal notranslate"><span class="pre">sensitivity_analysis()</span></code> method.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj</span><span class="o">.</span><span class="n">sensitivity_analysis</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dml_obj</span><span class="o">.</span><span class="n">sensitivity_summary</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== Sensitivity Analysis ==================
+
+------------------ Scenario          ------------------
+Significance Level: level=0.95
+Sensitivity parameters: cf_y=0.03; cf_d=0.03, rho=1.0
+
+------------------ Bounds with CI    ------------------
+              CI lower  theta lower     theta  theta upper  CI upper
+ATT(3.0,0,1) -0.818764    -0.458395 -0.111021     0.236352  0.593280
+ATT(3.0,1,2) -0.858645    -0.325634  0.195264     0.716162  1.252033
+ATT(3.0,2,3) -0.128834     0.515808  1.194680     1.873552  2.535848
+ATT(3.0,2,4)  0.632813     1.320627  2.078489     2.836352  3.525724
+ATT(3.0,2,5)  0.964192     1.851576  2.755739     3.659903  4.558834
+ATT(4.0,0,1) -0.539144    -0.234324  0.100516     0.435357  0.743780
+ATT(4.0,1,2) -0.880782    -0.477338  0.007868     0.493075  0.892826
+ATT(4.0,2,3) -1.390373    -0.878496 -0.260447     0.357601  0.869695
+ATT(4.0,3,4)  0.070589     0.692491  1.466160     2.239829  2.870595
+ATT(4.0,3,5)  0.296190     1.078591  1.978502     2.878412  3.668259
+ATT(5.0,0,1) -0.459971    -0.197916  0.135144     0.468204  0.730141
+ATT(5.0,1,2) -0.801110    -0.442732  0.004293     0.451318  0.810448
+ATT(5.0,2,3) -1.548992    -1.080603 -0.470757     0.139088  0.610499
+ATT(5.0,3,4) -1.291787    -0.656763  0.117080     0.890922  1.532429
+ATT(5.0,4,5) -0.746335    -0.037688  0.898292     1.834272  2.540801
+
+------------------ Robustness Values ------------------
+              H_0    RV (%)   RVa (%)
+ATT(3.0,0,1)  0.0  0.968935  0.000389
+ATT(3.0,1,2)  0.0  1.135473  0.000393
+ATT(3.0,2,3)  0.0  5.218702  2.432460
+ATT(3.0,2,4)  0.0  8.012316  5.416995
+ATT(3.0,2,5)  0.0  8.862832  6.100256
+ATT(4.0,0,1)  0.0  0.910369  0.000381
+ATT(4.0,1,2)  0.0  0.049243  0.000664
+ATT(4.0,2,3)  0.0  1.275524  0.000636
+ATT(4.0,3,4)  0.0  5.608286  3.269934
+ATT(4.0,3,5)  0.0  6.476406  3.968677
+ATT(5.0,0,1)  0.0  1.228492  0.000646
+ATT(5.0,1,2)  0.0  0.029110  0.000619
+ATT(5.0,2,3)  0.0  2.323931  0.007919
+ATT(5.0,3,4)  0.0  0.459629  0.000583
+ATT(5.0,4,5)  0.0  2.881040  0.621311
+</pre></div></div>
+</div>
+<p>In this example one can clearly, distinguish the robustness of the non-zero effects vs. the pre-treatment periods.</p>
+</section>
+<section id="Control-Groups">
+<h3>Control Groups<a class="headerlink" href="#Control-Groups" title="Link to this heading">#</a></h3>
+<p>The current implementation support the following control groups</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;never_treated&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;not_yet_treated&quot;</span></code></p></li>
+</ul>
+<p>Remark that the ``”not_yet_treated” depends on anticipation.</p>
+<p>For differences and recommendations, we refer to <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.12.001">Callaway and Sant’Anna(2021)</a>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj_nyt</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">default_args</span> <span class="o">|</span> <span class="p">{</span><span class="s2">&quot;control_group&quot;</span><span class="p">:</span> <span class="s2">&quot;not_yet_treated&quot;</span><span class="p">}))</span>
+<span class="n">dml_obj_nyt</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_obj_nyt</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">dml_obj_nyt</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 4 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 3.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 4.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 5.0&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_35_2.png" src="../../_images/examples_did_py_rep_cs_35_2.png" />
+</div>
+</div>
+</section>
+<section id="Linear-Covariate-Adjustment">
+<h3>Linear Covariate Adjustment<a class="headerlink" href="#Linear-Covariate-Adjustment" title="Link to this heading">#</a></h3>
+<p>Remark that we relied on boosted trees to adjust for conditional parallel trends which allow for a nonlinear adjustment. In comparison to linear adjustment, we could rely on linear learners.</p>
+<p><strong>Remark that the DGP (``dgp_type=4``) is based on nonlinear conditional expectations such that the estimates will be biased</strong></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">linear_learners</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ml_g&quot;</span><span class="p">:</span> <span class="n">LinearRegression</span><span class="p">(),</span>
+    <span class="s2">&quot;ml_m&quot;</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(),</span>
+<span class="p">}</span>
+
+<span class="n">dml_obj_linear</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">default_args</span> <span class="o">|</span> <span class="n">linear_learners</span><span class="p">))</span>
+<span class="n">dml_obj_linear</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_obj_linear</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">dml_obj_linear</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 4 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 3.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 4.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 5.0&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_37_2.png" src="../../_images/examples_did_py_rep_cs_37_2.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Aggregated-Effects">
+<h2>Aggregated Effects<a class="headerlink" href="#Aggregated-Effects" title="Link to this heading">#</a></h2>
+<p>As the <a class="reference external" href="https://bcallaway11.github.io/did/index.html">did-R-package</a>, the <span class="math notranslate nohighlight">\(ATT\)</span>’s can be aggregated to summarize multiple effects. For details on different aggregations and details on their interpretations see <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.12.001">Callaway and Sant’Anna(2021)</a>.</p>
+<p>The aggregations are implemented via the <code class="docutils literal notranslate"><span class="pre">aggregate()</span></code> method.</p>
+<section id="Group-Aggregation">
+<h3>Group Aggregation<a class="headerlink" href="#Group-Aggregation" title="Link to this heading">#</a></h3>
+<p>To obtain group-specific effects one can would like to average <span class="math notranslate nohighlight">\(ATT(\mathrm{g}, t_\text{eval})\)</span> over <span class="math notranslate nohighlight">\(t_\text{eval}\)</span>. As a sample oracle we will combine all <code class="docutils literal notranslate"><span class="pre">ite</span></code>’s based on group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_post_treatment</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">]]</span>
+<span class="n">df_post_treatment</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">)[</span><span class="s2">&quot;ite&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+d
+3.0    1.935077
+4.0    1.511858
+5.0    0.958206
+Name: ite, dtype: float64
+</pre></div></div>
+</div>
+<p>To obtain group-specific effects it is possible to aggregate several <span class="math notranslate nohighlight">\(\widehat{ATT}(\mathrm{g},t_\text{pre},t_\text{eval})\)</span> values based on the group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span> by setting the <code class="docutils literal notranslate"><span class="pre">aggregation=&quot;group&quot;</span></code> argument.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aggregated_group</span> <span class="o">=</span> <span class="n">dml_obj</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">aggregation</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">aggregated_group</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">aggregated_group</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDIDAggregation Object ==================
+ Group Aggregation
+
+------------------ Overall Aggregated Effects ------------------
+    coef  std err        t        P&gt;|t|    2.5 %   97.5 %
+1.551448  0.23123 6.709534 1.952460e-11 1.098245 2.004651
+------------------ Aggregated Effects         ------------------
+         coef   std err         t         P&gt;|t|     2.5 %    97.5 %
+3.0  2.009636  0.305576  6.576548  4.814948e-11  1.410718  2.608554
+4.0  1.722331  0.341061  5.049922  4.419900e-07  1.053864  2.390798
+5.0  0.898292  0.429518  2.091396  3.649257e-02  0.056452  1.740131
+------------------ Additional Information     ------------------
+Score function: observational
+Control group: never_treated
+Anticipation periods: 0
+
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/doubleml/did/did_aggregation.py:368: UserWarning: Joint confidence intervals require bootstrapping which hasn&#39;t been performed yet. Automatically applying &#39;.aggregated_frameworks.bootstrap(method=&#34;normal&#34;, n_rep_boot=500)&#39; with default values. For different bootstrap settings, call bootstrap() explicitly before plotting.
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_42_2.png" src="../../_images/examples_did_py_rep_cs_42_2.png" />
+</div>
+</div>
+<p>The output is a <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDAggregation</span></code> object which includes an overall aggregation summary based on group size.</p>
+</section>
+<section id="Time-Aggregation">
+<h3>Time Aggregation<a class="headerlink" href="#Time-Aggregation" title="Link to this heading">#</a></h3>
+<p>To obtain time-specific effects one can would like to average <span class="math notranslate nohighlight">\(ATT(\mathrm{g}, t_\text{eval})\)</span> over <span class="math notranslate nohighlight">\(\mathrm{g}\)</span> (respecting group size). As a sample oracle we will combine all <code class="docutils literal notranslate"><span class="pre">ite</span></code>’s based on group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span>. As oracle values, we obtain</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_post_treatment</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)[</span><span class="s2">&quot;ite&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+t
+3    0.932968
+4    1.478475
+5    2.005921
+Name: ite, dtype: float64
+</pre></div></div>
+</div>
+<p>To aggregate <span class="math notranslate nohighlight">\(\widehat{ATT}(\mathrm{g},t_\text{pre},t_\text{eval})\)</span>, based on <span class="math notranslate nohighlight">\(t_\text{eval}\)</span>, but weighted with respect to group size. Corresponds to <em>Calendar Time Effects</em> from the <a class="reference external" href="https://bcallaway11.github.io/did/index.html">did-R-package</a>.</p>
+<p>For calendar time effects set <code class="docutils literal notranslate"><span class="pre">aggregation=&quot;time&quot;</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aggregated_time</span> <span class="o">=</span> <span class="n">dml_obj</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">aggregated_time</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">aggregated_time</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDIDAggregation Object ==================
+ Time Aggregation
+
+------------------ Overall Aggregated Effects ------------------
+    coef  std err        t        P&gt;|t|    2.5 %   97.5 %
+1.622625 0.208521 7.781601 7.105427e-15 1.213932 2.031318
+------------------ Aggregated Effects         ------------------
+       coef   std err         t         P&gt;|t|     2.5 %    97.5 %
+3  1.194680  0.396379  3.013984  2.578410e-03  0.417791  1.971568
+4  1.780454  0.321475  5.538381  3.052803e-08  1.150373  2.410534
+5  1.892742  0.375189  5.044763  4.540839e-07  1.157384  2.628100
+------------------ Additional Information     ------------------
+Score function: observational
+Control group: never_treated
+Anticipation periods: 0
+
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/doubleml/did/did_aggregation.py:368: UserWarning: Joint confidence intervals require bootstrapping which hasn&#39;t been performed yet. Automatically applying &#39;.aggregated_frameworks.bootstrap(method=&#34;normal&#34;, n_rep_boot=500)&#39; with default values. For different bootstrap settings, call bootstrap() explicitly before plotting.
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_47_2.png" src="../../_images/examples_did_py_rep_cs_47_2.png" />
+</div>
+</div>
+</section>
+<section id="Event-Study-Aggregation">
+<h3>Event Study Aggregation<a class="headerlink" href="#Event-Study-Aggregation" title="Link to this heading">#</a></h3>
+<p>To obtain event-study-type effects one can would like to aggregate <span class="math notranslate nohighlight">\(ATT(\mathrm{g}, t_\text{eval})\)</span> over <span class="math notranslate nohighlight">\(e = t_\text{eval} - \mathrm{g}\)</span> (respecting group size). As a sample oracle we will combine all <code class="docutils literal notranslate"><span class="pre">ite</span></code>’s based on group <span class="math notranslate nohighlight">\(\mathrm{g}\)</span>. As oracle values, we obtain</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_treated</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_treated</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_treated</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df_treated</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">]</span>
+<span class="n">df_treated</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">)[</span><span class="s2">&quot;ite&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+e
+-4.0   -0.031310
+-3.0   -0.011711
+-2.0   -0.018675
+-1.0    0.011166
+ 0.0    0.949051
+ 1.0    2.007699
+ 2.0    2.929263
+Name: ite, dtype: float64
+</pre></div></div>
+</div>
+<p>Analogously, <code class="docutils literal notranslate"><span class="pre">aggregation=&quot;eventstudy&quot;</span></code> aggregates <span class="math notranslate nohighlight">\(\widehat{ATT}(\mathrm{g},t_\text{pre},t_\text{eval})\)</span> based on exposure time <span class="math notranslate nohighlight">\(e = t_\text{eval} - \mathrm{g}\)</span> (respecting group size).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aggregated_eventstudy</span> <span class="o">=</span> <span class="n">dml_obj</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="s2">&quot;eventstudy&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">aggregated_eventstudy</span><span class="p">)</span>
+<span class="n">aggregated_eventstudy</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDIDAggregation Object ==================
+ Event Study Aggregation
+
+------------------ Overall Aggregated Effects ------------------
+    coef  std err        t        P&gt;|t|    2.5 %   97.5 %
+1.990652  0.27966 7.118121 1.094014e-12 1.442529 2.538775
+------------------ Aggregated Effects         ------------------
+          coef   std err         t         P&gt;|t|     2.5 %    97.5 %
+-4.0  0.135144  0.159067  0.849605  3.955447e-01 -0.176622  0.446910
+-3.0  0.052371  0.128468  0.407662  6.835221e-01 -0.199421  0.304163
+-2.0 -0.189998  0.121834 -1.559477  1.188835e-01 -0.428788  0.048793
+-1.0  0.020521  0.166128  0.123526  9.016905e-01 -0.305084  0.346126
+0.0   1.186394  0.190961  6.212758  5.206264e-10  0.812118  1.560671
+1.0   2.029823  0.315928  6.424960  1.319043e-10  1.410616  2.649030
+2.0   2.755739  0.541919  5.085153  3.673299e-07  1.693598  3.817880
+------------------ Additional Information     ------------------
+Score function: observational
+Control group: never_treated
+Anticipation periods: 0
+
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/doubleml/did/did_aggregation.py:368: UserWarning: Joint confidence intervals require bootstrapping which hasn&#39;t been performed yet. Automatically applying &#39;.aggregated_frameworks.bootstrap(method=&#34;normal&#34;, n_rep_boot=500)&#39; with default values. For different bootstrap settings, call bootstrap() explicitly before plotting.
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x600 with 1 Axes&gt;,
+ &lt;Axes: title={&#39;center&#39;: &#39;Aggregated Treatment Effects&#39;}, ylabel=&#39;Effect&#39;&gt;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_51_3.png" src="../../_images/examples_did_py_rep_cs_51_3.png" />
+</div>
+</div>
+</section>
+<section id="Aggregation-Details">
+<h3>Aggregation Details<a class="headerlink" href="#Aggregation-Details" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDAggregation</span></code> objects include several <code class="docutils literal notranslate"><span class="pre">DoubleMLFrameworks</span></code> which support methods like <code class="docutils literal notranslate"><span class="pre">bootstrap()</span></code> or <code class="docutils literal notranslate"><span class="pre">confint()</span></code>. Further, the weights can be accessed via the properties</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">overall_aggregation_weights</span></code>: weights for the overall aggregation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation_weights</span></code>: weights for the aggregation</p></li>
+</ul>
+<p>To clarify, e.g. for the eventstudy aggregation</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">aggregated_eventstudy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+================== DoubleMLDIDAggregation Object ==================
+ Event Study Aggregation
+
+------------------ Overall Aggregated Effects ------------------
+    coef  std err        t        P&gt;|t|    2.5 %   97.5 %
+1.990652  0.27966 7.118121 1.094014e-12 1.442529 2.538775
+------------------ Aggregated Effects         ------------------
+          coef   std err         t         P&gt;|t|     2.5 %    97.5 %
+-4.0  0.135144  0.159067  0.849605  3.955447e-01 -0.176622  0.446910
+-3.0  0.052371  0.128468  0.407662  6.835221e-01 -0.199421  0.304163
+-2.0 -0.189998  0.121834 -1.559477  1.188835e-01 -0.428788  0.048793
+-1.0  0.020521  0.166128  0.123526  9.016905e-01 -0.305084  0.346126
+0.0   1.186394  0.190961  6.212758  5.206264e-10  0.812118  1.560671
+1.0   2.029823  0.315928  6.424960  1.319043e-10  1.410616  2.649030
+2.0   2.755739  0.541919  5.085153  3.673299e-07  1.693598  3.817880
+------------------ Additional Information     ------------------
+Score function: observational
+Control group: never_treated
+Anticipation periods: 0
+
+</pre></div></div>
+</div>
+<p>Here, the overall effect aggregation aggregates each effect with positive exposure</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">aggregated_eventstudy</span><span class="o">.</span><span class="n">overall_aggregation_weights</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[0.         0.         0.         0.         0.33333333 0.33333333
+ 0.33333333]
+</pre></div></div>
+</div>
+<p>If one would like to consider how the aggregated effect with <span class="math notranslate nohighlight">\(e=0\)</span> is computed, one would have to look at the corresponding set of weights within the <code class="docutils literal notranslate"><span class="pre">aggregation_weights</span></code> property</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the weights for e=0 correspond to the fifth element of the aggregation weights</span>
+<span class="n">aggregated_eventstudy</span><span class="o">.</span><span class="n">aggregation_weights</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([0.        , 0.        , 0.34508197, 0.        , 0.        ,
+       0.        , 0.        , 0.        , 0.32723133, 0.        ,
+       0.        , 0.        , 0.        , 0.        , 0.3276867 ])
+</pre></div></div>
+</div>
+<p>Taking a look at the original <code class="docutils literal notranslate"><span class="pre">dml_obj</span></code>, one can see that this combines the following estimates (only show month):</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\widehat{ATT}(04,03,04)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\widehat{ATT}(05,04,05)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\widehat{ATT}(06,05,06)\)</span></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_obj</span><span class="o">.</span><span class="n">summary</span><span class="p">[</span><span class="s2">&quot;coef&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ATT(3.0,0,1)   -0.111021
+ATT(3.0,1,2)    0.195264
+ATT(3.0,2,3)    1.194680
+ATT(3.0,2,4)    2.078489
+ATT(3.0,2,5)    2.755739
+ATT(4.0,0,1)    0.100516
+ATT(4.0,1,2)    0.007868
+ATT(4.0,2,3)   -0.260447
+ATT(4.0,3,4)    1.466160
+ATT(4.0,3,5)    1.978502
+ATT(5.0,0,1)    0.135144
+ATT(5.0,1,2)    0.004293
+ATT(5.0,2,3)   -0.470757
+ATT(5.0,3,4)    0.117080
+ATT(5.0,4,5)    0.898292
+Name: coef, dtype: float64
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Anticipation">
+<h2>Anticipation<a class="headerlink" href="#Anticipation" title="Link to this heading">#</a></h2>
+<p>As described in the <a class="reference external" href="https://docs.doubleml.org/stable/guide/models.html#difference-in-differences-models-did">Model Guide</a>, one can include anticipation periods <span class="math notranslate nohighlight">\(\delta&gt;0\)</span> by setting the <code class="docutils literal notranslate"><span class="pre">anticipation_periods</span></code> parameter.</p>
+<section id="Data-with-Anticipation">
+<h3>Data with Anticipation<a class="headerlink" href="#Data-with-Anticipation" title="Link to this heading">#</a></h3>
+<p>The DGP allows to include anticipation periods via the <code class="docutils literal notranslate"><span class="pre">anticipation_periods</span></code> parameter. In this case the observations will be “shifted” such that units anticipate the effect earlier and the exposure effect is increased by the number of periods where the effect is anticipated.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">4000</span>
+<span class="n">n_periods</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="n">df_anticipation</span> <span class="o">=</span> <span class="n">make_did_cs_CS2021</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">dgp_type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_periods</span><span class="o">=</span><span class="n">n_periods</span><span class="p">,</span> <span class="n">n_pre_treat_periods</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">time_type</span><span class="o">=</span><span class="s2">&quot;datetime&quot;</span><span class="p">,</span> <span class="n">anticipation_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df_anticipation</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df_anticipation</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(19046, 10)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>y</th>
+      <th>y0</th>
+      <th>y1</th>
+      <th>d</th>
+      <th>t</th>
+      <th>Z1</th>
+      <th>Z2</th>
+      <th>Z3</th>
+      <th>Z4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>209.943892</td>
+      <td>209.943892</td>
+      <td>206.488123</td>
+      <td>2025-05-01</td>
+      <td>2025-01-01</td>
+      <td>0.295609</td>
+      <td>-0.260085</td>
+      <td>-0.736988</td>
+      <td>-0.638664</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0</td>
+      <td>205.309536</td>
+      <td>201.959006</td>
+      <td>205.309536</td>
+      <td>2025-05-01</td>
+      <td>2025-06-01</td>
+      <td>0.295609</td>
+      <td>-0.260085</td>
+      <td>-0.736988</td>
+      <td>-0.638664</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1</td>
+      <td>222.862644</td>
+      <td>222.862644</td>
+      <td>221.543711</td>
+      <td>2025-06-01</td>
+      <td>2025-01-01</td>
+      <td>0.674337</td>
+      <td>-0.172129</td>
+      <td>0.316567</td>
+      <td>0.243262</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1</td>
+      <td>234.222429</td>
+      <td>234.222429</td>
+      <td>234.788618</td>
+      <td>2025-06-01</td>
+      <td>2025-03-01</td>
+      <td>0.674337</td>
+      <td>-0.172129</td>
+      <td>0.316567</td>
+      <td>0.243262</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>1</td>
+      <td>247.298166</td>
+      <td>246.590073</td>
+      <td>247.298166</td>
+      <td>2025-06-01</td>
+      <td>2025-05-01</td>
+      <td>0.674337</td>
+      <td>-0.172129</td>
+      <td>0.316567</td>
+      <td>0.243262</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>To visualize the anticipation, we will again plot the “oracle” values</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_anticipation</span><span class="p">[</span><span class="s2">&quot;ite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_anticipation</span><span class="p">[</span><span class="s2">&quot;y1&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df_anticipation</span><span class="p">[</span><span class="s2">&quot;y0&quot;</span><span class="p">]</span>
+<span class="n">agg_df_anticipation</span> <span class="o">=</span> <span class="n">df_anticipation</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="o">**</span><span class="n">agg_dictionary</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">agg_df_anticipation</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>t</th>
+      <th>d</th>
+      <th>y_mean</th>
+      <th>y_lower_quantile</th>
+      <th>y_upper_quantile</th>
+      <th>ite_mean</th>
+      <th>ite_lower_quantile</th>
+      <th>ite_upper_quantile</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2025-01-01</td>
+      <td>2025-04-01</td>
+      <td>208.157834</td>
+      <td>191.445418</td>
+      <td>225.238046</td>
+      <td>0.053598</td>
+      <td>-2.240579</td>
+      <td>2.526612</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2025-01-01</td>
+      <td>2025-05-01</td>
+      <td>210.667238</td>
+      <td>193.058954</td>
+      <td>227.275186</td>
+      <td>0.059441</td>
+      <td>-2.387472</td>
+      <td>2.331671</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2025-01-01</td>
+      <td>2025-06-01</td>
+      <td>212.951414</td>
+      <td>196.611318</td>
+      <td>229.209814</td>
+      <td>-0.022312</td>
+      <td>-2.427173</td>
+      <td>2.313213</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2025-02-01</td>
+      <td>2025-04-01</td>
+      <td>208.204619</td>
+      <td>184.353255</td>
+      <td>232.589209</td>
+      <td>0.021270</td>
+      <td>-2.227462</td>
+      <td>2.383587</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2025-02-01</td>
+      <td>2025-05-01</td>
+      <td>210.865913</td>
+      <td>187.348219</td>
+      <td>236.274644</td>
+      <td>-0.063757</td>
+      <td>-2.505044</td>
+      <td>2.174914</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>One can see that the effect is already anticipated one period before the actual treatment assignment.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">agg_df_anticipation</span><span class="p">,</span> <span class="n">col_name</span><span class="o">=</span><span class="s1">&#39;ite&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_66_0.png" src="../../_images/examples_did_py_rep_cs_66_0.png" />
+</div>
+</div>
+<p>Initialize a corresponding <code class="docutils literal notranslate"><span class="pre">DoubleMLPanelData</span></code> object.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_data_anticipation</span> <span class="o">=</span> <span class="n">DoubleMLPanelData</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">df_anticipation</span><span class="p">,</span>
+    <span class="n">y_col</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="n">d_cols</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+    <span class="n">id_col</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+    <span class="n">t_col</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span>
+    <span class="n">x_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Z1&quot;</span><span class="p">,</span> <span class="s2">&quot;Z2&quot;</span><span class="p">,</span> <span class="s2">&quot;Z3&quot;</span><span class="p">,</span> <span class="s2">&quot;Z4&quot;</span><span class="p">],</span>
+    <span class="n">datetime_unit</span><span class="o">=</span><span class="s2">&quot;M&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id1">
+<h3>ATT Estimation<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>Let us take a look at the estimation without anticipation.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj_anticipation</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span><span class="n">dml_data_anticipation</span><span class="p">,</span> <span class="o">**</span><span class="n">default_args</span><span class="p">)</span>
+<span class="n">dml_obj_anticipation</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_obj_anticipation</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">dml_obj_anticipation</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 4 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2025-04&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2025-05&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2025-06&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_70_2.png" src="../../_images/examples_did_py_rep_cs_70_2.png" />
+</div>
+</div>
+<p>The effects are obviously biased. To include anticipation periods, one can adjust the <code class="docutils literal notranslate"><span class="pre">anticipation_periods</span></code> parameter. Correspondingly, the outcome regression (and not yet treated units) are adjusted.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj_anticipation</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span><span class="n">dml_data_anticipation</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">default_args</span><span class="o">|</span> <span class="p">{</span><span class="s2">&quot;anticipation_periods&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
+<span class="n">dml_obj_anticipation</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_obj_anticipation</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">dml_obj_anticipation</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 4 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2025-04&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2025-05&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 2025-06&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_72_2.png" src="../../_images/examples_did_py_rep_cs_72_2.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Group-Time-Combinations">
+<h2>Group-Time Combinations<a class="headerlink" href="#Group-Time-Combinations" title="Link to this heading">#</a></h2>
+<p>The default option <code class="docutils literal notranslate"><span class="pre">gt_combinations=&quot;standard&quot;</span></code> includes all group time values with the specific choice of <span class="math notranslate nohighlight">\(t_\text{pre} = \min(\mathrm{g}, t_\text{eval}) - 1\)</span> (without anticipation) which is the weakest possible parallel trend assumption.</p>
+<p>Other options are possible or only specific combinations of <span class="math notranslate nohighlight">\((\mathrm{g},t_\text{pre},t_\text{eval})\)</span>.</p>
+<section id="All-combinations">
+<h3>All combinations<a class="headerlink" href="#All-combinations" title="Link to this heading">#</a></h3>
+<p>The option <code class="docutils literal notranslate"><span class="pre">gt_combinations=&quot;all&quot;</span></code> includes all relevant group time values with <span class="math notranslate nohighlight">\(t_\text{pre} &lt; \min(\mathrm{g}, t_\text{eval})\)</span>, including longer parallel trend assumptions. This can result in multiple estimates for the same <span class="math notranslate nohighlight">\(ATT(\mathrm{g},t)\)</span>, which have slightly different assumptions (length of parallel trends).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj_all</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">default_args</span><span class="o">|</span> <span class="p">{</span><span class="s2">&quot;gt_combinations&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">}))</span>
+<span class="n">dml_obj_all</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_obj_all</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">dml_obj_all</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 4 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 3.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 4.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 5.0&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_75_1.png" src="../../_images/examples_did_py_rep_cs_75_1.png" />
+</div>
+</div>
+</section>
+<section id="Universal-Base-Period">
+<h3>Universal Base Period<a class="headerlink" href="#Universal-Base-Period" title="Link to this heading">#</a></h3>
+<p>The option <code class="docutils literal notranslate"><span class="pre">gt_combinations=&quot;universal&quot;</span></code> set <span class="math notranslate nohighlight">\(t_\text{pre} = \mathrm{g} - \delta - 1\)</span>, corresponding to a universal/constant comparison or base period.</p>
+<p>Remark that this implies <span class="math notranslate nohighlight">\(t_\text{pre} &gt; t_\text{eval}\)</span> for all pre-treatment periods (accounting for anticipation). Therefore these effects do not have the same straightforward interpretation as ATT’s.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_obj_universal</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">default_args</span><span class="o">|</span> <span class="p">{</span><span class="s2">&quot;gt_combinations&quot;</span><span class="p">:</span> <span class="s2">&quot;universal&quot;</span><span class="p">}))</span>
+<span class="n">dml_obj_universal</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_obj_universal</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">dml_obj_universal</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.12.11/x64/lib/python3.12/site-packages/matplotlib/cbook.py:1719: FutureWarning: Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
+  return math.isfinite(val)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 4 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 3.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 4.0&#39;}, ylabel=&#39;Effect&#39;&gt;,
+  &lt;Axes: title={&#39;center&#39;: &#39;First Treated: 5.0&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_77_2.png" src="../../_images/examples_did_py_rep_cs_77_2.png" />
+</div>
+</div>
+</section>
+<section id="Selected-Combinations">
+<h3>Selected Combinations<a class="headerlink" href="#Selected-Combinations" title="Link to this heading">#</a></h3>
+<p>Instead it is also possible to just submit a list of tuples containing <span class="math notranslate nohighlight">\((\mathrm{g}, t_\text{pre}, t_\text{eval})\)</span> combinations. E.g. only two combinations</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gt_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;gt_combinations&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">dml_obj_all</span> <span class="o">=</span> <span class="n">DoubleMLDIDMulti</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">default_args</span><span class="o">|</span> <span class="n">gt_dict</span><span class="p">))</span>
+<span class="n">dml_obj_all</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">dml_obj_all</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">n_rep_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">dml_obj_all</span><span class="o">.</span><span class="n">plot_effects</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1200x800 with 2 Axes&gt;,
+ [&lt;Axes: title={&#39;center&#39;: &#39;First Treated: 4.0&#39;}, xlabel=&#39;Evaluation Period&#39;, ylabel=&#39;Effect&#39;&gt;])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_did_py_rep_cs_79_1.png" src="../../_images/examples_did_py_rep_cs_79_1.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="py_panel_data_example.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Python: Real-Data Example for Multi-Period Difference-in-Differences</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../R_double_ml_basics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">R: Basics of Double Machine Learning</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Data">Data</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-Details">Data Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-Description">Data Description</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#DoubleMLPanelData">DoubleMLPanelData</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ATT-Estimation">ATT Estimation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Basics">Basics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Sensitivity-Analysis">Sensitivity Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Control-Groups">Control Groups</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Linear-Covariate-Adjustment">Linear Covariate Adjustment</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Aggregated-Effects">Aggregated Effects</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Group-Aggregation">Group Aggregation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Time-Aggregation">Time Aggregation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Event-Study-Aggregation">Event Study Aggregation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Aggregation-Details">Aggregation Details</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Anticipation">Anticipation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-with-Anticipation">Data with Anticipation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">ATT Estimation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Group-Time-Combinations">Group-Time Combinations</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#All-combinations">All combinations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Universal-Base-Period">Universal Base Period</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Selected-Combinations">Selected Combinations</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/DoubleML/doubleml-docs/edit/dev/doc/examples/did/py_rep_cs.ipynb">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/examples/did/py_rep_cs.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, Bach, P., Chernozhukov, V., Klaassen, S., Kurz, M. S., and Spindler, M..
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
