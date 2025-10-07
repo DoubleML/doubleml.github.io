@@ -1008,7 +1008,8 @@ Default is <code class="docutils literal notranslate"><span class="pre">100</spa
 <p>The  attributes <code class="docutils literal notranslate"><span class="pre">n_folds</span></code> and <code class="docutils literal notranslate"><span class="pre">n_rep</span></code> are derived from the provided partition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>all_smpls</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – <dl class="simple">
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_smpls</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – <dl class="simple">
 <dt>If nested list of lists of tuples:</dt><dd><p>The outer list needs to provide an entry per repeated sample splitting (length of list is set as
 <code class="docutils literal notranslate"><span class="pre">n_rep</span></code>).
 The inner list needs to provide a tuple (train_ind, test_ind) per fold (length of list is set as
@@ -1022,7 +1023,13 @@ train_ind and test_ind to np.arange(n_obs), which corresponds to no sample split
 <code class="docutils literal notranslate"><span class="pre">n_folds=1</span></code> and <code class="docutils literal notranslate"><span class="pre">n_rep=1</span></code> is always set.</p>
 </dd>
 </dl>
-</p>
+</p></li>
+<li><p><strong>all_smpls_cluster</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> or </em><em>None</em>) – Nested list or <code class="docutils literal notranslate"><span class="pre">None</span></code>. The first level of nesting corresponds to the number of repetitions. The second level
+of nesting corresponds to the number of folds. The third level of nesting contains a tuple of training and
+testing lists. Both training and testing contain an array for each cluster variable, which form a partition of
+the clusters.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>self</strong></p>
@@ -1034,7 +1041,7 @@ train_ind and test_ind to np.arange(n_obs), which corresponds to no sample split
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.plm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">clone</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
@@ -1043,6 +1050,9 @@ train_ind and test_ind to np.arange(n_obs), which corresponds to no sample split
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">learner</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># simple sample splitting with two folds and without cross-fitting</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smpls</span> <span class="o">=</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_sample_splitting</span><span class="p">(</span><span class="n">smpls</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># sample splitting with two folds and cross-fitting</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">smpls</span> <span class="o">=</span> <span class="p">[([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]),</span>
 <span class="gp">&gt;&gt;&gt; </span>         <span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])]</span>

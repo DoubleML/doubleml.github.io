@@ -696,7 +696,7 @@ document.write(`
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj_dml_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DoubleMLData</span></code> object) – The <code class="xref py py-class docutils literal notranslate"><span class="pre">DoubleMLData</span></code> object providing the data and specifying the variables for the causal model.</p></li>
+<li><p><strong>obj_dml_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DoubleMLDIDData</span></code> object) – The <code class="xref py py-class docutils literal notranslate"><span class="pre">DoubleMLDIDData</span></code> object providing the data and specifying the variables for the causal model.</p></li>
 <li><p><strong>ml_g</strong> (estimator implementing <code class="docutils literal notranslate"><span class="pre">fit()</span></code> and <code class="docutils literal notranslate"><span class="pre">predict()</span></code>) – A machine learner implementing <code class="docutils literal notranslate"><span class="pre">fit()</span></code> and <code class="docutils literal notranslate"><span class="pre">predict()</span></code> methods (e.g.
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="(in scikit-learn v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.RandomForestRegressor</span></code></a>) for the nuisance function <span class="math notranslate nohighlight">\(g_0(d,t,X) = E[Y|D=d,T=t,X]\)</span>.
 For a binary outcome variable <span class="math notranslate nohighlight">\(Y\)</span> (with values 0 and 1), a classifier implementing <code class="docutils literal notranslate"><span class="pre">fit()</span></code> and
@@ -721,25 +721,34 @@ Default is <code class="docutils literal notranslate"><span class="pre">'truncat
 Default is <code class="docutils literal notranslate"><span class="pre">1e-2</span></code>.</p></li>
 <li><p><strong>draw_sample_splitting</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Indicates whether the sample splitting should be drawn during initialization of the object.
 Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>Examples</strong></p></li>
+<li><p><strong>np</strong> (<em>--------    &gt;&gt;&gt; import numpy as</em>)</p></li>
+<li><p><strong>dml</strong> (<em>&gt;&gt;&gt; import doubleml as</em>)</p></li>
+<li><p><strong>make_did_SZ2020</strong> (<em>&gt;&gt;&gt; from doubleml.did.datasets import</em>)</p></li>
+<li><p><strong>RandomForestRegressor</strong> (<em>&gt;&gt;&gt; from sklearn.ensemble import</em>)</p></li>
+<li><p><strong>RandomForestClassifier</strong></p></li>
+<li><p><strong>np.random.seed</strong><strong>(</strong><strong>42</strong><strong>)</strong> (<em>&gt;&gt;&gt;</em>)</p></li>
+<li><p><strong>RandomForestRegressor</strong><strong>(</strong><strong>n_estimators=100</strong> (<em>&gt;&gt;&gt; ml_g =</em>)</p></li>
+<li><p><strong>max_depth=5</strong></p></li>
+<li><p><strong>min_samples_leaf=5</strong><strong>)</strong></p></li>
+<li><p><strong>RandomForestClassifier</strong><strong>(</strong><strong>n_estimators=100</strong> (<em>&gt;&gt;&gt; ml_m =</em>)</p></li>
+<li><p><strong>max_depth=5</strong></p></li>
+<li><p><strong>min_samples_leaf=5</strong><strong>)</strong></p></li>
+<li><p><strong>make_did_SZ2020</strong><strong>(</strong><strong>n_obs=500</strong> (<em>&gt;&gt;&gt; data =</em>)</p></li>
+<li><p><strong>cross_sectional_data=True</strong></p></li>
+<li><p><strong>return_type='DataFrame'</strong><strong>)</strong></p></li>
+<li><p><strong>dml.DoubleMLDIDData</strong><strong>(</strong><strong>data</strong> (<em>&gt;&gt;&gt; obj_dml_data =</em>)</p></li>
+<li><p><strong>'y'</strong></p></li>
+<li><p><strong>'d'</strong></p></li>
+<li><p><strong>t_col='t'</strong><strong>)</strong></p></li>
+<li><p><strong>dml.DoubleMLDIDCS</strong><strong>(</strong><strong>obj_dml_data</strong> (<em>&gt;&gt;&gt; dml_did_obj =</em>)</p></li>
+<li><p><strong>ml_g</strong></p></li>
+<li><p><strong>ml_m</strong><strong>)</strong></p></li>
+<li><p><strong>dml_did_obj.fit</strong><strong>(</strong><strong>)</strong><strong>.summary</strong> (<em>&gt;&gt;&gt;</em>) – coef   std err         t     P&gt;|t|      2.5 %     97.5 %</p></li>
+<li><p><strong>10.497655</strong> (<em>d -6.604603  8.725802 -0.756905  0.449107 -23.706862</em>)</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_SZ2020</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">cross_sectional_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">t_col</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_did_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLDIDCS</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_did_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span>
-<span class="go">       coef   std err         t     P&gt;|t|      2.5 %     97.5 %</span>
-<span class="go">d -6.604603  8.725802 -0.756905  0.449107 -23.706862  10.497655</span>
-</pre></div>
-</div>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
@@ -997,7 +1006,7 @@ Default is the root-mean-square error.</p></li>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_absolute_error</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_irm_data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.irm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_irm_data</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -1134,7 +1143,7 @@ Default is None.</p></li>
 <dd class="field-even"><p><strong>benchmark_results</strong> – Benchmark results.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)">pandas.DataFrame</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.3)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1241,7 +1250,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.plm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">clone</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>

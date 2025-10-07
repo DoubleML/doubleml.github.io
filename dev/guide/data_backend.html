@@ -672,7 +672,9 @@ document.write(`
                   
   <section id="data-backend">
 <span id="id1"></span><h1><span class="section-number">2. </span>Data Backend<a class="headerlink" href="#data-backend" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> generally provides interfaces to dataframes as well as arrays.</p>
+<p><a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> provides a unified data interface via the <code class="xref py py-mod docutils literal notranslate"><span class="pre">doubleml.data</span></code> module.
+It supports both <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> objects and <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> arrays and now allows
+clustered data to be handled directly via <a class="reference internal" href="../api/generated/doubleml.data.DoubleMLData.html#doubleml.data.DoubleMLData" title="doubleml.data.DoubleMLData"><code class="xref py py-class docutils literal notranslate"><span class="pre">DoubleMLData</span></code></a>.</p>
 <section id="doublemldata">
 <span id="dml-data"></span><h2><span class="section-number">2.1. </span>DoubleMLData<a class="headerlink" href="#doublemldata" title="Link to this heading">#</a></h2>
 <p>The usage of both interfaces is demonstrated in the following.
@@ -680,11 +682,18 @@ We download the Bonus data set from the Pennsylvania Reemployment Bonus experime
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>In Python we use <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> and <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>.
+<li><p>In Python we use <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> and <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>.
 The data can be fetched via <a class="reference internal" href="../api/generated/doubleml.datasets.fetch_bonus.html#doubleml.datasets.fetch_bonus" title="doubleml.datasets.fetch_bonus"><code class="xref py py-func docutils literal notranslate"><span class="pre">doubleml.datasets.fetch_bonus()</span></code></a>.</p></li>
 <li><p>In R we use <a class="reference external" href="https://rdatatable.gitlab.io/data.table/reference/data.table.html">data.table::data.table()</a>, <a class="reference external" href="https://rdrr.io/r/base/data.frame.html">data.frame()</a>, and <a class="reference external" href="https://rdrr.io/r/base/matrix.html">matrix()</a>.
 The data can be fetched via <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/fetch_bonus.html">DoubleML::fetch_bonus()</a></p></li>
 </ul>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Cluster-robust analyses no longer require the dedicated <code class="docutils literal notranslate"><span class="pre">DoubleMLClusterData</span></code> backend.
+Use <code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLData</span></code> with the <code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code> (or <code class="docutils literal notranslate"><span class="pre">cluster_vars</span></code> for arrays)
+arguments instead. The wrapper <code class="docutils literal notranslate"><span class="pre">DoubleMLClusterData</span></code> remains available for backwards
+compatibility but is deprecated and scheduled for removal with version 0.12.0.</p>
 </div>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
@@ -768,7 +777,7 @@ serving as treatment variable <span class="math notranslate nohighlight">\(D\)</
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>In Python we use <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>
+<li><p>In Python we use <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>
 and the API reference can be found here <code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLData</span></code>.</p></li>
 <li><p>In R we use <a class="reference external" href="https://rdatatable.gitlab.io/data.table/reference/data.table.html">data.table::data.table()</a> and the API reference can be found here <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLData.html">DoubleML::DoubleMLData</a>.</p></li>
 <li><p>For initialization from the R base class <a class="reference external" href="https://rdrr.io/r/base/data.frame.html">data.frame()</a> the API reference can be found here <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/double_ml_data_from_data_frame.html">DoubleML::double_ml_data_from_data_frame()</a>.</p></li>
@@ -874,6 +883,11 @@ variable <code class="docutils literal notranslate"><span class="pre">y_col</spa
 <li><p>In case of multiple treatment variables, the boolean <code class="docutils literal notranslate"><span class="pre">use_other_treat_as_covariate</span></code> indicates whether the other
 treatment variables should be added as covariates in each treatment-variable-specific learning task.</p></li>
 <li><p>Instrumental variables for IV models have to be provided as <code class="docutils literal notranslate"><span class="pre">z_cols</span></code>.</p></li>
+<li><p>Cluster variables can directly be added via <code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code>; they must be distinct from all variables in
+<code class="docutils literal notranslate"><span class="pre">y_col</span></code>, <code class="docutils literal notranslate"><span class="pre">d_cols</span></code>, <code class="docutils literal notranslate"><span class="pre">x_cols</span></code> and <code class="docutils literal notranslate"><span class="pre">z_cols</span></code>. The object exposes <code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code> and <code class="docutils literal notranslate"><span class="pre">cluster_vars</span></code>
+properties for convenience.</p></li>
+<li><p>The optional <code class="docutils literal notranslate"><span class="pre">force_all_d_finite</span></code> flag mirrors <code class="docutils literal notranslate"><span class="pre">force_all_x_finite</span></code> and controls missings/infinite values
+in the treatment variables, which is especially relevant for panel models.</p></li>
 </ul>
 </section>
 <section id="doublemldata-from-arrays-and-matrices">
@@ -990,16 +1004,119 @@ No. Observations: 500
 </div>
 </div>
 </div>
+<p>In Python, cluster assignments can be supplied through the optional <code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code> argument (or <code class="docutils literal notranslate"><span class="pre">cluster_vars</span></code> in the <code class="docutils literal notranslate"><span class="pre">from_arrays</span></code> method).
+In R, one has to create a <code class="docutils literal notranslate"><span class="pre">DoubleMLClusterData</span></code> object instead of <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> to use clustering.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-8">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="n">cluster_vars</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span> <span class="o">//</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="gp">In [19]: </span><span class="n">obj_dml_data_sim_cluster</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">cluster_vars</span><span class="o">=</span><span class="n">cluster_vars</span><span class="p">)</span>
+
+<span class="gp">In [20]: </span><span class="n">obj_dml_data_sim_cluster</span><span class="o">.</span><span class="n">cluster_cols</span>
+<span class="gh">Out[20]: </span><span class="go">[&#39;cluster_var&#39;]</span>
+
+<span class="gp">In [21]: </span><span class="nb">print</span><span class="p">(</span><span class="n">obj_dml_data_sim_cluster</span><span class="p">)</span>
+<span class="go">================== DoubleMLData Object ==================</span>
+
+<span class="go">------------------ Data summary      ------------------</span>
+<span class="go">Outcome variable: y</span>
+<span class="go">Treatment variable(s): [&#39;d&#39;]</span>
+<span class="go">Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">Cluster variable(s): [&#39;cluster_var&#39;]</span>
+<span class="go">Is cluster data: True</span>
+<span class="go">No. Observations: 500</span>
+
+<span class="go">------------------ DataFrame info    ------------------</span>
+<span class="go">&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span>
+<span class="go">RangeIndex: 500 entries, 0 to 499</span>
+<span class="go">Columns: 103 entries, X1 to cluster_var</span>
+<span class="go">dtypes: float64(102), int64(1)</span>
+<span class="go">memory usage: 402.5 KB</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="special-data-types">
 <span id="dml-data-types"></span><h2><span class="section-number">2.2. </span>Special Data Types<a class="headerlink" href="#special-data-types" title="Link to this heading">#</a></h2>
-<p>The <a class="reference internal" href="#dml-data"><span class="std std-ref">DoubleMLData</span></a> class is extended by the following classes to support special data types or allow for additional parameters.</p>
+<p>The <a class="reference internal" href="#dml-data"><span class="std std-ref">DoubleMLData</span></a> class is extended by the following classes to support special data
+types or allow for additional parameters.</p>
+<section id="doublemldiddata">
+<span id="dml-did-data"></span><h3><span class="section-number">2.2.1. </span>DoubleMLDIDData<a class="headerlink" href="#doublemldiddata" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLDIDData</span></code> class tailors <a class="reference internal" href="#dml-data"><span class="std std-ref">DoubleMLData</span></a> to difference-in-differences
+applications. It handles both panel settings and repeated cross-sections by tracking an optional time indicator.</p>
+<section id="key-arguments">
+<h4><span class="section-number">2.2.1.1. </span>Key arguments<a class="headerlink" href="#key-arguments" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">t_col</span></code>: column containing the time variable for repeated cross-sections. It
+must be unique from <code class="docutils literal notranslate"><span class="pre">y_col</span></code>, <code class="docutils literal notranslate"><span class="pre">d_cols</span></code>, <code class="docutils literal notranslate"><span class="pre">x_cols</span></code>, <code class="docutils literal notranslate"><span class="pre">z_cols</span></code> and
+<code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code>: optional cluster identifiers inherited from
+<code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLData</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">force_all_d_finite</span></code>: controls how missing or infinite treatment values are
+handled. For standard DiD applications it defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">DoubleMLDIDData</span></code> exposes additional helpers such as the <code class="docutils literal notranslate"><span class="pre">t</span></code> property and
+an extended <code class="docutils literal notranslate"><span class="pre">from_arrays</span></code> constructor that accepts the <code class="docutils literal notranslate"><span class="pre">t</span></code> array (and
+<code class="docutils literal notranslate"><span class="pre">cluster_vars</span></code>) alongside the standard covariates.</p>
+</section>
+<section id="example-usage">
+<h4><span class="section-number">2.2.1.2. </span>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h4>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-9">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+
+<span class="gp">In [2]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.did.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_SZ2020</span>
+
+<span class="gp">In [3]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;DataFrame&quot;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="go">         Z1        Z2        Z3        Z4           y    d</span>
+<span class="go">0 -0.044447 -0.088288 -0.538513 -0.166322  197.508756  1.0</span>
+<span class="go">1  0.275538  0.485468 -0.658612  0.366188  219.146214  0.0</span>
+<span class="go">2 -0.659799  1.107467  1.131928  0.689542  231.559712  1.0</span>
+<span class="go">3  1.000916 -0.471454 -2.471666 -1.128412  179.077920  1.0</span>
+<span class="go">4  0.425414 -0.079761  0.382024  0.179548  227.360965  1.0</span>
+
+<span class="gp">In [5]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLDIDData</span><span class="p">(</span>
+<span class="gp">   ...: </span>    <span class="n">df</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">y_col</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">d_cols</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span><span class="p">)</span>
+<span class="gp">   ...: </span>
+
+<span class="go"># from arrays</span>
+<span class="gp">In [6]: </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;array&quot;</span><span class="p">)</span>
+
+<span class="gp">In [7]: </span><span class="n">dml_data_arrays</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLDIDData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="gp">In [8]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+<span class="go">================== DoubleMLDIDData Object ==================</span>
+<span class="go">Time variable: None</span>
+<span class="go">Outcome variable: y</span>
+<span class="go">Treatment variable(s): [&#39;d&#39;]</span>
+<span class="go">Covariates: [&#39;Z1&#39;, &#39;Z2&#39;, &#39;Z3&#39;, &#39;Z4&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">No. Observations: 500</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
 <section id="doublemlpaneldata">
-<span id="dml-panel-data"></span><h3><span class="section-number">2.2.1. </span>DoubleMLPanelData<a class="headerlink" href="#doublemlpaneldata" title="Link to this heading">#</a></h3>
+<span id="dml-panel-data"></span><h3><span class="section-number">2.2.2. </span>DoubleMLPanelData<a class="headerlink" href="#doublemlpaneldata" title="Link to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLPanelData</span></code> class serves as data-backend for <a class="reference internal" href="models.html#did-models"><span class="std std-ref">DiD models</span></a> and can be initialized from a dataframe.
 The class is a subclass of <a class="reference internal" href="#dml-data"><span class="std std-ref">DoubleMLData</span></a> and inherits all methods and attributes.
-Furthermore, it provides additional methods and attributes to handle panel data ()</p>
+Furthermore, it provides additional methods and attributes to handle panel data.</p>
+<section id="id5">
+<h4><span class="section-number">2.2.2.1. </span>Key arguments<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">id_col</span></code>: column to with unique identifiers for each unit</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">t_col</span></code>: column to specify the time periods of the observation</p></li>
@@ -1009,17 +1126,24 @@ Furthermore, it provides additional methods and attributes to handle panel data 
 <p class="admonition-title">Note</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">t_col</span></code> can contain <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">datetime</span></code> values.</p>
 </div>
+</section>
+<section id="id6">
+<h4><span class="section-number">2.2.2.2. </span>Example usage<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-4" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-8">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-6" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-10">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.did.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_CS2021</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="gp">In [2]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">In [2]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
 
-<span class="gp">In [3]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">make_did_CS2021</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="gp">In [3]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.did.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_CS2021</span>
 
-<span class="gp">In [4]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DoubleMLPanelData</span><span class="p">(</span>
+<span class="gp">In [4]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="gp">In [5]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">make_did_CS2021</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DoubleMLPanelData</span><span class="p">(</span>
 <span class="gp">   ...: </span>    <span class="n">df</span><span class="p">,</span>
 <span class="gp">   ...: </span>    <span class="n">y_col</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
 <span class="gp">   ...: </span>    <span class="n">d_cols</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
@@ -1030,7 +1154,7 @@ Python</label><div class="sd-tab-content docutils">
 <span class="gp">   ...: </span><span class="p">)</span>
 <span class="gp">   ...: </span>
 
-<span class="gp">In [5]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+<span class="gp">In [7]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
 <span class="go">================== DoubleMLPanelData Object ==================</span>
 
 <span class="go">------------------ Data summary      ------------------</span>
@@ -1053,6 +1177,110 @@ Python</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </div>
+</section>
+</section>
+<section id="doublemlrdddata">
+<span id="dml-rdd-data"></span><h3><span class="section-number">2.2.3. </span>DoubleMLRDDData<a class="headerlink" href="#doublemlrdddata" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLRDDData</span></code> class specialises <a class="reference internal" href="#dml-data"><span class="std std-ref">DoubleMLData</span></a> for
+regression discontinuity designs. In addition to the standard causal roles it
+tracks a mandatory running variable.</p>
+<section id="id7">
+<h4><span class="section-number">2.2.3.1. </span>Key arguments<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">score_col</span></code>: column with the running/score variable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code>: optional cluster identifiers inherited from the base data
+class.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">from_arrays</span></code>: expects an additional <code class="docutils literal notranslate"><span class="pre">score</span></code> array alongside <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>
+and <code class="docutils literal notranslate"><span class="pre">d</span></code>.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">DoubleMLRDDData</span></code> ensures that the running variable is kept separate from the
+other feature sets and exposes the <code class="docutils literal notranslate"><span class="pre">score</span></code> property for convenient access.</p>
+</section>
+<section id="id8">
+<h4><span class="section-number">2.2.3.2. </span>Example usage<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-7" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-11">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+
+<span class="gp">In [2]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.rdd.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_simple_rdd_data</span>
+
+<span class="gp">In [3]: </span><span class="n">dict_rdd</span> <span class="o">=</span> <span class="n">make_simple_rdd_data</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;DataFrame&quot;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLRDDData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span>
+<span class="gp">   ...: </span>  <span class="n">x</span><span class="o">=</span><span class="n">dict_rdd</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">],</span>
+<span class="gp">   ...: </span>  <span class="n">y</span><span class="o">=</span><span class="n">dict_rdd</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">],</span>
+<span class="gp">   ...: </span>  <span class="n">d</span><span class="o">=</span><span class="n">dict_rdd</span><span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">],</span>
+<span class="gp">   ...: </span>  <span class="n">score</span><span class="o">=</span><span class="n">dict_rdd</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
+<span class="gp">   ...: </span>  <span class="p">)</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [5]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+<span class="go">================== DoubleMLRDDData Object ==================</span>
+<span class="go">Score variable: score</span>
+<span class="go">Outcome variable: y</span>
+<span class="go">Treatment variable(s): [&#39;d&#39;]</span>
+<span class="go">Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">No. Observations: 500</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="doublemlssmdata">
+<span id="dml-ssm-data"></span><h3><span class="section-number">2.2.4. </span>DoubleMLSSMData<a class="headerlink" href="#doublemlssmdata" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLSSMData</span></code> class covers the sample selection model backend.
+It extends <a class="reference internal" href="#dml-data"><span class="std std-ref">DoubleMLData</span></a> with a dedicated selection indicator and inherits support for clustered data.</p>
+<section id="id9">
+<h4><span class="section-number">2.2.4.1. </span>Key arguments<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">s_col</span></code>: column containing the selection indicator.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code>: optional cluster identifiers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">from_arrays</span></code>: expects an additional <code class="docutils literal notranslate"><span class="pre">s</span></code> array together with <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">d</span></code>.</p></li>
+</ul>
+<p>The object exposes the <code class="docutils literal notranslate"><span class="pre">s</span></code> property and keeps the selection indicator
+separate from covariates and treatment variables.</p>
+</section>
+<section id="id10">
+<h4><span class="section-number">2.2.4.2. </span>Example usage<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-8" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-12">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+
+<span class="gp">In [2]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.irm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_ssm_data</span>
+
+<span class="gp">In [3]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">make_ssm_data</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;DataFrame&quot;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLSSMData</span><span class="p">(</span>
+<span class="gp">   ...: </span>    <span class="n">df</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">y_col</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">d_cols</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">s_col</span><span class="o">=</span><span class="s2">&quot;s&quot;</span>
+<span class="gp">   ...: </span><span class="p">)</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [5]: </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">make_ssm_data</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;array&quot;</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="n">dml_data_arrays</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLSSMData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+
+<span class="gp">In [7]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+<span class="go">================== DoubleMLSSMData Object ==================</span>
+<span class="go">Selection variable: s</span>
+<span class="go">Outcome variable: y</span>
+<span class="go">Treatment variable(s): [&#39;d&#39;]</span>
+<span class="go">Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">No. Observations: 500</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 </section>
 </section>
@@ -1109,7 +1337,26 @@ Python</label><div class="sd-tab-content docutils">
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#special-data-types">2.2. Special Data Types</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doublemlpaneldata">2.2.1. DoubleMLPanelData</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doublemldiddata">2.2.1. DoubleMLDIDData</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#key-arguments">2.2.1.1. Key arguments</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">2.2.1.2. Example usage</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doublemlpaneldata">2.2.2. DoubleMLPanelData</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">2.2.2.1. Key arguments</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">2.2.2.2. Example usage</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doublemlrdddata">2.2.3. DoubleMLRDDData</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">2.2.3.1. Key arguments</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">2.2.3.2. Example usage</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doublemlssmdata">2.2.4. DoubleMLSSMData</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">2.2.4.1. Key arguments</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">2.2.4.2. Example usage</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
