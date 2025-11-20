@@ -606,7 +606,8 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="../data_class.html">1. DoubleML Data Class</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../dml_models.html">2. DoubleML Models</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="doubleml.plm.DoubleMLPLR.html">2.1.1. doubleml.plm.DoubleMLPLR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="doubleml.plm.DoubleMLPLIV.html">2.1.2. doubleml.plm.DoubleMLPLIV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doubleml.plm.DoubleMLLPLR.html">2.1.2. doubleml.plm.DoubleMLLPLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doubleml.plm.DoubleMLPLIV.html">2.1.3. doubleml.plm.DoubleMLPLIV</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doubleml.irm.DoubleMLIRM.html">2.2.1. doubleml.irm.DoubleMLIRM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doubleml.irm.DoubleMLAPO.html">2.2.2. doubleml.irm.DoubleMLAPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doubleml.irm.DoubleMLAPOS.html">2.2.3. doubleml.irm.DoubleMLAPOS</a></li>
@@ -908,22 +909,25 @@ Default is <code class="docutils literal notranslate"><span class="pre">False</s
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smpls_cluster</span></code></p></td>
 <td><p>The partition of clusters used for cross-fitting.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smpls_inner</span></code></p></td>
+<td><p>The partition used for cross-fitting.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></p></td>
 <td><p>A summary for the estimated causal effect after calling <a class="reference internal" href="#doubleml.did.DoubleMLDIDBinary.fit" title="doubleml.did.DoubleMLDIDBinary.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">t_stat</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">t_stat</span></code></p></td>
 <td><p>t-statistics for the causal parameter(s) after calling <a class="reference internal" href="#doubleml.did.DoubleMLDIDBinary.fit" title="doubleml.did.DoubleMLDIDBinary.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> (shape (<code class="docutils literal notranslate"><span class="pre">n_coefs</span></code>,)).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">t_value_eval</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">t_value_eval</span></code></p></td>
 <td><p>The value indicating the evaluation period.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">t_value_pre</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">t_value_pre</span></code></p></td>
 <td><p>The value indicating the pre-treatment period.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimming_rule</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimming_rule</span></code></p></td>
 <td><p>Specifies the used trimming rule.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimming_threshold</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimming_threshold</span></code></p></td>
 <td><p>Specifies the used trimming threshold.</p></td>
 </tr>
 </tbody>
@@ -1042,7 +1046,7 @@ Default is the root-mean-square error.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mae</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">subset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_true</span><span class="p">))</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">[</span><span class="n">subset</span><span class="p">],</span> <span class="n">y_pred</span><span class="p">[</span><span class="n">subset</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="n">mae</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="n">mae</span><span class="p">)</span>  
 <span class="go">{&#39;ml_g0&#39;: array([[0.88173585]]), &#39;ml_g1&#39;: array([[0.83854057]]), &#39;ml_m&#39;: array([[0.35871235]])}</span>
 </pre></div>
 </div>

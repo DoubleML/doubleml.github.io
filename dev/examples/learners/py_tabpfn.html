@@ -609,10 +609,11 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_apo.html">Python: Average Potential Outcome (APO) Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_irm_vs_apo.html">Python: IRM and APO Model Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_lplr.html">Python: Log-Odds Effects for Logistic PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_sensitivity_booking.html">Python: Sensitivity Analysis for Causal ML</a></li>
 
 
@@ -744,19 +745,20 @@ Download Jupyter notebook:
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">LogisticRegression</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lgbm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tabpfn</span><span class="w"> </span><span class="kn">import</span> <span class="n">TabPFNRegressor</span><span class="p">,</span> <span class="n">TabPFNClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tabpfn.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelVersion</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_irm_data_discrete_treatments</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.irm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_irm_data_discrete_treatments</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Running on CPU*&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s2">&quot;tabpfn&quot;</span><span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*does not have valid feature names.*&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s2">&quot;lgbm&quot;</span><span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s2">&quot;sklearn&quot;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*does not have valid feature names.*&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -781,7 +783,7 @@ Download Jupyter notebook:
 <span class="n">n_rep</span> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">data_apo</span> <span class="o">=</span> <span class="n">make_irm_data_discrete_treatments</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span><span class="n">n_levels</span><span class="o">=</span><span class="n">n_levels</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">)</span>
+<span class="n">data_apo</span> <span class="o">=</span> <span class="n">make_irm_data_discrete_treatments</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_levels</span><span class="o">=</span><span class="n">n_levels</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">)</span>
 
 <span class="n">y0</span> <span class="o">=</span> <span class="n">data_apo</span><span class="p">[</span><span class="s1">&#39;oracle_values&#39;</span><span class="p">][</span><span class="s1">&#39;y0&#39;</span><span class="p">]</span>
 <span class="n">cont_d</span> <span class="o">=</span> <span class="n">data_apo</span><span class="p">[</span><span class="s1">&#39;oracle_values&#39;</span><span class="p">][</span><span class="s1">&#39;cont_d&#39;</span><span class="p">]</span>
@@ -934,8 +936,8 @@ memory usage: 54.8 KB
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span>
-<span class="n">ml_g</span> <span class="o">=</span> <span class="n">TabPFNRegressor</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-<span class="n">ml_m</span> <span class="o">=</span> <span class="n">TabPFNClassifier</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">ml_g</span> <span class="o">=</span> <span class="n">TabPFNRegressor</span><span class="o">.</span><span class="n">create_default_for_version</span><span class="p">(</span><span class="n">ModelVersion</span><span class="o">.</span><span class="n">V2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">TabPFNClassifier</span><span class="o">.</span><span class="n">create_default_for_version</span><span class="p">(</span><span class="n">ModelVersion</span><span class="o">.</span><span class="n">V2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -965,18 +967,6 @@ memory usage: 54.8 KB
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0b99ff64cd2644dfaa62c41b58bf02f9", "version_major": 2, "version_minor": 0}</script></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6b581b168cb640a4a25e74ba7147cd83", "version_major": 2, "version_minor": 0}</script></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
@@ -986,44 +976,68 @@ memory usage: 54.8 KB
 
 ------------------ Fit summary       ------------------
            coef   std err           t  P&gt;|t|       2.5 %      97.5 %
-0.0  209.395480  1.211939  172.777199    0.0  207.020123  211.770838
-1.0  210.966031  1.367425  154.279824    0.0  208.285928  213.646134
-2.0  216.538410  1.245027  173.922656    0.0  214.098202  218.978618
-3.0  219.333914  1.334717  164.329850    0.0  216.717916  221.949912
-4.0  219.905724  1.278724  171.972735    0.0  217.399470  222.411977
-5.0  219.265669  1.177094  186.277179    0.0  216.958608  221.572730
+0.0  209.309952  1.208485  173.200225    0.0  206.941364  211.678540
+1.0  210.984368  1.359622  155.178751    0.0  208.319559  213.649177
+2.0  216.506080  1.265888  171.030964    0.0  214.024985  218.987175
+3.0  219.259184  1.316197  166.585402    0.0  216.679486  221.838883
+4.0  219.891299  1.279140  171.905612    0.0  217.384232  222.398367
+5.0  219.380538  1.195920  183.440790    0.0  217.036577  221.724498
 </pre></div></div>
 </div>
 </section>
 <section id="Machine-Learning-Methods-Comparison">
 <h2>Machine Learning Methods Comparison<a class="headerlink" href="#Machine-Learning-Methods-Comparison" title="Link to this heading">#</a></h2>
 <p>We compare four different machine learning approaches for estimating the nuisance functions in our causal model:</p>
-<ol class="arabic simple">
-<li><p><strong>Random Forest</strong>: Ensemble method with bagging and random feature selection</p></li>
-<li><p><strong>Linear Models</strong>: Linear/Logistic regression</p></li>
-<li><p><strong>LightGBM</strong>: Gradient boosting framework</p></li>
-<li><p><strong>TabPFN</strong>: A foundation model for tabular data</p></li>
-</ol>
+<ul class="simple">
+<li><p><em>Random Forest</em></p></li>
+<li><p><em>Linear Models</em></p></li>
+<li><p><em>Boosted Trees (LightGBM)</em></p></li>
+<li><p><em>Foundation Model (TabPFN)</em></p></li>
+</ul>
+<p>Remark that we did not tune the machine learning models in detail.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rf_arguments</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">42</span>
+<span class="p">}</span>
+
+<span class="n">lgbm_arguments</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s1">&#39;min_data_in_leaf&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">&#39;lambda_l1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;lambda_l2&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="s1">&#39;verbose&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">learner_dict</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;RandomForest&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;ml_g&#39;</span><span class="p">:</span> <span class="n">RandomForestRegressor</span><span class="p">(),</span>
-        <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+        <span class="s1">&#39;ml_g&#39;</span><span class="p">:</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="o">**</span><span class="n">rf_arguments</span><span class="p">),</span>
+        <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">rf_arguments</span><span class="p">)</span>
     <span class="p">},</span>
     <span class="s1">&#39;Linear&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">&#39;ml_g&#39;</span><span class="p">:</span> <span class="n">LinearRegression</span><span class="p">(),</span>
         <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
     <span class="p">},</span>
     <span class="s1">&#39;LightGBM&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;ml_g&#39;</span><span class="p">:</span> <span class="n">lgbm</span><span class="o">.</span><span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
-        <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">lgbm</span><span class="o">.</span><span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="s1">&#39;ml_g&#39;</span><span class="p">:</span> <span class="n">lgbm</span><span class="o">.</span><span class="n">LGBMRegressor</span><span class="p">(</span><span class="o">**</span><span class="n">lgbm_arguments</span><span class="p">),</span>
+        <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">lgbm</span><span class="o">.</span><span class="n">LGBMClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">lgbm_arguments</span><span class="p">)</span>
     <span class="p">},</span>
     <span class="s1">&#39;TabPFN&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;ml_g&#39;</span><span class="p">:</span> <span class="n">TabPFNRegressor</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span>
-        <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">TabPFNClassifier</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="s1">&#39;ml_g&#39;</span><span class="p">:</span> <span class="n">TabPFNRegressor</span><span class="o">.</span><span class="n">create_default_for_version</span><span class="p">(</span><span class="n">ModelVersion</span><span class="o">.</span><span class="n">V2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+        <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">TabPFNClassifier</span><span class="o">.</span><span class="n">create_default_for_version</span><span class="p">(</span><span class="n">ModelVersion</span><span class="o">.</span><span class="n">V2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -1039,7 +1053,7 @@ memory usage: 54.8 KB
 </ol>
 <p>We also compute <strong>causal contrasts</strong> (Average Treatment Effects) as differences between treatment levels and the reference level (no treatment).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reference_level</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1049,7 +1063,12 @@ memory usage: 54.8 KB
 <span class="n">model_list</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">for</span> <span class="n">learner_name</span><span class="p">,</span> <span class="n">learner_pair</span> <span class="ow">in</span> <span class="n">learner_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="c1"># Recreate dml_obj for each learner (as in the main loop)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fitting model: </span><span class="si">{</span><span class="n">learner_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
     <span class="n">dml_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLAPOS</span><span class="p">(</span>
         <span class="n">dml_data</span><span class="p">,</span>
         <span class="n">learner_pair</span><span class="p">[</span><span class="s1">&#39;ml_g&#39;</span><span class="p">],</span>
@@ -1058,6 +1077,12 @@ memory usage: 54.8 KB
         <span class="n">n_rep</span><span class="o">=</span><span class="n">n_rep</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">dml_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">learner_name</span><span class="si">}</span><span class="s2"> fitted in </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+
     <span class="n">model_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dml_obj</span><span class="p">)</span>
 
     <span class="c1"># APO confidence intervals</span>
@@ -1094,42 +1119,32 @@ memory usage: 54.8 KB
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
+<div class="output_area docutils container">
 <div class="highlight"><pre>
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\utils\_checks.py:194: UserWarning: Propensity predictions from learner RandomForestClassifier() for ml_m are close to zero or one (eps=1e-12).
-  warnings.warn(
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\utils\_checks.py:194: UserWarning: Propensity predictions from learner RandomForestClassifier() for ml_m are close to zero or one (eps=1e-12).
-  warnings.warn(
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\utils\_checks.py:194: UserWarning: Propensity predictions from learner RandomForestClassifier() for ml_m are close to zero or one (eps=1e-12).
-  warnings.warn(
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\utils\_checks.py:194: UserWarning: Propensity predictions from learner RandomForestClassifier() for ml_m are close to zero or one (eps=1e-12).
-  warnings.warn(
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
-c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\doubleml\double_ml.py:1479: UserWarning: The estimated nu2 for d is not positive. Re-estimation based on riesz representer (non-orthogonal).
-  warnings.warn(msg, UserWarning)
+
+============================================================
+Fitting model: RandomForest
+============================================================
+RandomForest fitted in 46.82 seconds
+
+============================================================
+Fitting model: Linear
+============================================================
+Linear fitted in 0.11 seconds
+
+============================================================
+Fitting model: LightGBM
+============================================================
+LightGBM fitted in 3.12 seconds
+
+============================================================
+Fitting model: TabPFN
+============================================================
+TabPFN fitted in 183.38 seconds
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1163,161 +1178,161 @@ c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\double
       <th>0</th>
       <td>RandomForest</td>
       <td>1.0</td>
-      <td>1.325370</td>
-      <td>-4.218919</td>
-      <td>6.869658</td>
+      <td>2.253828</td>
+      <td>-2.699097</td>
+      <td>7.206752</td>
     </tr>
     <tr>
       <th>1</th>
       <td>RandomForest</td>
       <td>2.0</td>
-      <td>5.702248</td>
-      <td>1.094595</td>
-      <td>10.309901</td>
+      <td>7.498048</td>
+      <td>2.237756</td>
+      <td>12.758340</td>
     </tr>
     <tr>
       <th>2</th>
       <td>RandomForest</td>
       <td>3.0</td>
-      <td>8.743203</td>
-      <td>4.080729</td>
-      <td>13.405677</td>
+      <td>11.756539</td>
+      <td>6.289006</td>
+      <td>17.224073</td>
     </tr>
     <tr>
       <th>3</th>
       <td>RandomForest</td>
       <td>4.0</td>
-      <td>6.632407</td>
-      <td>1.979031</td>
-      <td>11.285783</td>
+      <td>7.678953</td>
+      <td>2.767027</td>
+      <td>12.590880</td>
     </tr>
     <tr>
       <th>4</th>
       <td>RandomForest</td>
       <td>5.0</td>
-      <td>7.967206</td>
-      <td>2.359083</td>
-      <td>13.575329</td>
+      <td>6.865101</td>
+      <td>0.994615</td>
+      <td>12.735587</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Linear</td>
       <td>1.0</td>
-      <td>4.971059</td>
-      <td>-1.231281</td>
-      <td>11.173400</td>
+      <td>3.932233</td>
+      <td>-1.962948</td>
+      <td>9.827414</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Linear</td>
       <td>2.0</td>
-      <td>7.963367</td>
-      <td>2.882965</td>
-      <td>13.043769</td>
+      <td>8.720447</td>
+      <td>3.747057</td>
+      <td>13.693837</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Linear</td>
       <td>3.0</td>
-      <td>10.747538</td>
-      <td>6.745536</td>
-      <td>14.749540</td>
+      <td>10.625888</td>
+      <td>6.871080</td>
+      <td>14.380695</td>
     </tr>
     <tr>
       <th>8</th>
       <td>Linear</td>
       <td>4.0</td>
-      <td>11.594317</td>
-      <td>7.889236</td>
-      <td>15.299398</td>
+      <td>11.339177</td>
+      <td>7.917038</td>
+      <td>14.761317</td>
     </tr>
     <tr>
       <th>9</th>
       <td>Linear</td>
       <td>5.0</td>
-      <td>6.626998</td>
-      <td>3.014525</td>
-      <td>10.239471</td>
+      <td>8.254858</td>
+      <td>4.324910</td>
+      <td>12.184806</td>
     </tr>
     <tr>
       <th>10</th>
       <td>LightGBM</td>
       <td>1.0</td>
-      <td>2.156988</td>
-      <td>-16.411264</td>
-      <td>20.725240</td>
+      <td>1.276002</td>
+      <td>-4.056172</td>
+      <td>6.608177</td>
     </tr>
     <tr>
       <th>11</th>
       <td>LightGBM</td>
       <td>2.0</td>
-      <td>5.973140</td>
-      <td>-7.915225</td>
-      <td>19.861505</td>
+      <td>6.166088</td>
+      <td>1.817977</td>
+      <td>10.514199</td>
     </tr>
     <tr>
       <th>12</th>
       <td>LightGBM</td>
       <td>3.0</td>
-      <td>10.824140</td>
-      <td>-4.925410</td>
-      <td>26.573689</td>
+      <td>10.974491</td>
+      <td>6.011016</td>
+      <td>15.937967</td>
     </tr>
     <tr>
       <th>13</th>
       <td>LightGBM</td>
       <td>4.0</td>
-      <td>11.547482</td>
-      <td>-2.465476</td>
-      <td>25.560440</td>
+      <td>9.726078</td>
+      <td>5.797966</td>
+      <td>13.654191</td>
     </tr>
     <tr>
       <th>14</th>
       <td>LightGBM</td>
       <td>5.0</td>
-      <td>12.528573</td>
-      <td>-2.627754</td>
-      <td>27.684899</td>
+      <td>8.085730</td>
+      <td>3.570351</td>
+      <td>12.601109</td>
     </tr>
     <tr>
       <th>15</th>
       <td>TabPFN</td>
       <td>1.0</td>
-      <td>1.531682</td>
-      <td>0.208840</td>
-      <td>2.854525</td>
+      <td>1.621060</td>
+      <td>0.289549</td>
+      <td>2.952572</td>
     </tr>
     <tr>
       <th>16</th>
       <td>TabPFN</td>
       <td>2.0</td>
-      <td>6.958612</td>
-      <td>6.026292</td>
-      <td>7.890933</td>
+      <td>7.064673</td>
+      <td>6.089229</td>
+      <td>8.040118</td>
     </tr>
     <tr>
       <th>17</th>
       <td>TabPFN</td>
       <td>3.0</td>
-      <td>10.317946</td>
-      <td>9.048090</td>
-      <td>11.587801</td>
+      <td>10.021728</td>
+      <td>8.609947</td>
+      <td>11.433509</td>
     </tr>
     <tr>
       <th>18</th>
       <td>TabPFN</td>
       <td>4.0</td>
-      <td>10.391389</td>
-      <td>9.417502</td>
-      <td>11.365275</td>
+      <td>10.454991</td>
+      <td>9.231879</td>
+      <td>11.678104</td>
     </tr>
     <tr>
       <th>19</th>
       <td>TabPFN</td>
       <td>5.0</td>
-      <td>9.816896</td>
-      <td>8.873275</td>
-      <td>10.760517</td>
+      <td>9.751194</td>
+      <td>8.762049</td>
+      <td>10.740339</td>
     </tr>
   </tbody>
 </table>
@@ -1333,7 +1348,7 @@ c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\double
 <li><p><strong>Treatment levels</strong>: Different dosage levels of the treatment (0 = no treatment)</p></li>
 </ul>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot APOs and 95% CIs for all models</span>
@@ -1362,12 +1377,12 @@ c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\double
     <span class="p">)</span>
 
 <span class="c1"># Get treatment levels for proper line positioning</span>
-<span class="n">treatment_levels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">df_all_apos</span><span class="p">[</span><span class="s1">&#39;treatment_level&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="n">treatment_levels_plot</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">df_all_apos</span><span class="p">[</span><span class="s1">&#39;treatment_level&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
 <span class="n">x_range</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">()</span>
 <span class="n">total_width</span> <span class="o">=</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="c1"># Add true APOs as red horizontal lines</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">treatment_levels</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">treatment_levels_plot</span><span class="p">):</span>
     <span class="c1"># Center each line around its treatment level with a reasonable width</span>
     <span class="n">line_width</span> <span class="o">=</span> <span class="mf">0.6</span>  <span class="c1"># Width of each horizontal line relative to treatment level spacing</span>
     <span class="n">x_center</span> <span class="o">=</span> <span class="n">level</span>
@@ -1396,7 +1411,7 @@ c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\double
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_learners_py_tabpfn_20_0.png" src="../../_images/examples_learners_py_tabpfn_20_0.png" />
+<img alt="../../_images/examples_learners_py_tabpfn_21_0.png" src="../../_images/examples_learners_py_tabpfn_21_0.png" />
 </div>
 </div>
 <p>It is quite clear to see, that without tuning the hyperparameters of the models, the TabPFN model achieves the best performance (smallest confidence intervals) across all treatment levels.</p>
@@ -1407,7 +1422,7 @@ c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\double
 <div class="math notranslate nohighlight">
 \[\text{ATE}_d = \mathbb{E}[Y(d)] - \mathbb{E}[Y(0)]\]</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot ATEs and 95% CIs for all models</span>
@@ -1436,12 +1451,12 @@ c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\double
     <span class="p">)</span>
 
 <span class="c1"># Get treatment levels for proper line positioning</span>
-<span class="n">treatment_levels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">df_all_ates</span><span class="p">[</span><span class="s1">&#39;treatment_level&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="n">treatment_levels_plot</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">df_all_ates</span><span class="p">[</span><span class="s1">&#39;treatment_level&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
 <span class="n">x_range</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">()</span>
 <span class="n">total_width</span> <span class="o">=</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="c1"># Add true ATEs as red horizontal lines</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">treatment_levels</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">treatment_levels_plot</span><span class="p">):</span>
     <span class="c1"># Center each line around its treatment level with a reasonable width</span>
     <span class="n">line_width</span> <span class="o">=</span> <span class="mf">0.6</span>  <span class="c1"># Width of each horizontal line relative to treatment level spacing</span>
     <span class="n">x_center</span> <span class="o">=</span> <span class="n">level</span>
@@ -1471,7 +1486,7 @@ c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\double
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_learners_py_tabpfn_23_0.png" src="../../_images/examples_learners_py_tabpfn_23_0.png" />
+<img alt="../../_images/examples_learners_py_tabpfn_24_0.png" src="../../_images/examples_learners_py_tabpfn_24_0.png" />
 </div>
 </div>
 </section>
@@ -1485,7 +1500,7 @@ c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\double
 </ul>
 <p>Better performance on these nuisance functions typically translates to more accurate causal estimates.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a comprehensive table with RMSE for g0, g1 and log loss for all learners and treatment levels</span>
@@ -1552,32 +1567,32 @@ c:\Users\BAM5698\AppData\Local\miniconda3\envs\dml_docs\Lib\site-packages\double
 
 RMSE g0 by Learner and Treatment Level:
 ================================================================================
-Treatment_Level      1.0      2.0      3.0      4.0      5.0
+Treatment_Level      0.0      1.0      2.0      3.0      4.0      5.0
 Learner
-LightGBM         15.2287  11.1751  15.2422  15.1509  14.8526
-Linear           21.1795  17.4716  20.3264  20.9783  21.0718
-RandomForest     14.3663  11.4107  14.5979  14.5166  14.3334
-TabPFN           10.0373   2.8767  10.5702   9.9764  10.2091
+LightGBM         16.6043  12.6722  16.4420  16.1879  16.1063  16.3937
+Linear           21.4232  17.3711  20.5572  21.3341  21.3044  21.3389
+RandomForest     17.8429  14.2921  17.1360  17.0445  17.4103  17.7712
+TabPFN            9.3977   2.8226   9.5238   9.4965   9.2663   9.2945
 
 
 RMSE g1 by Learner and Treatment Level:
 ================================================================================
-Treatment_Level      1.0      2.0      3.0      4.0      5.0
+Treatment_Level      0.0      1.0      2.0      3.0      4.0      5.0
 Learner
-LightGBM         17.2116  31.2223  20.1003  18.2962  15.7370
-Linear           16.6144  30.1755  21.2086  18.4788  16.9636
-RandomForest     16.0477  25.8403  18.6678  19.0762  15.5213
-TabPFN            3.3852  16.5840   4.8130   6.5550   4.9701
+LightGBM         16.2032  30.3334  18.8350  16.5337  15.6930  13.1095
+Linear           16.3087  29.3359  21.6232  17.8452  16.6807  14.6180
+RandomForest     21.0889  31.6349  22.8979  20.8461  19.2861  17.7393
+TabPFN            3.9209  15.6921   4.9981   7.4276   5.9365   3.2138
 
 
 LogLoss m by Learner and Treatment Level:
 ================================================================================
-Treatment_Level     1.0     2.0     3.0     4.0     5.0
+Treatment_Level     0.0     1.0     2.0     3.0     4.0     5.0
 Learner
-LightGBM         0.5732  0.5118  0.4976  0.5644  0.5650
-Linear           0.4822  0.4352  0.4252  0.4460  0.4660
-RandomForest     0.5277  0.4642  0.4364  0.4860  0.5101
-TabPFN           0.4776  0.4347  0.4320  0.4462  0.4645
+LightGBM         0.4996  0.4506  0.4417  0.4663  0.4782  0.4302
+Linear           0.4770  0.4391  0.4247  0.4450  0.4637  0.4234
+RandomForest     0.5011  0.4401  0.4235  0.4649  0.4766  0.4344
+TabPFN           0.4772  0.4348  0.4286  0.4481  0.4652  0.4218
 </pre></div></div>
 </div>
 </section>
@@ -1585,7 +1600,7 @@ TabPFN           0.4776  0.4347  0.4320  0.4462  0.4645
 <h3>Performance Summary and Insights<a class="headerlink" href="#Performance-Summary-and-Insights" title="Link to this heading">#</a></h3>
 <p>Let’s summarize the average performance across all treatment levels to identify the best-performing methods:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Best performing learners for each metric</span>
@@ -1608,10 +1623,10 @@ Best performing learners (averaged across treatment levels):
 ------------------------------------------------------------
               RMSE_g0  RMSE_g1  LogLoss_m
 Learner
-LightGBM      14.3299  20.5135     0.5424
-Linear        20.2055  20.6882     0.4509
-RandomForest  13.8450  19.0307     0.4849
-TabPFN         8.7339   7.2615     0.4510
+LightGBM      15.7344  18.4513     0.4611
+Linear        20.5548  19.4020     0.4455
+RandomForest  16.9162  22.2489     0.4568
+TabPFN         8.3002   6.8648     0.4460
 </pre></div></div>
 </div>
 </section>
