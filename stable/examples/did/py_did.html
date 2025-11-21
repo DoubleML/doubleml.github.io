@@ -609,11 +609,12 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_apo.html">Python: Average Potential Outcome (APO) Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_irm_vs_apo.html">Python: IRM and APO Model Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_lplr.html">Python: Log-Odds Effects for Logistic PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_sensitivity_booking.html">Example: Sensitivity Analysis for Causal ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../py_double_ml_sensitivity_booking.html">Python: Sensitivity Analysis for Causal ML</a></li>
 
 
 
@@ -750,17 +751,17 @@ Download Jupyter notebook:
 \[\Delta Y_i = Y_{i1}- Y_{i0}.\]</div>
 <p>This difference will then be defined as outcome in our <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> object. The data generating process <code class="docutils literal notranslate"><span class="pre">make_did_SZ2020</span></code> already specifies the outcome <code class="docutils literal notranslate"><span class="pre">y</span></code> accordingly.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_SZ2020</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.did.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_SZ2020</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLDIDData</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">n_obs</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">dgp_type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cross_sectional_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">)</span>
-<span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">dgp_type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cross_sectional_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">)</span>
+<span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLDIDData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -770,21 +771,14 @@ Download Jupyter notebook:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-================== DoubleMLData Object ==================
-
------------------- Data summary      ------------------
+================== DoubleMLDIDData Object ==================
+Time variable: None
 Outcome variable: y
 Treatment variable(s): [&#39;d&#39;]
 Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;]
 Instrument variable(s): None
 No. Observations: 1000
 
------------------- DataFrame info    ------------------
-&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-RangeIndex: 1000 entries, 0 to 999
-Columns: 6 entries, X1 to d
-dtypes: float64(6)
-memory usage: 47.0 KB
 
 </pre></div></div>
 </div>
@@ -795,14 +789,14 @@ memory usage: 47.0 KB
 <p>As for all <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> classes, we have to specify learners, which have to be initialized first. Here, we will just rely on a tree based method.</p>
 <p>The learner <code class="docutils literal notranslate"><span class="pre">ml_g</span></code> is used to fit conditional expectations of the outcome <span class="math notranslate nohighlight">\(\mathbb{E}[\Delta Y_i|D_i=0, X_i]\)</span>, whereas the learner <code class="docutils literal notranslate"><span class="pre">ml_m</span></code> will be used to estimate the propensity score <span class="math notranslate nohighlight">\(P(D_i=1|X_i)\)</span>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMClassifier</span><span class="p">,</span> <span class="n">LGBMRegressor</span>
 
 <span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">)</span>
-<span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">)</span>
+<span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -810,7 +804,7 @@ memory usage: 47.0 KB
 <p>The score is set to <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code>, since the we generated data where the treatment probability depends on the pretreatment covariates. Further, we will use <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code>, since normalization generally improved the results in our simulations (both <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code> are default values).</p>
 <p>After initialization, we have to call the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method to estimate the nuisance elements.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLDID</span>
@@ -833,38 +827,39 @@ memory usage: 47.0 KB
 <div class="highlight"><pre>
 ================== DoubleMLDID Object ==================
 
------------------- Data summary      ------------------
+------------------ Data Summary      ------------------
 Outcome variable: y
 Treatment variable(s): [&#39;d&#39;]
 Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;]
 Instrument variable(s): None
 No. Observations: 1000
 
------------------- Score &amp; algorithm ------------------
-Score function: observational
-DML algorithm: dml2
 
------------------- Machine learner   ------------------
-Learner ml_g: LGBMRegressor(n_estimators=30)
-Learner ml_m: LGBMClassifier(n_estimators=30)
+------------------ Score &amp; Algorithm ------------------
+Score function: observational
+
+------------------ Machine Learner   ------------------
+Learner ml_g: LGBMRegressor(n_estimators=30, verbose=-1)
+Learner ml_m: LGBMClassifier(n_estimators=30, verbose=-1)
 Out-of-sample Performance:
-Learner ml_g0 RMSE: [[11.43627032]]
-Learner ml_g1 RMSE: [[11.66989604]]
-Learner ml_m RMSE: [[0.48873663]]
+Regression:
+Learner ml_g0 RMSE: [[11.55855122]]
+Learner ml_g1 RMSE: [[11.38983785]]
+Classification:
+Learner ml_m Log Loss: [[0.67674909]]
 
 ------------------ Resampling        ------------------
 No. folds: 5
 No. repeated sample splits: 1
-Apply cross-fitting: True
 
------------------- Fit summary       ------------------
-       coef   std err         t     P&gt;|t|     2.5 %    97.5 %
-d  1.386988  1.827375  0.759006  0.447849 -2.194601  4.968577
+------------------ Fit Summary       ------------------
+       coef  std err         t     P&gt;|t|     2.5 %    97.5 %
+d  0.305272  1.25855  0.242559  0.808347 -2.161441  2.771986
 </pre></div></div>
 </div>
 <p>As usual, confidence intervals at different levels can be obtained via</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.90</span><span class="p">))</span>
@@ -877,7 +872,7 @@ d  1.386988  1.827375  0.759006  0.447849 -2.194601  4.968577
 <div class="output_area docutils container">
 <div class="highlight"><pre>
       5.0 %    95.0 %
-d -1.618776  4.392752
+d -1.764859  2.375403
 </pre></div></div>
 </div>
 </section>
@@ -885,7 +880,7 @@ d -1.618776  4.392752
 <h3>Coverage Simulation<a class="headerlink" href="#Coverage-Simulation" title="Link to this heading">#</a></h3>
 <p>Here, we add a small coverage simulation to highlight the difference to the linear implementation of <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a>. We generate multiple datasets, estimate the ATTE and collect the results (this may take some time).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_rep</span> <span class="o">=</span> <span class="mi">200</span>
@@ -930,7 +925,7 @@ Iteration: 180/200
 </div>
 <p>Let us take a look at the corresponding coverage and the length of the confidence intervals.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Coverage: </span><span class="si">{</span><span class="n">coverage</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -943,15 +938,15 @@ Iteration: 180/200
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Coverage: 0.925
-Average CI length: 5.32236455588136
+Coverage: 0.965
+Average CI length: 5.517510812139451
 </pre></div></div>
 </div>
 <p>Here, we can observe that the coverage is still valid, since we did not rely on linear learners, so the setting is not misspecified in this example.</p>
 <p>If we know the conditional expectation is correctly specified (linear form), we can use this to obtain smaller confidence intervals but in many applications, we may want to safeguard against misspecification and use flexible models such as random forest or boosting.</p>
 <p>The distribution of the estimates takes the following form</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -984,17 +979,17 @@ Average CI length: 5.32236455588136
 <p>In contrast to other <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> objects, we have to specify which column corresponds to our time variable <span class="math notranslate nohighlight">\(T\)</span>.</p>
 <p>The time variable can be simply set via the argument <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_SZ2020</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.did.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_did_SZ2020</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLData</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">n_obs</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">make_did_SZ2020</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">dgp_type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cross_sectional_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">)</span>
-<span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+<span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLDIDData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1004,22 +999,14 @@ Average CI length: 5.32236455588136
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-================== DoubleMLData Object ==================
-
------------------- Data summary      ------------------
+================== DoubleMLDIDData Object ==================
+Time variable: t
 Outcome variable: y
 Treatment variable(s): [&#39;d&#39;]
 Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;]
 Instrument variable(s): None
-Time variable: t
 No. Observations: 1000
 
------------------- DataFrame info    ------------------
-&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-RangeIndex: 1000 entries, 0 to 999
-Columns: 7 entries, X1 to t
-dtypes: float64(7)
-memory usage: 54.8 KB
 
 </pre></div></div>
 </div>
@@ -1030,7 +1017,7 @@ memory usage: 54.8 KB
 <p>As for all <code class="docutils literal notranslate"><span class="pre">DoubleML</span></code> classes, we have to specify learners, which have to be initialized first. Here, we will just rely on a tree based method.</p>
 <p>The learner <code class="docutils literal notranslate"><span class="pre">ml_g</span></code> is used to fit conditional expectations of the outcome <span class="math notranslate nohighlight">\(\mathbb{E}[\Delta Y_i| D_i=d, T_i =t, X_i]\)</span> for all combinations of <span class="math notranslate nohighlight">\(d,t\in\{0,1\}\)</span>, whereas the learner <code class="docutils literal notranslate"><span class="pre">ml_m</span></code> will be used to estimate the propensity score <span class="math notranslate nohighlight">\(P(D_i=1|X_i)\)</span>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMClassifier</span><span class="p">,</span> <span class="n">LGBMRegressor</span>
@@ -1045,7 +1032,7 @@ memory usage: 54.8 KB
 <p>The score is set to <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code>, since the we generated data where the treatment probability depends on the pretreatment covariates. Further, we will use <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code>, since normalization generally improved the results in our simulations (both <code class="docutils literal notranslate"><span class="pre">score='observational'</span></code> and <code class="docutils literal notranslate"><span class="pre">in_sample_normalization=True</span></code> are default values).</p>
 <p>After initialization, we have to call the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method to estimate the nuisance elements.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLDIDCS</span>
@@ -1068,41 +1055,41 @@ memory usage: 54.8 KB
 <div class="highlight"><pre>
 ================== DoubleMLDIDCS Object ==================
 
------------------- Data summary      ------------------
+------------------ Data Summary      ------------------
 Outcome variable: y
 Treatment variable(s): [&#39;d&#39;]
 Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;]
 Instrument variable(s): None
-Time variable: t
 No. Observations: 1000
 
------------------- Score &amp; algorithm ------------------
-Score function: observational
-DML algorithm: dml2
 
------------------- Machine learner   ------------------
+------------------ Score &amp; Algorithm ------------------
+Score function: observational
+
+------------------ Machine Learner   ------------------
 Learner ml_g: LGBMRegressor(n_estimators=30)
 Learner ml_m: LGBMClassifier(n_estimators=30)
 Out-of-sample Performance:
-Learner ml_g_d0_t0 RMSE: [[15.02897287]]
-Learner ml_g_d0_t1 RMSE: [[26.5602727]]
-Learner ml_g_d1_t0 RMSE: [[27.62403053]]
-Learner ml_g_d1_t1 RMSE: [[44.06834315]]
-Learner ml_m RMSE: [[0.47761563]]
+Regression:
+Learner ml_g_d0_t0 RMSE: [[14.54119805]]
+Learner ml_g_d0_t1 RMSE: [[26.40359107]]
+Learner ml_g_d1_t0 RMSE: [[27.98750578]]
+Learner ml_g_d1_t1 RMSE: [[45.69520523]]
+Classification:
+Learner ml_m Log Loss: [[0.67618978]]
 
 ------------------ Resampling        ------------------
 No. folds: 5
 No. repeated sample splits: 1
-Apply cross-fitting: True
 
------------------- Fit summary       ------------------
+------------------ Fit Summary       ------------------
        coef   std err         t     P&gt;|t|     2.5 %     97.5 %
-d  5.096741  5.225034  0.975447  0.329339 -5.144137  15.337619
+d  7.667682  5.809278  1.319903  0.186868 -3.718294  19.053659
 </pre></div></div>
 </div>
 <p>As usual, confidence intervals at different levels can be obtained via</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dml_did</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.90</span><span class="p">))</span>
@@ -1115,7 +1102,7 @@ d  5.096741  5.225034  0.975447  0.329339 -5.144137  15.337619
 <div class="output_area docutils container">
 <div class="highlight"><pre>
       5.0 %     95.0 %
-d -3.497674  13.691157
+d -1.887731  17.223095
 </pre></div></div>
 </div>
 </section>
@@ -1123,7 +1110,7 @@ d -3.497674  13.691157
 <h3>Coverage Simulation<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
 <p>Again, we add a small coverage simulation to highlight the difference to the linear implementation of <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020)</a>. We generate multiple datasets, estimate the ATTE and collect the results (this may take some time).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_rep</span> <span class="o">=</span> <span class="mi">200</span>
@@ -1168,7 +1155,7 @@ Iteration: 180/200
 </div>
 <p>Let us take a look at the corresponding coverage and the length of the confidence intervals.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Coverage: </span><span class="si">{</span><span class="n">coverage</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -1181,15 +1168,15 @@ Iteration: 180/200
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Coverage: 0.94
-Average CI length: 23.34858240261807
+Coverage: 0.96
+Average CI length: 23.357586986897548
 </pre></div></div>
 </div>
 <p>As for panel data the coverage is still valid, since we did not rely on linear learners, so the setting is not misspecified in this example.</p>
 <p>If we know the conditional expectation is correctly specified (linear form), we can use this to obtain smaller confidence intervals but in many applications, we may want to safeguard against misspecification and use flexible models such as random forest or boosting.</p>
 <p>The distribution of the estimates takes the following form</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>

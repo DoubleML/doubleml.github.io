@@ -609,11 +609,12 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_apo.html">Python: Average Potential Outcome (APO) Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_irm_vs_apo.html">Python: IRM and APO Model Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_lplr.html">Python: Log-Odds Effects for Logistic PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity_booking.html">Example: Sensitivity Analysis for Causal ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity_booking.html">Python: Sensitivity Analysis for Causal ML</a></li>
 
 
 
@@ -734,7 +735,7 @@ Download Jupyter notebook:
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_heterogeneous_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.irm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_heterogeneous_data</span>
 </pre></div>
 </div>
 </div>
@@ -976,17 +977,17 @@ Group 3  4.485871  4.856404  5.226938
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">groups</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Group&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;X_0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;X_0&#39;</span><span class="p">]):</span>
     <span class="k">if</span> <span class="n">x_i</span> <span class="o">&lt;=</span> <span class="mf">0.3</span><span class="p">:</span>
-         <span class="n">groups</span><span class="p">[</span><span class="s1">&#39;Group&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+         <span class="n">groups</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;Group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
     <span class="k">elif</span> <span class="p">(</span><span class="n">x_i</span> <span class="o">&gt;</span> <span class="mf">0.3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x_i</span> <span class="o">&lt;=</span> <span class="mf">0.7</span><span class="p">):</span>
-         <span class="n">groups</span><span class="p">[</span><span class="s1">&#39;Group&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2&#39;</span>
+         <span class="n">groups</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;Group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2&#39;</span>
     <span class="k">else</span><span class="p">:</span>
-         <span class="n">groups</span><span class="p">[</span><span class="s1">&#39;Group&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
+         <span class="n">groups</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;Group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -997,46 +998,6 @@ Group 3  4.485871  4.856404  5.226938
 2     2
 3     2
 4     2
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/tmp/ipykernel_46248/2424596822.py:8: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
-You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
-A typical example is when you are setting values in a column of a DataFrame, like:
-
-df[&#34;col&#34;][row_indexer] = value
-
-Use `df.loc[row_indexer, &#34;col&#34;] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-  groups[&#39;Group&#39;][i] = &#39;3&#39;
-/tmp/ipykernel_46248/2424596822.py:6: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
-You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
-A typical example is when you are setting values in a column of a DataFrame, like:
-
-df[&#34;col&#34;][row_indexer] = value
-
-Use `df.loc[row_indexer, &#34;col&#34;] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-  groups[&#39;Group&#39;][i] = &#39;2&#39;
-/tmp/ipykernel_46248/2424596822.py:4: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
-You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
-A typical example is when you are setting values in a column of a DataFrame, like:
-
-df[&#34;col&#34;][row_indexer] = value
-
-Use `df.loc[row_indexer, &#34;col&#34;] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-  groups[&#39;Group&#39;][i] = &#39;1&#39;
 </pre></div></div>
 </div>
 <p>This time lets consider pointwise confidence intervals.</p>

@@ -609,11 +609,12 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_apo.html">Python: Average Potential Outcome (APO) Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_irm_vs_apo.html">Python: IRM and APO Model Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_lplr.html">Python: Log-Odds Effects for Logistic PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity_booking.html">Example: Sensitivity Analysis for Causal ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity_booking.html">Python: Sensitivity Analysis for Causal ML</a></li>
 
 
 
@@ -810,8 +811,8 @@ Download Jupyter notebook:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Conditional Value at Risk Y(0): [0.5467606094959261, 0.7559417564883749, 0.9567242535070148, 1.1530959776797396, 1.34769649731686, 1.5425843074324594, 1.7395359436844482, 1.940354721701296, 2.1469734445741286, 2.361518457569366, 2.586719493648897, 2.8259803249536914, 3.0841842065698133, 3.3684990272106954, 3.6903344145051182, 4.0701961897676835, 4.551586928482123]
-Conditional Value at Risk Y(1): [1.110902411746278, 1.3453813031813522, 1.5700384030890744, 1.789671060840732, 2.007332393760465, 2.225459760731946, 2.4461928741399595, 2.6716717587835648, 2.9041560442482157, 3.146142808990006, 3.400855956463958, 3.6723684718264447, 3.9666592590622916, 4.292302995303554, 4.663081975281988, 5.103951906910721, 5.667614205604159]
+Conditional Value at Risk Y(0): [np.float64(0.5473064979425033), np.float64(0.756585519864526), np.float64(0.9574793755564219), np.float64(1.1539831483813536), np.float64(1.3486970271639334), np.float64(1.5436876323961168), np.float64(1.7407627053044026), np.float64(1.9417090334740552), np.float64(2.1484554868601506), np.float64(2.3631031251500065), np.float64(2.5883964619856044), np.float64(2.827874854703913), np.float64(3.086401570476133), np.float64(3.3711317415516624), np.float64(3.6934117220290754), np.float64(4.0735183279373635), np.float64(4.554986206618521)]
+Conditional Value at Risk Y(1): [np.float64(1.1121351274811793), np.float64(1.3466832975109777), np.float64(1.5714294154804167), np.float64(1.7910908091075142), np.float64(2.008825189994473), np.float64(2.227018245501943), np.float64(2.447863428811719), np.float64(2.6734628878523097), np.float64(2.906051023766621), np.float64(3.1482102407485826), np.float64(3.403113188429014), np.float64(3.675011328023803), np.float64(3.969702563412915), np.float64(4.295855642811191), np.float64(4.667285944503316), np.float64(5.108783087402629), np.float64(5.673581815999206)]
 </pre></div></div>
 </div>
 <p>Let us generate <span class="math notranslate nohighlight">\(n=5000\)</span> observations and convert them to a <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.data.DoubleMLData.html">DoubleMLData</a> object.</p>
@@ -834,8 +835,8 @@ Conditional Value at Risk Y(1): [1.110902411746278, 1.3453813031813522, 1.570038
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">CVAR_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 <span class="n">CVAR_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -911,23 +912,23 @@ Quantile: 0.9000000000000002
 <div class="output_area docutils container">
 <div class="highlight"><pre>
     Quantile  CVaR Y(0)  CVaR Y(1)  DML CVaR Y(0)  DML CVaR Y(1)  \
-0       0.10   0.546761   1.110902       0.360683       1.057962
-1       0.15   0.755942   1.345381       0.590911       1.273356
-2       0.20   0.956724   1.570038       0.829543       1.489699
-3       0.25   1.153096   1.789671       1.015038       1.697000
-4       0.30   1.347696   2.007332       1.203284       1.925736
-5       0.35   1.542584   2.225460       1.502494       2.144084
-6       0.40   1.739536   2.446193       1.678826       2.338775
-7       0.45   1.940355   2.671672       1.822482       2.559144
-8       0.50   2.146973   2.904156       2.153119       2.824701
-9       0.55   2.361518   3.146143       2.156969       3.041831
-10      0.60   2.586719   3.400856       2.495657       3.298120
-11      0.65   2.825980   3.672368       2.653846       3.582761
-12      0.70   3.084184   3.966659       2.847948       3.842405
-13      0.75   3.368499   4.292303       3.076347       4.163895
-14      0.80   3.690334   4.663082       3.523163       4.543075
-15      0.85   4.070196   5.103952       3.869020       4.913774
-16      0.90   4.551587   5.667614       4.372097       5.482038
+0       0.10   0.547306   1.112135       0.360683       1.057962
+1       0.15   0.756586   1.346683       0.590911       1.273356
+2       0.20   0.957479   1.571429       0.829543       1.489699
+3       0.25   1.153983   1.791091       1.015038       1.697000
+4       0.30   1.348697   2.008825       1.203284       1.925736
+5       0.35   1.543688   2.227018       1.502494       2.144084
+6       0.40   1.740763   2.447863       1.678826       2.338775
+7       0.45   1.941709   2.673463       1.822482       2.559144
+8       0.50   2.148455   2.906051       2.153119       2.824701
+9       0.55   2.363103   3.148210       2.156969       3.041831
+10      0.60   2.588396   3.403113       2.495657       3.298120
+11      0.65   2.827875   3.675011       2.653846       3.582761
+12      0.70   3.086402   3.969703       2.847948       3.842405
+13      0.75   3.371132   4.295856       3.076347       4.163895
+14      0.80   3.693412   4.667286       3.523163       4.543075
+15      0.85   4.073518   5.108783       3.869020       4.913774
+16      0.90   4.554986   5.673582       4.372097       5.482038
 
     DML CVaR Y(0) lower  DML CVaR Y(0) upper  DML CVaR Y(1) lower  \
 0              0.162710             0.558655             0.957745
@@ -1037,18 +1038,18 @@ Number of Cores used: 5
 ------------------ Fit summary       ------------------
           coef   std err         t         P&gt;|t|     2.5 %    97.5 %
 0.10  0.627564  0.103806  6.045553  1.488982e-09  0.424108  0.831019
-0.15  0.677980  0.102616  6.606954  3.923074e-11  0.476856  0.879103
-0.20  0.706645  0.100356  7.041387  1.903351e-12  0.509951  0.903339
-0.25  0.716793  0.102775  6.974414  3.071488e-12  0.515358  0.918227
-0.30  0.716762  0.107073  6.694154  2.169230e-11  0.506903  0.926621
-0.35  0.740869  0.112216  6.602168  4.051867e-11  0.520930  0.960808
-0.40  0.756969  0.114647  6.602628  4.039310e-11  0.532266  0.981672
+0.15  0.677980  0.102616  6.606954  3.923084e-11  0.476856  0.879103
+0.20  0.706645  0.100356  7.041387  1.903366e-12  0.509951  0.903339
+0.25  0.716793  0.102775  6.974414  3.071543e-12  0.515358  0.918227
+0.30  0.716762  0.107073  6.694154  2.169220e-11  0.506903  0.926621
+0.35  0.740869  0.112216  6.602168  4.051870e-11  0.520930  0.960808
+0.40  0.756969  0.114647  6.602628  4.039302e-11  0.532266  0.981672
 0.45  0.751710  0.117710  6.386102  1.701672e-10  0.521002  0.982417
 0.50  0.779682  0.122408  6.369556  1.895768e-10  0.539767  1.019596
 0.55  0.786744  0.130370  6.034690  1.592681e-09  0.531223  1.042265
 0.60  0.814351  0.138378  5.884996  3.980643e-09  0.543136  1.085566
 0.65  0.848868  0.144800  5.862359  4.563374e-09  0.565066  1.132671
-0.70  0.946968  0.154828  6.116274  9.578846e-10  0.643512  1.250425
+0.70  0.946968  0.154828  6.116274  9.578847e-10  0.643512  1.250425
 0.75  0.997621  0.164805  6.053331  1.418806e-09  0.674609  1.320633
 0.80  1.073520  0.190915  5.623024  1.876431e-08  0.699333  1.447706
 0.85  1.053558  0.236008  4.464076  8.041491e-06  0.590991  1.516125
@@ -1113,23 +1114,23 @@ Number of Cores used: 5
 <div class="output_area docutils container">
 <div class="highlight"><pre>
       Quantile      CVaR  DML CVaR  DML CVaR pointwise lower  \
-0.10      0.10  0.564142  0.627564                  0.424108
-0.15      0.15  0.589440  0.677980                  0.476856
-0.20      0.20  0.613314  0.706645                  0.509951
-0.25      0.25  0.636575  0.716793                  0.515358
-0.30      0.30  0.659636  0.716762                  0.506903
-0.35      0.35  0.682875  0.740869                  0.520930
-0.40      0.40  0.706657  0.756969                  0.532266
-0.45      0.45  0.731317  0.751710                  0.521002
-0.50      0.50  0.757183  0.779682                  0.539767
-0.55      0.55  0.784624  0.786744                  0.531223
-0.60      0.60  0.814136  0.814351                  0.543136
-0.65      0.65  0.846388  0.848868                  0.565066
-0.70      0.70  0.882475  0.946968                  0.643512
-0.75      0.75  0.923804  0.997621                  0.674609
-0.80      0.80  0.972748  1.073520                  0.699333
-0.85      0.85  1.033756  1.053558                  0.590991
-0.90      0.90  1.116027  1.097468                  0.433221
+0.10      0.10  0.564829  0.627564                  0.424108
+0.15      0.15  0.590098  0.677980                  0.476856
+0.20      0.20  0.613950  0.706645                  0.509951
+0.25      0.25  0.637108  0.716793                  0.515358
+0.30      0.30  0.660128  0.716762                  0.506903
+0.35      0.35  0.683331  0.740869                  0.520930
+0.40      0.40  0.707101  0.756969                  0.532266
+0.45      0.45  0.731754  0.751710                  0.521002
+0.50      0.50  0.757596  0.779682                  0.539767
+0.55      0.55  0.785107  0.786744                  0.531223
+0.60      0.60  0.814717  0.814351                  0.543136
+0.65      0.65  0.847136  0.848868                  0.565066
+0.70      0.70  0.883301  0.946968                  0.643512
+0.75      0.75  0.924724  0.997621                  0.674609
+0.80      0.80  0.973874  1.073520                  0.699333
+0.85      0.85  1.035265  1.053558                  0.590991
+0.90      0.90  1.118596  1.097468                  0.433221
 
       DML CVaR pointwise upper  DML CVaR joint lower  DML CVaR joint upper
 0.10                  0.831019              0.367571              0.887556

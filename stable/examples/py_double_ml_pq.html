@@ -609,11 +609,12 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_apo.html">Python: Average Potential Outcome (APO) Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_irm_vs_apo.html">Python: IRM and APO Model Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_lplr.html">Python: Log-Odds Effects for Logistic PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_multiway_cluster.html">Python: Cluster Robust Double Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity_booking.html">Example: Sensitivity Analysis for Causal ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity_booking.html">Python: Sensitivity Analysis for Causal ML</a></li>
 
 
 
@@ -809,12 +810,12 @@ Download Jupyter notebook:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Potential Quantile Y(0): [-3.33014346 -2.71465114 -2.21155656 -1.77348822 -1.37436439 -1.00000591
- -0.64197957 -0.29548121  0.04653976  0.38866808  0.73608412  1.09347419
-  1.46811985  1.8685788   2.30982972  2.81568484  3.43597565]
-Potential Quantile Y(1): [-3.23789633 -2.53947541 -1.97276281 -1.48208358 -1.03698487 -0.62131806
- -0.22522221  0.15891559  0.53724023  0.91724807  1.30361321  1.7018663
-  2.12046836  2.56965663  3.06724028  3.64154727  4.35341202]
+Potential Quantile Y(0): [-3.33065771 -2.7142787  -2.2114026  -1.77261209 -1.37433503 -1.00032016
+ -0.64362337 -0.29675887  0.04608822  0.38898864  0.73569431  1.09245337
+  1.46598119  1.86610467  2.30628774  2.81128199  3.43361991]
+Potential Quantile Y(1): [-3.23801203 -2.54010127 -1.97499195 -1.48353114 -1.03783666 -0.62195343
+ -0.22563538  0.15946647  0.53849791  0.91771387  1.30229388  1.70007159
+  2.11789998  2.56670073  3.06397789  3.63817859  4.35053317]
 </pre></div></div>
 </div>
 <p>Let us generate <span class="math notranslate nohighlight">\(n=5000\)</span> observations and convert them to a <a class="reference external" href="https://docs.doubleml.org/stable/guide/data_backend.html#doublemldata">DoubleMLData</a> object.</p>
@@ -837,8 +838,8 @@ Potential Quantile Y(1): [-3.23789633 -2.53947541 -1.97276281 -1.48208358 -1.036
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">PQ_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 <span class="n">PQ_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -914,23 +915,23 @@ Quantile: 0.9000000000000002
 <div class="output_area docutils container">
 <div class="highlight"><pre>
     Quantile      Y(0)      Y(1)  DML Y(0)  DML Y(1)  DML Y(0) lower  \
-0       0.10 -3.330143 -3.237896 -3.408565 -3.128312       -3.813293
-1       0.15 -2.714651 -2.539475 -2.855780 -2.495752       -3.245512
-2       0.20 -2.211557 -1.972763 -2.345903 -1.978977       -2.638264
-3       0.25 -1.773488 -1.482084 -1.924002 -1.533900       -2.189737
-4       0.30 -1.374364 -1.036985 -1.482483 -1.148161       -1.683942
-5       0.35 -1.000006 -0.621318 -1.246879 -0.700102       -1.509196
-6       0.40 -0.641980 -0.225222 -0.932973 -0.291406       -1.244455
-7       0.45 -0.295481  0.158916 -0.665264  0.145245       -0.949456
-8       0.50  0.046540  0.537240 -0.077319  0.496551       -0.411582
-9       0.55  0.388668  0.917248  0.378834  0.760104        0.070020
-10      0.60  0.736084  1.303613  0.479928  1.216344        0.168614
-11      0.65  1.093474  1.701866  1.059384  1.655284        0.677614
-12      0.70  1.468120  2.120468  1.544097  2.036147        1.215342
-13      0.75  1.868579  2.569657  1.700015  2.493219        1.400823
-14      0.80  2.309830  3.067240  2.187690  2.988463        1.872768
-15      0.85  2.815685  3.641547  2.631333  3.542647        2.226524
-16      0.90  3.435976  4.353412  3.113207  4.243246        2.753523
+0       0.10 -3.330658 -3.238012 -3.408565 -3.128312       -3.813293
+1       0.15 -2.714279 -2.540101 -2.855780 -2.495752       -3.245512
+2       0.20 -2.211403 -1.974992 -2.345903 -1.978977       -2.638264
+3       0.25 -1.772612 -1.483531 -1.924002 -1.533900       -2.189737
+4       0.30 -1.374335 -1.037837 -1.482483 -1.148161       -1.683942
+5       0.35 -1.000320 -0.621953 -1.246879 -0.700102       -1.509196
+6       0.40 -0.643623 -0.225635 -0.932973 -0.291406       -1.244455
+7       0.45 -0.296759  0.159466 -0.665264  0.145245       -0.949456
+8       0.50  0.046088  0.538498 -0.077319  0.496551       -0.411582
+9       0.55  0.388989  0.917714  0.378834  0.760104        0.070020
+10      0.60  0.735694  1.302294  0.479928  1.216344        0.168614
+11      0.65  1.092453  1.700072  1.059384  1.655284        0.677614
+12      0.70  1.465981  2.117900  1.544097  2.036147        1.215342
+13      0.75  1.866105  2.566701  1.700015  2.493219        1.400823
+14      0.80  2.306288  3.063978  2.187690  2.988463        1.872768
+15      0.85  2.811282  3.638179  2.631333  3.542647        2.226524
+16      0.90  3.433620  4.350533  3.113207  4.243246        2.753523
 
     DML Y(0) upper  DML Y(1) lower  DML Y(1) upper
 0        -3.003836       -3.448745       -2.807879
@@ -1035,7 +1036,7 @@ Number of Cores used: 5
 0.75  0.685107  0.245062  2.795647  5.179588e-03  0.204794  1.165419
 0.80  0.893851  0.222843  4.011131  6.042844e-05  0.457088  1.330615
 0.85  0.896023  0.209894  4.268942  1.964025e-05  0.484640  1.307407
-0.90  1.229443  0.177995  6.907176  4.943949e-12  0.880579  1.578307
+0.90  1.229443  0.177995  6.907176  4.944045e-12  0.880579  1.578307
 </pre></div></div>
 </div>
 <p>As for other <code class="docutils literal notranslate"><span class="pre">dml</span></code> objects, we can use <code class="docutils literal notranslate"><span class="pre">bootstrap()</span></code> and <code class="docutils literal notranslate"><span class="pre">confint()</span></code> methods to generate jointly valid confidence intervals.</p>
@@ -1096,23 +1097,23 @@ Number of Cores used: 5
 <div class="output_area docutils container">
 <div class="highlight"><pre>
       Quantile       QTE   DML QTE  DML QTE pointwise lower  \
-0.10      0.10  0.092247  0.267950                -0.186735
-0.15      0.15  0.175176  0.293218                -0.081100
-0.20      0.20  0.238794  0.388071                 0.059685
-0.25      0.25  0.291405  0.406285                 0.090255
-0.30      0.30  0.337380  0.466756                 0.169196
-0.35      0.35  0.378688  0.606129                 0.313535
-0.40      0.40  0.416757  0.708459                 0.398770
-0.45      0.45  0.454397  0.725166                 0.419371
-0.50      0.50  0.490700  0.509461                 0.186836
-0.55      0.55  0.528580  0.488811                 0.172793
-0.60      0.60  0.567529  0.542989                 0.225175
-0.65      0.65  0.608392  0.699035                 0.325056
-0.70      0.70  0.652349  0.516528                 0.133596
-0.75      0.75  0.701078  0.685107                 0.204794
-0.80      0.80  0.757411  0.893851                 0.457088
-0.85      0.85  0.825862  0.896023                 0.484640
-0.90      0.90  0.917436  1.229443                 0.880579
+0.10      0.10  0.092646  0.267950                -0.186735
+0.15      0.15  0.174177  0.293218                -0.081100
+0.20      0.20  0.236411  0.388071                 0.059685
+0.25      0.25  0.289081  0.406285                 0.090255
+0.30      0.30  0.336498  0.466756                 0.169196
+0.35      0.35  0.378367  0.606129                 0.313535
+0.40      0.40  0.417988  0.708459                 0.398770
+0.45      0.45  0.456225  0.725166                 0.419371
+0.50      0.50  0.492410  0.509461                 0.186836
+0.55      0.55  0.528725  0.488811                 0.172793
+0.60      0.60  0.566600  0.542989                 0.225175
+0.65      0.65  0.607618  0.699035                 0.325056
+0.70      0.70  0.651919  0.516528                 0.133596
+0.75      0.75  0.700596  0.685107                 0.204794
+0.80      0.80  0.757690  0.893851                 0.457088
+0.85      0.85  0.826897  0.896023                 0.484640
+0.90      0.90  0.916913  1.229443                 0.880579
 
       DML QTE pointwise upper  DML QTE joint lower  DML QTE joint upper
 0.10                 0.722634            -0.399692             0.935591
@@ -1308,8 +1309,8 @@ Local Potential Quantile Y(1): [-3.19031969 -2.53273833 -2.01574297 -1.57245066 
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ml_g</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">num_leaves</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">LPQ_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 <span class="n">LPQ_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">tau_vec</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -1402,7 +1403,7 @@ Quantile: 0.9000000000000002
 8       0.50 -1.292997  0.188175 -1.144669  0.317487       -1.566024
 9       0.55 -1.029010  0.512149 -0.970065  0.516255       -1.441209
 10      0.60 -0.762284  0.840303 -0.649158  0.793570       -1.180951
-11      0.65 -0.489550  1.176554 -0.355209  1.556792       -0.919432
+11      0.65 -0.489550  1.176554 -0.352246  1.556792       -0.916984
 12      0.70 -0.204007  1.530940 -0.077883  1.742907       -0.742128
 13      0.75  0.100896  1.911030  0.354371  1.995248       -0.379614
 14      0.80  0.434535  2.331756  0.692725  2.562013        0.009986
@@ -1421,7 +1422,7 @@ Quantile: 0.9000000000000002
 8        -0.723314       -0.260360        0.895333
 9        -0.498921       -0.098319        1.130829
 10       -0.117366        0.070884        1.516256
-11        0.209014        0.793735        2.319850
+11        0.212491        0.793735        2.319850
 12        0.586362        0.973241        2.512572
 13        1.088357        1.168931        2.821566
 14        1.375465        1.685807        3.438219
@@ -1505,7 +1506,7 @@ Number of Cores used: 5
 0.35  1.220772  0.297682  4.100923  4.115060e-05  0.637326  1.804219
 0.40  1.369796  0.292105  4.689392  2.740180e-06  0.797280  1.942312
 0.45  1.403425  0.287041  4.889293  1.011988e-06  0.840836  1.966015
-0.50  1.500517  0.283974  5.283994  1.263974e-07  0.943938  2.057095
+0.50  1.501403  0.284073  5.285276  1.255151e-07  0.944630  2.058175
 0.55  1.642016  0.304130  5.399056  6.699259e-08  1.045932  2.238101
 0.60  1.502995  0.350518  4.287926  1.803492e-05  0.815993  2.189998
 0.65  1.901148  0.335846  5.660776  1.506900e-08  1.242902  2.559394
@@ -1513,7 +1514,7 @@ Number of Cores used: 5
 0.75  1.844308  0.339570  5.431306  5.594316e-08  1.178763  2.509853
 0.80  1.916914  0.305775  6.269043  3.632747e-10  1.317607  2.516222
 0.85  2.087947  0.346206  6.030934  1.630150e-09  1.409395  2.766499
-0.90  2.250354  0.536746  4.192587  2.757917e-05  1.198351  3.302357
+0.90  2.278907  0.541010  4.212317  2.527644e-05  1.218546  3.339268
 </pre></div></div>
 </div>
 <p>As for other <code class="docutils literal notranslate"><span class="pre">dml</span></code> objects, we can use <code class="docutils literal notranslate"><span class="pre">bootstrap()</span></code> and <code class="docutils literal notranslate"><span class="pre">confint()</span></code> methods to generate jointly valid confidence intervals.</p>
@@ -1535,23 +1536,23 @@ Number of Cores used: 5
 <div class="output_area docutils container">
 <div class="highlight"><pre>
          2.5 %    97.5 %
-0.10 -0.206614  2.413608
-0.15 -0.617877  2.722881
-0.20 -0.455120  1.870857
-0.25 -0.277968  2.140926
-0.30  0.258951  2.106746
-0.35  0.379038  2.062507
-0.40  0.543832  2.195761
-0.45  0.591782  2.215069
-0.50  0.697545  2.303489
-0.55  0.782050  2.501983
-0.60  0.511862  2.494129
-0.65  0.951502  2.850794
-0.70  0.889963  2.764798
-0.75  0.884132  2.804484
-0.80  1.052298  2.781530
-0.85  1.109005  3.066889
-0.90  0.732638  3.768071
+0.10 -0.208300  2.415294
+0.15 -0.620026  2.725031
+0.20 -0.456617  1.872354
+0.25 -0.279524  2.142482
+0.30  0.257762  2.107935
+0.35  0.377955  2.063590
+0.40  0.542769  2.196824
+0.45  0.590738  2.216113
+0.50  0.697118  2.305687
+0.55  0.780943  2.503089
+0.60  0.510586  2.495405
+0.65  0.950280  2.852016
+0.70  0.888757  2.766005
+0.75  0.882896  2.805720
+0.80  1.051186  2.782643
+0.85  1.107746  3.068148
+0.90  0.747164  3.810650
 </pre></div></div>
 </div>
 <p>As before, let us take a look at the estimated effects and confidence intervals.</p>
@@ -1582,7 +1583,7 @@ Number of Cores used: 5
 0.35      0.35  1.305341  1.220772                  0.637326
 0.40      0.40  1.364800  1.369796                  0.797280
 0.45      0.45  1.424328  1.403425                  0.840836
-0.50      0.50  1.481172  1.500517                  0.943938
+0.50      0.50  1.481172  1.501403                  0.944630
 0.55      0.55  1.541159  1.642016                  1.045932
 0.60      0.60  1.602587  1.502995                  0.815993
 0.65      0.65  1.666104  1.901148                  1.242902
@@ -1590,26 +1591,26 @@ Number of Cores used: 5
 0.75      0.75  1.810134  1.844308                  1.178763
 0.80      0.80  1.897220  1.916914                  1.317607
 0.85      0.85  2.000017  2.087947                  1.409395
-0.90      0.90  2.137396  2.250354                  1.198351
+0.90      0.90  2.137396  2.278907                  1.218546
 
       DML LQTE pointwise upper  DML LQTE joint lower  DML LQTE joint upper
-0.10                  2.011598             -0.206614              2.413608
-0.15                  2.210323             -0.617877              2.722881
-0.20                  1.513992             -0.455120              1.870857
-0.25                  1.769805             -0.277968              2.140926
-0.30                  1.823247              0.258951              2.106746
-0.35                  1.804219              0.379038              2.062507
-0.40                  1.942312              0.543832              2.195761
-0.45                  1.966015              0.591782              2.215069
-0.50                  2.057095              0.697545              2.303489
-0.55                  2.238101              0.782050              2.501983
-0.60                  2.189998              0.511862              2.494129
-0.65                  2.559394              0.951502              2.850794
-0.70                  2.477150              0.889963              2.764798
-0.75                  2.509853              0.884132              2.804484
-0.80                  2.516222              1.052298              2.781530
-0.85                  2.766499              1.109005              3.066889
-0.90                  3.302357              0.732638              3.768071
+0.10                  2.011598             -0.208300              2.415294
+0.15                  2.210323             -0.620026              2.725031
+0.20                  1.513992             -0.456617              1.872354
+0.25                  1.769805             -0.279524              2.142482
+0.30                  1.823247              0.257762              2.107935
+0.35                  1.804219              0.377955              2.063590
+0.40                  1.942312              0.542769              2.196824
+0.45                  1.966015              0.590738              2.216113
+0.50                  2.058175              0.697118              2.305687
+0.55                  2.238101              0.780943              2.503089
+0.60                  2.189998              0.510586              2.495405
+0.65                  2.559394              0.950280              2.852016
+0.70                  2.477150              0.888757              2.766005
+0.75                  2.509853              0.882896              2.805720
+0.80                  2.516222              1.051186              2.782643
+0.85                  2.766499              1.107746              3.068148
+0.90                  3.339268              0.747164              3.810650
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">

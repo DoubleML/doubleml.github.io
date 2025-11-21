@@ -66,7 +66,7 @@
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Python: Sample Selection Models" href="py_double_ml_ssm.html" />
+    <link rel="next" title="Python: Sensitivity Analysis for Causal ML" href="py_double_ml_sensitivity_booking.html" />
     <link rel="prev" title="Python: First Stage and Causal Estimation" href="py_double_ml_firststage.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -609,11 +609,12 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity.html">Python: Sensitivity Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_apo.html">Python: Average Potential Outcome (APO) Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_irm_vs_apo.html">Python: IRM and APO Model Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_lplr.html">Python: Log-Odds Effects for Logistic PLR models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_learner.html">Python: Choice of learners</a></li>
 <li class="toctree-l1"><a class="reference internal" href="py_double_ml_firststage.html">Python: First Stage and Causal Estimation</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Python: Cluster Robust Double Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="py_double_ml_ssm.html">Python: Sample Selection Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity_booking.html">Example: Sensitivity Analysis for Causal ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py_double_ml_sensitivity_booking.html">Python: Sensitivity Analysis for Causal ML</a></li>
 
 
 
@@ -759,9 +760,9 @@ specific fold and used for generation of predictions in hold-out samples. Thereb
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LassoCV</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLClusterData</span><span class="p">,</span> <span class="n">DoubleMLData</span><span class="p">,</span> <span class="n">DoubleMLPLIV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLData</span><span class="p">,</span> <span class="n">DoubleMLPLIV</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pliv_multiway_cluster_CKMS2021</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.plm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pliv_multiway_cluster_CKMS2021</span>
 </pre></div>
 </div>
 </div>
@@ -829,13 +830,12 @@ s_{\varepsilon v} &amp; 1 \end{matrix} \right) \right)
 </section>
 <section id="Data-Backend-for-Cluster-Data">
 <h3>Data-Backend for Cluster Data<a class="headerlink" href="#Data-Backend-for-Cluster-Data" title="Link to this heading">#</a></h3>
-<p>The implementation of cluster robust double machine learning is based on a special data-backend called <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.data.DoubleMLClusterData.html">DoubleMLClusterData</a>. As compared to the standard data-backend <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.data.DoubleMLData.html">DoubleMLData</a>, users can specify the clustering variables during instantiation of a
-<a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.data.DoubleMLClusterData.html">DoubleMLClusterData</a> object. The estimation framework will subsequently account for the provided clustering options.</p>
+<p>The implementation of cluster robust double machine learning on the standard data-backend <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.data.DoubleMLData.html">DoubleMLData</a>. Users can specify the clustering variables during instantiation of a <a class="reference external" href="https://docs.doubleml.org/stable/api/generated/doubleml.data.DoubleMLData.html">DoubleMLData</a> object via the <code class="docutils literal notranslate"><span class="pre">cluster_cols</span></code> argument. The estimation framework will subsequently account for the provided clustering options.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The simulated data is of type DoubleMLClusterData</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The simulated data is of type DoubleMLData</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -845,14 +845,15 @@ s_{\varepsilon v} &amp; 1 \end{matrix} \right) \right)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-================== DoubleMLClusterData Object ==================
+================== DoubleMLData Object ==================
 
 ------------------ Data summary      ------------------
 Outcome variable: Y
 Treatment variable(s): [&#39;D&#39;]
-Cluster variable(s): [&#39;cluster_var_i&#39;, &#39;cluster_var_j&#39;]
 Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]
 Instrument variable(s): [&#39;Z&#39;]
+Cluster variable(s): [&#39;cluster_var_i&#39;, &#39;cluster_var_j&#39;]
+Is cluster data: True
 No. Observations: 625
 
 ------------------ DataFrame info    ------------------
@@ -937,19 +938,20 @@ memory usage: 512.8 KB
 <div class="highlight"><pre>
 ================== DoubleMLPLIV Object ==================
 
------------------- Data summary      ------------------
+------------------ Data Summary      ------------------
 Outcome variable: Y
 Treatment variable(s): [&#39;D&#39;]
-Cluster variable(s): [&#39;cluster_var_i&#39;, &#39;cluster_var_j&#39;]
 Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]
 Instrument variable(s): [&#39;Z&#39;]
+Cluster variable(s): [&#39;cluster_var_i&#39;, &#39;cluster_var_j&#39;]
+Is cluster data: True
 No. Observations: 625
 
------------------- Score &amp; algorithm ------------------
-Score function: partialling out
-DML algorithm: dml2
 
------------------- Machine learner   ------------------
+------------------ Score &amp; Algorithm ------------------
+Score function: partialling out
+
+------------------ Machine Learner   ------------------
 Learner ml_l: LassoCV()
 Learner ml_m: LassoCV()
 Learner ml_r: LassoCV()
@@ -958,9 +960,8 @@ Learner ml_r: LassoCV()
 No. folds per cluster: 3
 No. folds: 9
 No. repeated sample splits: 1
-Apply cross-fitting: True
 
------------------- Fit summary       ------------------
+------------------ Fit Summary       ------------------
 Empty DataFrame
 Columns: [coef, std err, t, P&gt;|t|]
 Index: []
@@ -1109,14 +1110,15 @@ D  1.135871  0.118601  9.577271  9.964261e-22  0.903418  1.368324
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-================== DoubleMLClusterData Object ==================
+================== DoubleMLData Object ==================
 
 ------------------ Data summary      ------------------
 Outcome variable: Y
 Treatment variable(s): [&#39;D&#39;]
-Cluster variable(s): [&#39;cluster_var_i&#39;]
 Covariates: [&#39;X1&#39;, &#39;X2&#39;, &#39;X3&#39;, &#39;X4&#39;, &#39;X5&#39;, &#39;X6&#39;, &#39;X7&#39;, &#39;X8&#39;, &#39;X9&#39;, &#39;X10&#39;, &#39;X11&#39;, &#39;X12&#39;, &#39;X13&#39;, &#39;X14&#39;, &#39;X15&#39;, &#39;X16&#39;, &#39;X17&#39;, &#39;X18&#39;, &#39;X19&#39;, &#39;X20&#39;, &#39;X21&#39;, &#39;X22&#39;, &#39;X23&#39;, &#39;X24&#39;, &#39;X25&#39;, &#39;X26&#39;, &#39;X27&#39;, &#39;X28&#39;, &#39;X29&#39;, &#39;X30&#39;, &#39;X31&#39;, &#39;X32&#39;, &#39;X33&#39;, &#39;X34&#39;, &#39;X35&#39;, &#39;X36&#39;, &#39;X37&#39;, &#39;X38&#39;, &#39;X39&#39;, &#39;X40&#39;, &#39;X41&#39;, &#39;X42&#39;, &#39;X43&#39;, &#39;X44&#39;, &#39;X45&#39;, &#39;X46&#39;, &#39;X47&#39;, &#39;X48&#39;, &#39;X49&#39;, &#39;X50&#39;, &#39;X51&#39;, &#39;X52&#39;, &#39;X53&#39;, &#39;X54&#39;, &#39;X55&#39;, &#39;X56&#39;, &#39;X57&#39;, &#39;X58&#39;, &#39;X59&#39;, &#39;X60&#39;, &#39;X61&#39;, &#39;X62&#39;, &#39;X63&#39;, &#39;X64&#39;, &#39;X65&#39;, &#39;X66&#39;, &#39;X67&#39;, &#39;X68&#39;, &#39;X69&#39;, &#39;X70&#39;, &#39;X71&#39;, &#39;X72&#39;, &#39;X73&#39;, &#39;X74&#39;, &#39;X75&#39;, &#39;X76&#39;, &#39;X77&#39;, &#39;X78&#39;, &#39;X79&#39;, &#39;X80&#39;, &#39;X81&#39;, &#39;X82&#39;, &#39;X83&#39;, &#39;X84&#39;, &#39;X85&#39;, &#39;X86&#39;, &#39;X87&#39;, &#39;X88&#39;, &#39;X89&#39;, &#39;X90&#39;, &#39;X91&#39;, &#39;X92&#39;, &#39;X93&#39;, &#39;X94&#39;, &#39;X95&#39;, &#39;X96&#39;, &#39;X97&#39;, &#39;X98&#39;, &#39;X99&#39;, &#39;X100&#39;]
 Instrument variable(s): [&#39;Z&#39;]
+Cluster variable(s): [&#39;cluster_var_i&#39;]
+Is cluster data: True
 No. Observations: 625
 
 ------------------ DataFrame info    ------------------
@@ -1373,18 +1375,18 @@ D  0.951532  0.047954  19.842625  1.276189e-87  0.857544  1.04552
 </pre></div></div>
 </div>
 </section>
-<section id="Initialize-DoubleMLClusterData-object">
-<h3>Initialize <code class="docutils literal notranslate"><span class="pre">DoubleMLClusterData</span></code> object<a class="headerlink" href="#Initialize-DoubleMLClusterData-object" title="Link to this heading">#</a></h3>
+<section id="Initialize-DoubleMLData-object-with-clusters">
+<h3>Initialize <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> object with clusters<a class="headerlink" href="#Initialize-DoubleMLData-object-with-clusters" title="Link to this heading">#</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLClusterData</span><span class="p">(</span><span class="n">dml_df</span><span class="p">,</span>
-                               <span class="n">y_col</span><span class="o">=</span><span class="n">y_col</span><span class="p">,</span>
-                               <span class="n">d_cols</span><span class="o">=</span><span class="n">d_col</span><span class="p">,</span>
-                               <span class="n">z_cols</span><span class="o">=</span><span class="n">z_col</span><span class="p">,</span>
-                               <span class="n">cluster_cols</span><span class="o">=</span><span class="n">cluster_cols</span><span class="p">,</span>
-                               <span class="n">x_cols</span><span class="o">=</span><span class="n">sel_cols_chiang</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="p">(</span><span class="n">dml_df</span><span class="p">,</span>
+                        <span class="n">y_col</span><span class="o">=</span><span class="n">y_col</span><span class="p">,</span>
+                        <span class="n">d_cols</span><span class="o">=</span><span class="n">d_col</span><span class="p">,</span>
+                        <span class="n">z_cols</span><span class="o">=</span><span class="n">z_col</span><span class="p">,</span>
+                        <span class="n">cluster_cols</span><span class="o">=</span><span class="n">cluster_cols</span><span class="p">,</span>
+                        <span class="n">x_cols</span><span class="o">=</span><span class="n">sel_cols_chiang</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1401,14 +1403,15 @@ D  0.951532  0.047954  19.842625  1.276189e-87  0.857544  1.04552
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-================== DoubleMLClusterData Object ==================
+================== DoubleMLData Object ==================
 
 ------------------ Data summary      ------------------
 Outcome variable: y
 Treatment variable(s): [&#39;log_p&#39;]
-Cluster variable(s): [&#39;model.id&#39;, &#39;cdid&#39;]
 Covariates: [&#39;air&#39;, &#39;air mpd&#39;, &#39;air mpd^2&#39;, &#39;air space&#39;, &#39;air space^2&#39;, &#39;air^2&#39;, &#39;air^2 mpd&#39;, &#39;air^2 space&#39;, &#39;air^3&#39;, &#39;hpwt&#39;, &#39;hpwt air&#39;, &#39;hpwt air^2&#39;, &#39;hpwt mpd&#39;, &#39;hpwt mpd^2&#39;, &#39;hpwt space&#39;, &#39;hpwt space^2&#39;, &#39;hpwt^2&#39;, &#39;hpwt^2 air&#39;, &#39;hpwt^2 mpd&#39;, &#39;hpwt^2 space&#39;, &#39;hpwt^3&#39;, &#39;mpd&#39;, &#39;mpd space&#39;, &#39;mpd space^2&#39;, &#39;mpd^2&#39;, &#39;mpd^2 space&#39;, &#39;mpd^3&#39;, &#39;space&#39;, &#39;space^2&#39;, &#39;space^3&#39;]
 Instrument variable(s): [&#39;sum.other.hpwt&#39;]
+Cluster variable(s): [&#39;model.id&#39;, &#39;cdid&#39;]
+Is cluster data: True
 No. Observations: 2217
 
 ------------------ DataFrame info    ------------------
@@ -1416,7 +1419,7 @@ No. Observations: 2217
 Index: 2217 entries, 1 to 2217
 Columns: 37 entries, y to sum.other.space
 dtypes: float64(34), object(3)
-memory usage: 658.2+ KB
+memory usage: 722.7+ KB
 
 </pre></div></div>
 </div>
@@ -1462,7 +1465,7 @@ memory usage: 658.2+ KB
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-c:\Users\svenk\.conda\envs\dml_base\lib\site-packages\sklearn\linear_model\_coordinate_descent.py:617: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Duality gap: 3.5154789948092002, tolerance: 1.1187339840850312
+/opt/hostedtoolcache/Python/3.12.12/x64/lib/python3.12/site-packages/sklearn/linear_model/_coordinate_descent.py:681: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Duality gap: 3.5154782580830215, tolerance: 1.1187339840850312
   model = cd_fast.enet_coordinate_descent_gram(
 </pre></div></div>
 </div>
@@ -1548,7 +1551,7 @@ No. Observations: 2217
 Index: 2217 entries, 1 to 2217
 Columns: 37 entries, y to sum.other.space
 dtypes: float64(34), object(3)
-memory usage: 658.2+ KB
+memory usage: 722.7+ KB
 
 </pre></div></div>
 </div>
@@ -1585,10 +1588,10 @@ memory usage: 658.2+ KB
 <div class="output_area docutils container">
 <div class="highlight"><pre>
        coef   std err          t         P&gt;|t|     2.5 %    97.5 %  \
-0 -5.450152  1.262621  -4.316540  1.584942e-05 -7.924843 -2.975461
-1 -5.757819  0.928947  -6.198218  5.710586e-10 -7.578523 -3.937116
-2 -5.811825  0.784483  -7.408479  1.277561e-13 -7.349383 -4.274267
-3 -5.754870  0.464284 -12.395136  2.776728e-35 -6.664850 -4.844889
+0 -5.450152  1.271867  -4.285160  1.826074e-05 -7.956272 -2.957339
+1 -5.757819  0.934270  -6.162909  7.142045e-10 -7.576879 -3.926685
+2 -5.811825  0.797323  -7.289170  3.118708e-13 -7.347213 -4.249100
+3 -5.754870  0.464282 -12.395195  2.774683e-35 -6.664846 -4.844893
 
             z_col       clustering
 0  sum.other.hpwt          two-way
@@ -1608,7 +1611,7 @@ memory usage: 658.2+ KB
 </section>
 <section id="Define-Helper-Functions-for-Plotting">
 <h2>Define Helper Functions for Plotting<a class="headerlink" href="#Define-Helper-Functions-for-Plotting" title="Link to this heading">#</a></h2>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
@@ -1669,6 +1672,17 @@ memory usage: 658.2+ KB
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+&lt;&gt;:53: SyntaxWarning: invalid escape sequence &#39;\e&#39;
+&lt;&gt;:53: SyntaxWarning: invalid escape sequence &#39;\e&#39;
+/tmp/ipykernel_52203/2714838731.py:53: SyntaxWarning: invalid escape sequence &#39;\e&#39;
+  ax.set_xlabel(&#39;Second Cluster Variable $\ell$&#39;)
+</pre></div></div>
+</div>
 </section>
 </section>
 
@@ -1692,11 +1706,11 @@ memory usage: 658.2+ KB
       </div>
     </a>
     <a class="right-next"
-       href="py_double_ml_ssm.html"
+       href="py_double_ml_sensitivity_booking.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Python: Sample Selection Models</p>
+        <p class="prev-next-title">Python: Sensitivity Analysis for Causal ML</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1731,7 +1745,7 @@ memory usage: 658.2+ KB
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#(One-Way)-Cluster-Robust-Double-Machine-Learing">(One-Way) Cluster Robust Double Machine Learing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Real-Data-Application">Real-Data Application</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Load-and-Process-Data">Load and Process Data</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Initialize-DoubleMLClusterData-object">Initialize <code class="docutils literal notranslate"><span class="pre">DoubleMLClusterData</span></code> object</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Initialize-DoubleMLData-object-with-clusters">Initialize <code class="docutils literal notranslate"><span class="pre">DoubleMLData</span></code> object with clusters</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Two-Way-Clustering-with-Respect-to-Product-and-Market">Two-Way Clustering with Respect to Product and Market</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#One-Way-Clustering-with-Respect-to-the-Product">One-Way Clustering with Respect to the Product</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#One-Way-Clustering-with-Respect-to-the-Market">One-Way Clustering with Respect to the Market</a></li>
