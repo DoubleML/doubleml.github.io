@@ -784,6 +784,9 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 <tr class="row-even"><td><p><a class="reference internal" href="#doubleml.did.DoubleMLDIDCS.tune" title="doubleml.did.DoubleMLDIDCS.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>(param_grids[, tune_on_folds, ...])</p></td>
 <td><p>Hyperparameter-tuning for DoubleML models.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#doubleml.did.DoubleMLDIDCS.tune_ml_models" title="doubleml.did.DoubleMLDIDCS.tune_ml_models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune_ml_models</span></code></a>(ml_param_space[, ...])</p></td>
+<td><p>Hyperparameter-tuning for DoubleML models using Optuna.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -999,8 +1002,8 @@ Default is the root-mean-square error.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.irm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_irm_data</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
@@ -1267,6 +1270,11 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <dt class="sig sig-object py" id="doubleml.did.DoubleMLDIDCS.tune">
 <span class="sig-prename descclassname"><span class="pre">DoubleMLDIDCS.</span></span><span class="sig-name descname"><span class="pre">tune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tune_on_folds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring_methods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_folds_tune</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'grid_search'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter_randomized_search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs_cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_as_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_tune_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doubleml.did.DoubleMLDIDCS.tune" title="Link to this definition">#</a></dt>
 <dd><p>Hyperparameter-tuning for DoubleML models.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.13.0: </span>The <code class="docutils literal notranslate"><span class="pre">tune</span></code> method using grid/randomized search is maintained for backward compatibility.
+For more efficient hyperparameter optimization, use <a class="reference internal" href="#doubleml.did.DoubleMLDIDCS.tune_ml_models" title="doubleml.did.DoubleMLDIDCS.tune_ml_models"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tune_ml_models()</span></code></a> with Optuna,
+which provides Bayesian optimization and better performance.</p>
+</div>
 <p>The hyperparameter-tuning is performed using either an exhaustive search over specified parameter values
 implemented in <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> or via a randomized search implemented in
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="(in scikit-learn v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.RandomizedSearchCV</span></code></a>.</p>
@@ -1304,6 +1312,152 @@ Returned if <code class="docutils literal notranslate"><span class="pre">return_
 </p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="doubleml.did.DoubleMLDIDCS.tune_ml_models">
+<span class="sig-prename descclassname"><span class="pre">DoubleMLDIDCS.</span></span><span class="sig-name descname"><span class="pre">tune_ml_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ml_param_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring_methods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_as_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_tune_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optuna_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#doubleml.did.DoubleMLDIDCS.tune_ml_models" title="Link to this definition">#</a></dt>
+<dd><p>Hyperparameter-tuning for DoubleML models using Optuna.</p>
+<p>The hyperparameter-tuning is performed using Optuna’s Bayesian optimization.
+Unlike grid/randomized search, Optuna tuning is performed once on the whole dataset
+using cross-validation, and the same optimal hyperparameters are used for all folds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ml_param_space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – <p>A dict with a parameter grid function for each nuisance model
+(see attribute <code class="docutils literal notranslate"><span class="pre">params_names</span></code>) or for each learner (see attribute <code class="docutils literal notranslate"><span class="pre">learner_names</span></code>).
+Mixed specification are allowed, i.e., some nuisance models can share the same learner.
+For mixed specifications, learner-specific settings will be overwritten by nuisance model-specific settings.</p>
+<p>Each parameter grid must be specified as a callable function that takes an Optuna trial
+and returns a dictionary of hyperparameters.</p>
+<p>For PLR models, keys should be: <code class="docutils literal notranslate"><span class="pre">'ml_l'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ml_m'</span></code> (and optionally <code class="docutils literal notranslate"><span class="pre">'ml_g'</span></code> for IV-type score).
+For IRM models, keys should be: <code class="docutils literal notranslate"><span class="pre">'ml_g0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ml_g1'</span></code> (or just <code class="docutils literal notranslate"><span class="pre">'ml_g'</span></code> for both), <code class="docutils literal notranslate"><span class="pre">'ml_m'</span></code>.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ml_l_params</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+        <span class="s1">&#39;num_leaves&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;num_leaves&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+        <span class="s1">&#39;min_child_samples&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;min_child_samples&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="p">}</span>
+
+<span class="n">ml_param_space</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="n">ml_l_params</span><span class="p">,</span> <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">ml_m_params</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Note: Optuna tuning is performed globally (not fold-specific) to ensure consistent
+hyperparameters across all folds.</p>
+</p></li>
+<li><p><strong>scoring_methods</strong> (<em>None</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The scoring method used to evaluate the predictions. The scoring method must be set per
+nuisance model via a dict (see attribute <code class="docutils literal notranslate"><span class="pre">params_names</span></code> for the keys).
+If None, the estimator’s score method is used.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>cv</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>cross-validation splitter</em><em>, or </em><em>iterable</em><em> of </em><em>(</em><em>train_indices</em><em>, </em><em>test_indices</em><em>)</em>) – Cross-validation strategy used for Optuna-based tuning. If an integer is provided, a shuffled
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="(in scikit-learn v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.KFold</span></code></a> with the specified number of splits and <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code> is used.
+Custom splitters must implement <code class="docutils literal notranslate"><span class="pre">split</span></code> (and ideally <code class="docutils literal notranslate"><span class="pre">get_n_splits</span></code>), or be an iterable yielding
+<code class="docutils literal notranslate"><span class="pre">(train_indices,</span> <span class="pre">test_indices)</span></code> pairs. Default is <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+<li><p><strong>set_as_params</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether the hyperparameters should be set in order to be used when <a class="reference internal" href="#doubleml.did.DoubleMLDIDCS.fit" title="doubleml.did.DoubleMLDIDCS.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> is called.
+Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>return_tune_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Indicates whether detailed tuning results should be returned.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>optuna_settings</strong> (<em>None</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – <p>Optional configuration passed to the Optuna tuner. Supports global settings
+as well as learner-specific overrides (using the keys from <code class="docutils literal notranslate"><span class="pre">ml_param_space</span></code>).
+The dictionary can contain entries corresponding to Optuna’s study and optimize
+configuration such as:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_trials</span></code> (int): Number of optimization trials (default: 100)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timeout</span></code> (float): Time limit in seconds for the study (default: None)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">direction</span></code> (str): Optimization direction, ‘maximize’ or ‘minimize’.
+For sklearn scorers, use ‘maximize’ for negative metrics like ‘neg_mean_squared_error’
+(since -0.1 &gt; -0.2 means better performance). Can be set globally or per learner.
+(default: ‘maximize’)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sampler</span></code> (optuna.samplers.BaseSampler): Optuna sampler instance (default: None, uses TPE)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">callbacks</span></code> (list): List of callback functions (default: None)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">show_progress_bar</span></code> (bool): Show progress bar during optimization (default: False)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_jobs_optuna</span></code> (int): Number of parallel trials (default: None)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">verbosity</span></code> (int): Optuna logging verbosity level (default: None)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">study</span></code> (optuna.study.Study): Pre-created study instance (default: None)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">study_kwargs</span></code> (dict): Additional kwargs for study creation (default: {})</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimize_kwargs</span></code> (dict): Additional kwargs for study.optimize() (default: {})</p></li>
+</ul>
+<p>To set direction per learner (similar to <code class="docutils literal notranslate"><span class="pre">scoring_methods</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optuna_settings</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_trials&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="s1">&#39;direction&#39;</span><span class="p">:</span> <span class="s1">&#39;maximize&#39;</span><span class="p">,</span>  <span class="c1"># Global default</span>
+    <span class="s1">&#39;ml_g0&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;direction&#39;</span><span class="p">:</span> <span class="s1">&#39;maximize&#39;</span><span class="p">},</span>  <span class="c1"># Per-learner override</span>
+    <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;n_trials&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;direction&#39;</span><span class="p">:</span> <span class="s1">&#39;maximize&#39;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – Returned if <code class="docutils literal notranslate"><span class="pre">return_tune_res</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>tune_res</strong> (<em>list</em>) – A list containing detailed tuning results and the proposed hyperparameters.
+Returned if <code class="docutils literal notranslate"><span class="pre">return_tune_res</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleMLData</span><span class="p">,</span> <span class="n">DoubleMLPLR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.plm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMRegressor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_plr</span> <span class="o">=</span> <span class="n">DoubleMLPLR</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">dml_data</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+<span class="gp">... </span>   <span class="n">LGBMRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Define parameter grid functions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">ml_l_params</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">ml_m_params</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ml_param_space</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="n">ml_l_params</span><span class="p">,</span> <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">ml_m_params</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Tune with TPE sampler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">optuna_settings</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;n_trials&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;sampler&#39;</span><span class="p">:</span> <span class="n">optuna</span><span class="o">.</span><span class="n">samplers</span><span class="o">.</span><span class="n">TPESampler</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tune_res</span> <span class="o">=</span> <span class="n">dml_plr</span><span class="o">.</span><span class="n">tune_ml_models</span><span class="p">(</span><span class="n">ml_param_space</span><span class="p">,</span> <span class="n">optuna_settings</span><span class="o">=</span><span class="n">optuna_settings</span><span class="p">,</span> <span class="n">return_tune_res</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tune_res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;ml_l&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">best_params</span><span class="p">)</span>  
+<span class="go">{&#39;learning_rate&#39;: 0.03907122389107094}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Fit and get results</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_plr</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span> 
+<span class="go">      coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.57436  0.045206  12.705519  5.510257e-37  0.485759  0.662961</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example with scoring methods and directions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scoring_methods</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="s1">&#39;neg_mean_squared_error&#39;</span><span class="p">,</span>  <span class="c1"># Negative metric</span>
+<span class="gp">... </span>    <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="s1">&#39;neg_mean_squared_error&#39;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">optuna_settings</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;n_trials&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;direction&#39;</span><span class="p">:</span> <span class="s1">&#39;maximize&#39;</span><span class="p">,</span>  <span class="c1"># Maximize negative MSE (minimize MSE)</span>
+<span class="gp">... </span>    <span class="s1">&#39;sampler&#39;</span><span class="p">:</span> <span class="n">optuna</span><span class="o">.</span><span class="n">samplers</span><span class="o">.</span><span class="n">TPESampler</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tune_res</span> <span class="o">=</span> <span class="n">dml_plr</span><span class="o">.</span><span class="n">tune_ml_models</span><span class="p">(</span><span class="n">ml_param_space</span><span class="p">,</span> <span class="n">scoring_methods</span><span class="o">=</span><span class="n">scoring_methods</span><span class="p">,</span>
+<span class="gp">... </span>                                  <span class="n">optuna_settings</span><span class="o">=</span><span class="n">optuna_settings</span><span class="p">,</span> <span class="n">return_tune_res</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tune_res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;ml_l&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">best_params</span><span class="p">)</span>  
+<span class="go">{&#39;learning_rate&#39;: 0.04300012336462904}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dml_plr</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span> 
+<span class="go">       coef   std err          t         P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  0.574796  0.045062  12.755721  2.896820e-37  0.486476  0.663115</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -1369,6 +1523,7 @@ Returned if <code class="docutils literal notranslate"><span class="pre">return_
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.did.DoubleMLDIDCS.set_ml_nuisance_params"><code class="docutils literal notranslate"><span class="pre">DoubleMLDIDCS.set_ml_nuisance_params()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.did.DoubleMLDIDCS.set_sample_splitting"><code class="docutils literal notranslate"><span class="pre">DoubleMLDIDCS.set_sample_splitting()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.did.DoubleMLDIDCS.tune"><code class="docutils literal notranslate"><span class="pre">DoubleMLDIDCS.tune()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doubleml.did.DoubleMLDIDCS.tune_ml_models"><code class="docutils literal notranslate"><span class="pre">DoubleMLDIDCS.tune_ml_models()</span></code></a></li>
 </ul>
   </nav></div>
 

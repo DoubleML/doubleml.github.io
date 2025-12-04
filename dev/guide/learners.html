@@ -682,7 +682,7 @@ separately for <a class="reference internal" href="#learners-python"><span class
 <section id="python-learners-and-hyperparameters">
 <span id="learners-python"></span><h2><span class="section-number">7.1. </span>Python: Learners and hyperparameters<a class="headerlink" href="#python-learners-and-hyperparameters" title="Link to this heading">#</a></h2>
 <section id="minimum-requirements-for-learners">
-<h3><span class="section-number">7.1.1. </span>Minimum requirements for learners<a class="headerlink" href="#minimum-requirements-for-learners" title="Link to this heading">#</a></h3>
+<span id="py-learner-req"></span><h3><span class="section-number">7.1.1. </span>Minimum requirements for learners<a class="headerlink" href="#minimum-requirements-for-learners" title="Link to this heading">#</a></h3>
 <p>The minimum requirement for a learner to be used for nuisance models in the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
 package is</p>
 <ul class="simple">
@@ -699,7 +699,7 @@ method for a learner in order to be used for nuisance models of <a class="refere
 <p>Most learners from <a class="reference external" href="https://scikit-learn.org/">scikit-learn</a> satisfy all these minimum requirements.</p>
 </section>
 <section id="specifying-learners-and-set-hyperparameters">
-<h3><span class="section-number">7.1.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#specifying-learners-and-set-hyperparameters" title="Link to this heading">#</a></h3>
+<span id="py-set-params"></span><h3><span class="section-number">7.1.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#specifying-learners-and-set-hyperparameters" title="Link to this heading">#</a></h3>
 <p>The learners are set during initialization of the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> model classes
 <code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLPLR</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLPLIV</span></code>,
 <code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLIRM</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleMLIIVM</span></code>.
@@ -784,33 +784,117 @@ length <code class="docutils literal notranslate"><span class="pre">n_rep</span>
 </ul>
 </section>
 <section id="hyperparameter-tuning">
-<h3><span class="section-number">7.1.3. </span>Hyperparameter tuning<a class="headerlink" href="#hyperparameter-tuning" title="Link to this heading">#</a></h3>
+<span id="py-tune-params"></span><h3><span class="section-number">7.1.3. </span>Hyperparameter tuning<a class="headerlink" href="#hyperparameter-tuning" title="Link to this heading">#</a></h3>
 <p>Parameter tuning of learners for the nuisance functions of <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models can be done via
-the <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method.
+the <code class="docutils literal notranslate"><span class="pre">tune_ml_models()</span></code> method.
 To illustrate the parameter tuning, we generate data from a sparse partially linear regression model.</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-2" name="sd-tab-set-2" type="radio">
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-2">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
 
-<span class="gp">In [19]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">In [2]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="gp">In [20]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+<span class="gp">In [3]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
 
-<span class="gp">In [21]: </span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="gp">In [4]: </span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">200</span>
 
-<span class="gp">In [22]: </span><span class="n">n_vars</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="gp">In [5]: </span><span class="n">n_vars</span> <span class="o">=</span> <span class="mi">200</span>
 
-<span class="gp">In [23]: </span><span class="n">theta</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">In [6]: </span><span class="n">theta</span> <span class="o">=</span> <span class="mi">3</span>
 
-<span class="gp">In [24]: </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">))</span>
+<span class="gp">In [7]: </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">))</span>
 
-<span class="gp">In [25]: </span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+<span class="gp">In [8]: </span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
 
-<span class="gp">In [26]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+<span class="gp">In [9]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
 
-<span class="gp">In [27]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="gp">In [10]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The hyperparameter-tuning is performed using <a class="reference external" href="https://optuna.org/#key_features">Optuna</a> as backend. Here, we illustrate
+the tuning via defining a search space for the nuisance function learners over <code class="docutils literal notranslate"><span class="pre">100</span></code> trials. The most important input
+argument is the hyperparameter space via a dictionary of functions. This search space will internally transformed into a
+suitable <code class="docutils literal notranslate"><span class="pre">objective(trial)</span></code> function for <a class="reference external" href="https://optuna.org/#key_features">Optuna</a>.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-3">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+
+<span class="gp">In [12]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lasso</span>
+
+<span class="gp">In [13]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
+
+<span class="gp">In [14]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+
+<span class="gp">In [15]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+
+<span class="gp">In [16]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+
+<span class="gp">In [17]: </span><span class="k">def</span><span class="w"> </span><span class="nf">ml_l_params</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+<span class="gp">   ....: </span>    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)}</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [18]: </span><span class="k">def</span><span class="w"> </span><span class="nf">ml_m_params</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+<span class="gp">   ....: </span>    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)}</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [19]: </span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="n">ml_l_params</span><span class="p">,</span> <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">ml_m_params</span><span class="p">}</span>
+
+<span class="gp">In [20]: </span><span class="n">optuna_settings</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_trials&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;verbosity&#39;</span><span class="p">:</span> <span class="n">optuna</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">}</span>
+
+<span class="gp">In [21]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">tune_ml_models</span><span class="p">(</span><span class="n">ml_param_space</span><span class="o">=</span><span class="n">param_space</span><span class="p">,</span> <span class="n">optuna_settings</span><span class="o">=</span><span class="n">optuna_settings</span><span class="p">)</span>
+<span class="gh">Out[21]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7fc6b3064a10&gt;</span>
+
+<span class="gp">In [22]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+<span class="go">{&#39;ml_l&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.45034544002042237}, {&#39;alpha&#39;: 0.45034544002042237}, {&#39;alpha&#39;: 0.45034544002042237}, {&#39;alpha&#39;: 0.45034544002042237}, {&#39;alpha&#39;: 0.45034544002042237}]]}, &#39;ml_m&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: 0.1278077895385511}, {&#39;alpha&#39;: 0.1278077895385511}, {&#39;alpha&#39;: 0.1278077895385511}, {&#39;alpha&#39;: 0.1278077895385511}, {&#39;alpha&#39;: 0.1278077895385511}]]}}</span>
+
+<span class="gp">In [23]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="go">       coef   std err         t  P&gt;|t|     2.5 %    97.5 %</span>
+<span class="go">d  3.032544  0.077581  39.08871    0.0  2.880488  3.184601</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A more detailed description of hyperparameter-tuning possibilities can be found in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">Example Gallery</span></a>.</p>
+</section>
+<section id="hyperparameter-tuning-grid-search">
+<h3><span class="section-number">7.1.4. </span>Hyperparameter tuning (Grid Search)<a class="headerlink" href="#hyperparameter-tuning-grid-search" title="Link to this heading">#</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Deprecated:</strong> The <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method is deprecated and be removed in a future version.
+Please use <code class="docutils literal notranslate"><span class="pre">tune_ml_models()</span></code> for hyperparameter tuning, see <a class="reference internal" href="#py-tune-params"><span class="std std-ref">Hyperparameter tuning</span></a>.</p>
+</div>
+<p>Parameter tuning of learners for the nuisance functions of <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models can be done via
+the <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method.
+To illustrate the parameter tuning, we generate data from a sparse partially linear regression model.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-4">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+
+<span class="gp">In [2]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="gp">In [3]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3141</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="n">n_obs</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="gp">In [5]: </span><span class="n">n_vars</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="gp">In [6]: </span><span class="n">theta</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="gp">In [7]: </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">n_vars</span><span class="p">))</span>
+
+<span class="gp">In [8]: </span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+
+<span class="gp">In [9]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">d</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_obs</span><span class="p">,))</span>
+
+<span class="gp">In [10]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -819,44 +903,44 @@ Python</label><div class="sd-tab-content docutils">
 implemented in <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="(in scikit-learn v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GridSearchCV</span></code></a> or via a randomized search implemented in
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="(in scikit-learn v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.RandomizedSearchCV</span></code></a>.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-3" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-3">
+<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-5">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [28]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
 
-<span class="gp">In [29]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lasso</span>
+<span class="gp">In [12]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lasso</span>
 
-<span class="gp">In [30]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+<span class="gp">In [13]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
 
-<span class="gp">In [31]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+<span class="gp">In [14]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
 
-<span class="gp">In [32]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="gp">In [15]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
-<span class="gp">In [33]: </span><span class="n">par_grids</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)},</span>
-<span class="gp">   ....: </span>             <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)}}</span>
+<span class="gp">In [16]: </span><span class="n">par_grids</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)},</span>
+<span class="gp">   ....: </span>              <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)}}</span>
 <span class="gp">   ....: </span>
 
-<span class="gp">In [34]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">par_grids</span><span class="p">,</span> <span class="n">search_mode</span><span class="o">=</span><span class="s1">&#39;grid_search&#39;</span><span class="p">);</span>
+<span class="gp">In [17]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">par_grids</span><span class="p">,</span> <span class="n">search_mode</span><span class="o">=</span><span class="s1">&#39;grid_search&#39;</span><span class="p">);</span>
 
-<span class="gp">In [35]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+<span class="gp">In [18]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 <span class="go">{&#39;ml_l&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: np.float64(0.45000000000000007)}, {&#39;alpha&#39;: np.float64(0.45000000000000007)}, {&#39;alpha&#39;: np.float64(0.45000000000000007)}, {&#39;alpha&#39;: np.float64(0.45000000000000007)}, {&#39;alpha&#39;: np.float64(0.45000000000000007)}]]}, &#39;ml_m&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: np.float64(0.15000000000000002)}, {&#39;alpha&#39;: np.float64(0.15000000000000002)}, {&#39;alpha&#39;: np.float64(0.15000000000000002)}, {&#39;alpha&#39;: np.float64(0.15000000000000002)}, {&#39;alpha&#39;: np.float64(0.15000000000000002)}]]}}</span>
 
-<span class="gp">In [36]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="gp">In [19]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 <span class="go">       coef   std err          t  P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">d  3.031134  0.071777  42.229759    0.0  2.890454  3.171815</span>
 
-<span class="gp">In [37]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+<span class="gp">In [20]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
 
-<span class="gp">In [38]: </span><span class="n">par_grids</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)},</span>
-<span class="gp">   ....: </span>             <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)}}</span>
+<span class="gp">In [21]: </span><span class="n">par_grids</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)},</span>
+<span class="gp">   ....: </span>              <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)}}</span>
 <span class="gp">   ....: </span>
 
-<span class="gp">In [39]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">par_grids</span><span class="p">,</span> <span class="n">search_mode</span><span class="o">=</span><span class="s1">&#39;randomized_search&#39;</span><span class="p">,</span> <span class="n">n_iter_randomized_search</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="gp">In [22]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">par_grids</span><span class="p">,</span> <span class="n">search_mode</span><span class="o">=</span><span class="s1">&#39;randomized_search&#39;</span><span class="p">,</span> <span class="n">n_iter_randomized_search</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
 
-<span class="gp">In [40]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+<span class="gp">In [23]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 <span class="go">{&#39;ml_l&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: np.float64(0.4000000000000001)}, {&#39;alpha&#39;: np.float64(0.4000000000000001)}, {&#39;alpha&#39;: np.float64(0.4000000000000001)}, {&#39;alpha&#39;: np.float64(0.4000000000000001)}, {&#39;alpha&#39;: np.float64(0.4000000000000001)}]]}, &#39;ml_m&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: np.float64(0.09000000000000001)}, {&#39;alpha&#39;: np.float64(0.09000000000000001)}, {&#39;alpha&#39;: np.float64(0.09000000000000001)}, {&#39;alpha&#39;: np.float64(0.09000000000000001)}, {&#39;alpha&#39;: np.float64(0.09000000000000001)}]]}}</span>
 
-<span class="gp">In [41]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="gp">In [24]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 <span class="go">      coef   std err          t          P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">d  2.96582  0.086679  34.216207  1.388216e-256  2.795932  3.135707</span>
 </pre></div>
@@ -868,33 +952,33 @@ a regularization path implemented in <a class="reference external" href="https:/
 In this case the tuning should be done externally and the parameters can then be set via the
 <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-4" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-4">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-6">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [42]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [25]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
 
-<span class="gp">In [43]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LassoCV</span>
+<span class="gp">In [26]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LassoCV</span>
 
-<span class="gp">In [44]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+<span class="gp">In [27]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
 
-<span class="gp">In [45]: </span><span class="n">ml_l_tune</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dml_data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">In [28]: </span><span class="n">ml_l_tune</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dml_data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 
-<span class="gp">In [46]: </span><span class="n">ml_m_tune</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dml_data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
+<span class="gp">In [29]: </span><span class="n">ml_m_tune</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dml_data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dml_data</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
 
-<span class="gp">In [47]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+<span class="gp">In [30]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
 
-<span class="gp">In [48]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+<span class="gp">In [31]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
 
-<span class="gp">In [49]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="gp">In [32]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
-<span class="gp">In [50]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_l&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">ml_l_tune</span><span class="o">.</span><span class="n">alpha_</span><span class="p">});</span>
+<span class="gp">In [33]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_l&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">ml_l_tune</span><span class="o">.</span><span class="n">alpha_</span><span class="p">});</span>
 
-<span class="gp">In [51]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_m&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">ml_m_tune</span><span class="o">.</span><span class="n">alpha_</span><span class="p">});</span>
+<span class="gp">In [34]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">set_ml_nuisance_params</span><span class="p">(</span><span class="s1">&#39;ml_m&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">ml_m_tune</span><span class="o">.</span><span class="n">alpha_</span><span class="p">});</span>
 
-<span class="gp">In [52]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+<span class="gp">In [35]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 <span class="go">{&#39;ml_l&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: np.float64(0.4311947070055128)}, {&#39;alpha&#39;: np.float64(0.4311947070055128)}, {&#39;alpha&#39;: np.float64(0.4311947070055128)}, {&#39;alpha&#39;: np.float64(0.4311947070055128)}, {&#39;alpha&#39;: np.float64(0.4311947070055128)}]]}, &#39;ml_m&#39;: {&#39;d&#39;: [[{&#39;alpha&#39;: np.float64(0.14281403493938022)}, {&#39;alpha&#39;: np.float64(0.14281403493938022)}, {&#39;alpha&#39;: np.float64(0.14281403493938022)}, {&#39;alpha&#39;: np.float64(0.14281403493938022)}, {&#39;alpha&#39;: np.float64(0.14281403493938022)}]]}}</span>
 
-<span class="gp">In [53]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="gp">In [36]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 <span class="go">       coef   std err          t  P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">d  3.048723  0.075869  40.183855    0.0  2.900021  3.197424</span>
 </pre></div>
@@ -903,37 +987,37 @@ Python</label><div class="sd-tab-content docutils">
 </div>
 </section>
 <section id="evaluate-learners">
-<span id="eval-learners"></span><h3><span class="section-number">7.1.4. </span>Evaluate learners<a class="headerlink" href="#evaluate-learners" title="Link to this heading">#</a></h3>
+<span id="py-eval-learners"></span><h3><span class="section-number">7.1.5. </span>Evaluate learners<a class="headerlink" href="#evaluate-learners" title="Link to this heading">#</a></h3>
 <p>To compare different learners it is possible to evaluate the out-of-sample performance of each learner. The <code class="docutils literal notranslate"><span class="pre">summary</span></code>
 already displays either the root-mean-squared error (for regressions) or log-loss (for classifications) for each learner
 and each corresponding repetition of cross-fitting (<code class="docutils literal notranslate"><span class="pre">n_rep</span></code> argument).</p>
 <p>To illustrate the parameter tuning, we work with the following example.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-5" name="sd-tab-set-5" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-5">
+<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-7">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [54]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
 
-<span class="gp">In [55]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.plm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
+<span class="gp">In [2]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.plm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_plr_CCDDHNR2018</span>
 
-<span class="gp">In [56]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+<span class="gp">In [3]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span>
 
-<span class="gp">In [57]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+<span class="gp">In [4]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
 
-<span class="gp">In [58]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<span class="gp">In [5]: </span><span class="n">ml_l</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
 
-<span class="gp">In [59]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<span class="gp">In [6]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
 
-<span class="gp">In [60]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">In [7]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
 
-<span class="gp">In [61]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="gp">In [8]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
-<span class="gp">In [62]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="gp">In [9]: </span><span class="n">dml_plr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
-<span class="gp">In [63]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[63]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7f72ca830500&gt;</span>
+<span class="gp">In [10]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gh">Out[10]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7fc6c88d2960&gt;</span>
 
-<span class="gp">In [64]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="p">)</span>
+<span class="gp">In [11]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="p">)</span>
 <span class="go">================== DoubleMLPLR Object ==================</span>
 
 <span class="go">------------------ Data Summary      ------------------</span>
@@ -970,13 +1054,13 @@ Python</label><div class="sd-tab-content docutils">
 Further, the <code class="docutils literal notranslate"><span class="pre">evaluate_learners()</span></code> method allows to evalute customized evaluation metrics as e.g. the mean absolute error.
 The default option is still the root-mean-squared error for evaluation.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-6" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-6">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-8" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-8">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [65]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">nuisance_loss</span><span class="p">)</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [12]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">nuisance_loss</span><span class="p">)</span>
 <span class="go">{&#39;ml_l&#39;: array([[1.17385178]]), &#39;ml_m&#39;: array([[1.03244552]])}</span>
 
-<span class="gp">In [66]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">())</span>
+<span class="gp">In [13]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">())</span>
 <span class="go">{&#39;ml_l&#39;: array([[1.17385178]]), &#39;ml_m&#39;: array([[1.03244552]])}</span>
 </pre></div>
 </div>
@@ -985,18 +1069,18 @@ Python</label><div class="sd-tab-content docutils">
 <p>To evaluate a customized metric one has to define a <code class="docutils literal notranslate"><span class="pre">callable</span></code>. For some models (e.g. the IRM model) it is important that
 the metric can handle <code class="docutils literal notranslate"><span class="pre">nan</span></code> values as not all target values are known.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-7" name="sd-tab-set-7" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-7">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-9" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-9">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [67]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_absolute_error</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_absolute_error</span>
 
-<span class="gp">In [68]: </span><span class="k">def</span><span class="w"> </span><span class="nf">mae</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="gp">In [15]: </span><span class="k">def</span><span class="w"> </span><span class="nf">mae</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
 <span class="gp">   ....: </span>    <span class="n">subset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_true</span><span class="p">))</span>
 <span class="gp">   ....: </span>    <span class="k">return</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">[</span><span class="n">subset</span><span class="p">],</span> <span class="n">y_pred</span><span class="p">[</span><span class="n">subset</span><span class="p">])</span>
 <span class="gp">   ....: </span>
 
-<span class="gp">In [69]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">(</span><span class="n">learners</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ml_l&#39;</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">mae</span><span class="p">)</span>
-<span class="gh">Out[69]: </span><span class="go">{&#39;ml_l&#39;: array([[0.95559917]])}</span>
+<span class="gp">In [16]: </span><span class="n">dml_plr_obj</span><span class="o">.</span><span class="n">evaluate_learners</span><span class="p">(</span><span class="n">learners</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ml_l&#39;</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">mae</span><span class="p">)</span>
+<span class="gh">Out[16]: </span><span class="go">{&#39;ml_l&#39;: array([[0.95559917]])}</span>
 </pre></div>
 </div>
 </div>
@@ -1004,40 +1088,40 @@ Python</label><div class="sd-tab-content docutils">
 <p>A more detailed notebook on the choice of learners is available in the <a class="reference internal" href="../examples/index.html#examplegallery"><span class="std std-ref">example gallery</span></a>.</p>
 </section>
 <section id="advanced-external-predictions">
-<span id="ext-pred"></span><h3><span class="section-number">7.1.5. </span>Advanced: External Predictions<a class="headerlink" href="#advanced-external-predictions" title="Link to this heading">#</a></h3>
+<span id="py-ext-pred"></span><h3><span class="section-number">7.1.6. </span>Advanced: External Predictions<a class="headerlink" href="#advanced-external-predictions" title="Link to this heading">#</a></h3>
 <p>Since there might be cases where the user wants to use a learner that is not supported by <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
 or do some extensive hyperparameter tuning, it is possible to use external predictions for the nuisance functions.
 Remark that this requires the user to take care of the cross-fitting procedure and learner evaluation.</p>
 <p>To illustrate the use of external predictions, we work with the following example.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-8" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-8">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-10" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-10">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [70]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="gp">In [71]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+<span class="gp">In [2]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
 
-<span class="gp">In [72]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.irm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_irm_data</span>
+<span class="gp">In [3]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.irm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_irm_data</span>
 
-<span class="gp">In [73]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
+<span class="gp">In [4]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
 
-<span class="gp">In [74]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
+<span class="gp">In [5]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
 
-<span class="gp">In [75]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+<span class="gp">In [6]: </span><span class="n">data</span> <span class="o">=</span> <span class="n">make_irm_data</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
 
-<span class="gp">In [76]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="gp">In [7]: </span><span class="n">obj_dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
 <span class="go"># DoubleML with interal predictions</span>
-<span class="gp">In [77]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [8]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [78]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">In [9]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="gp">In [79]: </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="gp">In [10]: </span><span class="n">dml_irm_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
-<span class="gp">In [80]: </span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[80]: </span><span class="go">&lt;doubleml.irm.irm.DoubleMLIRM at 0x7f72bf830740&gt;</span>
+<span class="gp">In [11]: </span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gh">Out[11]: </span><span class="go">&lt;doubleml.irm.irm.DoubleMLIRM at 0x7fc6c8282690&gt;</span>
 
-<span class="gp">In [81]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="gp">In [12]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 <span class="go">       coef  std err         t     P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">d  0.599297   0.1887  3.175931  0.001494  0.229452  0.969141</span>
 </pre></div>
@@ -1049,10 +1133,10 @@ To rely on external predictions, the user has to provide a nested dictionary, wh
 variable names and the inner level keys correspond to the nuisance learner names. Further the values have to be <code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays of shape
 <code class="docutils literal notranslate"><span class="pre">(n_obs,</span> <span class="pre">n_rep)</span></code>. Here we generate an external predictions dictionary from the internal <code class="docutils literal notranslate"><span class="pre">predictions</span></code> attribute.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-9" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-9">
+<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-11" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-11">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [82]: </span><span class="n">pred_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="p">{</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="n">pred_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="p">{</span>
 <span class="gp">   ....: </span>    <span class="s2">&quot;ml_g0&quot;</span><span class="p">:</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;ml_g0&quot;</span><span class="p">][:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span>
 <span class="gp">   ....: </span>    <span class="s2">&quot;ml_g1&quot;</span><span class="p">:</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;ml_g1&quot;</span><span class="p">][:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span>
 <span class="gp">   ....: </span>    <span class="s2">&quot;ml_m&quot;</span><span class="p">:</span> <span class="n">dml_irm_obj</span><span class="o">.</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;ml_m&quot;</span><span class="p">][:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
@@ -1065,19 +1149,19 @@ Python</label><div class="sd-tab-content docutils">
 </div>
 <p>The external predictions can be passed to the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method of the <code class="xref py py-class docutils literal notranslate"><span class="pre">doubleml.DoubleML</span></code> class via the <code class="docutils literal notranslate"><span class="pre">external_predictions</span></code> argument.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-10" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-10">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-12" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-12">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [83]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">DMLDummyRegressor</span><span class="p">()</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="n">ml_g</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">DMLDummyRegressor</span><span class="p">()</span>
 
-<span class="gp">In [84]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">DMLDummyClassifier</span><span class="p">()</span>
+<span class="gp">In [15]: </span><span class="n">ml_m</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">DMLDummyClassifier</span><span class="p">()</span>
 
-<span class="gp">In [85]: </span><span class="n">dml_irm_obj_ext</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
+<span class="gp">In [16]: </span><span class="n">dml_irm_obj_ext</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLIRM</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
-<span class="gp">In [86]: </span><span class="n">dml_irm_obj_ext</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">external_predictions</span><span class="o">=</span><span class="n">pred_dict</span><span class="p">)</span>
-<span class="gh">Out[86]: </span><span class="go">&lt;doubleml.irm.irm.DoubleMLIRM at 0x7f72bf831a90&gt;</span>
+<span class="gp">In [17]: </span><span class="n">dml_irm_obj_ext</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">external_predictions</span><span class="o">=</span><span class="n">pred_dict</span><span class="p">)</span>
+<span class="gh">Out[17]: </span><span class="go">&lt;doubleml.irm.irm.DoubleMLIRM at 0x7fc6bbeb9d60&gt;</span>
 
-<span class="gp">In [87]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_irm_obj_ext</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+<span class="gp">In [18]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_irm_obj_ext</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 <span class="go">       coef  std err         t     P&gt;|t|     2.5 %    97.5 %</span>
 <span class="go">d  0.599297   0.1887  3.175931  0.001494  0.229452  0.969141</span>
 </pre></div>
@@ -1093,8 +1177,8 @@ This can be handled by adding a dummy column to the data.</p>
 </section>
 <section id="r-learners-and-hyperparameters">
 <span id="learners-r"></span><h2><span class="section-number">7.2. </span>R: Learners and hyperparameters<a class="headerlink" href="#r-learners-and-hyperparameters" title="Link to this heading">#</a></h2>
-<section id="id2">
-<h3><span class="section-number">7.2.1. </span>Minimum requirements for learners<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<section id="r-learner-req">
+<span id="id3"></span><h3><span class="section-number">7.2.1. </span>Minimum requirements for learners<a class="headerlink" href="#r-learner-req" title="Link to this heading">#</a></h3>
 <p>The minimum requirement for a learner to be used for nuisance models in the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> package is</p>
 <ul class="simple">
 <li><p>The implementation as a learner for regression or classification in the <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> package
@@ -1118,8 +1202,8 @@ instantiation using the <code class="docutils literal notranslate"><span class="
 <p>An interactive list of provided learners in the <a class="reference external" href="https://mlr3.mlr-org.com/">mlr3</a> and extension packages can be found on the
 <a class="reference external" href="https://mlr3extralearners.mlr-org.com/articles/learners/list_learners.html">website of the mlr3extralearners package</a>.</p>
 </section>
-<section id="id9">
-<h3><span class="section-number">7.2.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<section id="r-set-params">
+<span id="id10"></span><h3><span class="section-number">7.2.2. </span>Specifying learners and set hyperparameters<a class="headerlink" href="#r-set-params" title="Link to this heading">#</a></h3>
 <p>The learners are set during initialization of the <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> model classes
 <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLR.html">DoubleML::DoubleMLPLR</a>,
 <a class="reference external" href="https://docs.doubleml.org/r/stable/reference/DoubleMLPLIV.html">DoubleML::DoubleMLPLIV</a> ,
@@ -1131,8 +1215,8 @@ for example <a class="reference external" href="https://mlr3learners.mlr-org.com
 (<code class="docutils literal notranslate"><span class="pre">lrn(&quot;regr.ranger&quot;)</span></code>) for regression with random forests based on the  <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a>
 package for R.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-11" name="sd-tab-set-11" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-11">
+<input checked="checked" id="sd-tab-item-13" name="sd-tab-set-13" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-13">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1176,8 +1260,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params(learner,</span> <span class="pre">treat_var,</span> <span class="pre">params,</span> <span class="pre">set_fold_specific)</span></code>.</p></li>
 </ul>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-12" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-12">
+<input checked="checked" id="sd-tab-item-14" name="sd-tab-set-14" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-14">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1239,8 +1323,8 @@ parameter passing is only supported, if all parameters are set fold-specific.</p
 fields <code class="docutils literal notranslate"><span class="pre">$learner</span></code> and <code class="docutils literal notranslate"><span class="pre">$params</span></code>.</p></li>
 </ul>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-13" name="sd-tab-set-13" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-13">
+<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-15" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-15">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1313,8 +1397,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 <p>The following example illustrates how to set parameters for each fold.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-14" name="sd-tab-set-14" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-14">
+<input checked="checked" id="sd-tab-item-16" name="sd-tab-set-16" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-16">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1413,7 +1497,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="using-pipelines-to-construct-learners">
-<h3><span class="section-number">7.2.3. </span>Using pipelines to construct learners<a class="headerlink" href="#using-pipelines-to-construct-learners" title="Link to this heading">#</a></h3>
+<span id="r-pipelines"></span><h3><span class="section-number">7.2.3. </span>Using pipelines to construct learners<a class="headerlink" href="#using-pipelines-to-construct-learners" title="Link to this heading">#</a></h3>
 <p>Users can also specify learners that have been constructed from a pipeline using the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a>
 package. In general, pipelines can be used to perform data preprocessing, feature selection, combine learners and even
 to perform hyperparameter tuning. In the following, we provide two examples on how to construct a single learner and how
@@ -1422,12 +1506,16 @@ we refer to the <a class="reference external" href="https://mlr3book.mlr-org.com
 notebook on how to use <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> in combination with <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
 is available in the example gallery.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-15" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-15">
+<input checked="checked" id="sd-tab-item-17" name="sd-tab-set-17" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-17">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">mlr3pipelines</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">DoubleML</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3learners</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">mlr3pipelines</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
 
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
 <span class="c1"># Define random forest learner in a pipeline</span>
@@ -1437,6 +1525,7 @@ R</label><div class="sd-tab-content docutils">
 <span class="n">ml_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">single_learner_pipeline</span><span class="p">)</span>
 <span class="n">ml_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as_learner</span><span class="p">(</span><span class="n">single_learner_pipeline</span><span class="p">)</span>
 
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">make_plr_CCDDHNR2018</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">return_type</span><span class="o">=</span><span class="s">&#39;data.table&#39;</span><span class="p">)</span>
 <span class="n">obj_dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DoubleMLData</span><span class="o">$</span><span class="nf">new</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">y_col</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d_cols</span><span class="o">=</span><span class="s">&quot;d&quot;</span><span class="p">)</span>
 
 <span class="n">n_rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
@@ -1509,7 +1598,7 @@ marshal, missings, offset, oob_error, selected_features, and weights
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
   Estimate. Std. Error t value Pr(&gt;|t|)    
-d   0.52732    0.04586    11.5   &lt;2e-16 ***
+d   0.52465    0.04583   11.45   &lt;2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -1571,16 +1660,16 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </div>
 </section>
-<section id="id16">
-<h3><span class="section-number">7.2.4. </span>Hyperparameter tuning<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
+<section id="r-tune-params">
+<span id="id17"></span><h3><span class="section-number">7.2.4. </span>Hyperparameter tuning<a class="headerlink" href="#r-tune-params" title="Link to this heading">#</a></h3>
 <p>Parameter tuning of learners for the nuisance functions of <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models can be done via the <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method.
 The <code class="docutils literal notranslate"><span class="pre">tune()</span></code> method passes various options and parameters to the tuning interface provided by the
 <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a> package. The <a class="reference external" href="https://mlr3book.mlr-org.com/">mlr3 book</a> provides a
 <a class="reference external" href="https://mlr3book.mlr-org.com/chapters/chapter4/hyperparameter_optimization.html">step-by-step introduction to parameter tuning</a>.</p>
 <p>To illustrate the parameter tuning, we generate data from a sparse partially linear regression model.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-16" name="sd-tab-set-16" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-16">
+<input checked="checked" id="sd-tab-item-18" name="sd-tab-set-18" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-18">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1638,8 +1727,8 @@ which are later used in the fitting stage for all folds.</p>
 For example, if we set <code class="docutils literal notranslate"><span class="pre">n_folds=2</span></code> at initialization of the <code class="docutils literal notranslate"><span class="pre">DoubleMLPLR</span></code> object and use a 5-fold cross-validated error
 for tuning, each of the two folds would be split up into 5 subfolds and the error would be evaluated on these subfolds.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-17" name="sd-tab-set-17" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-17">
+<input checked="checked" id="sd-tab-item-19" name="sd-tab-set-19" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-19">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1801,8 +1890,8 @@ Alternatively, the powerful functionalities of the <a class="reference external"
 external parameter tuning of the nuisance parts. The optimally chosen parameters can then be passed to the
 <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> models using the <code class="docutils literal notranslate"><span class="pre">set_ml_nuisance_params()</span></code> method.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-18" name="sd-tab-set-18" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-18">
+<input checked="checked" id="sd-tab-item-20" name="sd-tab-set-20" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-20">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1842,8 +1931,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 as provided by the  <a class="reference external" href="https://github.com/imbs-hl/ranger">ranger</a> package. In this example, we use random search to find optimal
 parameters <code class="docutils literal notranslate"><span class="pre">mtry</span></code> and <code class="docutils literal notranslate"><span class="pre">max.depth</span></code> of a random forest. Evaluation is based on 3-fold cross-validation.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-19" name="sd-tab-set-19" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-19">
+<input checked="checked" id="sd-tab-item-21" name="sd-tab-set-21" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-21">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1926,7 +2015,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="hyperparameter-tuning-with-pipelines">
-<h3><span class="section-number">7.2.5. </span>Hyperparameter tuning with pipelines<a class="headerlink" href="#hyperparameter-tuning-with-pipelines" title="Link to this heading">#</a></h3>
+<span id="r-tune-and-pipelines"></span><h3><span class="section-number">7.2.5. </span>Hyperparameter tuning with pipelines<a class="headerlink" href="#hyperparameter-tuning-with-pipelines" title="Link to this heading">#</a></h3>
 <p>As an alternative to the previously presented tuning approach, it is possible to base the parameter tuning on a pipeline
 as provided by the <a class="reference external" href="https://mlr3pipelines.mlr-org.com/">mlr3pipelines</a> package. The basic idea of this approach is to
 define a learner via a pipeline and then perform the tuning via the <code class="docutils literal notranslate"><span class="pre">tune()</span></code>. We will shortly repeat the lasso example
@@ -1934,8 +2023,8 @@ from above. In general, the pipeline-based approach can be used to find optimal 
 one or multiple learners, but also for other parameters, which are, for example, involved in the data preprocessing. We
 refer to more details provided in the <a class="reference external" href="https://mlr3book.mlr-org.com/chapters/chapter7/sequential_pipelines.html">Pipelines Chapter in the mlr3book</a>.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-20" name="sd-tab-set-20" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-20">
+<input checked="checked" id="sd-tab-item-22" name="sd-tab-set-22" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-22">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -1945,6 +2034,15 @@ R</label><div class="sd-tab-content docutils">
 <span class="nf">library</span><span class="p">(</span><span class="n">mlr3pipelines</span><span class="p">)</span>
 <span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
 <span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;bbotk&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">3141</span><span class="p">)</span>
+<span class="n">n_obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
+<span class="n">n_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
+<span class="n">theta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">matrix</span><span class="p">(</span><span class="n">stats</span><span class="o">::</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n_vars</span><span class="p">),</span><span class="w"> </span><span class="n">nrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_obs</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_vars</span><span class="p">)</span>
+<span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">drop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">]</span><span class="w"> </span><span class="o">%*%</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stats</span><span class="o">::</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+<span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">theta</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">drop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">]</span><span class="w"> </span><span class="o">%*%</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">)</span><span class="w">  </span><span class="o">+</span><span class="w"> </span><span class="n">stats</span><span class="o">::</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+<span class="n">dml_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">double_ml_data_from_matrix</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">)</span>
 
 <span class="c1"># Define learner in a pipeline</span>
 <span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
@@ -2048,15 +2146,16 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-requirements-for-learners">7.1.1. Minimum requirements for learners</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specifying-learners-and-set-hyperparameters">7.1.2. Specifying learners and set hyperparameters</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning">7.1.3. Hyperparameter tuning</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-learners">7.1.4. Evaluate learners</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-external-predictions">7.1.5. Advanced: External Predictions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning-grid-search">7.1.4. Hyperparameter tuning (Grid Search)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-learners">7.1.5. Evaluate learners</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-external-predictions">7.1.6. Advanced: External Predictions</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#r-learners-and-hyperparameters">7.2. R: Learners and hyperparameters</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">7.2.1. Minimum requirements for learners</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">7.2.2. Specifying learners and set hyperparameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#r-learner-req">7.2.1. Minimum requirements for learners</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#r-set-params">7.2.2. Specifying learners and set hyperparameters</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pipelines-to-construct-learners">7.2.3. Using pipelines to construct learners</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">7.2.4. Hyperparameter tuning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#r-tune-params">7.2.4. Hyperparameter tuning</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning-with-pipelines">7.2.5. Hyperparameter tuning with pipelines</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#references">7.2.5.1. References</a></li>
 </ul>
