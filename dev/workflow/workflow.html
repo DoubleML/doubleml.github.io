@@ -735,6 +735,7 @@ In this example, let us specify a random forest and an xgboost learner for both 
 We can directly pass the parameters during initialization of the learner objects.
 Because we have a binary treatment variable, we can use a classification learner for the corresponding nuisance part.
 We use a regression learner for the continuous outcome variable net financial assets.</p>
+<p>Hyperparameter tuning of the machine learning models can be performed in Step 5. before estimation.</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-2">
@@ -857,39 +858,127 @@ R</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </section>
-<section id="estimation">
-<h2>5. Estimation<a class="headerlink" href="#estimation" title="Link to this heading">#</a></h2>
-<p>We perform estimation in Step 5. In this step, the cross-fitting algorithm is executed such that the predictions
-in the score are computed. As an output, users can access the coefficient estimates and standard errors either via the
-corresponding fields or via a summary.</p>
+<section id="hyperparameter-tuning">
+<h2>5. Hyperparameter Tuning<a class="headerlink" href="#hyperparameter-tuning" title="Link to this heading">#</a></h2>
+<p>As (optional) step before estimation, we can perform hyperparameter tuning of the machine learning models.
+<a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> for Python supports hyperparameter tuning via <a class="reference external" href="https://optuna.org/">Optuna</a> and
+the R version relies on the <a class="reference external" href="https://mlr3tuning.mlr-org.com/">mlr3tuning</a> package.
+For more details, please refer to the <a class="reference internal" href="../guide/learners.html#py-tune-params"><span class="std std-ref">hyperparameter tuning (Python)</span></a> and <a class="reference internal" href="../guide/learners.html#r-tune-params"><span class="std std-ref">hyperparameter tuning (R)</span></a>
+sections in the documentation.</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-6" name="sd-tab-set-3" type="radio">
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-6">
 Python</label><div class="sd-tab-content docutils">
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Estimation</span>
-<span class="gp">In [16]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[16]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7fc313751c70&gt;</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
 
-<span class="go"># Coefficient estimate</span>
-<span class="gp">In [17]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">coef</span>
-<span class="gh">Out[17]: </span><span class="go">array([8909.63407762])</span>
+<span class="go"># define search spaces for hyperparameters</span>
+<span class="gp">In [17]: </span><span class="k">def</span><span class="w"> </span><span class="nf">ml_l_params</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+<span class="gp">   ....: </span>    <span class="k">return</span> <span class="p">{</span>
+<span class="gp">   ....: </span>        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+<span class="gp">   ....: </span>        <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;max_depth&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+<span class="gp">   ....: </span>        <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+<span class="gp">   ....: </span>    <span class="p">}</span>
+<span class="gp">   ....: </span>
 
-<span class="go"># Standard error</span>
-<span class="gp">In [18]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">se</span>
-<span class="gh">Out[18]: </span><span class="go">array([1321.82228913])</span>
+<span class="gp">In [18]: </span><span class="k">def</span><span class="w"> </span><span class="nf">ml_m_params</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+<span class="gp">   ....: </span>    <span class="k">return</span> <span class="p">{</span>
+<span class="gp">   ....: </span>        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+<span class="gp">   ....: </span>        <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;max_depth&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+<span class="gp">   ....: </span>        <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+<span class="gp">   ....: </span>    <span class="p">}</span>
+<span class="gp">   ....: </span>
 
-<span class="go"># Summary</span>
-<span class="gp">In [19]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">summary</span>
-<span class="gh">Out[19]: </span>
-<span class="go">             coef      std err  ...        2.5 %        97.5 %</span>
-<span class="go">e401  8909.634078  1321.822289  ...  6318.909997  11500.358158</span>
+<span class="gp">In [19]: </span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">   ....: </span>    <span class="s1">&#39;ml_l&#39;</span><span class="p">:</span> <span class="n">ml_l_params</span><span class="p">,</span>
+<span class="gp">   ....: </span>    <span class="s1">&#39;ml_m&#39;</span><span class="p">:</span> <span class="n">ml_m_params</span>
+<span class="gp">   ....: </span><span class="p">}</span>
+<span class="gp">   ....: </span>
 
-<span class="go">[1 rows x 6 columns]</span>
+<span class="gp">In [20]: </span><span class="n">optuna_settings</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">   ....: </span>    <span class="s1">&#39;n_trials&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>  <span class="c1"># small number for illustration purposes</span>
+<span class="gp">   ....: </span>    <span class="s1">&#39;show_progress_bar&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">   ....: </span>    <span class="s1">&#39;verbosity&#39;</span><span class="p">:</span> <span class="n">optuna</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span>  <span class="c1"># Suppress Optuna logs</span>
+<span class="gp">   ....: </span><span class="p">}</span>
+<span class="gp">   ....: </span>
+
+<span class="go"># Hyperparameter tuning</span>
+<span class="gp">In [21]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">tune_ml_models</span><span class="p">(</span><span class="n">ml_param_space</span><span class="o">=</span><span class="n">param_space</span><span class="p">,</span>
+<span class="gp">   ....: </span>                            <span class="n">optuna_settings</span><span class="o">=</span><span class="n">optuna_settings</span><span class="p">,</span>
+<span class="gp">   ....: </span><span class="p">)</span>
+<span class="gp">   ....: </span>
+<span class="gh">Out[21]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7f96cb900ef0&gt;</span>
 </pre></div>
 </div>
 </div>
 <input id="sd-tab-item-7" name="sd-tab-set-3" type="radio">
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-7">
+R</label><div class="sd-tab-content docutils">
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">mlr3tuning</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">paradox</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;mlr3&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">lgr</span><span class="o">::</span><span class="nf">get_logger</span><span class="p">(</span><span class="s">&quot;bbotk&quot;</span><span class="p">)</span><span class="o">$</span><span class="nf">set_threshold</span><span class="p">(</span><span class="s">&quot;warn&quot;</span><span class="p">)</span>
+
+<span class="c1"># Define search spaces for hyperparameters</span>
+<span class="n">param_grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;ml_l&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ps</span><span class="p">(</span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">p_int</span><span class="p">(</span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">),</span>
+<span class="w">              </span><span class="n">max.depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">p_int</span><span class="p">(</span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">)),</span>
+<span class="w">  </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ps</span><span class="p">(</span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">p_int</span><span class="p">(</span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">),</span>
+<span class="w">              </span><span class="n">max.depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">p_int</span><span class="p">(</span><span class="n">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="n">tune_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span>
+<span class="w">  </span><span class="n">terminator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">trm</span><span class="p">(</span><span class="s">&quot;evals&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n_evals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">),</span>
+<span class="w">  </span><span class="n">algorithm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">tnr</span><span class="p">(</span><span class="s">&quot;grid_search&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">),</span>
+<span class="w">  </span><span class="n">measure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="s">&quot;ml_l&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;regr.mse&quot;</span><span class="p">),</span>
+<span class="w">                 </span><span class="s">&quot;ml_m&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">msr</span><span class="p">(</span><span class="s">&quot;classif.ce&quot;</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1"># Hyperparameter tuning</span>
+<span class="n">dml_plr_forest</span><span class="o">$</span><span class="nf">tune</span><span class="p">(</span><span class="n">param_set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param_grid</span><span class="p">,</span><span class="w"> </span><span class="n">tune_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tune_settings</span><span class="p">,</span><span class="w"> </span><span class="n">tune_on_folds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="estimation">
+<h2>6. Estimation<a class="headerlink" href="#estimation" title="Link to this heading">#</a></h2>
+<p>We perform estimation in Step 6. In this step, the cross-fitting algorithm is executed such that the predictions
+in the score are computed. As an output, users can access the coefficient estimates and standard errors either via the
+corresponding fields or via a summary.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-8">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Estimation</span>
+<span class="gp">In [22]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="gh">Out[22]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7f96cb900ef0&gt;</span>
+
+<span class="go"># Coefficient estimate</span>
+<span class="gp">In [23]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">coef</span>
+<span class="gh">Out[23]: </span><span class="go">array([8788.81345233])</span>
+
+<span class="go"># Standard error</span>
+<span class="gp">In [24]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">se</span>
+<span class="gh">Out[24]: </span><span class="go">array([1328.51289354])</span>
+
+<span class="go"># Summary</span>
+<span class="gp">In [25]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">summary</span>
+<span class="gh">Out[25]: </span>
+<span class="go">             coef      std err  ...        2.5 %        97.5 %</span>
+<span class="go">e401  8788.813452  1328.512894  ...  6184.976028  11392.650877</span>
+
+<span class="go">[1 rows x 6 columns]</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-9" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-9">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -908,17 +997,9 @@ R</label><div class="sd-tab-content docutils">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>INFO  [13:59:56.340] [mlr3] Applying learner &#39;regr.ranger&#39; on task &#39;nuis_l&#39; (iter 1/3)
-INFO  [13:59:58.308] [mlr3] Applying learner &#39;regr.ranger&#39; on task &#39;nuis_l&#39; (iter 2/3)
-INFO  [13:59:59.556] [mlr3] Applying learner &#39;regr.ranger&#39; on task &#39;nuis_l&#39; (iter 3/3)
-INFO  [14:00:00.919] [mlr3] Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 1/3)
-INFO  [14:00:01.979] [mlr3] Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 2/3)
-INFO  [14:00:03.028] [mlr3] Applying learner &#39;classif.ranger&#39; on task &#39;nuis_m&#39; (iter 3/3)
-</pre></div>
-</div>
-<div class="output text_html"><strong>e401:</strong> 9126.99864670889</div><div class="output text_html"><strong>e401:</strong> 1312.93958082416</div><div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
+<div class="output text_html"><strong>e401:</strong> 8823.66411161491</div><div class="output text_html"><strong>e401:</strong> 1326.28712022561</div><div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
      Estimate. Std. Error t value Pr(&gt;|t|)    
-e401      9127       1313   6.952 3.61e-12 ***
+e401      8824       1326   6.653 2.87e-11 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -931,8 +1012,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="inference">
-<h2>6. Inference<a class="headerlink" href="#inference" title="Link to this heading">#</a></h2>
-<p>In Step 6., we can perform further inference methods and finally interpret our findings. For example, we can set up confidence intervals
+<h2>7. Inference<a class="headerlink" href="#inference" title="Link to this heading">#</a></h2>
+<p>In Step 7., we can perform further inference methods and finally interpret our findings. For example, we can set up confidence intervals
 or, in case multiple causal parameters are estimated, adjust the analysis for multiple testing. <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a>
 supports various approaches to perform <a class="reference internal" href="../guide/se_confint.html#sim-inf"><span class="std std-ref">valid simultaneous inference</span></a>
 which are partly based on a multiplier bootstrap.</p>
@@ -941,37 +1022,37 @@ on net financial assets, we find a positive and significant effect: Being eligib
 approximately <span class="math notranslate nohighlight">\($9,000\)</span>. This estimate is much smaller than the unconditional effect of eligibility on net financial assets:
 If we did not control for the confounding variables, the average treatment effect would correspond to <span class="math notranslate nohighlight">\($19,559\)</span>.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-4" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-8">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-10">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Summary</span>
-<span class="gp">In [20]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">summary</span>
-<span class="gh">Out[20]: </span>
+<span class="gp">In [26]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">summary</span>
+<span class="gh">Out[26]: </span>
 <span class="go">             coef      std err  ...        2.5 %        97.5 %</span>
-<span class="go">e401  8909.634078  1321.822289  ...  6318.909997  11500.358158</span>
+<span class="go">e401  8788.813452  1328.512894  ...  6184.976028  11392.650877</span>
 
 <span class="go">[1 rows x 6 columns]</span>
 
 <span class="go"># Confidence intervals</span>
-<span class="gp">In [21]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">confint</span><span class="p">()</span>
-<span class="gh">Out[21]: </span>
+<span class="gp">In [27]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">confint</span><span class="p">()</span>
+<span class="gh">Out[27]: </span>
 <span class="go">            2.5 %        97.5 %</span>
-<span class="go">e401  6318.909997  11500.358158</span>
+<span class="go">e401  6184.976028  11392.650877</span>
 
 <span class="go"># Multiplier bootstrap (relevant in case with multiple treatment variables)</span>
-<span class="gp">In [22]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span>
-<span class="gh">Out[22]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7fc313751c70&gt;</span>
+<span class="gp">In [28]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span>
+<span class="gh">Out[28]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7f96cb900ef0&gt;</span>
 
 <span class="go"># Simultaneous confidence bands</span>
-<span class="gp">In [23]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">joint</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="gh">Out[23]: </span>
+<span class="gp">In [29]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">confint</span><span class="p">(</span><span class="n">joint</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gh">Out[29]: </span>
 <span class="go">            2.5 %        97.5 %</span>
-<span class="go">e401  6075.923943  11743.344212</span>
+<span class="go">e401  6138.604223  11439.022682</span>
 </pre></div>
 </div>
 </div>
-<input id="sd-tab-item-9" name="sd-tab-set-4" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-9">
+<input id="sd-tab-item-11" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="r" for="sd-tab-item-11">
 R</label><div class="sd-tab-content docutils">
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
@@ -992,7 +1073,7 @@ R</label><div class="sd-tab-content docutils">
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Estimates and significance testing of the effect of target variables
      Estimate. Std. Error t value Pr(&gt;|t|)    
-e401      9127       1313   6.952 3.61e-12 ***
+e401      8824       1326   6.653 2.87e-11 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -1005,7 +1086,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 	<tr><th></th><th scope=col>2.5 %</th><th scope=col>97.5 %</th></tr>
 </thead>
 <tbody>
-	<tr><th scope=row>e401</th><td>6553.684</td><td>11700.31</td></tr>
+	<tr><th scope=row>e401</th><td>6224.189</td><td>11423.14</td></tr>
 </tbody>
 </table>
 </div><div class="output text_html"><table class="dataframe">
@@ -1014,7 +1095,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 	<tr><th></th><th scope=col>2.5 %</th><th scope=col>97.5 %</th></tr>
 </thead>
 <tbody>
-	<tr><th scope=row>e401</th><td>6553.428</td><td>11700.57</td></tr>
+	<tr><th scope=row>e401</th><td>6270.86</td><td>11376.47</td></tr>
 </tbody>
 </table>
 </div></div>
@@ -1023,22 +1104,22 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 </div>
 </section>
 <section id="sensitivity-analysis">
-<h2>7. Sensitivity Analysis<a class="headerlink" href="#sensitivity-analysis" title="Link to this heading">#</a></h2>
-<p>In Step 7., we can analyze the sensitivity of the estimated parameters. In the <a class="reference internal" href="../guide/models.html#plr-model"><span class="std std-ref">Partially linear regression model (PLR)</span></a> the causal interpretation
+<h2>8. Sensitivity Analysis<a class="headerlink" href="#sensitivity-analysis" title="Link to this heading">#</a></h2>
+<p>In Step 8., we can analyze the sensitivity of the estimated parameters. In the <a class="reference internal" href="../guide/models.html#plr-model"><span class="std std-ref">Partially linear regression model (PLR)</span></a> the causal interpretation
 relies on conditional exogeneity, which requires to control for confounding variables. The <a class="reference internal" href="../index.html#doubleml-package"><span class="std std-ref">DoubleML</span></a> python package
 implements <a class="reference internal" href="../guide/sensitivity.html#sensitivity"><span class="std std-ref">Sensitivity analysis</span></a> with respect to omitted confounders.</p>
 <p>Analyzing the sensitivity of the intent-to-treat effect in the 401(k) example, we find that the effect remains positive even after adjusting for
 omitted confounders with a lower bound of <span class="math notranslate nohighlight">\($4,611\)</span> for the point estimate and <span class="math notranslate nohighlight">\($2,359\)</span> including statistical uncertainty.</p>
 <div class="sd-tab-set docutils">
-<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-5" type="radio">
-<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-10">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-6" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-12">
 Python</label><div class="sd-tab-content docutils">
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Sensitivity analysis</span>
-<span class="gp">In [24]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">sensitivity_analysis</span><span class="p">(</span><span class="n">cf_y</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">cf_d</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
-<span class="gh">Out[24]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7fc313751c70&gt;</span>
+<span class="gp">In [30]: </span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">sensitivity_analysis</span><span class="p">(</span><span class="n">cf_y</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">cf_d</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+<span class="gh">Out[30]: </span><span class="go">&lt;doubleml.plm.plr.DoubleMLPLR at 0x7f96cb900ef0&gt;</span>
 
 <span class="go"># Sensitivity summary</span>
-<span class="gp">In [25]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">sensitivity_summary</span><span class="p">)</span>
+<span class="gp">In [31]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plr_tree</span><span class="o">.</span><span class="n">sensitivity_summary</span><span class="p">)</span>
 <span class="go">================== Sensitivity Analysis ==================</span>
 
 <span class="go">------------------ Scenario          ------------------</span>
@@ -1047,11 +1128,11 @@ Python</label><div class="sd-tab-content docutils">
 
 <span class="go">------------------ Bounds with CI    ------------------</span>
 <span class="go">         CI lower  theta lower        theta   theta upper      CI upper</span>
-<span class="go">e401  2359.496777  4610.983759  8909.634078  13208.284397  15430.415812</span>
+<span class="go">e401  2216.836517   4475.32743  8788.813452  13102.299475  15339.141205</span>
 
 <span class="go">------------------ Robustness Values ------------------</span>
 <span class="go">      H_0    RV (%)   RVa (%)</span>
-<span class="go">e401  0.0  7.029209  5.233154</span>
+<span class="go">e401  0.0  6.914309  5.123216</span>
 </pre></div>
 </div>
 </div>
@@ -1110,9 +1191,10 @@ Python</label><div class="sd-tab-content docutils">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#causal-model">2. Causal Model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ml-methods">3. ML Methods</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dml-specifications">4. DML Specifications</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation">5. Estimation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">6. Inference</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sensitivity-analysis">7. Sensitivity Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-tuning">5. Hyperparameter Tuning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation">6. Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">7. Inference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sensitivity-analysis">8. Sensitivity Analysis</a></li>
 </ul>
   </nav></div>
 
