@@ -745,7 +745,6 @@ Python</label><div class="sd-tab-content docutils">
 <span class="go">Instrument variable(s): None</span>
 <span class="go">No. Observations: 500</span>
 
-
 <span class="go">------------------ Score &amp; Algorithm ------------------</span>
 <span class="go">Score function: partialling out</span>
 
@@ -948,8 +947,51 @@ and the following estimates:</p>
 \[ \begin{align}\begin{aligned}r_0(X) = t_0(X) - \breve \beta a_0(X),\\m_0(X) = \mathbb{E} [D | X].\end{aligned}\end{align} \]</div>
 <p>and <span class="math notranslate nohighlight">\(r_0(X)\)</span> is computed as for <code class="docutils literal notranslate"><span class="pre">score='nuisance_space'</span></code>.</p>
 </section>
+<section id="partially-linear-panel-regression-plpr">
+<span id="plpr-score"></span><h4><span class="section-number">5.2.1.3. </span>Partially linear panel regression (PLPR)<a class="headerlink" href="#partially-linear-panel-regression-plpr" title="Link to this heading">#</a></h4>
+<p>For the PLPR model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLPR</span></code> one can choose between
+<code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='IV-type'</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> implements the score function:</p>
+<p>For correlated random effect (cre) approaches <code class="docutils literal notranslate"><span class="pre">approach='cre_general'</span></code> and <code class="docutils literal notranslate"><span class="pre">approach='cre_normal'</span></code></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi(W_{it}; \theta, \eta) &amp;:= [Y_{it} - \tilde{\ell}(X_{it},\bar{X}_i) - \theta (D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i)] [D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i]\\&amp;= - (D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i) (D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i) \theta + (Y_{it} - \tilde{\ell}(X_{it},\bar{X}_i)) (D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i)\\&amp;= \psi_a(W_{it}; \eta) \theta + \psi_b(W_{it}; \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(\tilde{\ell},\tilde{m})\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{\ell}_0(X_{it},\bar{X}_i) &amp;:= \mathbb{E}[Y_{it} \mid X_{it}, \bar{X}_i] = \theta_0\mathbb{E}[D_{it} \mid X_{it}, \bar{X}_i] + g(X_{it}, \bar{X}_i),\\\tilde{m}_0(X_{it},\bar{X}_i) + c_i &amp;:= \mathbb{E}[D_{it} \mid X_{it}, \bar{X}_i].\end{aligned}\end{align} \]</div>
+<p>The components of the linear score are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(W_{it}; \eta) &amp;= - (D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i) (D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i),\\\psi_b(_{it}W; \eta) &amp;= (Y_{it} - \tilde{\ell}(X_{it},\bar{X}_i)) (D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i).\end{aligned}\end{align} \]</div>
+<p>For transformation approaches <code class="docutils literal notranslate"><span class="pre">approach='fd_exact'</span></code> and <code class="docutils literal notranslate"><span class="pre">approach='wg_approx'</span></code>, where <span class="math notranslate nohighlight">\(Q(W_{it})\)</span> indicates a transformated variable <span class="math notranslate nohighlight">\(W_{it}\)</span></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi(Q(W_{it}); \theta, \eta) &amp;:= [Q(Y_{it}) - Q(\ell(X_{it})) - \theta (Q(D_{it}) - Q(m(X_{it})))] [Q(D_{it}) - Q(m(X_{it}))]\\&amp;= - (Q(D_{it}) - Q(m(X_{it}))) (Q(D_{it}) - Q(m(X_{it}))) \theta + (Q(Y_{it}) - Q(\ell(X_{it}))) (Q(D_{it}) - Q(m(X_{it})))\\&amp;= \psi_a(Q(W_{it}); \eta) \theta + \psi_b(Q(W_{it}); \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(\ell,m)\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}Q(\ell_0(X)) &amp;:= \mathbb{E}[Q(Y_{it}) \mid Q(X_{it})] = \theta_0\mathbb{E}[Q(D_{it}) \mid Q(X_{it})] + Q(g(X_{it})),\\Q(m_0(X)) &amp;:= \mathbb{E}[Q(D_{it}) \mid Q(X_{it})].\end{aligned}\end{align} \]</div>
+<p>The components of the linear score are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(Q(W_{it}); \eta) &amp;=  - (Q(D_{it}) - Q(m(X_{it}))) (Q(D_{it}) - Q(m(X_{it}))),\\\psi_b(Q(W_{it}); \eta) &amp;= Q(Y_{it}) - Q(\ell(X_{it})) (Q(D_{it}) - Q(m(X_{it}))).\end{aligned}\end{align} \]</div>
+<p><code class="docutils literal notranslate"><span class="pre">score='IV-type'</span></code> implements the score function:</p>
+<p>For correlated random effect (cre) approaches <code class="docutils literal notranslate"><span class="pre">approach='cre_general'</span></code> and <code class="docutils literal notranslate"><span class="pre">approach='cre_normal'</span></code></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi(W_{it}; \theta, \eta) &amp;:= [Y_{it} - D_{it} \theta - \tilde{g}(X_{it},\bar{X}_i)] [D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i]\\&amp;= - D_{it} (D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i) \theta + (Y_{it} - \tilde{g}(X_{it},\bar{X}_i)) (D_{it} - \tilde{m}(X_{it},\bar{X}_i) - c_i)\\&amp;= \psi_a(W_{it}; \eta) \theta + \psi_b(W_{it}; \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(\tilde{g},\tilde{m})\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\tilde{g}_0(X_{it},\bar{X}_i) &amp;:= \mathbb{E}[Y_{it} - D_{it} \theta_0 \mid X_{it},\bar{X}_i],\\\tilde{m}_0(X_{it},\bar{X}_i) + c_i &amp;:= \mathbb{E}[D_{it} \mid X_{it}, \bar{X}_i].\end{aligned}\end{align} \]</div>
+<p>The components of the linear score are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(W_{it}; \eta) &amp;=  - D_{it} (D_{it} - \tilde{m}(X_{it},\bar{X}_i)),\\\psi_b(W_{it}; \eta) &amp;= (Y_{it} - \tilde{g}(X_{it},\bar{X}_i)) (D_{it} - \tilde{m}(X_{it},\bar{X}_i)).\end{aligned}\end{align} \]</div>
+<p>For transformation scores <code class="docutils literal notranslate"><span class="pre">approach='fd_exact'</span></code> and <code class="docutils literal notranslate"><span class="pre">approach='wg_approx'</span></code>, where <span class="math notranslate nohighlight">\(Q(W_{it})\)</span> indicates a transformated variable <span class="math notranslate nohighlight">\(W_{it}\)</span></p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi(Q(W_{it}); \theta, \eta) &amp;:= [Q(Y_{it}) - Q(D_{it}) \theta - Q(g(X_{it}))] [Q(D_{it}) - Q(m(X_{it}))]\\&amp;= - Q(D_{it}) (Q(D_{it}) - Q(m(X_{it}))) \theta + (Q(Y_{it}) - Q(g(X_{it}))) (Q(D_{it}) - Q(m(X_{it})))\\&amp;= \psi_a(Q(W_{it}); \eta) \theta + \psi_b(Q(W_{it}); \eta)\end{aligned}\end{align} \]</div>
+<p>with <span class="math notranslate nohighlight">\(\eta=(g,m)\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}Q(g_0(X_{it})) &amp;:= \mathbb{E}[Q(Y_{it}) - Q(D_{it}) \theta_0 \mid Q(X_{it})],\\Q(m_0(X_{it})) &amp;:= \mathbb{E}[Q(D_{it}) \mid Q(X_{it})].\end{aligned}\end{align} \]</div>
+<p>The components of the linear score are</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\psi_a(Q(W_{it}); \eta) &amp;= - Q(D_{it}) (Q(D_{it}) - Q(m(X_{it}))),\\\psi_b(Q(W_{it}); \eta) &amp;= (Q(Y_{it}) - Q(g(X_{it}))) (Q(D_{it}) - Q(m(X_{it}))).\end{aligned}\end{align} \]</div>
+</section>
 <section id="partially-linear-iv-regression-model-pliv">
-<span id="pliv-score"></span><h4><span class="section-number">5.2.1.3. </span>Partially linear IV regression model (PLIV)<a class="headerlink" href="#partially-linear-iv-regression-model-pliv" title="Link to this heading">#</a></h4>
+<span id="pliv-score"></span><h4><span class="section-number">5.2.1.4. </span>Partially linear IV regression model (PLIV)<a class="headerlink" href="#partially-linear-iv-regression-model-pliv" title="Link to this heading">#</a></h4>
 <p>For the PLIV model implemented in <code class="docutils literal notranslate"><span class="pre">DoubleMLPLIV</span></code> one can choose between
 <code class="docutils literal notranslate"><span class="pre">score='IV-type'</span></code> and <code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">score='partialling</span> <span class="pre">out'</span></code> implements the score function:</p>
@@ -1404,7 +1446,8 @@ Note that this estimate will in general be prone to a regularization bias, see a
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#partially-linear-models-plm">5.2.1. Partially linear models (PLM)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#partially-linear-regression-model-plr">5.2.1.1. Partially linear regression model (PLR)</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-partial-linear-regression-lplr">5.2.1.2. Logistic partial linear regression (LPLR)</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#partially-linear-iv-regression-model-pliv">5.2.1.3. Partially linear IV regression model (PLIV)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#partially-linear-panel-regression-plpr">5.2.1.3. Partially linear panel regression (PLPR)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#partially-linear-iv-regression-model-pliv">5.2.1.4. Partially linear IV regression model (PLIV)</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-regression-models-irm">5.2.2. Interactive regression models (IRM)</a><ul class="nav section-nav flex-column">

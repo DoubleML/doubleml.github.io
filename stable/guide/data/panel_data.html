@@ -647,7 +647,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLPanelData</span></code> class serves as data-backend for <a class="reference internal" href="../models.html#did-models"><span class="std std-ref">DiD models</span></a> and can be initialized from a dataframe.
+  <p>The <code class="docutils literal notranslate"><span class="pre">DoubleMLPanelData</span></code> class serves as data-backend for <a class="reference internal" href="../models.html#did-models"><span class="std std-ref">DiD models</span></a>, as well as the <a class="reference internal" href="../models.html#plm-models"><span class="std std-ref">DoubleMLPLPR model</span></a>, and can be initialized from a dataframe.
 The class is a subclass of <a class="reference internal" href="../data_backend.html#dml-data"><span class="std std-ref">DoubleMLData</span></a> and inherits all methods and attributes.
 Furthermore, it provides additional methods and attributes to handle panel data.</p>
 <section id="key-arguments">
@@ -655,6 +655,7 @@ Furthermore, it provides additional methods and attributes to handle panel data.
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">id_col</span></code>: column to with unique identifiers for each unit</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">t_col</span></code>: column to specify the time periods of the observation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">static_panel</span></code>: Indicates whether the data model corresponds to a static panel data approach (<code class="docutils literal notranslate"><span class="pre">True</span></code>, used for the <code class="docutils literal notranslate"><span class="pre">DoubleMLPLPR</span></code> model) or to staggered adoption panel data (<code class="docutils literal notranslate"><span class="pre">False</span></code>, for <a class="reference internal" href="../models.html#did-models"><span class="std std-ref">DiD models</span></a>) which is the default option.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">datetime_unit</span></code>: unit of the time periods (e.g. ‘Y’, ‘M’, ‘D’, ‘h’, ‘m’, ‘s’)</p></li>
 </ul>
 <div class="admonition note">
@@ -699,15 +700,63 @@ Python</label><div class="sd-tab-content docutils">
 <span class="go">Instrument variable(s): None</span>
 <span class="go">Time variable: t</span>
 <span class="go">Id variable: id</span>
+<span class="go">Static panel data: False</span>
 <span class="go">No. Unique Ids: 500</span>
 <span class="go">No. Observations: 2500</span>
-
 <span class="go">------------------ DataFrame info    ------------------</span>
 <span class="go">&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span>
 <span class="go">RangeIndex: 2500 entries, 0 to 2499</span>
 <span class="go">Columns: 10 entries, id to Z4</span>
 <span class="go">dtypes: datetime64[s](2), float64(7), int64(1)</span>
 <span class="go">memory usage: 195.4 KB</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-1" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="py" for="sd-tab-item-1">
+Python</label><div class="sd-tab-content docutils">
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [8]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="gp">In [9]: </span><span class="kn">import</span><span class="w"> </span><span class="nn">doubleml</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dml</span>
+
+<span class="gp">In [10]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">doubleml.plm.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_plpr_CP2025</span>
+
+<span class="gp">In [11]: </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="gp">In [12]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">make_plpr_CP2025</span><span class="p">(</span><span class="n">num_id</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">num_t</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="gp">In [13]: </span><span class="n">dml_data</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DoubleMLPanelData</span><span class="p">(</span>
+<span class="gp">   ....: </span>    <span class="n">df</span><span class="p">,</span>
+<span class="gp">   ....: </span>    <span class="n">y_col</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+<span class="gp">   ....: </span>    <span class="n">d_cols</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+<span class="gp">   ....: </span>    <span class="n">id_col</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+<span class="gp">   ....: </span>    <span class="n">t_col</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span>
+<span class="gp">   ....: </span>    <span class="n">x_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="s2">&quot;x3&quot;</span><span class="p">,</span> <span class="s2">&quot;x4&quot;</span><span class="p">,</span> <span class="s2">&quot;x5&quot;</span><span class="p">],</span>
+<span class="gp">   ....: </span>    <span class="n">static_panel</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">   ....: </span><span class="p">)</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_data</span><span class="p">)</span>
+<span class="go">================== DoubleMLPanelData Object ==================</span>
+
+<span class="go">------------------ Data summary      ------------------</span>
+<span class="go">Outcome variable: y</span>
+<span class="go">Treatment variable(s): [&#39;d&#39;]</span>
+<span class="go">Covariates: [&#39;x1&#39;, &#39;x2&#39;, &#39;x3&#39;, &#39;x4&#39;, &#39;x5&#39;]</span>
+<span class="go">Instrument variable(s): None</span>
+<span class="go">Time variable: time</span>
+<span class="go">Id variable: id</span>
+<span class="go">Static panel data: True</span>
+<span class="go">No. Unique Ids: 100</span>
+<span class="go">No. Observations: 500</span>
+<span class="go">------------------ DataFrame info    ------------------</span>
+<span class="go">&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span>
+<span class="go">RangeIndex: 500 entries, 0 to 499</span>
+<span class="go">Columns: 9 entries, id to x5</span>
+<span class="go">dtypes: float64(7), int64(2)</span>
+<span class="go">memory usage: 35.3 KB</span>
 </pre></div>
 </div>
 </div>
