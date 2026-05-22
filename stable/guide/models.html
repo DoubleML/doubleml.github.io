@@ -53,6 +53,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script data-domain="docs.doubleml.org" defer="defer" src="https://plausible.io/js/script.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guide/models';</script>
@@ -822,7 +823,7 @@ Apply cross-fitting: TRUE
 ------------------ Fit summary       ------------------
  Estimates and significance testing of the effect of target variables
   Estimate. Std. Error t value Pr(&gt;|t|)    
-d   0.47319    0.04165   11.36   &lt;2e-16 ***
+d   0.47572    0.04174    11.4   &lt;2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -978,7 +979,7 @@ Mundlak device <a class="reference external" href="https://doi.org/10.2307/19136
 <p>These approaches remove individual heterogeneity from the model by transforming the data.
 For some random variable <span class="math notranslate nohighlight">\(W_{it}\)</span>, define the First-Difference (FD) transformation
 <span class="math notranslate nohighlight">\(Q(W_{it}) = W_{it} - W_{it-1}\)</span> (for <span class="math notranslate nohighlight">\(t=2, \dots, T\)</span>), and the Within-Group (WG)
-transformation <span class="math notranslate nohighlight">\(Q(W_{it}) = X_{it} - \bar{X}_{i}\)</span>, where <span class="math notranslate nohighlight">\(\bar{W}_{i} = T^{-1} \sum_{t=1}^T W_{it}\)</span>.</p>
+transformation <span class="math notranslate nohighlight">\(Q(W_{it}) = W_{it} - \bar{W}_{i}\)</span>, where <span class="math notranslate nohighlight">\(\bar{W}_{i} = T^{-1} \sum_{t=1}^T W_{it}\)</span>.</p>
 <p>The PLPR model under the transformation approaches takes the form</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}Q(Y_{it}) = \theta_0 Q(D_{it}) + Q(g_1(X_{it})) + Q(U_{it}),\\Q(D_{it}) = Q(m_1(X_{it})) + Q(V_{it}).\end{aligned}\end{align} \]</div>
@@ -1069,7 +1070,7 @@ Python</label><div class="sd-tab-content docutils">
 <span class="gp">In [37]: </span><span class="n">dml_plpr_obj</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLPLPR</span><span class="p">(</span><span class="n">obj_dml_data</span><span class="p">,</span> <span class="n">ml_l</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">)</span>
 
 <span class="gp">In [38]: </span><span class="n">dml_plpr_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[38]: </span><span class="go">&lt;doubleml.plm.plpr.DoubleMLPLPR at 0x7feaed459d60&gt;</span>
+<span class="gh">Out[38]: </span><span class="go">&lt;doubleml.plm.plpr.DoubleMLPLPR at 0x7f3c09240fb0&gt;</span>
 
 <span class="gp">In [39]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_plpr_obj</span><span class="p">)</span>
 <span class="go">================== DoubleMLPLPR Object ==================</span>
@@ -2157,12 +2158,12 @@ Python</label><div class="sd-tab-content docutils">
 <span class="gp">   ...: </span>
 
 <span class="gp">In [9]: </span><span class="n">dml_did_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[9]: </span><span class="go">&lt;doubleml.did.did_multi.DoubleMLDIDMulti at 0x7feaec08cb60&gt;</span>
+<span class="gh">Out[9]: </span><span class="go">&lt;doubleml.did.did_multi.DoubleMLDIDMulti at 0x7f3bfb1f7ec0&gt;</span>
 
 <span class="gp">In [10]: </span><span class="n">agg_did_obj</span> <span class="o">=</span> <span class="n">dml_did_obj</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">aggregation</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
 
 <span class="gp">In [11]: </span><span class="n">agg_did_obj</span><span class="o">.</span><span class="n">aggregated_frameworks</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span>
-<span class="gh">Out[11]: </span><span class="go">&lt;doubleml.double_ml_framework.DoubleMLFramework at 0x7feafd9db860&gt;</span>
+<span class="gh">Out[11]: </span><span class="go">&lt;doubleml.double_ml_framework.DoubleMLFramework at 0x7f3c0a390890&gt;</span>
 
 <span class="gp">In [12]: </span><span class="nb">print</span><span class="p">(</span><span class="n">agg_did_obj</span><span class="p">)</span>
 <span class="go">================== DoubleMLDIDAggregation Object ==================</span>
@@ -2433,7 +2434,7 @@ Python</label><div class="sd-tab-content docutils">
 <span class="gp">In [12]: </span><span class="n">dml_ssm</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLSSM</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">ml_pi</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s1">&#39;missing-at-random&#39;</span><span class="p">)</span>
 
 <span class="gp">In [13]: </span><span class="n">dml_ssm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[13]: </span><span class="go">&lt;doubleml.irm.ssm.DoubleMLSSM at 0x7feafd7a3c20&gt;</span>
+<span class="gh">Out[13]: </span><span class="go">&lt;doubleml.irm.ssm.DoubleMLSSM at 0x7f3c0bea81a0&gt;</span>
 
 <span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_ssm</span><span class="p">)</span>
 <span class="go">================== DoubleMLSSM Object ==================</span>
@@ -2598,7 +2599,7 @@ Python</label><div class="sd-tab-content docutils">
 <span class="gp">In [26]: </span><span class="n">dml_ssm</span> <span class="o">=</span> <span class="n">dml</span><span class="o">.</span><span class="n">DoubleMLSSM</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">ml_pi</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s1">&#39;nonignorable&#39;</span><span class="p">)</span>
 
 <span class="gp">In [27]: </span><span class="n">dml_ssm</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[27]: </span><span class="go">&lt;doubleml.irm.ssm.DoubleMLSSM at 0x7feaec08c590&gt;</span>
+<span class="gh">Out[27]: </span><span class="go">&lt;doubleml.irm.ssm.DoubleMLSSM at 0x7f3c0940c680&gt;</span>
 
 <span class="gp">In [28]: </span><span class="nb">print</span><span class="p">(</span><span class="n">dml_ssm</span><span class="p">)</span>
 <span class="go">================== DoubleMLSSM Object ==================</span>
@@ -2806,7 +2807,7 @@ Python</label><div class="sd-tab-content docutils">
 <span class="gp">In [13]: </span><span class="n">rdflex_obj</span> <span class="o">=</span> <span class="n">RDFlex</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">fuzzy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="gp">In [14]: </span><span class="n">rdflex_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[14]: </span><span class="go">&lt;doubleml.rdd.rdd.RDFlex at 0x7feafd43a780&gt;</span>
+<span class="gh">Out[14]: </span><span class="go">&lt;doubleml.rdd.rdd.RDFlex at 0x7f3c09f8f3b0&gt;</span>
 
 <span class="gp">In [15]: </span><span class="nb">print</span><span class="p">(</span><span class="n">rdflex_obj</span><span class="p">)</span>
 <span class="go">Method             Coef.     S.E.     t-stat       P&gt;|t|           95% CI</span>
@@ -2816,7 +2817,7 @@ Python</label><div class="sd-tab-content docutils">
 <span class="n">Design</span> <span class="n">Type</span><span class="p">:</span>        <span class="n">Sharp</span>
 <span class="ne">Cutoff</span>:             0
 <span class="n">First</span> <span class="n">Stage</span> <span class="n">Kernel</span><span class="p">:</span> <span class="n">triangular</span>
-<span class="n">Final</span> <span class="n">Bandwidth</span><span class="p">:</span>    <span class="p">[</span><span class="mf">0.63117311</span><span class="p">]</span>
+<span class="n">Final</span> <span class="n">Bandwidth</span><span class="p">:</span>    <span class="p">[</span><span class="mf">0.63129302</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -2885,17 +2886,17 @@ Python</label><div class="sd-tab-content docutils">
 <span class="gp">In [29]: </span><span class="n">rdflex_obj</span> <span class="o">=</span> <span class="n">RDFlex</span><span class="p">(</span><span class="n">dml_data</span><span class="p">,</span> <span class="n">ml_g</span><span class="p">,</span> <span class="n">ml_m</span><span class="p">,</span> <span class="n">fuzzy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="gp">In [30]: </span><span class="n">rdflex_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="gh">Out[30]: </span><span class="go">&lt;doubleml.rdd.rdd.RDFlex at 0x7feafdb31790&gt;</span>
+<span class="gh">Out[30]: </span><span class="go">&lt;doubleml.rdd.rdd.RDFlex at 0x7f3bfb8dd3a0&gt;</span>
 
 <span class="gp">In [31]: </span><span class="nb">print</span><span class="p">(</span><span class="n">rdflex_obj</span><span class="p">)</span>
 <span class="go">Method             Coef.     S.E.     t-stat       P&gt;|t|           95% CI</span>
 <span class="gt">-------------------------------------------------------------------------</span>
-<span class="n">Conventional</span>      <span class="mf">3.343</span>     <span class="mf">5.164</span>     <span class="mf">0.647</span>    <span class="mf">5.174e-01</span>  <span class="p">[</span><span class="o">-</span><span class="mf">6.779</span><span class="p">,</span> <span class="mf">13.465</span><span class="p">]</span>
-<span class="n">Robust</span>                 <span class="o">-</span>        <span class="o">-</span>     <span class="mf">0.657</span>    <span class="mf">5.110e-01</span>  <span class="p">[</span><span class="o">-</span><span class="mf">7.789</span><span class="p">,</span> <span class="mf">15.649</span><span class="p">]</span>
+<span class="n">Conventional</span>      <span class="mf">3.340</span>     <span class="mf">5.163</span>     <span class="mf">0.647</span>    <span class="mf">5.177e-01</span>  <span class="p">[</span><span class="o">-</span><span class="mf">6.780</span><span class="p">,</span> <span class="mf">13.459</span><span class="p">]</span>
+<span class="n">Robust</span>                 <span class="o">-</span>        <span class="o">-</span>     <span class="mf">0.657</span>    <span class="mf">5.113e-01</span>  <span class="p">[</span><span class="o">-</span><span class="mf">7.790</span><span class="p">,</span> <span class="mf">15.643</span><span class="p">]</span>
 <span class="n">Design</span> <span class="n">Type</span><span class="p">:</span>        <span class="n">Fuzzy</span>
 <span class="ne">Cutoff</span>:             0
 <span class="n">First</span> <span class="n">Stage</span> <span class="n">Kernel</span><span class="p">:</span> <span class="n">triangular</span>
-<span class="n">Final</span> <span class="n">Bandwidth</span><span class="p">:</span>    <span class="p">[</span><span class="mf">0.61458483</span><span class="p">]</span>
+<span class="n">Final</span> <span class="n">Bandwidth</span><span class="p">:</span>    <span class="p">[</span><span class="mf">0.61496471</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
