@@ -101,9 +101,12 @@ as shown below for the simulated data.
 dml_data_bonus = DoubleMLData$new(df_bonus,
   y_col = "inuidur1",
   d_cols = "tg",
-  x_cols = c("female", "black", "othrace", "dep1", "dep2",
+  x_cols = c(
+    "female", "black", "othrace", "dep1", "dep2",
     "q2", "q3", "q4", "q5", "q6", "agelt35", "agegt54",
-    "durable", "lusd", "husd"))
+    "durable", "lusd", "husd"
+  )
+)
 print(dml_data_bonus)
 ```
 

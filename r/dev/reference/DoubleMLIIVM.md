@@ -5,7 +5,8 @@ Double machine learning for interactive IV regression models.
 ## Format
 
 [R6::R6Class](https://r6.r-lib.org/reference/R6Class.html) object
-inheriting from [DoubleML](DoubleML.md).
+inheriting from
+[DoubleML](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.md).
 
 ## Details
 
@@ -38,13 +39,17 @@ E\[r_0(0,X)\]}.\\
 
 ## See also
 
-Other DoubleML: [`DoubleML`](DoubleML.md),
-[`DoubleMLIRM`](DoubleMLIRM.md), [`DoubleMLPLIV`](DoubleMLPLIV.md),
-[`DoubleMLPLR`](DoubleMLPLR.md), [`DoubleMLSSM`](DoubleMLSSM.md)
+Other DoubleML:
+[`DoubleML`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.md),
+[`DoubleMLIRM`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLIRM.md),
+[`DoubleMLPLIV`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLPLIV.md),
+[`DoubleMLPLR`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLPLR.md),
+[`DoubleMLSSM`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLSSM.md)
 
 ## Super class
 
-[`DoubleML::DoubleML`](DoubleML.md) -\> `DoubleMLIIVM`
+[`DoubleML`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.md)
+-\> `DoubleMLIIVM`
 
 ## Active bindings
 
@@ -71,29 +76,29 @@ Other DoubleML: [`DoubleML`](DoubleML.md),
 
 ### Public methods
 
-- [`DoubleMLIIVM$new()`](#method-DoubleMLIIVM-new)
+- [`DoubleMLIIVM$new()`](#method-DoubleMLIIVM-initialize)
 
 - [`DoubleMLIIVM$clone()`](#method-DoubleMLIIVM-clone)
 
 Inherited methods
 
-- [`DoubleML::DoubleML$bootstrap()`](DoubleML.html#method-bootstrap)
-- [`DoubleML::DoubleML$confint()`](DoubleML.html#method-confint)
-- [`DoubleML::DoubleML$fit()`](DoubleML.html#method-fit)
-- [`DoubleML::DoubleML$get_params()`](DoubleML.html#method-get_params)
-- [`DoubleML::DoubleML$learner_names()`](DoubleML.html#method-learner_names)
-- [`DoubleML::DoubleML$p_adjust()`](DoubleML.html#method-p_adjust)
-- [`DoubleML::DoubleML$params_names()`](DoubleML.html#method-params_names)
-- [`DoubleML::DoubleML$print()`](DoubleML.html#method-print)
-- [`DoubleML::DoubleML$set_ml_nuisance_params()`](DoubleML.html#method-set_ml_nuisance_params)
-- [`DoubleML::DoubleML$set_sample_splitting()`](DoubleML.html#method-set_sample_splitting)
-- [`DoubleML::DoubleML$split_samples()`](DoubleML.html#method-split_samples)
-- [`DoubleML::DoubleML$summary()`](DoubleML.html#method-summary)
-- [`DoubleML::DoubleML$tune()`](DoubleML.html#method-tune)
+- [`DoubleML$bootstrap()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-bootstrap)
+- [`DoubleML$confint()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-confint)
+- [`DoubleML$fit()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-fit)
+- [`DoubleML$get_params()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-get_params)
+- [`DoubleML$learner_names()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-learner_names)
+- [`DoubleML$p_adjust()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-p_adjust)
+- [`DoubleML$params_names()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-params_names)
+- [`DoubleML$print()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-print)
+- [`DoubleML$set_ml_nuisance_params()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-set_ml_nuisance_params)
+- [`DoubleML$set_sample_splitting()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-set_sample_splitting)
+- [`DoubleML$split_samples()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-split_samples)
+- [`DoubleML$summary()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-summary)
+- [`DoubleML$tune()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-tune)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DoubleMLIIVM$new()`
 
 Creates a new instance of this R6 class.
 
@@ -245,7 +250,7 @@ Creates a new instance of this R6 class.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DoubleMLIIVM$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -275,14 +280,17 @@ library(data.table)
 set.seed(2)
 ml_g = lrn("regr.ranger",
   num.trees = 100, mtry = 20,
-  min.node.size = 2, max.depth = 5)
+  min.node.size = 2, max.depth = 5
+)
 ml_m = lrn("classif.ranger",
   num.trees = 100, mtry = 20,
-  min.node.size = 2, max.depth = 5)
+  min.node.size = 2, max.depth = 5
+)
 ml_r = ml_m$clone()
 obj_dml_data = make_iivm_data(
   theta = 0.5, n_obs = 1000,
-  alpha_x = 1, dim_x = 20)
+  alpha_x = 1, dim_x = 20
+)
 dml_iivm_obj = DoubleMLIIVM$new(obj_dml_data, ml_g, ml_m, ml_r)
 dml_iivm_obj$fit()
 dml_iivm_obj$summary()
@@ -307,22 +315,28 @@ ml_m = lrn("classif.rpart")
 ml_r = ml_m$clone()
 obj_dml_data = make_iivm_data(
   theta = 0.5, n_obs = 1000,
-  alpha_x = 1, dim_x = 20)
+  alpha_x = 1, dim_x = 20
+)
 dml_iivm_obj = DoubleMLIIVM$new(obj_dml_data, ml_g, ml_m, ml_r)
 param_grid = list(
   "ml_g" = paradox::ps(
     cp = paradox::p_dbl(lower = 0.01, upper = 0.02),
-    minsplit = paradox::p_int(lower = 1, upper = 2)),
+    minsplit = paradox::p_int(lower = 1, upper = 2)
+  ),
   "ml_m" = paradox::ps(
     cp = paradox::p_dbl(lower = 0.01, upper = 0.02),
-    minsplit = paradox::p_int(lower = 1, upper = 2)),
+    minsplit = paradox::p_int(lower = 1, upper = 2)
+  ),
   "ml_r" = paradox::ps(
     cp = paradox::p_dbl(lower = 0.01, upper = 0.02),
-    minsplit = paradox::p_int(lower = 1, upper = 2)))
+    minsplit = paradox::p_int(lower = 1, upper = 2)
+  )
+)
 # minimum requirements for tune_settings
 tune_settings = list(
   terminator = mlr3tuning::trm("evals", n_evals = 5),
-  algorithm = mlr3tuning::tnr("grid_search", resolution = 5))
+  algorithm = mlr3tuning::tnr("grid_search", resolution = 5)
+)
 dml_iivm_obj$tune(param_set = param_grid, tune_settings = tune_settings)
 dml_iivm_obj$fit()
 dml_iivm_obj$summary()

@@ -10,15 +10,16 @@ functions can be used to create a new instance of `DoubleMLClusterData`.
 
 - `DoubleMLClusterData$new()` for initialization from a `data.table`.
 
-- [`double_ml_data_from_matrix()`](double_ml_data_from_matrix.md) for
-  initialization from `matrix` objects,
+- [`double_ml_data_from_matrix()`](https://docs.doubleml.org/r/stable/dev/reference/double_ml_data_from_matrix.md)
+  for initialization from `matrix` objects,
 
-- [`double_ml_data_from_data_frame()`](double_ml_data_from_data_frame.md)
+- [`double_ml_data_from_data_frame()`](https://docs.doubleml.org/r/stable/dev/reference/double_ml_data_from_data_frame.md)
   for initialization from a `data.frame`.
 
 ## Super class
 
-[`DoubleML::DoubleMLData`](DoubleMLData.md) -\> `DoubleMLClusterData`
+[`DoubleMLData`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLData.md)
+-\> `DoubleMLClusterData`
 
 ## Active bindings
 
@@ -45,7 +46,7 @@ functions can be used to create a new instance of `DoubleMLClusterData`.
 
 ### Public methods
 
-- [`DoubleMLClusterData$new()`](#method-DoubleMLClusterData-new)
+- [`DoubleMLClusterData$new()`](#method-DoubleMLClusterData-initialize)
 
 - [`DoubleMLClusterData$print()`](#method-DoubleMLClusterData-print)
 
@@ -55,7 +56,7 @@ functions can be used to create a new instance of `DoubleMLClusterData`.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DoubleMLClusterData$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -123,7 +124,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `DoubleMLClusterData$print()`
 
 Print DoubleMLClusterData objects.
 
@@ -133,7 +134,7 @@ Print DoubleMLClusterData objects.
 
 ------------------------------------------------------------------------
 
-### Method `set_data_model()`
+### `DoubleMLClusterData$set_data_model()`
 
 Setter function for `data_model`. The function implements the causal
 model as specified by the user via `y_col`, `d_cols`, `x_cols`, `z_cols`
@@ -153,7 +154,7 @@ the multiple-treatment case.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DoubleMLClusterData$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -176,5 +177,6 @@ obj_dml_data = DoubleMLClusterData$new(dt,
   y_col = "Y",
   d_cols = "D",
   z_cols = "Z",
-  cluster_cols = c("cluster_var_i", "cluster_var_j"))
+  cluster_cols = c("cluster_var_i", "cluster_var_j")
+)
 ```

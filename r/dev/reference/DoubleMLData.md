@@ -10,10 +10,10 @@ functions can be used to create a new instance of `DoubleMLData`.
 
 - `DoubleMLData$new()` for initialization from a `data.table`.
 
-- [`double_ml_data_from_matrix()`](double_ml_data_from_matrix.md) for
-  initialization from `matrix` objects,
+- [`double_ml_data_from_matrix()`](https://docs.doubleml.org/r/stable/dev/reference/double_ml_data_from_matrix.md)
+  for initialization from `matrix` objects,
 
-- [`double_ml_data_from_data_frame()`](double_ml_data_from_data_frame.md)
+- [`double_ml_data_from_data_frame()`](https://docs.doubleml.org/r/stable/dev/reference/double_ml_data_from_data_frame.md)
   for initialization from a `data.frame`.
 
 ## Active bindings
@@ -103,7 +103,7 @@ functions can be used to create a new instance of `DoubleMLData`.
 
 ### Public methods
 
-- [`DoubleMLData$new()`](#method-DoubleMLData-new)
+- [`DoubleMLData$new()`](#method-DoubleMLData-initialize)
 
 - [`DoubleMLData$print()`](#method-DoubleMLData-print)
 
@@ -113,7 +113,7 @@ functions can be used to create a new instance of `DoubleMLData`.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DoubleMLData$new()`
 
 Creates a new instance of this
 [R6](https://r6.r-lib.org/reference/R6Class.html) class.
@@ -175,7 +175,7 @@ Creates a new instance of this
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `DoubleMLData$print()`
 
 Print DoubleMLData objects.
 
@@ -185,7 +185,7 @@ Print DoubleMLData objects.
 
 ------------------------------------------------------------------------
 
-### Method `set_data_model()`
+### `DoubleMLData$set_data_model()`
 
 Setter function for `data_model`. The function implements the causal
 model as specified by the user via `y_col`, `d_cols`, `x_cols` and
@@ -205,7 +205,7 @@ multiple-treatment case.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DoubleMLData$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -226,5 +226,6 @@ library(DoubleML)
 df = make_plr_CCDDHNR2018(return_type = "data.table")
 obj_dml_data = DoubleMLData$new(df,
   y_col = "y",
-  d_cols = "d")
+  d_cols = "d"
+)
 ```

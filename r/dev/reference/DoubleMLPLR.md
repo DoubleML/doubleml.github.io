@@ -5,7 +5,8 @@ Double machine learning for partially linear regression models.
 ## Format
 
 [R6::R6Class](https://r6.r-lib.org/reference/R6Class.html) object
-inheriting from [DoubleML](DoubleML.md).
+inheriting from
+[DoubleML](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.md).
 
 ## Details
 
@@ -22,19 +23,23 @@ confounding covariates, and \\\zeta\\ and \\V\\ are stochastic errors.
 
 ## See also
 
-Other DoubleML: [`DoubleML`](DoubleML.md),
-[`DoubleMLIIVM`](DoubleMLIIVM.md), [`DoubleMLIRM`](DoubleMLIRM.md),
-[`DoubleMLPLIV`](DoubleMLPLIV.md), [`DoubleMLSSM`](DoubleMLSSM.md)
+Other DoubleML:
+[`DoubleML`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.md),
+[`DoubleMLIIVM`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLIIVM.md),
+[`DoubleMLIRM`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLIRM.md),
+[`DoubleMLPLIV`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLPLIV.md),
+[`DoubleMLSSM`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLSSM.md)
 
 ## Super class
 
-[`DoubleML::DoubleML`](DoubleML.md) -\> `DoubleMLPLR`
+[`DoubleML`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.md)
+-\> `DoubleMLPLR`
 
 ## Methods
 
 ### Public methods
 
-- [`DoubleMLPLR$new()`](#method-DoubleMLPLR-new)
+- [`DoubleMLPLR$new()`](#method-DoubleMLPLR-initialize)
 
 - [`DoubleMLPLR$set_ml_nuisance_params()`](#method-DoubleMLPLR-set_ml_nuisance_params)
 
@@ -44,21 +49,21 @@ Other DoubleML: [`DoubleML`](DoubleML.md),
 
 Inherited methods
 
-- [`DoubleML::DoubleML$bootstrap()`](DoubleML.html#method-bootstrap)
-- [`DoubleML::DoubleML$confint()`](DoubleML.html#method-confint)
-- [`DoubleML::DoubleML$fit()`](DoubleML.html#method-fit)
-- [`DoubleML::DoubleML$get_params()`](DoubleML.html#method-get_params)
-- [`DoubleML::DoubleML$learner_names()`](DoubleML.html#method-learner_names)
-- [`DoubleML::DoubleML$p_adjust()`](DoubleML.html#method-p_adjust)
-- [`DoubleML::DoubleML$params_names()`](DoubleML.html#method-params_names)
-- [`DoubleML::DoubleML$print()`](DoubleML.html#method-print)
-- [`DoubleML::DoubleML$set_sample_splitting()`](DoubleML.html#method-set_sample_splitting)
-- [`DoubleML::DoubleML$split_samples()`](DoubleML.html#method-split_samples)
-- [`DoubleML::DoubleML$summary()`](DoubleML.html#method-summary)
+- [`DoubleML$bootstrap()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-bootstrap)
+- [`DoubleML$confint()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-confint)
+- [`DoubleML$fit()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-fit)
+- [`DoubleML$get_params()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-get_params)
+- [`DoubleML$learner_names()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-learner_names)
+- [`DoubleML$p_adjust()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-p_adjust)
+- [`DoubleML$params_names()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-params_names)
+- [`DoubleML$print()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-print)
+- [`DoubleML$set_sample_splitting()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-set_sample_splitting)
+- [`DoubleML$split_samples()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-split_samples)
+- [`DoubleML$summary()`](https://docs.doubleml.org/r/stable/dev/reference/DoubleML.html#method-summary)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DoubleMLPLR$new()`
 
 Creates a new instance of this R6 class.
 
@@ -189,7 +194,7 @@ Creates a new instance of this R6 class.
 
 ------------------------------------------------------------------------
 
-### Method `set_ml_nuisance_params()`
+### `DoubleMLPLR$set_ml_nuisance_params()`
 
 Set hyperparameters for the nuisance models of DoubleML models.
 
@@ -242,7 +247,7 @@ self
 
 ------------------------------------------------------------------------
 
-### Method [`tune()`](https://mlr3tuning.mlr-org.com/reference/tune.html)
+### `DoubleMLPLR$tune()`
 
 Hyperparameter-tuning for DoubleML models.
 
@@ -345,7 +350,7 @@ self
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DoubleMLPLR$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -398,15 +403,19 @@ dml_plr_obj = DoubleMLPLR$new(obj_dml_data, ml_l, ml_m)
 param_grid = list(
   "ml_l" = paradox::ps(
     cp = paradox::p_dbl(lower = 0.01, upper = 0.02),
-    minsplit = paradox::p_int(lower = 1, upper = 2)),
+    minsplit = paradox::p_int(lower = 1, upper = 2)
+  ),
   "ml_m" = paradox::ps(
     cp = paradox::p_dbl(lower = 0.01, upper = 0.02),
-    minsplit = paradox::p_int(lower = 1, upper = 2)))
+    minsplit = paradox::p_int(lower = 1, upper = 2)
+  )
+)
 
 # minimum requirements for tune_settings
 tune_settings = list(
   terminator = mlr3tuning::trm("evals", n_evals = 5),
-  algorithm = mlr3tuning::tnr("grid_search", resolution = 5))
+  algorithm = mlr3tuning::tnr("grid_search", resolution = 5)
+)
 dml_plr_obj$tune(param_set = param_grid, tune_settings = tune_settings)
 dml_plr_obj$fit()
 dml_plr_obj$summary()

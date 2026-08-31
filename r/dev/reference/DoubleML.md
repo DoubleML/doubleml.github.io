@@ -8,9 +8,12 @@ Abstract base class that can't be initialized.
 
 ## See also
 
-Other DoubleML: [`DoubleMLIIVM`](DoubleMLIIVM.md),
-[`DoubleMLIRM`](DoubleMLIRM.md), [`DoubleMLPLIV`](DoubleMLPLIV.md),
-[`DoubleMLPLR`](DoubleMLPLR.md), [`DoubleMLSSM`](DoubleMLSSM.md)
+Other DoubleML:
+[`DoubleMLIIVM`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLIIVM.md),
+[`DoubleMLIRM`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLIRM.md),
+[`DoubleMLPLIV`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLPLIV.md),
+[`DoubleMLPLR`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLPLR.md),
+[`DoubleMLSSM`](https://docs.doubleml.org/r/stable/dev/reference/DoubleMLSSM.md)
 
 ## Active bindings
 
@@ -160,7 +163,7 @@ Other DoubleML: [`DoubleMLIIVM`](DoubleMLIIVM.md),
 
 ### Public methods
 
-- [`DoubleML$new()`](#method-DoubleML-new)
+- [`DoubleML$new()`](#method-DoubleML-initialize)
 
 - [`DoubleML$print()`](#method-DoubleML-print)
 
@@ -192,7 +195,7 @@ Other DoubleML: [`DoubleMLIIVM`](DoubleMLIIVM.md),
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DoubleML$new()`
 
 DoubleML is an abstract class that can't be initialized.
 
@@ -202,7 +205,7 @@ DoubleML is an abstract class that can't be initialized.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `DoubleML$print()`
 
 Print DoubleML objects.
 
@@ -212,7 +215,7 @@ Print DoubleML objects.
 
 ------------------------------------------------------------------------
 
-### Method `fit()`
+### `DoubleML$fit()`
 
 Estimate DoubleML models.
 
@@ -241,7 +244,7 @@ self
 
 ------------------------------------------------------------------------
 
-### Method `bootstrap()`
+### `DoubleML$bootstrap()`
 
 Multiplier bootstrap for DoubleML models.
 
@@ -268,7 +271,7 @@ self
 
 ------------------------------------------------------------------------
 
-### Method `split_samples()`
+### `DoubleML$split_samples()`
 
 Draw sample splitting for DoubleML models.
 
@@ -285,7 +288,7 @@ self
 
 ------------------------------------------------------------------------
 
-### Method `set_sample_splitting()`
+### `DoubleML$set_sample_splitting()`
 
 Set the sample splitting for DoubleML models.
 
@@ -341,7 +344,7 @@ self
 
 ------------------------------------------------------------------------
 
-### Method `tune()`
+### `DoubleML$tune()`
 
 Hyperparameter-tuning for DoubleML models.
 
@@ -444,7 +447,7 @@ self
 
 ------------------------------------------------------------------------
 
-### Method [`summary()`](https://rdrr.io/r/base/summary.html)
+### `DoubleML$summary()`
 
 Summary for DoubleML models after calling `fit()`.
 
@@ -461,7 +464,7 @@ Summary for DoubleML models after calling `fit()`.
 
 ------------------------------------------------------------------------
 
-### Method [`confint()`](https://rdrr.io/r/stats/confint.html)
+### `DoubleML$confint()`
 
 Confidence intervals for DoubleML models.
 
@@ -498,7 +501,7 @@ interval(s).
 
 ------------------------------------------------------------------------
 
-### Method `learner_names()`
+### `DoubleML$learner_names()`
 
 Returns the names of the learners.
 
@@ -513,7 +516,7 @@ learners.
 
 ------------------------------------------------------------------------
 
-### Method `params_names()`
+### `DoubleML$params_names()`
 
 Returns the names of the nuisance models with hyperparameters.
 
@@ -528,7 +531,7 @@ nuisance models with hyperparameters.
 
 ------------------------------------------------------------------------
 
-### Method `set_ml_nuisance_params()`
+### `DoubleML$set_ml_nuisance_params()`
 
 Set hyperparameters for the nuisance models of DoubleML models.
 
@@ -581,7 +584,7 @@ self
 
 ------------------------------------------------------------------------
 
-### Method `p_adjust()`
+### `DoubleML$p_adjust()`
 
 Multiple testing adjustment for DoubleML models.
 
@@ -614,7 +617,7 @@ p-values. If `return_matrix = TRUE`, a
 
 ------------------------------------------------------------------------
 
-### Method `get_params()`
+### `DoubleML$get_params()`
 
 Get hyperparameters for the nuisance model of DoubleML models.
 
@@ -636,7 +639,7 @@ nuisance model/learner.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DoubleML$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -655,7 +658,7 @@ The objects of this class are cloneable with this method.
 ``` r
 
 ## ------------------------------------------------
-## Method `DoubleML$set_sample_splitting`
+## Method `DoubleML$set_sample_splitting()`
 ## ------------------------------------------------
 
 library(DoubleML)
