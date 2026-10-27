@@ -3,14 +3,16 @@
 ## Authors
 
 - **Philipp Bach**. Author, maintainer.
+  [](https://orcid.org/0000-0002-7183-9239)
 
 - **Victor Chernozhukov**. Author.
+  [](https://orcid.org/0000-0002-3250-6714)
 
 - **Malte S. Kurz**. Author.
 
-- **Martin Spindler**. Author.
+- **Martin Spindler**. Author. [](https://orcid.org/0000-0002-1294-7782)
 
-- **Klaassen Sven**. Author.
+- **Sven Klaassen**. Author. [](https://orcid.org/0009-0004-9080-0809)
 
 ## Citation
 

@@ -1,4 +1,4 @@
 # License
 
-    YEAR: 2019-2023
+    YEAR: 2019-2026
     COPYRIGHT HOLDER: Philipp Bach, Victor Chernozhukov, Malte S. Kurz, Martin Spindler, Sven Klaassen
